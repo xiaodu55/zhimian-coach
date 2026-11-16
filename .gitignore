@@ -28,3 +28,8 @@ data/local-*
 skill/
 zhihu-cli-skill.zip
 .tmp-asr/
+
+# ---- 本地缓存与临时产物 ----
+.cache/
+.tmp-*/
+.tmp-*.json

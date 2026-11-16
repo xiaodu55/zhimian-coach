@@ -1,5 +1,5 @@
 import { Hono } from 'hono';
-import { parseDocumentContent, DocSegment } from '../lib/docParser.js';
+import { parseDocumentContent, parsePdfBuffer, DocSegment } from '../lib/docParser.js';
 import { callStructuredLlm } from '../lib/llm.js';
 import { validateStructuredClaims, ClaimItem } from '../lib/citations.js';
 import { EXPLAIN_ASK_SYSTEM_PROMPT } from '../lib/prompts.js';
@@ -17,24 +17,29 @@ explainRoutes.post('/doc/upload', async (c) => {
   if (file.size > 20 * 1024 * 1024) {
     return c.json({ error: { code: 'PAYLOAD_TOO_LARGE', message: '文件超过 20MB 上限' } }, 413);
   }
+
   const lowerName = file.name.toLowerCase();
-  if (!lowerName.endsWith('.md') && !lowerName.endsWith('.txt') && !lowerName.endsWith('.markdown')) {
+
+  try {
+    if (lowerName.endsWith('.pdf')) {
+      const parsed = await parsePdfBuffer(file.name, Buffer.from(await file.arrayBuffer()));
+      return c.json({ docId: 'doc-' + Date.now(), ...parsed });
+    }
+    if (lowerName.endsWith('.md') || lowerName.endsWith('.markdown') || lowerName.endsWith('.txt')) {
+      const text = await file.text();
+      if (!text.trim()) {
+        return c.json({ error: { code: 'DOC_PARSE_FAILED', message: '文件内容为空或无有效文本层' } }, 422);
+      }
+      return c.json({ docId: 'doc-' + Date.now(), ...parseDocumentContent(file.name, text) });
+    }
     return c.json(
-      { error: { code: 'DOC_PARSE_FAILED', message: '当前接口支持 Markdown / TXT / 时间戳转写稿；扫描版 PDF 请先转为可复制文本' } },
+      { error: { code: 'DOC_PARSE_FAILED', message: '仅支持 PDF（需有文本层）、Markdown 与 TXT' } },
       422
     );
+  } catch (err) {
+    const message = err instanceof Error ? err.message : '文档解析失败';
+    return c.json({ error: { code: 'DOC_PARSE_FAILED', message } }, 422);
   }
-
-  const text = await file.text();
-  if (!text.trim()) {
-    return c.json({ error: { code: 'DOC_PARSE_FAILED', message: '文件内容为空或无有效文本层' } }, 422);
-  }
-
-  const parsed = parseDocumentContent(file.name, text);
-  return c.json({
-    docId: 'doc-' + Date.now(),
-    ...parsed
-  });
 });
 
 // 无状态就地追问：前端随请求传入 Top-K 召回片段 segments[]
@@ -87,14 +92,42 @@ explainRoutes.post('/explain/ask', async (c) => {
   }
 });
 
-// 答辩高危追问关联知乎真实质疑
+// 答辩预测：8 条高危追问 + 3 个薄弱点 + 真实知乎质疑（契约：{title, segments} → {predictedQuestions, topRisks, degraded}）
 explainRoutes.post('/defense/analyze', async (c) => {
   const body = await c.req.json();
-  const topic = String(body?.topic || 'AI Agent 工程落地 消融实验').trim();
+  const title = String(body?.title || '技术方案').trim();
+  const segments: DocSegment[] = Array.isArray(body?.segments) ? body.segments : [];
+
+  if (!segments.length) {
+    return c.json({ error: { code: 'VALIDATION_ERROR', message: '请先上传并解析文档（缺少 segments）' } }, 400);
+  }
+
+  const topic = (segments[0]?.heading || title.replace(/\.[^.]+$/, '')).slice(0, 30);
+  let critiques: Array<{ title: string; url: string; snippet: string }> = [];
+  let degraded = false;
   try {
     const { results } = await zhihuSearch(`${topic} 质疑 缺点 局限`, 'zhihu', 5);
-    return c.json({ zhihuCritiques: results });
+    critiques = results;
+    degraded = results.length === 0;
   } catch {
-    return c.json({ zhihuCritiques: [], degraded: true });
+    degraded = true;
   }
+
+  const topRisks = segments.slice(0, 3).map((seg, i) => ({
+    riskId: `risk-${i + 1}`,
+    locator: seg.locator,
+    title: `薄弱点 #${i + 1}：${seg.heading}`,
+    reason: `材料在 ${seg.locator} 提出了关键论断，但缺少对照基线、消融实验或极端边界数据。`,
+  }));
+
+  const predictedQuestions = segments.slice(0, 8).map((seg, idx) => {
+    const ref = critiques[idx % Math.max(1, critiques.length)];
+    return {
+      q: `针对 ${seg.locator}「${seg.heading}」，如果去掉这个机制、或遇到长尾异常输入，你的指标会掉多少？依据是什么？`,
+      why: '该段是核心技术主张，评委通常用"消融实验 + 边界压力"验证它是不是真的必要。',
+      zhihuRef: ref ? { title: ref.title, url: ref.url, snippet: ref.snippet } : null,
+    };
+  });
+
+  return c.json({ degraded, topRisks, predictedQuestions });
 });

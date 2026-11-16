@@ -29,8 +29,8 @@ export function renderExplainScreen(root) {
       </div>
       <div style="display:flex;gap:8px;flex-wrap:wrap;">
         <label class="btn btn-sm">
-          📂 上传 Markdown / TXT / 转写稿
-          <input id="doc-file-input" type="file" accept=".md,.txt,.markdown" hidden />
+          📂 上传 PDF / Markdown / TXT / 转写稿
+          <input id="doc-file-input" type="file" accept=".pdf,.md,.txt,.markdown" hidden />
         </label>
         <button id="btn-gen-defense" class="btn btn-primary btn-sm" type="button">🎓 生成答辩预测追问（挂知乎质疑）</button>
       </div>
@@ -131,6 +131,37 @@ export function renderExplainScreen(root) {
       showToast('文件超过 20MB 上限', 'error');
       return;
     }
+
+    // PDF：必须有文本层 + 需要页码定位符 → 交给 BFF 逐页解析（服务端零落盘，只回分段）
+    if (file.name.toLowerCase().endsWith('.pdf')) {
+      showToast('正在解析 PDF 文本层与页码定位符…');
+      try {
+        const fd = new FormData();
+        fd.append('file', file);
+        const res = await fetch('/api/doc/upload', { method: 'POST', body: fd });
+        const data = await res.json();
+        if (!res.ok) {
+          showToast(data?.error?.message || 'PDF 解析失败', 'error', 6000);
+          return;
+        }
+        activeDoc = {
+          id: data.docId,
+          title: data.title,
+          pages: data.pages,
+          segments: data.segments,
+          createdAt: new Date().toISOString(),
+        };
+        state.activeDocument = activeDoc;
+        await dbPut('documents', activeDoc);
+        renderSegments();
+        showToast(`PDF 解析成功：${data.pages} 页 / ${data.segments.length} 个定位片段（p页码¶段号）`);
+      } catch (err) {
+        showToast('PDF 解析需要 BFF 在线：' + err.message, 'warn', 5000);
+      }
+      return;
+    }
+
+    // MD / TXT：本地切块，零上传
     const text = await file.text();
     activeDoc = chunkDocumentText(text, file.name);
     state.activeDocument = activeDoc;
@@ -264,50 +295,56 @@ export function renderExplainScreen(root) {
   const genBtn = wrapper.querySelector('#btn-gen-defense');
 
   genBtn.addEventListener('click', async () => {
-    const topic = activeDoc.title.replace(/\.[a-z]+$/i, '').replace(/示例技术文档：/, '');
+    if (!activeDoc?.segments?.length) {
+      showToast('先上传并解析文档，再生成答辩追问', 'warn');
+      return;
+    }
     genBtn.disabled = true;
     const originLabel = genBtn.textContent;
     genBtn.textContent = '检索知乎真实质疑中…';
 
-    let critiques = [];
-    let searchDegraded = false;
+    let data = null;
     try {
       const res = await fetch('/api/defense/analyze', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ topic }),
+        body: JSON.stringify({ title: activeDoc.title, segments: activeDoc.segments }),
       });
-      const data = await res.json();
+      data = await res.json();
       if (!res.ok) throw new Error(data?.error?.message || '检索失败');
-      critiques = data.zhihuCritiques || [];
-      searchDegraded = Boolean(data.degraded) || critiques.length === 0;
-    } catch {
-      searchDegraded = true;
+    } catch (err) {
+      showToast(err.message, 'error', 5000);
+      genBtn.disabled = false;
+      genBtn.textContent = originLabel;
+      return;
     } finally {
       genBtn.disabled = false;
       genBtn.textContent = originLabel;
     }
 
-    // 预测问题基于材料自身薄弱处生成；每条尽量挂一条真实知乎质疑（拿不到就明说没有）
-    generatedDefenseItems = activeDoc.segments.slice(0, 4).map((seg, idx) => {
-      const critique = critiques[idx % Math.max(1, critiques.length)];
-      return {
-        q: `针对「${seg.heading}」，如果评委问：这套设计在真实约束（人力/时延/数据规模）下凭什么成立？你怎么答？`,
-        why: `材料在 ${seg.locator} 给出了断言，但没有给出消融实验、失败边界或与替代方案的对比。`,
-        zhihuRef: critique
-          ? { title: critique.title, url: critique.url, snippet: critique.snippet }
-          : null,
-      };
-    });
+    generatedDefenseItems = (data.predictedQuestions || []).map((item) => ({
+      q: item.q,
+      why: item.why,
+      zhihuRef: item.zhihuRef || null,
+    }));
 
     defenseCard.hidden = false;
     defenseList.innerHTML = '';
 
-    if (searchDegraded) {
+    if (data.degraded) {
       const warn = document.createElement('div');
       warn.style.cssText = 'font-size:12px;color:var(--amber);margin-bottom:8px;';
-      warn.textContent = '⚠ 知乎质疑检索不可用（额度或网络）：以下预测问题未挂外部质疑来源，不会伪造引用。';
+      warn.textContent = '⚠ 知乎质疑检索不可用（额度或网络）：预测问题照常生成，但不会伪造外部引用。';
       defenseList.appendChild(warn);
+    }
+
+    if ((data.topRisks || []).length) {
+      const riskBox = document.createElement('div');
+      riskBox.style.cssText = 'font-size:12px;background:var(--amber-soft);padding:8px 10px;border-radius:8px;margin-bottom:8px;color:var(--amber);';
+      riskBox.innerHTML = data.topRisks
+        .map((r) => `· ${escapeHtml(r.title)}：${escapeHtml(r.reason)}`)
+        .join('<br/>');
+      defenseList.appendChild(riskBox);
     }
 
     generatedDefenseItems.forEach((item, idx) => {
@@ -316,17 +353,20 @@ export function renderExplainScreen(root) {
       el.innerHTML = `
         <div style="font-weight:600;font-size:14px;margin-bottom:4px;">Q${idx + 1}. ${escapeHtml(item.q)}</div>
         <div style="font-size:12px;color:var(--amber);margin-bottom:6px;">为什么会被问：${escapeHtml(item.why)}</div>
-        ${item.zhihuRef ? `
-          <div style="font-size:12px;background:var(--primary-soft);padding:6px 8px;border-radius:6px;">
-            知乎真实质疑：「${escapeHtml(item.zhihuRef.title)}」
-            <div style="color:var(--text-secondary);margin-top:2px;">${escapeHtml((item.zhihuRef.snippet || '').slice(0, 70))}…</div>
-            <a href="${escapeHtml(item.zhihuRef.url)}" target="_blank" rel="noopener noreferrer" style="margin-top:4px;display:inline-block;">查看知乎原文 ↗</a>
-          </div>
-        ` : `<div style="font-size:12px;color:var(--text-muted);">本条暂无可核对的知乎质疑来源。</div>`}
+        ${
+          item.zhihuRef
+            ? `<div style="font-size:12px;background:var(--primary-soft);padding:6px 8px;border-radius:6px;">
+                 知乎真实质疑：「${escapeHtml(item.zhihuRef.title)}」
+                 <div style="color:var(--text-secondary);margin-top:2px;">${escapeHtml((item.zhihuRef.snippet || '').slice(0, 70))}…</div>
+                 <a href="${escapeHtml(item.zhihuRef.url)}" target="_blank" rel="noopener noreferrer" style="margin-top:4px;display:inline-block;">查看知乎原文 ↗</a>
+               </div>`
+            : `<div style="font-size:12px;color:var(--text-muted);">本条暂无可核对的知乎质疑来源。</div>`
+        }
       `;
       defenseList.appendChild(el);
     });
-    showToast(searchDegraded ? '已生成追问清单（知乎质疑降级）' : '已生成高危答辩追问清单（含知乎真实质疑）');
+
+    showToast(`已生成 ${generatedDefenseItems.length} 条答辩追问${data.degraded ? '（质疑降级）' : '（含知乎真实质疑）'}`);
   });
 
   wrapper.querySelector('#btn-export-defense-md').addEventListener('click', () => {

@@ -34,6 +34,19 @@ docs / *.md          规划与规格（PLAN / sdd_v0_2 / 作品稿 / 想法 / �
 
 ---
 
+## 部署（单容器）
+
+```bash
+docker build -t zhimian-coach .
+docker run -d --rm -p 8787:8787 --env-file .env -v "$PWD/.cache:/data/.cache" \
+  -e CACHE_PERSIST=1 -e CACHE_DIR=/data/.cache zhimian-coach
+```
+
+- 生产阶段不需要 `tsx`：镜像内 `pnpm --filter @zhimian/bff build` 后直接 `node apps/bff/dist/index.js`
+- 同域托管静态站点 → 规避 CORS，且容器平台分配的 HTTPS 域名满足录音（`getUserMedia`）的安全上下文要求
+- **缓存落盘**：`CACHE_PERSIST=1` + `CACHE_DIR` 指向**挂载卷**才有意义；容器文件系统是临时的，不挂卷重启即丢
+- 未挂卷时退化为纯内存缓存，功能不受影响，只是重启后重新消耗知乎配额
+
 ## 快速启动
 
 ```bash
@@ -118,4 +131,7 @@ pnpm build:bff && PORT=8788 pnpm start
 - 录音需 https/localhost（`getUserMedia` 安全上下文约束）；自动化环境未能验证真实麦克风，需真人点一次。
 - 实时字幕依赖 Web Speech API：Edge 走 Azure 较稳，Chrome 国内不稳；WebView2/桌面壳不提供。
 - `question_answers` 无赞同数 → 观点卡显示「知乎答主」而非虚构赞数。
-- 讲解室已端到端验证（上传→分段→BM25 检索→模型仅依据片段作答→引用 chip→无依据显式兜底）；PDF 需先转文本（扫描件无文本层）。
+- 讲解室已端到端验证（上传→分段→BM25 检索→模型仅依据片段作答→引用 chip→无依据显式兜底）。
+  **PDF 支持**：`.pdf` 走 BFF 逐页解析（`p{页码}¶{段号}` 定位符），自动折叠中文汉字间空格；扫描件（无文本层）会明确报错，不假装解析成功。
+- **答辩预测**契约：`POST /api/defense/analyze {title, segments}` → `{degraded, topRisks[], predictedQuestions[{q, why, zhihuRef}]}`；知乎质疑检索失败时 `degraded:true` 且不伪造引用。
+- **单元测试**：`pnpm test`（7 条：规则、转写切分、时间戳容忍、双轨对齐、引用校验）。
