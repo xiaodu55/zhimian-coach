@@ -3,7 +3,9 @@ import { navigate } from '../router.js';
 import { escapeHtml } from '../ui/citation.js';
 import { renderViewpointCard } from '../ui/components.js';
 import { LocalAudioRecorder } from '../capture/recorder.js';
-import { LiveCaptionEngine } from '../capture/caption.js';
+import { LiveCaptionEngine, captionsToTranscript } from '../capture/caption.js';
+import { listAudioInputs, detectVirtualDevice } from '../capture/devices.js';
+import { isSystemAudioSupported, captureSystemAudio } from '../capture/systemAudio.js';
 import { parseTranscriptToQA } from '../capture/transcript.js';
 import { runDeterministicRules } from '../rules/diagnose.js';
 import { dbPut } from '../db.js';
@@ -21,7 +23,7 @@ export function renderCoachScreen(root) {
   let audioUrl = null;
   let followupRound = 0;
   let activeFollowupFocus = '';
-  const recorder = new LocalAudioRecorder();
+  let recorder = null;
   let captionEngine = null;
 
   const wrapper = document.createElement('div');
@@ -77,6 +79,34 @@ export function renderCoachScreen(root) {
             录音文件仅保存在本机浏览器 IndexedDB，绝不上传服务器。
           </div>
 
+          <!-- 设备、双轨与说话人控制 -->
+          <div id="capture-config" style="display:grid;gap:8px;margin-bottom:10px;font-size:12.5px;">
+            <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+              <label for="mic-select" style="color:var(--text-secondary);">输入设备</label>
+              <select id="mic-select" class="input" style="max-width:280px;padding:4px 6px;"></select>
+              <button id="btn-refresh-mic" class="btn btn-ghost btn-sm" type="button">刷新</button>
+              <label style="display:flex;gap:6px;align-items:center;color:var(--text-secondary);cursor:pointer;">
+                <input id="chk-system-audio" type="checkbox" /> 同时录系统声音（面试官那一路）
+              </label>
+            </div>
+            <div id="device-hint" style="color:var(--text-muted);line-height:1.6;"></div>
+            <div id="silence-warning" style="display:none;color:var(--red);font-size:12.5px;line-height:1.6;"></div>
+            <div style="display:flex;gap:8px;align-items:center;">
+              <span style="color:var(--text-muted);">音量</span>
+              <div style="flex:1;height:6px;background:var(--border);border-radius:999px;overflow:hidden;">
+                <div id="volume-fill" style="height:100%;width:0%;background:var(--green);transition:width .12s;"></div>
+              </div>
+              <span id="volume-db" style="color:var(--text-muted);min-width:52px;text-align:right;">-100 dB</span>
+            </div>
+            <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+              <span style="color:var(--text-muted);">当前说话人</span>
+              <button id="btn-spk-auto" class="btn btn-primary btn-sm" type="button">自动判断</button>
+              <button id="btn-spk-me" class="btn btn-ghost btn-sm" type="button">我说</button>
+              <button id="btn-spk-interviewer" class="btn btn-ghost btn-sm" type="button">面试官说</button>
+              <button id="btn-captions-to-text" class="btn btn-ghost btn-sm" type="button">字幕整理成转写稿 →</button>
+            </div>
+          </div>
+
           <div id="audio-playback-box" style="margin-bottom:10px;" hidden>
             <audio id="audio-player" controls style="width:100%;height:36px;"></audio>
           </div>
@@ -105,6 +135,16 @@ export function renderCoachScreen(root) {
   const captionListEl = wrapper.querySelector('#caption-list');
   const captionStatusEl = wrapper.querySelector('#caption-status');
   const recordBtn = wrapper.querySelector('#btn-record-toggle');
+  const micSelect = wrapper.querySelector('#mic-select');
+  const refreshMicBtn = wrapper.querySelector('#btn-refresh-mic');
+  const systemAudioChk = wrapper.querySelector('#chk-system-audio');
+  const deviceHint = wrapper.querySelector('#device-hint');
+  const silenceWarning = wrapper.querySelector('#silence-warning');
+  const volumeFill = wrapper.querySelector('#volume-fill');
+  const volumeDb = wrapper.querySelector('#volume-db');
+  const spkAutoBtn = wrapper.querySelector('#btn-spk-auto');
+  const spkMeBtn = wrapper.querySelector('#btn-spk-me');
+  const spkInterviewerBtn = wrapper.querySelector('#btn-spk-interviewer');
   const audioBox = wrapper.querySelector('#audio-playback-box');
   const audioPlayer = wrapper.querySelector('#audio-player');
 
@@ -118,13 +158,25 @@ export function renderCoachScreen(root) {
     captions.forEach((cap) => {
       const row = document.createElement('div');
       row.className = 'caption-line';
+      const label = cap.speaker === 'me' ? '我' : cap.speaker === 'interviewer' ? '面试官' : '未标注';
+      const tone = cap.speaker === 'me' ? 'background:var(--primary-soft);color:var(--primary);'
+        : cap.speaker === 'interviewer' ? 'background:var(--amber-soft);color:var(--amber);'
+        : 'background:var(--surface-alt);color:var(--text-muted);';
       row.innerHTML = `
         <span class="caption-ts">${escapeHtml(cap.timestamp)}</span>
+        <button type="button" class="spk-badge" title="点击切换：我 / 面试官 / 未标注（自动判断可能不准，以你点选为准）"
+          style="border:0;border-radius:999px;padding:1px 8px;font-size:11px;cursor:pointer;${tone}">${label}</button>
         <div class="caption-text" contenteditable="true" title="点击可就地编辑字幕并保留时间戳">${escapeHtml(cap.text)}</div>
       `;
+      row.querySelector('.spk-badge').addEventListener('click', () => {
+        const order = ['me', 'interviewer', 'unknown'];
+        const next = order[(order.indexOf(cap.speaker || 'unknown') + 1) % order.length];
+        cap.speaker = next;
+        cap.speakerAuto = false;
+        renderCaptions();
+      });
       row.querySelector('.caption-text').addEventListener('input', (e) => {
         cap.text = e.target.textContent;
-        textarea.value = captions.map((c) => c.text).join(' ');
       });
       captionListEl.appendChild(row);
     });
@@ -136,6 +188,78 @@ export function renderCoachScreen(root) {
       captionListEl.appendChild(row);
     }
   };
+
+  // ---- 设备枚举：默认输入被会议软件切走是最常见的"录到静音"原因 ----
+  const loadMicDevices = async (requestPermission = false) => {
+    try {
+      const devices = await listAudioInputs({ requestPermission });
+      const current = micSelect.value;
+      micSelect.innerHTML = '';
+      const def = document.createElement('option');
+      def.value = '';
+      def.textContent = '系统默认输入';
+      micSelect.appendChild(def);
+      for (const d of devices) {
+        const opt = document.createElement('option');
+        opt.value = d.deviceId;
+        opt.textContent = d.label;
+        micSelect.appendChild(opt);
+      }
+      if (current) micSelect.value = current;
+
+      const selected = devices.find((d) => d.deviceId === micSelect.value);
+      const virtualHit = devices.filter((d) => detectVirtualDevice(d.label));
+      deviceHint.innerHTML = [
+        virtualHit.length
+          ? `⚠ 检测到疑似会议/虚拟设备：${virtualHit.map((d) => escapeHtml(d.label)).join('、')}。` +
+            '若录音一直是静音，多半是默认输入被会议软件切到了这类设备。'
+          : '提示：同时开飞书/腾讯会议时，Windows 一般允许共享麦克风；但会议软件可能改写默认输入。',
+        selected ? `当前选择：${escapeHtml(selected.label)}` : '',
+        isSystemAudioSupported()
+          ? '双轨说明：勾选「同时录系统声音」后会弹共享选择器，务必勾上"分享音频"，这样面试官的声音单独成轨。'
+          : '当前环境不支持采集系统声音（移动端/桌面壳），请用单麦克风 + 手动标注说话人。',
+      ].filter(Boolean).join('<br/>');
+    } catch (err) {
+      deviceHint.textContent = '设备枚举失败：' + err.message;
+    }
+  };
+  refreshMicBtn.addEventListener('click', () => loadMicDevices(true));
+  loadMicDevices(false);
+  if (!isSystemAudioSupported()) {
+    systemAudioChk.disabled = true;
+    systemAudioChk.parentElement.style.opacity = '0.5';
+  }
+
+  // ---- 说话人模式：手动优先，自动可纠 ----
+  const setSpeakerMode = (mode) => {
+    captionEngine?.setSpeakerMode(mode);
+    const map = { auto: spkAutoBtn, me: spkMeBtn, interviewer: spkInterviewerBtn };
+    for (const [k, btn] of Object.entries(map)) {
+      btn.className = `btn btn-sm ${k === mode ? 'btn-primary' : 'btn-ghost'}`;
+    }
+    captionStatusEl.dataset.speakerMode = mode;
+    if (mode === 'me') showToast('已切换为「我说」：后续字幕都记为你');
+    if (mode === 'interviewer') showToast('已切换为「面试官说」：后续字幕都记为面试官');
+    if (mode === 'auto') showToast('已切换为自动判断（按问句/人称推断，可点徽标纠正）');
+  };
+  spkAutoBtn.addEventListener('click', () => setSpeakerMode('auto'));
+  spkMeBtn.addEventListener('click', () => setSpeakerMode('me'));
+  spkInterviewerBtn.addEventListener('click', () => setSpeakerMode('interviewer'));
+
+  // ---- 字幕 → 带说话人标签的转写稿（直接喂给「解析并生成复盘」）----
+  wrapper.querySelector('#btn-captions-to-text').addEventListener('click', () => {
+    if (!captions.length) {
+      showToast('还没有字幕：先录音，或直接粘贴会议转写稿', 'warn');
+      return;
+    }
+    textarea.value = captionsToTranscript(captions);
+    const unknown = captions.filter((c) => !c.speaker || c.speaker === 'unknown').length;
+    showToast(
+      unknown
+        ? `已整理 ${captions.length} 句，其中 ${unknown} 句未标注说话人（点徽标可改）`
+        : `已整理 ${captions.length} 句，说话人标签完整`
+    );
+  });
 
   // 换一题
   wrapper.querySelector('#btn-switch-q').addEventListener('click', () => {
@@ -157,7 +281,34 @@ export function renderCoachScreen(root) {
   recordBtn.addEventListener('click', async () => {
     if (!isRecording) {
       try {
-        await recorder.start();
+        // 二轨（可选）：系统声音 = 面试官那一路
+        let systemStream = null;
+        if (systemAudioChk.checked) {
+          try {
+            const captured = await captureSystemAudio();
+            systemStream = captured.stream;
+          } catch (err) {
+            showToast(err.message, 'warn', 6000);
+          }
+        }
+
+        recorder = new LocalAudioRecorder({
+          onLevel: (_rms, db) => {
+            const pct = Math.max(0, Math.min(100, ((db + 60) / 60) * 100));
+            volumeFill.style.width = `${pct}%`;
+            volumeFill.style.background = db > -35 ? 'var(--green)' : db > -55 ? 'var(--amber)' : 'var(--red)';
+            volumeDb.textContent = `${Math.round(db)} dB`;
+            if (db > -50) silenceWarning.style.display = 'none';
+          },
+          onSilence: (msg) => {
+            showToast(msg, 'warn', 8000);
+            silenceWarning.textContent = '⚠ ' + msg;
+            silenceWarning.style.display = 'block';
+            captionStatusEl.textContent = '⚠ 检测到持续静音，检查设备后重试（或改用「导入会议转写稿」）';
+          },
+        });
+
+        await recorder.start({ deviceId: micSelect.value || undefined, systemStream });
         isRecording = true;
         recordBtn.textContent = '⏹ 停止录音';
         recordBtn.className = 'btn btn-danger btn-sm';
@@ -166,7 +317,6 @@ export function renderCoachScreen(root) {
         captionEngine = new LiveCaptionEngine({
           onSentence: (sent) => {
             captions.push(sent);
-            textarea.value = captions.map((c) => c.text).join(' ');
             renderCaptions();
           },
           onInterim: (txt) => renderCaptions(txt),
@@ -194,6 +344,8 @@ export function renderCoachScreen(root) {
           id: 'rec-' + Date.now(),
           questionId: question.id,
           durationSec: result.durationSec,
+          deviceId: micSelect.value || 'default',
+          hasSystemTrack: Boolean(result.systemBlob),
           captions
         });
         captionStatusEl.textContent = `✅ 录音完成（${result.durationSec} 秒），已加密存入本机 IndexedDB，未产生任何上传请求。`;
