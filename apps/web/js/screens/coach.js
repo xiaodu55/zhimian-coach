@@ -8,6 +8,13 @@ import { listAudioInputs, detectVirtualDevice } from '../capture/devices.js';
 import { isSystemAudioSupported, captureSystemAudio } from '../capture/systemAudio.js';
 import { saveRecording, downloadTrack, toFormData, trackUrl } from '../capture/recordings.js';
 import { mergeTracks, toTranscriptText } from '../capture/align.js';
+
+/** 陪练室两种练法：真题陪练（题库+知乎观点卡）/ 简历陪练（按你的真实经历出题） */
+const MODE_KEY = 'zhimian.coach.mode';
+const getMode = () => (sessionStorage.getItem(MODE_KEY) === 'resume' ? 'resume' : 'bank');
+/** 两种练法各自记住上一次选的题：切回来不用重挑 */
+const rememberedQuestions = { bank: null, resume: null };
+const setMode = (mode) => sessionStorage.setItem(MODE_KEY, mode);
 import { parseTranscriptToQA } from '../capture/transcript.js';
 import { runDeterministicRules } from '../rules/diagnose.js';
 import { dbPut } from '../db.js';
@@ -15,6 +22,7 @@ import { showToast } from '../ui/toast.js';
 
 export function renderCoachScreen(root) {
   const question = state.activeQuestion || state.bank[0];
+  if (question) rememberedQuestions[question.source === 'resume' ? 'resume' : 'bank'] = question;
   if (!question) {
     root.innerHTML = `<div class="card">题库加载中，请稍候…</div>`;
     return;
@@ -30,22 +38,28 @@ export function renderCoachScreen(root) {
 
   const wrapper = document.createElement('div');
   wrapper.innerHTML = `
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:8px;">
-      <div>
-        <span class="tag tag-blue">${escapeHtml(question.track)}</span>
-        <span class="tag" style="margin-left:4px;">状态：实战作答与连续追问（上限 3 轮）</span>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px;">
+      <div class="mode-switch" role="tablist" aria-label="陪练方式">
+        <button type="button" class="btn btn-sm" data-coach-mode="bank" role="tab">📚 真题陪练</button>
+        <button type="button" class="btn btn-sm" data-coach-mode="resume" role="tab">🧾 简历陪练</button>
       </div>
-      <div style="display:flex;gap:8px;">
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+        <span class="tag ${question.source === 'resume' ? 'tag-green' : 'tag-blue'}">${escapeHtml(question.source === 'resume' ? '简历题' : question.track)}</span>
+        <span class="tag">连续追问上限 3 轮</span>
         <button id="btn-switch-q" class="btn btn-sm" type="button">换一题</button>
         <button id="btn-fill-sample" class="btn btn-sm" type="button">填入演示回答样例</button>
       </div>
     </div>
 
-    <!-- 简历模式：上传简历 → 按真实经历出题（题目接地到简历定位符） -->
-    <section class="card" style="margin-bottom:14px;">
+    <div class="grid-2" style="align-items:start;">
+      <!-- 左侧：练法切换（简历陪练 / 真题陪练） -->
+      <div style="display:flex;flex-direction:column;gap:14px;">
+        <div id="panel-resume" style="display:none;flex-direction:column;gap:14px;">
+        <!-- 简历陪练：上传简历 → 按真实经历出题（题目接地到简历定位符） -->
+        <section class="card">
       <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;">
         <div>
-          <strong>🧾 简历模式：上传简历，按你的真实经历出题</strong>
+          <strong>🧾 简历陪练：按你的真实经历出题</strong>
           <div style="font-size:12px;color:var(--text-muted);margin-top:4px;">
             解析简历 → 抽取项目/技能/缺口 → 生成 6–10 道针对性面试题（每题挂简历定位符 + 真实知乎面经）。
             扫描版 PDF 会自动走 OCR 兜底。
@@ -63,9 +77,9 @@ export function renderCoachScreen(root) {
       <div id="resume-questions" style="display:none;margin-top:12px;display:none;flex-direction:column;gap:8px;"></div>
     </section>
 
-    <div class="grid-2" style="align-items:start;">
-      <!-- 左侧：真题与知乎多元观点对照预览 -->
-      <div style="display:flex;flex-direction:column;gap:14px;">
+        </div>
+
+        <div id="panel-bank" style="flex-direction:column;gap:14px;">
         <section class="card">
           <h2 style="margin:0 0 8px;font-size:18px;">${escapeHtml(question.title)}</h2>
           <p style="margin:0 0 12px;font-size:13px;color:var(--text-secondary);">${escapeHtml(question.context)}</p>
@@ -87,6 +101,7 @@ export function renderCoachScreen(root) {
           <h3 style="margin:0 0 8px;font-size:14px;color:var(--text-secondary);">锚定知乎多元观点卡（评分基准）</h3>
           <div id="coach-vp-list" style="display:flex;flex-direction:column;gap:10px;"></div>
         </section>
+        </div>
       </div>
 
       <!-- 右侧：录音 + 实时字幕（可点句编辑）+ 文本/转写稿导入 -->
@@ -97,6 +112,11 @@ export function renderCoachScreen(root) {
             <div style="display:flex;gap:8px;">
               <button id="btn-record-toggle" class="btn btn-primary btn-sm" type="button">开始录音</button>
             </div>
+          </div>
+
+          <div id="current-question-strip" style="font-size:12.5px;color:var(--text-secondary);background:var(--surface-alt);border-radius:8px;padding:8px 10px;margin-bottom:8px;">
+            ${question.source === 'resume' ? '当前题目' : '当前题目（真题）'}：${escapeHtml(question.title)}
+            ${question.source === 'resume' ? `<div style="color:var(--text-muted);margin-top:2px;">简历题 · 定位 ${escapeHtml(question.locator || '')}${question.zhihuRef ? ' · 面经参考挂在左栏' : ''}</div>` : ''}
           </div>
 
           <div id="caption-status" style="font-size:12px;color:var(--text-muted);margin-bottom:8px;">
@@ -435,6 +455,44 @@ export function renderCoachScreen(root) {
       showToast(err.message, 'error', 6000);
     }
   });
+
+  // ---- 两种练法切换（sessionStorage 记忆，刷新不丢） ----
+  const panelBank = wrapper.querySelector('#panel-bank');
+  const panelResume = wrapper.querySelector('#panel-resume');
+  const modeButtons = Array.from(wrapper.querySelectorAll('[data-coach-mode]'));
+
+  const applyMode = (mode) => {
+    setMode(mode);
+    const isResume = mode === 'resume';
+    panelBank.style.display = isResume ? 'none' : 'flex';
+    panelResume.style.display = isResume ? 'flex' : 'none';
+    for (const btn of modeButtons) {
+      const active = btn.dataset.coachMode === mode;
+      btn.className = `btn btn-sm ${active ? 'btn-primary' : ''}`;
+      btn.setAttribute('aria-selected', String(active));
+    }
+  };
+  const switchMode = (mode) => {
+    const currentSource = question.source === 'resume' ? 'resume' : 'bank';
+    if (mode === currentSource) {
+      applyMode(mode);
+      return;
+    }
+    const next = rememberedQuestions[mode] || (mode === 'bank' ? state.bank[0] : null);
+    setMode(mode);
+    if (next) {
+      state.activeQuestion = next;
+      root.innerHTML = '';
+      renderCoachScreen(root);
+    } else {
+      // 简历模式还没有题：只切面板，右侧提示先上传简历
+      applyMode(mode);
+    }
+  };
+  for (const btn of modeButtons) {
+    btn.addEventListener('click', () => switchMode(btn.dataset.coachMode));
+  }
+  applyMode(question.source === 'resume' ? 'resume' : getMode());
 
   // ---- 双轨回放 / 导出 / 转写 ----
   let lastTracks = null;
