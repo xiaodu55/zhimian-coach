@@ -143,10 +143,19 @@ export function renderExplainScreen(root) {
   const askInput = wrapper.querySelector('#ask-input');
   const askResultBox = wrapper.querySelector('#ask-result-box');
 
-  wrapper.querySelector('#btn-ask-submit').addEventListener('click', () => {
+  const askBtn = wrapper.querySelector('#btn-ask-submit');
+  const BASIS_CLASS = { '原文直述': 'basis-direct', '外部佐证': 'basis-external', '推断': 'basis-inference' };
+
+  askBtn.addEventListener('click', async () => {
     const q = askInput.value.trim();
     if (!q) return;
-    const hits = searchSegmentsBM25(activeDoc.segments, q, 2);
+
+    // 第一跳：文档内 BM25 精准召回（本地、零成本、隐私）
+    const hits = searchSegmentsBM25(activeDoc.segments, q, 3);
+
+    // BM25 阈值兜底：低分命中基本是噪声（实测无关问题也能命中 1 段），
+    // 与其花一次模型调用去问"材料里有没有"，不如就地判定无依据（省额度、也不给模型编的机会）。
+    if (hits.length && hits[0].score < 0.35) hits.length = 0;
 
     if (!hits.length) {
       askResultBox.innerHTML = `
@@ -154,34 +163,97 @@ export function renderExplainScreen(root) {
           <span class="basis-badge basis-inference">无直接依据 · noEvidence:true</span>
           未在当前文档检索到直接依据
         </div>
-        <p style="margin:0 0 8px;font-size:13px;">当前上传材料中未包含与「${escapeHtml(q)}」直接匹配的段落。为防止模型幻觉，系统拒绝生成无锚点猜测。</p>
+        <p style="margin:0 0 8px;font-size:13px;">当前材料中未包含与「${escapeHtml(q)}」直接匹配的段落。为防止模型幻觉，系统拒绝生成无锚点猜测。</p>
         <div style="font-size:12px;color:var(--text-secondary);">建议检索词：<code>${escapeHtml(activeDoc.segments[0]?.heading || '核心架构')}</code> / <code>评估基线</code></div>
       `;
       return;
     }
 
-    askResultBox.innerHTML = '';
-    hits.forEach((h, i) => {
-      const row = document.createElement('div');
-      row.style.marginBottom = '10px';
-      row.innerHTML = `
-        <div style="margin-bottom:4px;">
-          <span class="basis-badge basis-direct">原文直述</span>
-          <strong>依据片段 #${i + 1}：</strong>
-          <span class="chip-slot"></span>
-        </div>
-        <div style="font-size:13px;color:var(--text-secondary);">${escapeHtml(h.segment.text)}</div>
-      `;
-      row.querySelector('.chip-slot').appendChild(renderCitationChip({
-        id: `S${i + 1}`,
-        type: h.segment.type === 'time' ? 'time' : 'doc',
-        label: h.segment.locator,
-        sourceTitle: activeDoc.title,
-        locator: h.segment.locator,
-        quote: h.segment.text
-      }));
-      askResultBox.appendChild(row);
-    });
+    askResultBox.innerHTML = `<span style="color:var(--text-muted);font-size:13px;">已定位 ${hits.length} 个片段，正在让模型只在片段范围内作答（严格溯源）…</span>`;
+    askBtn.disabled = true;
+    const originLabel = askBtn.textContent;
+    askBtn.textContent = '生成中…';
+
+    try {
+      const res = await fetch('/api/explain/ask', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          question: q,
+          segments: hits.map((h) => ({ text: h.segment.text, locator: h.segment.locator, heading: h.segment.heading })),
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw Object.assign(new Error(data?.error?.message || '追问失败'), data?.error || {});
+
+      askResultBox.innerHTML = '';
+
+      if (data.degraded) {
+        const warn = document.createElement('div');
+        warn.style.cssText = 'font-size:12px;color:var(--amber);margin-bottom:8px;';
+        warn.textContent = '⚠ 模型暂不可用：已降级为「原文摘录」模式（零幻觉），未生成任何推断性结论。';
+        askResultBox.appendChild(warn);
+      }
+
+      if (data.noEvidence || !(data.claims || []).length) {
+        const box = document.createElement('div');
+        box.innerHTML = `
+          <div style="color:var(--amber);font-weight:600;margin-bottom:6px;">
+            <span class="basis-badge basis-inference">未检索到直接依据</span>
+            模型判断材料里不足以回答这个问题
+          </div>
+          <p style="margin:0;font-size:13px;color:var(--text-secondary);">系统没有编造答案。建议换一种问法，或补充更相关的材料后再问。</p>`;
+        askResultBox.appendChild(box);
+      } else {
+        (data.claims || []).forEach((claim, i) => {
+          const row = document.createElement('div');
+          row.style.cssText = i ? 'margin-top:10px;padding-top:10px;border-top:1px dashed var(--border);' : '';
+
+          const head = document.createElement('div');
+          head.style.cssText = 'display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-bottom:4px;';
+          const badge = document.createElement('span');
+          badge.className = `basis-badge ${BASIS_CLASS[claim.basis] || 'basis-inference'}`;
+          badge.textContent = claim.basis || '推断';
+          head.appendChild(badge);
+
+          for (const refId of claim.refIds || []) {
+            const idx = Number(String(refId).replace(/[^\d]/g, '')) - 1;
+            const seg = hits[idx]?.segment;
+            head.appendChild(renderCitationChip({
+              id: refId,
+              type: seg?.type === 'time' ? 'time' : 'doc',
+              label: seg?.locator || refId,
+              sourceTitle: activeDoc.title,
+              locator: seg?.locator || '',
+              quote: seg?.text || '',
+            }));
+          }
+
+          const body = document.createElement('div');
+          body.style.cssText = 'font-size:13px;line-height:1.7;color:var(--text-primary);';
+          body.textContent = claim.claim || '';
+
+          row.append(head, body);
+          if (claim.inferenceReason) {
+            const note = document.createElement('div');
+            note.style.cssText = 'font-size:12px;color:var(--text-muted);margin-top:4px;';
+            note.textContent = `推断依据：${claim.inferenceReason}`;
+            row.appendChild(note);
+          }
+          askResultBox.appendChild(row);
+        });
+
+        const foot = document.createElement('div');
+        foot.style.cssText = 'font-size:12px;color:var(--text-muted);margin-top:10px;';
+        foot.textContent = `引用校验：保留 ${(data.claims || []).length} 条，丢弃 ${data.droppedByValidator ?? 0} 条无依据/越界引用结论。`;
+        askResultBox.appendChild(foot);
+      }
+    } catch (err) {
+      askResultBox.innerHTML = `<div style="color:var(--red);font-size:13px;">${escapeHtml(err.message)}</div>`;
+    } finally {
+      askBtn.disabled = false;
+      askBtn.textContent = originLabel;
+    }
   });
 
   // F2 答辩预测追问生成（挂知乎真实质疑链接 + 导出 Markdown）
@@ -189,37 +261,72 @@ export function renderExplainScreen(root) {
   const defenseList = wrapper.querySelector('#defense-questions-list');
   let generatedDefenseItems = [];
 
-  wrapper.querySelector('#btn-gen-defense').addEventListener('click', () => {
-    const zhihuCards = state.bank.flatMap((q) => q.viewpointCards || []).filter((c) => c.stance.includes('分歧'));
-    generatedDefenseItems = activeDoc.segments.slice(0, 3).map((seg, idx) => {
-      const zCard = zhihuCards[idx % Math.max(1, zhihuCards.length)];
+  const genBtn = wrapper.querySelector('#btn-gen-defense');
+
+  genBtn.addEventListener('click', async () => {
+    const topic = activeDoc.title.replace(/\.[a-z]+$/i, '').replace(/示例技术文档：/, '');
+    genBtn.disabled = true;
+    const originLabel = genBtn.textContent;
+    genBtn.textContent = '检索知乎真实质疑中…';
+
+    let critiques = [];
+    let searchDegraded = false;
+    try {
+      const res = await fetch('/api/defense/analyze', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ topic }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data?.error?.message || '检索失败');
+      critiques = data.zhihuCritiques || [];
+      searchDegraded = Boolean(data.degraded) || critiques.length === 0;
+    } catch {
+      searchDegraded = true;
+    } finally {
+      genBtn.disabled = false;
+      genBtn.textContent = originLabel;
+    }
+
+    // 预测问题基于材料自身薄弱处生成；每条尽量挂一条真实知乎质疑（拿不到就明说没有）
+    generatedDefenseItems = activeDoc.segments.slice(0, 4).map((seg, idx) => {
+      const critique = critiques[idx % Math.max(1, critiques.length)];
       return {
-        q: `针对「${seg.heading}」，如何证明你的设计不是过度工程化，且在极端边界下依然成立？`,
-        why: `你的材料在 ${seg.locator} 提出了核心断言，但缺少消融实验与失败降级对比数据。`,
-        zhihuRef: zCard
+        q: `针对「${seg.heading}」，如果评委问：这套设计在真实约束（人力/时延/数据规模）下凭什么成立？你怎么答？`,
+        why: `材料在 ${seg.locator} 给出了断言，但没有给出消融实验、失败边界或与替代方案的对比。`,
+        zhihuRef: critique
+          ? { title: critique.title, url: critique.url, snippet: critique.snippet }
+          : null,
       };
     });
 
     defenseCard.hidden = false;
     defenseList.innerHTML = '';
+
+    if (searchDegraded) {
+      const warn = document.createElement('div');
+      warn.style.cssText = 'font-size:12px;color:var(--amber);margin-bottom:8px;';
+      warn.textContent = '⚠ 知乎质疑检索不可用（额度或网络）：以下预测问题未挂外部质疑来源，不会伪造引用。';
+      defenseList.appendChild(warn);
+    }
+
     generatedDefenseItems.forEach((item, idx) => {
       const el = document.createElement('div');
-      el.style.padding = '10px';
-      el.style.border = '1px solid var(--border)';
-      el.style.borderRadius = '8px';
+      el.style.cssText = 'padding:10px;border:1px solid var(--border);border-radius:8px;';
       el.innerHTML = `
         <div style="font-weight:600;font-size:14px;margin-bottom:4px;">Q${idx + 1}. ${escapeHtml(item.q)}</div>
         <div style="font-size:12px;color:var(--amber);margin-bottom:6px;">为什么会被问：${escapeHtml(item.why)}</div>
         ${item.zhihuRef ? `
           <div style="font-size:12px;background:var(--primary-soft);padding:6px 8px;border-radius:6px;">
-            知乎真实质疑参考：“${escapeHtml(item.zhihuRef.evidenceQuote)}”
-            <a href="${escapeHtml(item.zhihuRef.sourceUrl)}" target="_blank" rel="noopener noreferrer" style="margin-left:6px;">查看知乎原答 ↗</a>
+            知乎真实质疑：「${escapeHtml(item.zhihuRef.title)}」
+            <div style="color:var(--text-secondary);margin-top:2px;">${escapeHtml((item.zhihuRef.snippet || '').slice(0, 70))}…</div>
+            <a href="${escapeHtml(item.zhihuRef.url)}" target="_blank" rel="noopener noreferrer" style="margin-top:4px;display:inline-block;">查看知乎原文 ↗</a>
           </div>
-        ` : ''}
+        ` : `<div style="font-size:12px;color:var(--text-muted);">本条暂无可核对的知乎质疑来源。</div>`}
       `;
       defenseList.appendChild(el);
     });
-    showToast('已生成高危答辩追问清单（附知乎真实质疑来源）');
+    showToast(searchDegraded ? '已生成追问清单（知乎质疑降级）' : '已生成高危答辩追问清单（含知乎真实质疑）');
   });
 
   wrapper.querySelector('#btn-export-defense-md').addEventListener('click', () => {
@@ -230,7 +337,7 @@ export function renderExplainScreen(root) {
       ...generatedDefenseItems.map((it, i) =>
         `## Q${i + 1}. ${it.q}
 - **触发原因**：${it.why}
-- **知乎类似质疑**：${it.zhihuRef ? `${it.zhihuRef.evidenceQuote} (${it.zhihuRef.sourceUrl})` : '暂无'}
+- **知乎类似质疑**：${it.zhihuRef ? `${it.zhihuRef.title} ${it.zhihuRef.url}` : '暂无'}
 `
       )
     ].join('\n');

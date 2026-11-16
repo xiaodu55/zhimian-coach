@@ -30,6 +30,37 @@ function buildHeaders(): Record<string, string> {
   };
 }
 
+/** 知乎开放平台返回的是 PascalCase（Data.Items / Title / ContentText / Url），
+ *  旧实现只认 camelCase（data.items / title…）→ 静默返回 0 条（实测：所有查询都空）。
+ *  这里统一做兼容提取，两种命名都能吃。 */
+function extractItems(payload: any): any[] {
+  const bodies = [payload?.Data, payload?.data, payload];
+  for (const body of bodies) {
+    for (const key of ['Items', 'items', 'List', 'list']) {
+      if (Array.isArray(body?.[key])) return body[key];
+    }
+  }
+  return [];
+}
+
+function pickString(item: any, keys: string[]): string {
+  for (const k of keys) {
+    const v = item?.[k];
+    if (typeof v === 'string' && v.trim()) return v;
+    if (typeof v === 'number') return String(v);
+  }
+  return '';
+}
+
+function normalizeItem(item: any, scope: string): ZhihuSearchItem {
+  return {
+    title: pickString(item, ['Title', 'title', 'question_title']) || '知乎内容',
+    snippet: pickString(item, ['ContentText', 'Summary', 'summary', 'snippet', 'excerpt', 'content']),
+    url: pickString(item, ['Url', 'url', 'link']),
+    type: pickString(item, ['ContentType', 'type']) || scope
+  };
+}
+
 export async function zhihuSearch(
   query: string,
   scope: 'zhihu' | 'global' = 'zhihu',
@@ -83,13 +114,10 @@ export async function zhihuSearch(
     }
 
     const payload: any = await res.json();
-    const rawItems: any[] = payload?.data?.items || payload?.items || payload?.results || [];
-    const normalized: ZhihuSearchItem[] = rawItems.map((item) => ({
-      title: String(item.title || item.question_title || '知乎内容'),
-      snippet: String(item.snippet || item.excerpt || item.content || ''),
-      url: String(item.url || item.link || ''),
-      type: String(item.type || scope)
-    })).filter((item) => item.url.length > 0);
+    const rawItems: any[] = extractItems(payload);
+    const normalized: ZhihuSearchItem[] = rawItems
+      .map((item) => normalizeItem(item, scope))
+      .filter((item) => item.url.length > 0);
 
     recordUpstreamSuccess();
     setCache(cacheKey, normalized, config.cacheTtlMs);
@@ -118,13 +146,9 @@ export async function zhihuHotList(limit = 10): Promise<ZhihuSearchItem[]> {
     throw new ZhihuApiError('ZH_UPSTREAM_ERROR', 502, '知乎热榜接口暂时不可用');
   }
   const payload: any = await res.json();
-  const list: any[] = payload?.data || payload?.items || [];
-  const items = list.map((it) => ({
-    title: String(it.title || ''),
-    snippet: String(it.excerpt || ''),
-    url: String(it.url || ''),
-    type: 'hot'
-  }));
+  const items: ZhihuSearchItem[] = extractItems(payload)
+    .map((it) => normalizeItem(it, 'hot'))
+    .filter((it) => it.url.length > 0);
   setCache(cacheKey, items, 3600 * 1000);
   return items;
 }
