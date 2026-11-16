@@ -1,0 +1,260 @@
+import { state, refreshLocalCollections } from '../state.js';
+import { navigate } from '../router.js';
+import { escapeHtml, renderCitationChip } from '../ui/citation.js';
+import { renderViewpointCard } from '../ui/components.js';
+import { dbPut, dbGetAll } from '../db.js';
+import { showToast } from '../ui/toast.js';
+
+export function renderReviewScreen(root) {
+  const report = state.lastReviewReport;
+
+  if (!report) {
+    root.innerHTML = `
+      <div class="card" style="text-align:center;padding:36px 20px;">
+        <h2 style="margin:0 0 8px;">暂无待复盘的作答记录</h2>
+        <p style="color:var(--text-secondary);margin:0 0 16px;">你可以前往陪练室完成一次作答，或在首页点击「30 秒一键体验」。</p>
+        <button id="btn-back-bank" class="btn btn-primary" type="button">返回题库首页</button>
+      </div>
+    `;
+    root.querySelector('#btn-back-bank').addEventListener('click', () => navigate('/bank'));
+    return;
+  }
+
+  const { question, answer, ruleFindings = [], degraded } = report;
+  const majorityCard = question.viewpointCards?.[0];
+  const minorityCard = question.viewpointCards?.[1];
+
+  const wrapper = document.createElement('div');
+  wrapper.innerHTML = `
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:10px;">
+      <div>
+        <h1 style="margin:0 0 4px;font-size:20px;">复盘台 · 三方对照与原话级诊断</h1>
+        <div style="font-size:13px;color:var(--text-secondary);">题目：${escapeHtml(question.title)}</div>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <button id="btn-mark-weakness" class="btn btn-danger btn-sm" type="button">📌 标记薄弱点并加入「优先复习」</button>
+        <button id="btn-retry-coach" class="btn btn-sm" type="button">再练一题 →</button>
+      </div>
+    </div>
+
+    ${degraded ? `
+      <div class="card" style="background:var(--amber-soft);border-color:#fedf89;margin-bottom:16px;padding:10px 14px;font-size:13px;color:var(--amber);">
+        <strong>⚠ 显式降级提示：</strong> 当前展示为「确定性规则层诊断（10 条规则）+ 知乎观点卡对照」。每条诊断均严格回指你的回答原话与字符区间，绝无模型幻觉编造。
+      </div>
+    ` : ''}
+
+    <!-- M7 三方对照并排视图：你的回答 ⇄ 知乎主流观点 ⇄ 知乎分歧 -->
+    <section style="margin-bottom:20px;">
+      <h2 style="font-size:15px;margin:0 0 10px;color:var(--text-secondary);">一、三方对照（你的回答 ⇄ 知乎主流观点 ⇄ 知乎分歧）</h2>
+      <div class="grid-3">
+        <div class="card">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+            <span class="tag">你的回答原话</span>
+            <span style="font-size:12px;color:var(--text-muted);">${answer.length} 字</span>
+          </div>
+          <div id="user-answer-highlighted" style="font-size:14px;white-space:pre-wrap;line-height:1.7;"></div>
+        </div>
+        <div id="slot-majority"></div>
+        <div id="slot-minority"></div>
+      </div>
+    </section>
+
+    <!-- M5 确定性诊断列表（可展开看原话/字符区间/规则/改进建议） -->
+    <section>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+        <h2 style="font-size:15px;margin:0;color:var(--text-secondary);">二、可核对原话诊断（命中 ${ruleFindings.length} 条 · 点击展开详情）</h2>
+      </div>
+      <div id="findings-list"></div>
+    </section>
+
+    <!-- AI 观点层：对照知乎来源的四维评分（每条结论必须带可点开的 S 编号） -->
+    <section style="margin-top:22px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:8px;">
+        <h2 style="font-size:15px;margin:0;color:var(--text-secondary);">三、AI 观点层（对照知乎观点卡 · 引用可核对）</h2>
+        <span class="tag">${(report.llmScores || []).length} 条结构化结论</span>
+      </div>
+      <div id="llm-layer"></div>
+    </section>
+  `;
+  root.appendChild(wrapper);
+
+  // 渲染三方对照中的知乎观点卡
+  const slotMaj = wrapper.querySelector('#slot-majority');
+  const slotMin = wrapper.querySelector('#slot-minority');
+  if (majorityCard) slotMaj.appendChild(renderViewpointCard(majorityCard, 0));
+  if (minorityCard) {
+    slotMin.appendChild(renderViewpointCard(minorityCard, 1));
+  } else {
+    slotMin.innerHTML = `<div class="card" style="color:var(--text-muted);font-size:13px;">本题暂无补充少数派分歧观点卡。</div>`;
+  }
+
+  // 渲染带原话高亮的回答文本
+  const answerBox = wrapper.querySelector('#user-answer-highlighted');
+  const renderHighlightedAnswer = (targetQuote = null) => {
+    if (!targetQuote || !answer.includes(targetQuote)) {
+      answerBox.textContent = answer;
+      return;
+    }
+    const idx = answer.indexOf(targetQuote);
+    const before = escapeHtml(answer.slice(0, idx));
+    const mid = escapeHtml(targetQuote);
+    const after = escapeHtml(answer.slice(idx + targetQuote.length));
+    answerBox.innerHTML = `${before}<mark class="quote-highlight">${mid}</mark>${after}`;
+  };
+  renderHighlightedAnswer();
+
+  // 三、AI 观点层（数据来自陪练室提交时 /api/coach/parse 的返回）
+  renderLlmLayer(wrapper, report);
+
+  // 渲染诊断列表
+  const findingsList = wrapper.querySelector('#findings-list');
+  if (!ruleFindings.length) {
+    findingsList.innerHTML = `<div class="card" style="color:var(--green);background:var(--green-soft);">🎉 10 条确定性基础规则全部通过！结构清晰、指标有基线。</div>`;
+  } else {
+    ruleFindings.forEach((f, idx) => {
+      const item = document.createElement('div');
+      item.className = `finding-item ${f.severity === 'red' ? 'severity-red' : ''}`;
+      item.innerHTML = `
+        <div class="finding-header">
+          <div>
+            <span class="tag ${f.severity === 'red' ? 'tag-red' : 'tag-amber'}">${f.severity === 'red' ? '高危项' : '优化项'}</span>
+            <strong style="margin-left:6px;font-size:14px;">${escapeHtml(f.ruleName)}</strong>
+          </div>
+          <span style="font-size:12px;color:var(--primary);">点击定位原话 ▾</span>
+        </div>
+        <div class="finding-body" ${idx === 0 ? '' : 'hidden'}>
+          <div style="margin-bottom:6px;">
+            <strong>命中原话（字符区间 [${f.range?.[0] ?? 0}, ${f.range?.[1] ?? 0}]）：</strong>
+            <span style="background:#fff3c4;padding:1px 5px;border-radius:3px;">“${escapeHtml(f.quote)}”</span>
+          </div>
+          <div><strong>改进建议：</strong>${escapeHtml(f.suggestion)}</div>
+        </div>
+      `;
+      item.querySelector('.finding-header').addEventListener('click', () => {
+        const body = item.querySelector('.finding-body');
+        body.hidden = !body.hidden;
+        renderHighlightedAnswer(f.quote);
+      });
+      findingsList.appendChild(item);
+    });
+  }
+
+  // M11 回流：标记薄弱点 -> 弹药库「优先复习」置顶
+  wrapper.querySelector('#btn-mark-weakness').addEventListener('click', async () => {
+    const existing = await dbGetAll('weaknesses');
+    const summaryTags = ruleFindings.map((f) => f.ruleName).slice(0, 3).join('；') || '待深化知乎分歧应对';
+    const weakness = {
+      id: 'wk-' + question.id,
+      questionId: question.id,
+      questionTitle: question.title,
+      track: question.track,
+      attribution: summaryTags,
+      priority: 'pinned',
+      status: 'pending',
+      createdAt: new Date().toISOString()
+    };
+    await dbPut('weaknesses', weakness);
+    await refreshLocalCollections();
+    showToast(`已入库并置顶至「弹药库台账 · 优先复习」（当前共 ${existing.length + 1} 项）`);
+  });
+
+  wrapper.querySelector('#btn-retry-coach').addEventListener('click', () => navigate('/coach'));
+}
+
+/** 三、AI 观点层渲染：分数卡片 + S 编号引用 chip + 改进话术 */
+function renderLlmLayer(wrapper, report) {
+  const host = wrapper.querySelector('#llm-layer');
+  if (!host) return;
+  const scores = report.llmScores || [];
+  const improvements = report.improvements || [];
+
+  if (!scores.length) {
+    host.innerHTML = `
+      <div class="card" style="background:var(--amber-soft);border-color:#fedf89;font-size:13px;color:var(--amber);">
+        <strong>本次未取得模型评分（已显式降级为规则模式）。</strong><br/>
+        规则层的 ${(report.ruleFindings || []).length} 条原话级诊断照常可用；模型恢复后重新提交即可获得四维观点评分。
+      </div>`;
+    return;
+  }
+
+  const grid = document.createElement('div');
+  grid.className = 'grid-2';
+  for (const s of scores) {
+    const tone = s.score >= 75 ? 'var(--green)' : s.score >= 55 ? 'var(--amber)' : 'var(--red)';
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.style.padding = '14px';
+
+    const head = document.createElement('div');
+    head.style.cssText = 'display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px;';
+    const left = document.createElement('div');
+    left.innerHTML = `<span class="tag tag-blue">${escapeHtml(s.dimension || '维度')}</span>
+      <span class="tag" style="margin-left:6px;">${escapeHtml(s.basis || '推断')}</span>`;
+    const scoreEl = document.createElement('strong');
+    scoreEl.style.cssText = `font-size:20px;color:${tone};`;
+    scoreEl.textContent = String(s.score ?? '-');
+    head.append(left, scoreEl);
+
+    const bar = document.createElement('div');
+    bar.style.cssText = 'height:4px;border-radius:999px;background:var(--border);overflow:hidden;margin-bottom:10px;';
+    const fill = document.createElement('div');
+    fill.style.cssText = `height:100%;width:${Math.max(0, Math.min(100, Number(s.score) || 0))}%;background:${tone};`;
+    bar.appendChild(fill);
+
+    const claim = document.createElement('p');
+    claim.style.cssText = 'margin:0 0 10px;font-size:13.5px;line-height:1.65;';
+    claim.textContent = s.claim || '';
+
+    const chips = document.createElement('div');
+    chips.style.cssText = 'display:flex;gap:6px;flex-wrap:wrap;';
+    for (const refId of s.refIds || []) {
+      const idx = Number(String(refId).replace(/[^\d]/g, '')) - 1;
+      const card = (report.question.viewpointCards || [])[idx];
+      chips.appendChild(renderCitationChip({
+        id: refId,
+        type: 'zhihu',
+        label: `${refId} · ${card ? '知乎原答' : '来源缺失'}`,
+        sourceTitle: card?.author || '知乎高赞回答',
+        locator: card?.stance || '',
+        quote: card?.evidenceQuote || '来源原文未随结果返回',
+        url: card?.sourceUrl || '',
+      }));
+    }
+    card.append(head, bar, claim, chips);
+    grid.appendChild(card);
+  }
+  host.appendChild(grid);
+
+  if (improvements.length) {
+    const box = document.createElement('div');
+    box.className = 'card';
+    box.style.cssText = 'margin-top:12px;padding:14px;';
+    const h = document.createElement('strong');
+    h.textContent = '照这个改（每条均对齐知乎来源）';
+    h.style.cssText = 'display:block;margin-bottom:8px;font-size:13.5px;';
+    const ul = document.createElement('ul');
+    ul.style.cssText = 'margin:0;padding-left:18px;font-size:13px;line-height:1.75;';
+    for (const im of improvements) {
+      const li = document.createElement('li');
+      li.textContent = im.claim || '';
+      for (const refId of im.refIds || []) {
+        const idx = Number(String(refId).replace(/[^\d]/g, '')) - 1;
+        const vc = (report.question.viewpointCards || [])[idx];
+        li.appendChild(document.createTextNode(' '));
+        li.appendChild(renderCitationChip({
+          id: refId, type: 'zhihu', label: refId,
+          sourceTitle: vc?.author || '知乎高赞回答', locator: vc?.stance || '',
+          quote: vc?.evidenceQuote || '', url: vc?.sourceUrl || '',
+        }));
+      }
+      ul.appendChild(li);
+    }
+    box.append(h, ul);
+    host.appendChild(box);
+  }
+
+  const note = document.createElement('p');
+  note.style.cssText = 'font-size:12px;color:var(--text-muted);margin-top:10px;';
+  note.textContent = `引用校验：保留 ${scores.length} 条结论，丢弃 ${report.droppedByValidator ?? 0} 条无依据/越界引用结论（来源 ${(report.question.viewpointCards || []).length} 张观点卡）。`;
+  host.appendChild(note);
+}

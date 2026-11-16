@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>知面陪练 · 锚定知乎多元观点的 AI 面试与答辩教练</title>
+  <link rel="stylesheet" href="./styles/app.css" />
+</head>
+<body>
+  <div id="app" class="app-shell">
+    <!-- 顶部导航栏 -->
+    <header class="topbar" role="banner">
+      <div class="topbar-inner">
+        <a href="#/bank" class="brand" aria-label="知面陪练首页">
+          <span class="brand-badge">知面</span>
+          <span class="brand-title">知面陪练</span>
+          <span class="brand-sub">知乎黑客松 S3 · 菜菜队</span>
+        </a>
+
+        <nav class="nav-tabs" aria-label="主导航">
+          <a href="#/bank" class="nav-link" data-route="bank">题库首页</a>
+          <a href="#/coach" class="nav-link" data-route="coach">陪练室</a>
+          <a href="#/review" class="nav-link" data-route="review">复盘台</a>
+          <a href="#/explain" class="nav-link" data-route="explain">讲解室</a>
+          <a href="#/ledger" class="nav-link" data-route="ledger">弹药库台账 <span id="nav-review-badge" class="badge-count" hidden>0</span></a>
+        </nav>
+
+        <div class="topbar-actions">
+          <span id="system-status-pill" class="status-pill status-checking" title="BFF 后端与知乎接口连通性">检测服务中…</span>
+          <button id="btn-export-data" class="btn btn-ghost btn-sm" type="button" title="导出本地 IndexedDB 全量备份">导出数据</button>
+          <label class="btn btn-ghost btn-sm" title="导入 JSON 备份">
+            导入
+            <input id="input-import-data" type="file" accept="application/json" hidden />
+          </label>
+        </div>
+      </div>
+    </header>
+
+    <!-- 全局降级/异常横幅（显式提示，绝不静默失败） -->
+    <div id="degraded-banner" class="degraded-banner" role="status" aria-live="polite" hidden>
+      <span class="degraded-icon">⚠</span>
+      <span id="degraded-text">当前处于本地离线兜底模式</span>
+      <button id="btn-dismiss-banner" class="btn-icon" type="button" aria-label="关闭提示">✕</button>
+    </div>
+
+    <!-- 主视图挂载区 -->
+    <main id="screen-root" class="main-container" role="main" tabindex="-1">
+      <div class="skeleton-loader">
+        <div class="skeleton-bar w-60"></div>
+        <div class="skeleton-bar w-90"></div>
+        <div class="skeleton-grid">
+          <div class="skeleton-card"></div>
+          <div class="skeleton-card"></div>
+        </div>
+      </div>
+    </main>
+
+    <!-- 底部说明与隐私声明 -->
+    <footer class="footer">
+      <div class="footer-inner">
+        <span>闭环：读懂 → 说清 → 被追问 → 查清楚</span>
+        <span>·</span>
+        <span>隐私承诺：所有录音、转写稿、答题记录与上传文档仅存本地浏览器 IndexedDB，服务端零落盘</span>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Citation 原文片段抽屉 / 弹窗 -->
+  <div id="citation-modal" class="modal-backdrop" hidden role="dialog" aria-modal="true" aria-labelledby="citation-modal-title">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 id="citation-modal-title">引用来源原文对照</h3>
+        <button id="btn-close-citation" class="btn-icon" type="button" aria-label="关闭">✕</button>
+      </div>
+      <div id="citation-modal-body" class="modal-body"></div>
+    </div>
+  </div>
+
+  <!-- Toast 容器 -->
+  <div id="toast-container" class="toast-container" aria-live="polite"></div>
+
+  <script type="module" src="./js/app.js"></script>
+</body>
+</html>

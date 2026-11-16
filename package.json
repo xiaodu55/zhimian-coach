@@ -1,0 +1,16 @@
+{
+  "name": "zhimian-coach-monorepo",
+  "private": true,
+  "version": "0.2.0",
+  "scripts": {
+    "dev": "pnpm --filter @zhimian/bff dev",
+    "build:bank": "pnpm --filter @zhimian/build-bank start",
+    "check:secrets": "node scripts/check-secrets.mjs",
+    "dev:port": "pnpm --filter @zhimian/bff exec tsx src/index.ts --port",
+    "build:bff": "pnpm --filter @zhimian/bff build",
+    "start": "pnpm --filter @zhimian/bff start:dist",
+    "bank:questions": "node scripts/build-bank/questions.mjs",
+    "bank:cards": "node scripts/build-bank/cards.mjs",
+    "bank:to-v02": "node scripts/build-bank/to-v02.mjs"
+  }
+}

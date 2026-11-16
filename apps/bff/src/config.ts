@@ -1,0 +1,37 @@
+import dotenv from 'dotenv';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+dotenv.config({ path: path.resolve(__dirname, '../../../.env') });
+
+// 优先级：--port 参数 > PORT 环境变量 > 8787（便于同机并行起多实例）
+function readArgPort(): number | null {
+  const idx = process.argv.indexOf('--port');
+  if (idx === -1) return null;
+  const n = Number(process.argv[idx + 1]);
+  return Number.isInteger(n) && n > 0 && n < 65536 ? n : null;
+}
+
+export const config = {
+  port: readArgPort() ?? Number(process.env.PORT || 8787),
+  nodeEnv: process.env.NODE_ENV || 'development',
+  zhihuAccessSecret: (process.env.ZHIHU_ACCESS_SECRET || '').trim(),
+  llmBaseUrl: (process.env.LLM_BASE_URL || 'https://api.minimax.chat/v1').replace(/\/$/, ''),
+  llmApiKey: (process.env.LLM_API_KEY || '').trim(),
+  llmModel: (process.env.LLM_MODEL || 'MiniMax-Text-01').trim(),
+  cacheTtlMs: Number(process.env.CACHE_TTL_HOURS || 24) * 3600 * 1000,
+  oauthAppId: (process.env.OAUTH_APP_ID || '').trim(),
+  oauthAppKey: (process.env.OAUTH_APP_KEY || '').trim(),
+  oauthRedirectUri: (process.env.OAUTH_REDIRECT_URI || '').trim(),
+  webRoot: path.resolve(__dirname, '../../web'),
+  bankFilePath: path.resolve(__dirname, '../../web/data/question-bank.json')
+};
+
+export function hasZhihuSecret(): boolean {
+  return config.zhihuAccessSecret.length > 0;
+}
+
+export function hasLlmKey(): boolean {
+  return config.llmApiKey.length > 0;
+}

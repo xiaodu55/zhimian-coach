@@ -1,0 +1,2798 @@
+{
+  "version": "0.2.0-real",
+  "generatedAt": "2026-11-16T14:06:49.703Z",
+  "note": "真题来自知乎开放平台（question_recommendations + question_answers），观点卡由直答生成并逐字校验 evidence",
+  "questions": [
+    {
+      "id": "q_1",
+      "track": "面试通用",
+      "difficulty": "进阶",
+      "title": "大厂员工吐槽新来的校招生特别mean，被回复不mean根本过不了面试，真的吗？面试到底在选什么样的人？",
+      "context": "考的是能否区分面试中的博弈能力与为人处世的刻薄，以及理解面试筛选标准的阶段性变化",
+      "keywords": [
+        "本质不同派",
+        "只说对一半",
+        "阶段演化派",
+        "反怼录取派",
+        "大厂",
+        "厂员",
+        "员工",
+        "工吐",
+        "吐槽",
+        "槽新"
+      ],
+      "expectedLength": [
+        150,
+        400
+      ],
+      "skeleton": [
+        "开口先复述问题，确认你听到的是同一件事",
+        "给一个可核对数字（影响面 / 耗时 / 覆盖率）并说明口径与基线",
+        "说明你的判断与取舍：为什么这么做、还有什么选项",
+        "收尾落到结果：变化了多少，谁验收过",
+        "注意避开：把博弈能力等同刻薄",
+        "注意避开：用单一案例推普遍规律"
+      ],
+      "viewpointCards": [
+        {
+          "id": "q_1-vp-1",
+          "stance": "本质不同派",
+          "summary": "面试需要的是博弈能力，与为人处事的mean看着像本质不同，不能混为一谈",
+          "evidenceQuote": "但要分清面试需要的博弈能力和为人处事的mean，二者看着像，本质完全不是一回事。",
+          "sourceUrl": "https://www.zhihu.com/question/2094093125488566874/answer/2094459908942984842",
+          "author": "",
+          "upvotes": 0,
+          "popularity": "主流"
+        },
+        {
+          "id": "q_1-vp-2",
+          "stance": "只说对一半",
+          "summary": "面试官找的是能扛事、敢拼、能承压的特质，mean只是火候没掌握好的外在表现",
+          "evidenceQuote": "这个题目里的mean是被吐槽的应届生带给旁人的一种感受，他大概率具备了HR想找的那些特质，但平时为人处世的时候“火候”没掌握好。",
+          "sourceUrl": "https://www.zhihu.com/question/2094093125488566874/answer/2095538323678875714",
+          "author": "",
+          "upvotes": 0,
+          "popularity": "主流"
+        },
+        {
+          "id": "q_1-vp-3",
+          "stance": "阶段演化派",
+          "summary": "面试筛选标准随环境变化，不同阶段对应企业不同发展时期，并非一成不变",
+          "evidenceQuote": "面试筛选人这个事，也是随着环境变的，并不是一尘不变的。 就我工作的这十几年，我发",
+          "sourceUrl": "https://www.zhihu.com/question/2094093125488566874/answer/2094436375122687662",
+          "author": "",
+          "upvotes": 0,
+          "popularity": "主流"
+        },
+        {
+          "id": "q_1-vp-4",
+          "stance": "反怼录取派",
+          "summary": "案例中唯一反怼面试官的同学被录取，说明压力面下敢于对抗也可能被看重",
+          "evidenceQuote": "唯独有一个同学不服气，站起来反怼了面试官一顿，然后他就被录取了。",
+          "sourceUrl": "https://www.zhihu.com/question/2094093125488566874/answer/2094109481068130419",
+          "author": "",
+          "upvotes": 0,
+          "popularity": "少数派"
+        }
+      ],
+      "questionUrl": "https://www.zhihu.com/question/2094093125488566874",
+      "sources": [
+        {
+          "url": "https://www.zhihu.com/question/2094093125488566874/answer/2094109481068130419",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/2094093125488566874/answer/2095538323678875714",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/2094093125488566874/answer/2094436375122687662",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/2094093125488566874/answer/2094459908942984842",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/2094093125488566874/answer/2094545192460215132",
+          "author": "",
+          "votes": null
+        }
+      ]
+    },
+    {
+      "id": "q_2",
+      "track": "面试通用",
+      "difficulty": "进阶",
+      "title": "面试需要准备什么，想知道?",
+      "context": "考察面试准备的系统性拆解能力与对求职心态的真实理解",
+      "keywords": [
+        "五维结构化准备",
+        "先调研公司与岗位",
+        "准备常见问题",
+        "主动心态优先",
+        "面试",
+        "试需",
+        "需要",
+        "要准",
+        "准备",
+        "备什"
+      ],
+      "expectedLength": [
+        150,
+        400
+      ],
+      "skeleton": [
+        "开口先复述问题，确认你听到的是同一件事",
+        "给一个可核对数字（影响面 / 耗时 / 覆盖率）并说明口径与基线",
+        "说明你的判断与取舍：为什么这么做、还有什么选项",
+        "收尾落到结果：变化了多少，谁验收过",
+        "注意避开：海投不做准备",
+        "注意避开：把面试当碰运气"
+      ],
+      "viewpointCards": [
+        {
+          "id": "q_2-vp-1",
+          "stance": "五维结构化准备",
+          "summary": "面试准备可分为材料、形象、内容、问题、心态五个方面系统推进",
+          "evidenceQuote": "面试前准备主要是五个方面，一是材料准备；二是形象准备；三是内容准备；四是问题准备；五是心态准备。",
+          "sourceUrl": "https://www.zhihu.com/question/1928823612443460910/answer/1931612698254226045",
+          "author": "",
+          "upvotes": 0,
+          "popularity": "主流"
+        },
+        {
+          "id": "q_2-vp-2",
+          "stance": "先调研公司与岗位",
+          "summary": "面试前先上网了解应聘公司的行业、业务、产品及岗位要求",
+          "evidenceQuote": "一、面前前了解所应聘的公司:上网查询所应聘公司的情况，了解行业概况、公司业务板块、公司产品动态等。",
+          "sourceUrl": "https://www.zhihu.com/question/1928823612443460910/answer/1981340719248589634",
+          "author": "",
+          "upvotes": 0,
+          "popularity": "主流"
+        },
+        {
+          "id": "q_2-vp-3",
+          "stance": "准备常见问题",
+          "summary": "提前梳理自我介绍等常见面试问题并准备对应回答",
+          "evidenceQuote": "1.请简单做个自我介绍（将时间控制在3分钟内）？（有必要的提前准备英文的自我介绍）",
+          "sourceUrl": "https://www.zhihu.com/question/1928823612443460910/answer/1929067664606725831",
+          "author": "",
+          "upvotes": 0,
+          "popularity": "主流"
+        },
+        {
+          "id": "q_2-vp-4",
+          "stance": "主动心态优先",
+          "summary": "找工作过程中最重要的是主动的心态，而非被动等待",
+          "evidenceQuote": "在找工作的过程中最重要的心态是什么？两个字告诉你：主动。",
+          "sourceUrl": "https://www.zhihu.com/question/1928823612443460910/answer/1936099976607434640",
+          "author": "",
+          "upvotes": 0,
+          "popularity": "少数派"
+        }
+      ],
+      "questionUrl": "https://www.zhihu.com/question/1928823612443460910",
+      "sources": [
+        {
+          "url": "https://www.zhihu.com/question/1928823612443460910/answer/1931612698254226045",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/1928823612443460910/answer/1981340719248589634",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/1928823612443460910/answer/1929067664606725831",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/1928823612443460910/answer/1936099976607434640",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/1928823612443460910/answer/1983579583153452849",
+          "author": "",
+          "votes": null
+        }
+      ]
+    },
+    {
+      "id": "q_3",
+      "track": "面试通用",
+      "difficulty": "进阶",
+      "title": "我想考公但是我又害怕面试怎么办?",
+      "context": "考公面试恐惧多源于对流程规则的不了解，破恐惧要先认知再行动",
+      "keywords": [
+        "先懂规则再备战",
+        "考官抽签保公平",
+        "把面试当聊天",
+        "别因害怕而放弃",
+        "我想",
+        "想考",
+        "考公",
+        "公但",
+        "但是",
+        "是我"
+      ],
+      "expectedLength": [
+        150,
+        400
+      ],
+      "skeleton": [
+        "开口先复述问题，确认你听到的是同一件事",
+        "给一个可核对数字（影响面 / 耗时 / 覆盖率）并说明口径与基线",
+        "说明你的判断与取舍：为什么这么做、还有什么选项",
+        "收尾落到结果：变化了多少，谁验收过",
+        "注意避开：误以为面试可走后门",
+        "注意避开：把面试当成考试硬背"
+      ],
+      "viewpointCards": [
+        {
+          "id": "q_3-vp-1",
+          "stance": "先懂规则再备战",
+          "summary": "恐惧来自未知，先弄清考公流程与结构化面试规则，问题就消解大半",
+          "evidenceQuote": "你不是害怕面试，而是压根不了解考公流程与规则。",
+          "sourceUrl": "https://www.zhihu.com/question/1924780442512500466/answer/2098745996230520911",
+          "author": "",
+          "upvotes": 0,
+          "popularity": "主流"
+        },
+        {
+          "id": "q_3-vp-2",
+          "stance": "考官抽签保公平",
+          "summary": "面试考官从考官库随机抽签、集中培训，不必担心有人走门路",
+          "evidenceQuote": "担任面试考官，都是从人事部门「考官库」中抽签的。",
+          "sourceUrl": "https://www.zhihu.com/question/1924780442512500466/answer/1947455940409403279",
+          "author": "",
+          "upvotes": 0,
+          "popularity": "主流"
+        },
+        {
+          "id": "q_3-vp-3",
+          "stance": "把面试当聊天",
+          "summary": "转换心态，把面试看作一次双向选择的聊天，自信从容做自己",
+          "evidenceQuote": "别把面试当考试，当做一次聊天换个角度看问题",
+          "sourceUrl": "https://www.zhihu.com/question/1924780442512500466/answer/1949135928321900624",
+          "author": "",
+          "upvotes": 0,
+          "popularity": "主流"
+        },
+        {
+          "id": "q_3-vp-4",
+          "stance": "别因害怕而放弃",
+          "summary": "笔试才是最难的关卡，因害怕面试而放弃考公是因噎废食",
+          "evidenceQuote": "完全没必要因害怕面试，而因噎废食吧？",
+          "sourceUrl": "https://www.zhihu.com/question/1924780442512500466/answer/1947183601302079486",
+          "author": "",
+          "upvotes": 0,
+          "popularity": "少数派"
+        }
+      ],
+      "questionUrl": "https://www.zhihu.com/question/1924780442512500466",
+      "sources": [
+        {
+          "url": "https://www.zhihu.com/question/1924780442512500466/answer/1947455940409403279",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/1924780442512500466/answer/2098745996230520911",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/1924780442512500466/answer/1946964484942980176",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/1924780442512500466/answer/1949135928321900624",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/1924780442512500466/answer/1947183601302079486",
+          "author": "",
+          "votes": null
+        }
+      ]
+    },
+    {
+      "id": "q_4",
+      "track": "面试通用",
+      "difficulty": "进阶",
+      "title": "当面试被问「你手上还有其它 offer 吗」我们该如何应答？",
+      "context": "考查求职者的市场价值、求职诚意与谈判筹码，而非简单报数。",
+      "keywords": [
+        "如实但有技巧",
+        "模糊留悬念",
+        "先摸清意图",
+        "反演技派",
+        "当面",
+        "面试",
+        "试被",
+        "被问",
+        "问你",
+        "你手"
+      ],
+      "expectedLength": [
+        150,
+        400
+      ],
+      "skeleton": [
+        "开口先复述问题，确认你听到的是同一件事",
+        "给一个可核对数字（影响面 / 耗时 / 覆盖率）并说明口径与基线",
+        "说明你的判断与取舍：为什么这么做、还有什么选项",
+        "收尾落到结果：变化了多少，谁验收过",
+        "注意避开：直接报有或没有",
+        "注意避开：编造offer抬身价"
+      ],
+      "viewpointCards": [
+        {
+          "id": "q_4-vp-1",
+          "stance": "如实但有技巧",
+          "summary": "不赞成刻意演戏编造，应如实回答但讲究表达方式。",
+          "evidenceQuote": "个人观点：如实回答，但要讲技巧。我不赞成在面试中去刻意演戏",
+          "sourceUrl": "https://www.zhihu.com/question/5698418860/answer/2093317489639925740",
+          "author": "",
+          "upvotes": 0,
+          "popularity": "主流"
+        },
+        {
+          "id": "q_4-vp-2",
+          "stance": "模糊留悬念",
+          "summary": "不直接说有或没有，既给希望又制造稀缺感。",
+          "evidenceQuote": "你不能直接回答有or没有，你既要给对方希望，又要制造稀缺感，让对方对你重视。",
+          "sourceUrl": "https://www.zhihu.com/question/5698418860/answer/2095557534929122879",
+          "author": "",
+          "upvotes": 0,
+          "popularity": "主流"
+        },
+        {
+          "id": "q_4-vp-3",
+          "stance": "先摸清意图",
+          "summary": "关键不在报数，而在理解面试官掂量分量的意图。",
+          "evidenceQuote": "其实不是想听你报个数，只是想掂一掂你的分量。",
+          "sourceUrl": "https://www.zhihu.com/question/5698418860/answer/2095417055344445420",
+          "author": "",
+          "upvotes": 0,
+          "popularity": "主流"
+        },
+        {
+          "id": "q_4-vp-4",
+          "stance": "反演技派",
+          "summary": "反对迷信演技抬价，认为编造offer风险高且易被识破。",
+          "evidenceQuote": "别迷信“人生如戏，全靠演技”，千万不要高估自己的演技。",
+          "sourceUrl": "https://www.zhihu.com/question/5698418860/answer/2093317489639925740",
+          "author": "",
+          "upvotes": 0,
+          "popularity": "少数派"
+        }
+      ],
+      "questionUrl": "https://www.zhihu.com/question/5698418860",
+      "sources": [
+        {
+          "url": "https://www.zhihu.com/question/5698418860/answer/2095417055344445420",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/5698418860/answer/2095557534929122879",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/5698418860/answer/2093317489639925740",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/5698418860/answer/49187327424",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/5698418860/answer/47481064405",
+          "author": "",
+          "votes": null
+        }
+      ]
+    },
+    {
+      "id": "q_20",
+      "track": "面试通用",
+      "difficulty": "进阶",
+      "title": "面试短时间内怎么能看出一个人能力怎样？",
+      "context": "考察能否在短时面试中区分经验真伪、思维结构与岗位匹配，而非追求一眼识人",
+      "keywords": [
+        "接受局限派",
+        "风险排除派",
+        "结构表达派",
+        "包装难防派",
+        "面试",
+        "试短",
+        "短时",
+        "时间",
+        "间内",
+        "内怎"
+      ],
+      "expectedLength": [
+        150,
+        400
+      ],
+      "skeleton": [
+        "开口先复述问题，确认你听到的是同一件事",
+        "给一个可核对数字（影响面 / 耗时 / 覆盖率）并说明口径与基线",
+        "说明你的判断与取舍：为什么这么做、还有什么选项",
+        "收尾落到结果：变化了多少，谁验收过",
+        "注意避开：把面试当终审",
+        "注意避开：被简历大词带偏"
+      ],
+      "viewpointCards": [
+        {
+          "id": "q_20-vp-1",
+          "stance": "接受局限派",
+          "summary": "几十分钟只能判断经验真实性、思考方式和匹配度，深层特质需背调与试用期验证",
+          "evidenceQuote": "几十分钟只能判断候选人的经验真实性、思考方式、表达能力和岗位匹配度。",
+          "sourceUrl": "https://www.zhihu.com/question/2046326440946299352/answer/2062811627016151256",
+          "author": "",
+          "upvotes": 0,
+          "popularity": "主流"
+        },
+        {
+          "id": "q_20-vp-2",
+          "stance": "风险排除派",
+          "summary": "短面试的价值在于筛掉明显不合适的人，而非找到最合适的人",
+          "evidenceQuote": "面试其实更多的是 识别风险，也就是筛掉那些不合适的人",
+          "sourceUrl": "https://www.zhihu.com/question/2046326440946299352/answer/2048690430531965340",
+          "author": "",
+          "upvotes": 0,
+          "popularity": "主流"
+        },
+        {
+          "id": "q_20-vp-3",
+          "stance": "结构表达派",
+          "summary": "看说话有无结构，强者讲事实细节，弱者堆砌形容词",
+          "evidenceQuote": "能力弱的人喜欢堆砌形容词（“我学习能力强”“我抗压”）。",
+          "sourceUrl": "https://www.zhihu.com/question/2046326440946299352/answer/2087200692733846337",
+          "author": "",
+          "upvotes": 0,
+          "popularity": "主流"
+        },
+        {
+          "id": "q_20-vp-4",
+          "stance": "包装难防派",
+          "summary": "候选人普遍背诵话术精心包装，面试官难免被伪装者蒙蔽",
+          "evidenceQuote": "根本没有充足时间去长期考察一个人的真实能力。",
+          "sourceUrl": "https://www.zhihu.com/question/2046326440946299352/answer/2049542487778259765",
+          "author": "",
+          "upvotes": 0,
+          "popularity": "少数派"
+        }
+      ],
+      "questionUrl": "https://www.zhihu.com/question/2046326440946299352",
+      "sources": [
+        {
+          "url": "https://www.zhihu.com/question/2046326440946299352/answer/2049542487778259765",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/2046326440946299352/answer/2103065060671218145",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/2046326440946299352/answer/2048690430531965340",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/2046326440946299352/answer/2062811627016151256",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/2046326440946299352/answer/2087200692733846337",
+          "author": "",
+          "votes": null
+        }
+      ]
+    },
+    {
+      "id": "q_22",
+      "track": "面试通用",
+      "difficulty": "进阶",
+      "title": "要面试了，紧张，怎么办？",
+      "context": "考的是能否把紧张从情绪问题转化为可操作的准备与视角调整问题",
+      "keywords": [
+        "重视属正常",
+        "充分准备派",
+        "降低后果",
+        "紧张不可治",
+        "要面",
+        "面试",
+        "试了",
+        "了紧",
+        "紧张",
+        "张怎"
+      ],
+      "expectedLength": [
+        150,
+        400
+      ],
+      "skeleton": [
+        "开口先复述问题，确认你听到的是同一件事",
+        "给一个可核对数字（影响面 / 耗时 / 覆盖率）并说明口径与基线",
+        "说明你的判断与取舍：为什么这么做、还有什么选项",
+        "收尾落到结果：变化了多少，谁验收过",
+        "注意避开：只劝别紧张",
+        "注意避开：忽视准备"
+      ],
+      "viewpointCards": [
+        {
+          "id": "q_22-vp-1",
+          "stance": "重视属正常",
+          "summary": "紧张源于对面试重要性的判断，重视关键机会时紧张是正常反应",
+          "evidenceQuote": "如果是面试的安排会让人紧张，基本上可以判定这个面试比较重要",
+          "sourceUrl": "https://www.zhihu.com/question/2096788082855098365/answer/2097824726395765018",
+          "author": "",
+          "upvotes": 0,
+          "popularity": "主流"
+        },
+        {
+          "id": "q_22-vp-2",
+          "stance": "充分准备派",
+          "summary": "紧张属正常不必焦虑，准备充分的求职者表现更好、少出差错",
+          "evidenceQuote": "我觉得要面试感觉到紧张是很正常的情况，不要过于的担忧和焦虑",
+          "sourceUrl": "https://www.zhihu.com/question/2096788082855098365/answer/2097798037988971126",
+          "author": "",
+          "upvotes": 0,
+          "popularity": "主流"
+        },
+        {
+          "id": "q_22-vp-3",
+          "stance": "降低后果",
+          "summary": "把最坏结果想清楚，淘汰并非大事，以此卸下心理负担",
+          "evidenceQuote": "最坏的结果不就是被淘汰，浪费点时间，又不是什么大事？",
+          "sourceUrl": "https://www.zhihu.com/question/2096788082855098365/answer/2097224321148236820",
+          "author": "",
+          "upvotes": 0,
+          "popularity": "主流"
+        },
+        {
+          "id": "q_22-vp-4",
+          "stance": "紧张不可治",
+          "summary": "紧张无法根除，关键是弄懂面试官在那几分钟里看什么",
+          "evidenceQuote": "紧张这事儿治不了。能治的是，你知道对面那三分钟在看什么。",
+          "sourceUrl": "https://www.zhihu.com/question/2096788082855098365/answer/2096924425899749885",
+          "author": "",
+          "upvotes": 0,
+          "popularity": "少数派"
+        }
+      ],
+      "questionUrl": "https://www.zhihu.com/question/2096788082855098365",
+      "sources": [
+        {
+          "url": "https://www.zhihu.com/question/2096788082855098365/answer/2097824726395765018",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/2096788082855098365/answer/2097224321148236820",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/2096788082855098365/answer/2097798037988971126",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/2096788082855098365/answer/2097708234744375154",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/2096788082855098365/answer/2096924425899749885",
+          "author": "",
+          "votes": null
+        }
+      ]
+    },
+    {
+      "id": "q_23",
+      "track": "面试通用",
+      "difficulty": "进阶",
+      "title": "和HR已经约好面试时间，但是等你到现场的时候，发现面试官迟迟不到，一等就是一个多小时，那个怎么处理？",
+      "context": "考察面对面试官严重迟到时的情绪管理与关系判断能力，而非单纯忍让或发火。",
+      "keywords": [
+        "评估公司",
+        "果断避坑",
+        "合理表达",
+        "三方归因",
+        "和H",
+        "HR",
+        "R已",
+        "已经",
+        "经约",
+        "约好"
+      ],
+      "expectedLength": [
+        150,
+        400
+      ],
+      "skeleton": [
+        "开口先复述问题，确认你听到的是同一件事",
+        "给一个可核对数字（影响面 / 耗时 / 覆盖率）并说明口径与基线",
+        "说明你的判断与取舍：为什么这么做、还有什么选项",
+        "收尾落到结果：变化了多少，谁验收过",
+        "注意避开：现场情绪爆发",
+        "注意避开：全程沉默干等"
+      ],
+      "viewpointCards": [
+        {
+          "id": "q_23-vp-1",
+          "stance": "评估公司",
+          "summary": "借HR言行判断公司是否值得继续，认可公司才谈后续面试。",
+          "evidenceQuote": "但前提条件是，你对这家公司足够认可的情况下，再去沟通之后的面试时间。",
+          "sourceUrl": "https://www.zhihu.com/question/12263145390/answer/103239294326",
+          "author": "",
+          "upvotes": 0,
+          "popularity": "主流"
+        },
+        {
+          "id": "q_23-vp-2",
+          "stance": "果断避坑",
+          "summary": "单向要求守时却让候选久等，反映公司双标，应尽快放弃。",
+          "evidenceQuote": "这样的公司还不快跑，哪怕他是大公司！",
+          "sourceUrl": "https://www.zhihu.com/question/12263145390/answer/104608321237",
+          "author": "",
+          "upvotes": 0,
+          "popularity": "主流"
+        },
+        {
+          "id": "q_23-vp-3",
+          "stance": "合理表达",
+          "summary": "在有限忍耐时间内合理表达不满，不必一味隐忍等待。",
+          "evidenceQuote": "在我有限的忍耐时间内，我也合理表达了自己的愤怒。",
+          "sourceUrl": "https://www.zhihu.com/question/12263145390/answer/2025865512672864217",
+          "author": "",
+          "upvotes": 0,
+          "popularity": "少数派"
+        },
+        {
+          "id": "q_23-vp-4",
+          "stance": "三方归因",
+          "summary": "HR、候选人与面试官三方都有问题，应就事论事分析。",
+          "evidenceQuote": "这件事情，HR、候选人、面试官三方其实都有问题：",
+          "sourceUrl": "https://www.zhihu.com/question/12263145390/answer/2049435990721409081",
+          "author": "",
+          "upvotes": 0,
+          "popularity": "主流"
+        }
+      ],
+      "questionUrl": "https://www.zhihu.com/question/12263145390",
+      "sources": [
+        {
+          "url": "https://www.zhihu.com/question/12263145390/answer/2049435990721409081",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/12263145390/answer/103239294326",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/12263145390/answer/104608321237",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/12263145390/answer/2025865512672864217",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/12263145390/answer/1991770032871597447",
+          "author": "",
+          "votes": null
+        }
+      ]
+    },
+    {
+      "id": "q_25",
+      "track": "面试通用",
+      "difficulty": "进阶",
+      "title": "面试中，说话总是打结巴怎么办？",
+      "context": "考查的是被面试者能否稳定、流畅地输出内容，以及卡壳时的临场处理能力",
+      "keywords": [
+        "唯熟练尔派",
+        "停顿替代口头禅",
+        "流畅是及格底线",
+        "反技巧派",
+        "面试",
+        "试中",
+        "中说",
+        "说话",
+        "话总",
+        "总是"
+      ],
+      "expectedLength": [
+        150,
+        400
+      ],
+      "skeleton": [
+        "开口先复述问题，确认你听到的是同一件事",
+        "给一个可核对数字（影响面 / 耗时 / 覆盖率）并说明口径与基线",
+        "说明你的判断与取舍：为什么这么做、还有什么选项",
+        "收尾落到结果：变化了多少，谁验收过",
+        "注意避开：用嗯啊然后掩盖卡壳",
+        "注意避开：只背话术不练表达"
+      ],
+      "viewpointCards": [
+        {
+          "id": "q_25-vp-1",
+          "stance": "唯熟练尔派",
+          "summary": "结巴源于紧张下口脑脱节，核心解法是反复练习缩短思考反应时间",
+          "evidenceQuote": "通过重复练习，缩短自己思考和反应的时间，让大脑和嘴巴能够保持一致的频率。",
+          "sourceUrl": "https://www.zhihu.com/question/1984808264874086733/answer/2031379579198231352",
+          "author": "",
+          "upvotes": 0,
+          "popularity": "主流"
+        },
+        {
+          "id": "q_25-vp-2",
+          "stance": "停顿替代口头禅",
+          "summary": "考官能容忍停顿但反感无意义口头禅，卡壳时应停顿而非嗯啊然后",
+          "evidenceQuote": "考官能容忍你偶尔的停顿，但反感你毫无意义的“口头禅”（嗯、那个、然后）。",
+          "sourceUrl": "https://www.zhihu.com/question/1984808264874086733/answer/2095466877157897186",
+          "author": "",
+          "upvotes": 0,
+          "popularity": "主流"
+        },
+        {
+          "id": "q_25-vp-3",
+          "stance": "流畅是及格底线",
+          "summary": "语言流畅是面试基础，不流畅磕绊通常被判平均分以下",
+          "evidenceQuote": "面试语言一定要流畅，这是基础，我在考场做过记分员",
+          "sourceUrl": "https://www.zhihu.com/question/1984808264874086733/answer/2004606683784181311",
+          "author": "",
+          "upvotes": 0,
+          "popularity": "主流"
+        },
+        {
+          "id": "q_25-vp-4",
+          "stance": "反技巧派",
+          "summary": "靠临时学话术包装口才反而显得油滑不老实，问题不在技巧",
+          "evidenceQuote": "看似非常幽默，但姑娘顿时给你下了一个定义：不老实，油嘴滑舌。",
+          "sourceUrl": "https://www.zhihu.com/question/1984808264874086733/answer/2005591456593777407",
+          "author": "",
+          "upvotes": 0,
+          "popularity": "少数派"
+        }
+      ],
+      "questionUrl": "https://www.zhihu.com/question/1984808264874086733",
+      "sources": [
+        {
+          "url": "https://www.zhihu.com/question/1984808264874086733/answer/2005591456593777407",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/1984808264874086733/answer/2004606683784181311",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/1984808264874086733/answer/2031379579198231352",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/1984808264874086733/answer/2095466877157897186",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/1984808264874086733/answer/2098862788651369793",
+          "author": "",
+          "votes": null
+        }
+      ]
+    },
+    {
+      "id": "q_27",
+      "track": "面试通用",
+      "difficulty": "进阶",
+      "title": "什么信号出现，就该果断选择跳槽？",
+      "context": "考察能否区分「真正该跳槽的结构性信号」与「情绪性冲动」，并给出可判断的离场标准。",
+      "keywords": [
+        "钱断即离",
+        "业务收缩论",
+        "分位判断",
+        "身心先警",
+        "么信",
+        "信号",
+        "号出",
+        "出现",
+        "现就",
+        "就该"
+      ],
+      "expectedLength": [
+        150,
+        400
+      ],
+      "skeleton": [
+        "开口先复述问题，确认你听到的是同一件事",
+        "给一个可核对数字（影响面 / 耗时 / 覆盖率）并说明口径与基线",
+        "说明你的判断与取舍：为什么这么做、还有什么选项",
+        "收尾落到结果：变化了多少，谁验收过",
+        "注意避开：只凭领导态度判断",
+        "注意避开：把犹豫当没信号"
+      ],
+      "viewpointCards": [
+        {
+          "id": "q_27-vp-1",
+          "stance": "钱断即离",
+          "summary": "工资拖欠、发放时间不确定是公司出问题的硬信号，多次出现应立即警惕并考虑离开。",
+          "evidenceQuote": "如果多次出现不能按时发工资，那一定要立刻引起警惕。",
+          "sourceUrl": "https://www.zhihu.com/question/2086577106918564743/answer/2088963612119413794",
+          "author": "",
+          "upvotes": 0,
+          "popularity": "主流"
+        },
+        {
+          "id": "q_27-vp-2",
+          "stance": "业务收缩论",
+          "summary": "核心业务连续无新项目落地、只靠旧业务维持时，后续必然裁员降薪，应提前规划。",
+          "evidenceQuote": "如果是连续半年没有新项目落地，现有的工程陆续收尾，公司不再参与新的招投标，只靠旧的业务维持。",
+          "sourceUrl": "https://www.zhihu.com/question/2086577106918564743/answer/2094049316193178243",
+          "author": "",
+          "upvotes": 0,
+          "popularity": "主流"
+        },
+        {
+          "id": "q_27-vp-3",
+          "stance": "分位判断",
+          "summary": "信号要按所处层级看：高层以失去老板信任为标志，股东矛盾不可调和则公司难正常经营。",
+          "evidenceQuote": "高层职位的基础首先建立在最高管理者和老板对你的信任上，一旦这种信任失去，几乎没有挽回的可能。",
+          "sourceUrl": "https://www.zhihu.com/question/2086577106918564743/answer/2095163153424373475",
+          "author": "",
+          "upvotes": 0,
+          "popularity": "少数派"
+        },
+        {
+          "id": "q_27-vp-4",
+          "stance": "身心先警",
+          "summary": "不必硬猜，身心持续亮红灯是最诚实的离场警报，信号堆积到临界点才促成变动。",
+          "evidenceQuote": "身心持续亮起红灯，这是最诚实的离场警报。",
+          "sourceUrl": "https://www.zhihu.com/question/2086577106918564743/answer/2096757396571959794",
+          "author": "",
+          "upvotes": 0,
+          "popularity": "少数派"
+        }
+      ],
+      "questionUrl": "https://www.zhihu.com/question/2086577106918564743",
+      "sources": [
+        {
+          "url": "https://www.zhihu.com/question/2086577106918564743/answer/2094049316193178243",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/2086577106918564743/answer/2095163153424373475",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/2086577106918564743/answer/2097826869395703183",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/2086577106918564743/answer/2088963612119413794",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/2086577106918564743/answer/2096757396571959794",
+          "author": "",
+          "votes": null
+        }
+      ]
+    },
+    {
+      "id": "q_30",
+      "track": "面试通用",
+      "difficulty": "进阶",
+      "title": "秋招时，我们为什么容易把一份 Offer 当成对自己的评价？",
+      "context": "考察能否跳出个体归因，看清秋招标准化筛选把人变成被评价对象的结构性机制",
+      "keywords": [
+        "筛选机制派",
+        "外部认同派",
+        "同辈比较派",
+        "复盘借鉴派",
+        "秋招",
+        "招时",
+        "时我",
+        "们为",
+        "么容",
+        "容易"
+      ],
+      "expectedLength": [
+        150,
+        400
+      ],
+      "skeleton": [
+        "开口先复述问题，确认你听到的是同一件事",
+        "给一个可核对数字（影响面 / 耗时 / 覆盖率）并说明口径与基线",
+        "说明你的判断与取舍：为什么这么做、还有什么选项",
+        "收尾落到结果：变化了多少，谁验收过",
+        "注意避开：只谈个人心态",
+        "注意避开：忽视筛选结构"
+      ],
+      "viewpointCards": [
+        {
+          "id": "q_30-vp-1",
+          "stance": "筛选机制派",
+          "summary": "秋招像标准化大考，层层过关与否实质在给人排序，所以容易变成自我评定",
+          "evidenceQuote": "它本身就是一长串标准化的筛选：简历初筛、笔试、一轮轮面试，每一关都有人被刷下去。",
+          "sourceUrl": "https://www.zhihu.com/question/2101018127945265844/answer/2105657661815628713",
+          "author": "",
+          "upvotes": 0,
+          "popularity": "主流"
+        },
+        {
+          "id": "q_30-vp-2",
+          "stance": "外部认同派",
+          "summary": "offer是显化的结果，习惯从外部获得评价，offer便成为外部认同的参照",
+          "evidenceQuote": "有结果意味着显化了自己的努力、能力，而我们还是习惯从外部获得评价。",
+          "sourceUrl": "https://www.zhihu.com/question/2101018127945265844/answer/2101311568898270205",
+          "author": "",
+          "upvotes": 0,
+          "popularity": "主流"
+        },
+        {
+          "id": "q_30-vp-3",
+          "stance": "同辈比较派",
+          "summary": "看到同学手握多个offer就觉得自己失败，同辈对照放大了offer的评价意味",
+          "evidenceQuote": "我听到了同宿舍的S同学，已经手握三个Offer了，顿时就觉得自己很失败。",
+          "sourceUrl": "https://www.zhihu.com/question/2101018127945265844/answer/2101703748867441121",
+          "author": "",
+          "upvotes": 0,
+          "popularity": "主流"
+        },
+        {
+          "id": "q_30-vp-4",
+          "stance": "复盘借鉴派",
+          "summary": "反过来主张应适当把offer当评价，借助外部反馈复盘输赢以看清自己",
+          "evidenceQuote": "都应该要适当地把这 offer当成自己的评价，以借助外部评价来更充分了解自己。",
+          "sourceUrl": "https://www.zhihu.com/question/2101018127945265844/answer/2101637626025583333",
+          "author": "",
+          "upvotes": 0,
+          "popularity": "少数派"
+        }
+      ],
+      "questionUrl": "https://www.zhihu.com/question/2101018127945265844",
+      "sources": [
+        {
+          "url": "https://www.zhihu.com/question/2101018127945265844/answer/2101311568898270205",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/2101018127945265844/answer/2101703748867441121",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/2101018127945265844/answer/2101637626025583333",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/2101018127945265844/answer/2105657661815628713",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/2101018127945265844/answer/2105688823803942022",
+          "author": "",
+          "votes": null
+        }
+      ]
+    },
+    {
+      "id": "q_33",
+      "track": "论文/答辩",
+      "difficulty": "进阶",
+      "title": "导师和评委真的能一眼看出来你的毕业论文是AI写的吗？",
+      "context": "考察能否识别AI痕迹与真人写作在逻辑、深度上的差异，而非单纯文字润色",
+      "keywords": [
+        "逻辑难掩",
+        "数学易辨",
+        "导师更熟",
+        "重写可辨",
+        "导师",
+        "师和",
+        "和评",
+        "评委",
+        "委真",
+        "真的"
+      ],
+      "expectedLength": [
+        150,
+        400
+      ],
+      "skeleton": [
+        "开口先复述问题，确认你听到的是同一件事",
+        "给一个可核对数字（影响面 / 耗时 / 覆盖率）并说明口径与基线",
+        "说明方法与边界：什么条件下成立、什么条件下会翻车",
+        "收尾落到结果：变化了多少，谁验收过",
+        "注意避开：只做文字润色",
+        "注意避开：忽视逻辑深度"
+      ],
+      "viewpointCards": [
+        {
+          "id": "q_33-vp-1",
+          "stance": "逻辑难掩",
+          "summary": "AI能润色文字却难达内涵高度，理工科论文文字与逻辑深度绑定，易露破绽",
+          "evidenceQuote": "Ai可以让文字非常牛逼，但是很难把文章的内涵带到和文字一样的高度。",
+          "sourceUrl": "https://www.zhihu.com/question/2027479561852429688/answer/2035152837160780575",
+          "author": "",
+          "upvotes": 0,
+          "popularity": "主流"
+        },
+        {
+          "id": "q_33-vp-2",
+          "stance": "数学易辨",
+          "summary": "数学专业AI描述与人类差异明显，关键步骤处理方式不同，老师大概率一眼看出",
+          "evidenceQuote": "我想老师们大概率是能“一眼看出来”的。",
+          "sourceUrl": "https://www.zhihu.com/question/2027479561852429688/answer/2035983971947915215",
+          "author": "",
+          "upvotes": 0,
+          "popularity": "主流"
+        },
+        {
+          "id": "q_33-vp-3",
+          "stance": "导师更熟",
+          "summary": "导师用AI频率远超学生，熟悉AI感觉，且学生用AI水平低易暴露",
+          "evidenceQuote": "你知道你的导师使用AI的频率是你的多少倍吗？",
+          "sourceUrl": "https://www.zhihu.com/question/2027479561852429688/answer/2028271435903170281",
+          "author": "",
+          "upvotes": 0,
+          "popularity": "主流"
+        },
+        {
+          "id": "q_33-vp-4",
+          "stance": "重写可辨",
+          "summary": "即便自己用AI并重写，重读时仍能感觉哪些是AI生成、哪些是自身思维",
+          "evidenceQuote": "几乎都能感觉到哪些是AI生成的文字。",
+          "sourceUrl": "https://www.zhihu.com/question/2027479561852429688/answer/2036104864284012829",
+          "author": "",
+          "upvotes": 0,
+          "popularity": "少数派"
+        }
+      ],
+      "questionUrl": "https://www.zhihu.com/question/2027479561852429688",
+      "sources": [
+        {
+          "url": "https://www.zhihu.com/question/2027479561852429688/answer/2035152837160780575",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/2027479561852429688/answer/2035983971947915215",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/2027479561852429688/answer/2036104864284012829",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/2027479561852429688/answer/2035635089229476336",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/2027479561852429688/answer/2028271435903170281",
+          "author": "",
+          "votes": null
+        }
+      ]
+    },
+    {
+      "id": "q_19",
+      "track": "面试通用",
+      "difficulty": "进阶",
+      "title": "作为面试官，如何在面试中减少「主观偏见」？",
+      "context": "考察能否在承认偏见难消除的前提下，用结构化与标准化手段把主观判断压到可控范围。",
+      "keywords": [
+        "结构化压偏见",
+        "标准加盲选",
+        "偏见不可消除",
+        "作为",
+        "为面",
+        "面试",
+        "试官",
+        "官如",
+        "何在",
+        "在面"
+      ],
+      "expectedLength": [
+        150,
+        400
+      ],
+      "skeleton": [
+        "开口先复述问题，确认你听到的是同一件事",
+        "给一个可核对数字（影响面 / 耗时 / 覆盖率）并说明口径与基线",
+        "说明你的判断与取舍：为什么这么做、还有什么选项",
+        "收尾落到结果：变化了多少，谁验收过",
+        "注意避开：只喊客观无标准",
+        "注意避开：把客观当唯一目的"
+      ],
+      "viewpointCards": [
+        {
+          "id": "q_19-vp-1",
+          "stance": "结构化压偏见",
+          "summary": "通过结构化面试和规范招聘流程，在可控范围内减少面试官主观性。",
+          "evidenceQuote": "结构化面试，可以在一定范围内减少主观偏见。",
+          "sourceUrl": "https://www.zhihu.com/question/1895491917971681597/answer/1895890362968564632",
+          "author": "",
+          "upvotes": 0,
+          "popularity": "主流"
+        },
+        {
+          "id": "q_19-vp-2",
+          "stance": "标准加盲选",
+          "summary": "先定清晰评分标准，再用盲选隐藏求职者身份信息，落实一视同仁。",
+          "evidenceQuote": "制定标准提前制定清晰的面试标准，明确面试标准和评分体系，确保所有候选人都可以被一视同仁的对待。",
+          "sourceUrl": "https://www.zhihu.com/question/1895491917971681597/answer/1895880759190979620",
+          "author": "",
+          "upvotes": 0,
+          "popularity": "主流"
+        },
+        {
+          "id": "q_19-vp-3",
+          "stance": "偏见不可消除",
+          "summary": "主观偏见是人的出厂设置，完全消除不现实，面试核心是筛选匹配岗位的人。",
+          "evidenceQuote": "「主观偏见」是每个人的“出厂设置”“天赋BUFF” 。",
+          "sourceUrl": "https://www.zhihu.com/question/1895491917971681597/answer/1895521771672815455",
+          "author": "",
+          "upvotes": 0,
+          "popularity": "少数派"
+        }
+      ],
+      "questionUrl": "https://www.zhihu.com/question/1895491917971681597",
+      "sources": [
+        {
+          "url": "https://www.zhihu.com/question/1895491917971681597/answer/1895832052399600061",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/1895491917971681597/answer/1895890362968564632",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/1895491917971681597/answer/1895880759190979620",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/1895491917971681597/answer/1895511729363977848",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/1895491917971681597/answer/1895521771672815455",
+          "author": "",
+          "votes": null
+        }
+      ]
+    },
+    {
+      "id": "q_24",
+      "track": "面试通用",
+      "difficulty": "进阶",
+      "title": "面试时夸大能力，怕连试用期都过不去，还要去上班吗？",
+      "context": "考察的是能否区分适度包装与虚构注水，并对夸大后果做出有底线的行动判断。",
+      "keywords": [
+        "区分程度再定",
+        "主张实干补齐",
+        "行动派主张去",
+        "面试",
+        "试时",
+        "时夸",
+        "夸大",
+        "大能",
+        "能力",
+        "力怕"
+      ],
+      "expectedLength": [
+        150,
+        400
+      ],
+      "skeleton": [
+        "开口先复述问题，确认你听到的是同一件事",
+        "给一个可核对数字（影响面 / 耗时 / 覆盖率）并说明口径与基线",
+        "说明你的判断与取舍：为什么这么做、还有什么选项",
+        "收尾落到结果：变化了多少，谁验收过",
+        "注意避开：夸大与虚构不分",
+        "注意避开：因恐惧放弃机会"
+      ],
+      "viewpointCards": [
+        {
+          "id": "q_24-vp-1",
+          "stance": "区分程度再定",
+          "summary": "先看夸大程度与自身能力，是美化还是虚构，再决定去留。",
+          "evidenceQuote": "可能要看您夸大的程度，以及您自身的能力而定。",
+          "sourceUrl": "https://www.zhihu.com/question/2061554214258599477/answer/2076662382391203712",
+          "author": "",
+          "upvotes": 0,
+          "popularity": "主流"
+        },
+        {
+          "id": "q_24-vp-2",
+          "stance": "主张实干补齐",
+          "summary": "若核心工作短期能跟上就去，试用期少吹牛多实干、补齐落差。",
+          "evidenceQuote": "试用期期间收起浮躁的心，抓紧补齐短板，这期间少吹牛多实干",
+          "sourceUrl": "https://www.zhihu.com/question/2061554214258599477/answer/2064406657644356884",
+          "author": "",
+          "upvotes": 0,
+          "popularity": "主流"
+        },
+        {
+          "id": "q_24-vp-3",
+          "stance": "行动派主张去",
+          "summary": "别被恐惧困住，马上去，用行动把适度夸大变成真实能力。",
+          "evidenceQuote": "我的建议是，去，马上去。",
+          "sourceUrl": "https://www.zhihu.com/question/2061554214258599477/answer/2064352785257308784",
+          "author": "",
+          "upvotes": 0,
+          "popularity": "少数派"
+        }
+      ],
+      "questionUrl": "https://www.zhihu.com/question/2061554214258599477",
+      "sources": [
+        {
+          "url": "https://www.zhihu.com/question/2061554214258599477/answer/2094317517820912582",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/2061554214258599477/answer/2076662382391203712",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/2061554214258599477/answer/2064406657644356884",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/2061554214258599477/answer/2064352785257308784",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/2061554214258599477/answer/2062421340045434984",
+          "author": "",
+          "votes": null
+        }
+      ]
+    },
+    {
+      "id": "q_29",
+      "track": "面试通用",
+      "difficulty": "进阶",
+      "title": "考公、考编和企业秋招同时准备，怎样判断自己更适合哪条路？",
+      "context": "考察能否把多线并行准备的焦虑，转化为基于自我认知与机会试探的路径判断，而非简单比较三条路的优劣。",
+      "keywords": [
+        "先自我后选择",
+        "多投多碰机会",
+        "看土壤适配",
+        "考公",
+        "公考",
+        "考编",
+        "编和",
+        "和企",
+        "企业",
+        "业秋"
+      ],
+      "expectedLength": [
+        150,
+        400
+      ],
+      "skeleton": [
+        "开口先复述问题，确认你听到的是同一件事",
+        "给一个可核对数字（影响面 / 耗时 / 覆盖率）并说明口径与基线",
+        "说明你的判断与取舍：为什么这么做、还有什么选项",
+        "收尾落到结果：变化了多少，谁验收过",
+        "注意避开：只比难度不比适配",
+        "注意避开：预设条件排斥机会"
+      ],
+      "viewpointCards": [
+        {
+          "id": "q_29-vp-1",
+          "stance": "先自我后选择",
+          "summary": "先明确自己要什么、手里有什么，两者交集就是适合的路。",
+          "evidenceQuote": "先想清楚你要什么，再盘一盘你手里有什么，两者的交集，就是最适合你的那条路。",
+          "sourceUrl": "https://www.zhihu.com/question/2096642243906094159/answer/2100850029665826053",
+          "author": "",
+          "upvotes": 0,
+          "popularity": "主流"
+        },
+        {
+          "id": "q_29-vp-2",
+          "stance": "多投多碰机会",
+          "summary": "就业前不宜预设考公考编或企业的条件，应多投简历多触碰机会。",
+          "evidenceQuote": "应当是多撒简历多触碰机会，有可能你的无意间的投递简历就触碰到了机会",
+          "sourceUrl": "https://www.zhihu.com/question/2096642243906094159/answer/2099114850865759841",
+          "author": "",
+          "upvotes": 0,
+          "popularity": "少数派"
+        },
+        {
+          "id": "q_29-vp-3",
+          "stance": "看土壤适配",
+          "summary": "三条路是不同土壤，先弄清自己是什么苗，再判断哪片土壤适合。",
+          "evidenceQuote": "考公、考编、企业秋招，不是三条一样好的路，但它们是三片不一样的土壤。",
+          "sourceUrl": "https://www.zhihu.com/question/2096642243906094159/answer/2104172354649835399",
+          "author": "",
+          "upvotes": 0,
+          "popularity": "主流"
+        }
+      ],
+      "questionUrl": "https://www.zhihu.com/question/2096642243906094159",
+      "sources": [
+        {
+          "url": "https://www.zhihu.com/question/2096642243906094159/answer/2098849898380650107",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/2096642243906094159/answer/2104838049318360547",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/2096642243906094159/answer/2100850029665826053",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/2096642243906094159/answer/2099114850865759841",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/2096642243906094159/answer/2104172354649835399",
+          "author": "",
+          "votes": null
+        }
+      ]
+    },
+    {
+      "id": "q_32",
+      "track": "面试通用",
+      "difficulty": "进阶",
+      "title": "2027年秋招形势怎么样，尤其是计算机行业？",
+      "context": "考察能否区分事实与情绪，结构化分析秋招供需与结构性分化。",
+      "keywords": [
+        "结构性分化",
+        "节奏前移派",
+        "反信息差派",
+        "20",
+        "02",
+        "27",
+        "7年",
+        "年秋",
+        "秋招",
+        "招形"
+      ],
+      "expectedLength": [
+        150,
+        400
+      ],
+      "skeleton": [
+        "开口先复述问题，确认你听到的是同一件事",
+        "给一个可核对数字（影响面 / 耗时 / 覆盖率）并说明口径与基线",
+        "说明你的判断与取舍：为什么这么做、还有什么选项",
+        "收尾落到结果：变化了多少，谁验收过",
+        "注意避开：只看内推广告",
+        "注意避开：把分化当全面收缩"
+      ],
+      "viewpointCards": [
+        {
+          "id": "q_32-vp-1",
+          "stance": "结构性分化",
+          "summary": "计算机秋招整体承压但非全面收缩，传统互联网收缩与AI等硬科技岗位扩张并存。",
+          "evidenceQuote": "传统互联网岗位趋于谨慎，人工智能、云计算、芯片、智能汽车和机器人相关岗位仍在增加",
+          "sourceUrl": "https://www.zhihu.com/question/2042256668021486564/answer/2085814695026607373",
+          "author": "",
+          "upvotes": 0,
+          "popularity": "主流"
+        },
+        {
+          "id": "q_32-vp-2",
+          "stance": "节奏前移派",
+          "summary": "秋招窗口结构性前移、春招萎缩，但不代表9月后没有机会。",
+          "evidenceQuote": "窗口前移不等于9月没机会",
+          "sourceUrl": "https://www.zhihu.com/question/2042256668021486564/answer/2083537190764729014",
+          "author": "",
+          "upvotes": 0,
+          "popularity": "主流"
+        },
+        {
+          "id": "q_32-vp-3",
+          "stance": "反信息差派",
+          "summary": "真正让人掉队的不是信息差，而是收藏后没有后续行动。",
+          "evidenceQuote": "秋招里最容易让人掉队的，往往不是信息差，而是“收藏之后没有下一步”",
+          "sourceUrl": "https://www.zhihu.com/question/2042256668021486564/answer/2070199195479414057",
+          "author": "",
+          "upvotes": 0,
+          "popularity": "少数派"
+        }
+      ],
+      "questionUrl": "https://www.zhihu.com/question/2042256668021486564",
+      "sources": [
+        {
+          "url": "https://www.zhihu.com/question/2042256668021486564/answer/2079185701610971253",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/2042256668021486564/answer/2083537190764729014",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/2042256668021486564/answer/2069346883965817839",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/2042256668021486564/answer/2070199195479414057",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/2042256668021486564/answer/2085814695026607373",
+          "author": "",
+          "votes": null
+        }
+      ]
+    },
+    {
+      "id": "q_5",
+      "track": "面试通用",
+      "difficulty": "进阶",
+      "title": "我42岁的朋友去一家公司面试，面试官说了一句，你都这么大年纪还在找工作？该如何回答？",
+      "context": "考察能否在有分歧的问题上给出有依据、经得起追问的判断。",
+      "keywords": [
+        "我4",
+        "42",
+        "2岁",
+        "岁的",
+        "的朋",
+        "朋友",
+        "友去",
+        "去一",
+        "一家",
+        "家公"
+      ],
+      "expectedLength": [
+        150,
+        400
+      ],
+      "skeleton": [
+        "开口先复述问题，确认你听到的是同一件事",
+        "给一个可核对数字（影响面 / 耗时 / 覆盖率）并说明口径与基线",
+        "说明你的判断与取舍：为什么这么做、还有什么选项",
+        "收尾落到结果：变化了多少，谁验收过"
+      ],
+      "viewpointCards": [],
+      "questionUrl": "https://www.zhihu.com/question/2023309601903322192",
+      "sources": [
+        {
+          "url": "https://www.zhihu.com/question/2023309601903322192/answer/2099863164800209887",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/2023309601903322192/answer/2104463484926932524",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/2023309601903322192/answer/2023358324419097811",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/2023309601903322192/answer/2023402212508836207",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/2023309601903322192/answer/2095181109659227096",
+          "author": "",
+          "votes": null
+        }
+      ]
+    },
+    {
+      "id": "q_6",
+      "track": "面试通用",
+      "difficulty": "进阶",
+      "title": "HR 和你说面试通过，但是又说发 offer 一周流程都走不下来，这正常吗?",
+      "context": "考察能否在有分歧的问题上给出有依据、经得起追问的判断。",
+      "keywords": [
+        "HR",
+        "R和",
+        "和你",
+        "你说",
+        "说面",
+        "面试",
+        "试通",
+        "通过",
+        "过但",
+        "但是"
+      ],
+      "expectedLength": [
+        150,
+        400
+      ],
+      "skeleton": [
+        "开口先复述问题，确认你听到的是同一件事",
+        "给一个可核对数字（影响面 / 耗时 / 覆盖率）并说明口径与基线",
+        "说明你的判断与取舍：为什么这么做、还有什么选项",
+        "收尾落到结果：变化了多少，谁验收过"
+      ],
+      "viewpointCards": [],
+      "questionUrl": "https://www.zhihu.com/question/13665922389",
+      "sources": [
+        {
+          "url": "https://www.zhihu.com/question/13665922389/answer/2047979854549739111",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/13665922389/answer/116828356225",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/13665922389/answer/117068857866",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/13665922389/answer/114880640052",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/13665922389/answer/116820080166",
+          "author": "",
+          "votes": null
+        }
+      ]
+    },
+    {
+      "id": "q_7",
+      "track": "面试通用",
+      "difficulty": "进阶",
+      "title": "面试中遇到面试官提问一些刁钻的或者叼难的问题怎么回好（大家看看下面详情内容描述）？",
+      "context": "考察能否在有分歧的问题上给出有依据、经得起追问的判断。",
+      "keywords": [
+        "面试",
+        "试中",
+        "中遇",
+        "遇到",
+        "到面",
+        "试官",
+        "官提",
+        "提问",
+        "问一",
+        "一些"
+      ],
+      "expectedLength": [
+        150,
+        400
+      ],
+      "skeleton": [
+        "开口先复述问题，确认你听到的是同一件事",
+        "给一个可核对数字（影响面 / 耗时 / 覆盖率）并说明口径与基线",
+        "说明你的判断与取舍：为什么这么做、还有什么选项",
+        "收尾落到结果：变化了多少，谁验收过"
+      ],
+      "viewpointCards": [],
+      "questionUrl": "https://www.zhihu.com/question/2095220567171404759",
+      "sources": [
+        {
+          "url": "https://www.zhihu.com/question/2095220567171404759/answer/2096965799428744055",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/2095220567171404759/answer/2095841252436717716",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/2095220567171404759/answer/2095796415704339698",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/2095220567171404759/answer/2096317094350669419",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/2095220567171404759/answer/2095790261863502247",
+          "author": "",
+          "votes": null
+        }
+      ]
+    },
+    {
+      "id": "q_8",
+      "track": "面试通用",
+      "difficulty": "进阶",
+      "title": "面试为什么会有群面？群面的意义是什么？",
+      "context": "考察能否在有分歧的问题上给出有依据、经得起追问的判断。",
+      "keywords": [
+        "面试",
+        "试为",
+        "么会",
+        "会有",
+        "有群",
+        "群面",
+        "面群",
+        "面的",
+        "的意",
+        "意义"
+      ],
+      "expectedLength": [
+        150,
+        400
+      ],
+      "skeleton": [
+        "开口先复述问题，确认你听到的是同一件事",
+        "给一个可核对数字（影响面 / 耗时 / 覆盖率）并说明口径与基线",
+        "说明你的判断与取舍：为什么这么做、还有什么选项",
+        "收尾落到结果：变化了多少，谁验收过"
+      ],
+      "viewpointCards": [],
+      "questionUrl": "https://www.zhihu.com/question/2076036454556361541",
+      "sources": [
+        {
+          "url": "https://www.zhihu.com/question/2076036454556361541/answer/2087459246472422601",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/2076036454556361541/answer/2076433902579758818",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/2076036454556361541/answer/2083517737972905979",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/2076036454556361541/answer/2086394870500008222",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/2076036454556361541/answer/2086946536374677795",
+          "author": "",
+          "votes": null
+        }
+      ]
+    },
+    {
+      "id": "q_9",
+      "track": "面试通用",
+      "difficulty": "进阶",
+      "title": "当面试官问到「跳槽原因」时，应该怎么回答？",
+      "context": "考察能否在有分歧的问题上给出有依据、经得起追问的判断。",
+      "keywords": [
+        "当面",
+        "面试",
+        "试官",
+        "官问",
+        "问到",
+        "到跳",
+        "跳槽",
+        "槽原",
+        "原因",
+        "因时"
+      ],
+      "expectedLength": [
+        150,
+        400
+      ],
+      "skeleton": [
+        "开口先复述问题，确认你听到的是同一件事",
+        "给一个可核对数字（影响面 / 耗时 / 覆盖率）并说明口径与基线",
+        "说明你的判断与取舍：为什么这么做、还有什么选项",
+        "收尾落到结果：变化了多少，谁验收过"
+      ],
+      "viewpointCards": [],
+      "questionUrl": "https://www.zhihu.com/question/652074142",
+      "sources": [
+        {
+          "url": "https://www.zhihu.com/question/652074142/answer/1983073941758166922",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/652074142/answer/2018589732121101594",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/652074142/answer/2021629187815997749",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/652074142/answer/3468737632",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/652074142/answer/3487172024",
+          "author": "",
+          "votes": null
+        }
+      ]
+    },
+    {
+      "id": "q_10",
+      "track": "面试通用",
+      "difficulty": "进阶",
+      "title": "为什么面试hr总喜欢问离职原因？",
+      "context": "考察能否在有分歧的问题上给出有依据、经得起追问的判断。",
+      "keywords": [
+        "么面",
+        "面试",
+        "试h",
+        "hr",
+        "r总",
+        "总喜",
+        "喜欢",
+        "欢问",
+        "问离",
+        "离职"
+      ],
+      "expectedLength": [
+        150,
+        400
+      ],
+      "skeleton": [
+        "开口先复述问题，确认你听到的是同一件事",
+        "给一个可核对数字（影响面 / 耗时 / 覆盖率）并说明口径与基线",
+        "说明你的判断与取舍：为什么这么做、还有什么选项",
+        "收尾落到结果：变化了多少，谁验收过"
+      ],
+      "viewpointCards": [],
+      "questionUrl": "https://www.zhihu.com/question/1953465644130468918",
+      "sources": [
+        {
+          "url": "https://www.zhihu.com/question/1953465644130468918/answer/2093237135293813839",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/1953465644130468918/answer/1967121005429391515",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/1953465644130468918/answer/2080936297221329635",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/1953465644130468918/answer/1966295680277551021",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/1953465644130468918/answer/1961389203028936217",
+          "author": "",
+          "votes": null
+        }
+      ]
+    },
+    {
+      "id": "q_11",
+      "track": "面试通用",
+      "difficulty": "进阶",
+      "title": "面试时候离职原因怎么说比较体面？",
+      "context": "考察能否在有分歧的问题上给出有依据、经得起追问的判断。",
+      "keywords": [
+        "面试",
+        "试时",
+        "时候",
+        "候离",
+        "离职",
+        "职原",
+        "原因",
+        "因怎",
+        "么说",
+        "说比"
+      ],
+      "expectedLength": [
+        150,
+        400
+      ],
+      "skeleton": [
+        "开口先复述问题，确认你听到的是同一件事",
+        "给一个可核对数字（影响面 / 耗时 / 覆盖率）并说明口径与基线",
+        "说明你的判断与取舍：为什么这么做、还有什么选项",
+        "收尾落到结果：变化了多少，谁验收过"
+      ],
+      "viewpointCards": [],
+      "questionUrl": "https://www.zhihu.com/question/654053077",
+      "sources": [
+        {
+          "url": "https://www.zhihu.com/question/654053077/answer/3494335180",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/654053077/answer/3491294653",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/654053077/answer/3491372803",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/654053077/answer/3491478756",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/654053077/answer/3492443420",
+          "author": "",
+          "votes": null
+        }
+      ]
+    },
+    {
+      "id": "q_12",
+      "track": "面试通用",
+      "difficulty": "进阶",
+      "title": "面试的时候被问离职原因，怎么回答比较好？",
+      "context": "考察能否在有分歧的问题上给出有依据、经得起追问的判断。",
+      "keywords": [
+        "面试",
+        "试的",
+        "的时",
+        "时候",
+        "候被",
+        "被问",
+        "问离",
+        "离职",
+        "职原",
+        "原因"
+      ],
+      "expectedLength": [
+        150,
+        400
+      ],
+      "skeleton": [
+        "开口先复述问题，确认你听到的是同一件事",
+        "给一个可核对数字（影响面 / 耗时 / 覆盖率）并说明口径与基线",
+        "说明你的判断与取舍：为什么这么做、还有什么选项",
+        "收尾落到结果：变化了多少，谁验收过"
+      ],
+      "viewpointCards": [],
+      "questionUrl": "https://www.zhihu.com/question/1906678709269799006",
+      "sources": [
+        {
+          "url": "https://www.zhihu.com/question/1906678709269799006/answer/2102438795044036832",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/1906678709269799006/answer/1955354728708961918",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/1906678709269799006/answer/2094729014023931249",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/1906678709269799006/answer/2105580440673437568",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/1906678709269799006/answer/2103438752995714614",
+          "author": "",
+          "votes": null
+        }
+      ]
+    },
+    {
+      "id": "q_13",
+      "track": "面试通用",
+      "difficulty": "进阶",
+      "title": "在职业生涯中，如何判断是否应该跳槽或离职？决定的核心因素和权衡点有哪些？",
+      "context": "考察能否在有分歧的问题上给出有依据、经得起追问的判断。",
+      "keywords": [
+        "在职",
+        "职业",
+        "业生",
+        "生涯",
+        "涯中",
+        "中如",
+        "何判",
+        "判断",
+        "断是",
+        "否应"
+      ],
+      "expectedLength": [
+        150,
+        400
+      ],
+      "skeleton": [
+        "开口先复述问题，确认你听到的是同一件事",
+        "给一个可核对数字（影响面 / 耗时 / 覆盖率）并说明口径与基线",
+        "说明你的判断与取舍：为什么这么做、还有什么选项",
+        "收尾落到结果：变化了多少，谁验收过"
+      ],
+      "viewpointCards": [],
+      "questionUrl": "https://www.zhihu.com/question/5801884796",
+      "sources": [
+        {
+          "url": "https://www.zhihu.com/question/5801884796/answer/2050486859365720958",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/5801884796/answer/73782044076",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/5801884796/answer/73747781299",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/5801884796/answer/74260781516",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/5801884796/answer/73685591778",
+          "author": "",
+          "votes": null
+        }
+      ]
+    },
+    {
+      "id": "q_14",
+      "track": "面试通用",
+      "difficulty": "进阶",
+      "title": "秋招面试时被问「如果与上级意见不合，你会怎么做」？该如何回答？",
+      "context": "考察能否在有分歧的问题上给出有依据、经得起追问的判断。",
+      "keywords": [
+        "秋招",
+        "招面",
+        "面试",
+        "试时",
+        "时被",
+        "被问",
+        "问如",
+        "如果",
+        "果与",
+        "与上"
+      ],
+      "expectedLength": [
+        150,
+        400
+      ],
+      "skeleton": [
+        "开口先复述问题，确认你听到的是同一件事",
+        "给一个可核对数字（影响面 / 耗时 / 覆盖率）并说明口径与基线",
+        "说明你的判断与取舍：为什么这么做、还有什么选项",
+        "收尾落到结果：变化了多少，谁验收过"
+      ],
+      "viewpointCards": [],
+      "questionUrl": "https://www.zhihu.com/question/5779064611",
+      "sources": [
+        {
+          "url": "https://www.zhihu.com/question/5779064611/answer/47808443489",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/5779064611/answer/46445261277",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/5779064611/answer/48074146389",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/5779064611/answer/47873186297",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/5779064611/answer/48593304924",
+          "author": "",
+          "votes": null
+        }
+      ]
+    },
+    {
+      "id": "q_15",
+      "track": "面试通用",
+      "difficulty": "进阶",
+      "title": "秋招结束还没拿到 offer，接下来先补能力还是继续投？",
+      "context": "考察能否在有分歧的问题上给出有依据、经得起追问的判断。",
+      "keywords": [
+        "秋招",
+        "招结",
+        "结束",
+        "束还",
+        "还没",
+        "没拿",
+        "拿到",
+        "到o",
+        "of",
+        "ff"
+      ],
+      "expectedLength": [
+        150,
+        400
+      ],
+      "skeleton": [
+        "开口先复述问题，确认你听到的是同一件事",
+        "给一个可核对数字（影响面 / 耗时 / 覆盖率）并说明口径与基线",
+        "说明你的判断与取舍：为什么这么做、还有什么选项",
+        "收尾落到结果：变化了多少，谁验收过"
+      ],
+      "viewpointCards": [],
+      "questionUrl": "https://www.zhihu.com/question/2099517835739513045",
+      "sources": [
+        {
+          "url": "https://www.zhihu.com/question/2099517835739513045/answer/2100849760982910436",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/2099517835739513045/answer/2105185829324853631",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/2099517835739513045/answer/2100188982864770660",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/2099517835739513045/answer/2101014835119051705",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/2099517835739513045/answer/2100699153835745507",
+          "author": "",
+          "votes": null
+        }
+      ]
+    },
+    {
+      "id": "q_16",
+      "track": "面试通用",
+      "difficulty": "进阶",
+      "title": "如果给正在秋招的应届生写一封信，但这封信里「不许出现任何建议」，你会怎么写？",
+      "context": "考察能否在有分歧的问题上给出有依据、经得起追问的判断。",
+      "keywords": [
+        "如果",
+        "果给",
+        "给正",
+        "正在",
+        "在秋",
+        "秋招",
+        "招的",
+        "的应",
+        "应届",
+        "届生"
+      ],
+      "expectedLength": [
+        150,
+        400
+      ],
+      "skeleton": [
+        "开口先复述问题，确认你听到的是同一件事",
+        "给一个可核对数字（影响面 / 耗时 / 覆盖率）并说明口径与基线",
+        "说明你的判断与取舍：为什么这么做、还有什么选项",
+        "收尾落到结果：变化了多少，谁验收过"
+      ],
+      "viewpointCards": [],
+      "questionUrl": "https://www.zhihu.com/question/2096976861461063626",
+      "sources": [
+        {
+          "url": "https://www.zhihu.com/question/2096976861461063626/answer/2101606960059757565",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/2096976861461063626/answer/2098362392895926371",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/2096976861461063626/answer/2099108737810284923",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/2096976861461063626/answer/2098439009932521596",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/2096976861461063626/answer/2098678600459347638",
+          "author": "",
+          "votes": null
+        }
+      ]
+    },
+    {
+      "id": "q_17",
+      "track": "面试通用",
+      "difficulty": "进阶",
+      "title": "2027 届秋招和去年相比有哪些新变化？应届生如何调整预期？",
+      "context": "考察能否在有分歧的问题上给出有依据、经得起追问的判断。",
+      "keywords": [
+        "20",
+        "02",
+        "27",
+        "7届",
+        "届秋",
+        "秋招",
+        "招和",
+        "和去",
+        "去年",
+        "年相"
+      ],
+      "expectedLength": [
+        150,
+        400
+      ],
+      "skeleton": [
+        "开口先复述问题，确认你听到的是同一件事",
+        "给一个可核对数字（影响面 / 耗时 / 覆盖率）并说明口径与基线",
+        "说明你的判断与取舍：为什么这么做、还有什么选项",
+        "收尾落到结果：变化了多少，谁验收过"
+      ],
+      "viewpointCards": [],
+      "questionUrl": "https://www.zhihu.com/question/2096642243650180736",
+      "sources": [
+        {
+          "url": "https://www.zhihu.com/question/2096642243650180736/answer/2100156185534112082",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/2096642243650180736/answer/2099142506084618518",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/2096642243650180736/answer/2098107275852387950",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/2096642243650180736/answer/2099113869243429977",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/2096642243650180736/answer/2098721608928060419",
+          "author": "",
+          "votes": null
+        }
+      ]
+    },
+    {
+      "id": "q_18",
+      "track": "面试通用",
+      "difficulty": "进阶",
+      "title": "秋招2027大家都怎么样了？",
+      "context": "考察能否在有分歧的问题上给出有依据、经得起追问的判断。",
+      "keywords": [
+        "秋招",
+        "招2",
+        "20",
+        "02",
+        "27",
+        "7大",
+        "大家",
+        "家都",
+        "都怎",
+        "么样"
+      ],
+      "expectedLength": [
+        150,
+        400
+      ],
+      "skeleton": [
+        "开口先复述问题，确认你听到的是同一件事",
+        "给一个可核对数字（影响面 / 耗时 / 覆盖率）并说明口径与基线",
+        "说明你的判断与取舍：为什么这么做、还有什么选项",
+        "收尾落到结果：变化了多少，谁验收过"
+      ],
+      "viewpointCards": [],
+      "questionUrl": "https://www.zhihu.com/question/2098950710863848420",
+      "sources": [
+        {
+          "url": "https://www.zhihu.com/question/2098950710863848420/answer/2100593709087712283",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/2098950710863848420/answer/2103437282837643302",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/2098950710863848420/answer/2101251683133167168",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/2098950710863848420/answer/2101724929565667935",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/2098950710863848420/answer/2101346003236528987",
+          "author": "",
+          "votes": null
+        }
+      ]
+    },
+    {
+      "id": "q_21",
+      "track": "面试通用",
+      "difficulty": "进阶",
+      "title": "我朋友去面试，面试官大概聊了聊，问他：在100杯水里，有一杯放糖了，你如何快速的找到它？",
+      "context": "考察能否在有分歧的问题上给出有依据、经得起追问的判断。",
+      "keywords": [
+        "我朋",
+        "朋友",
+        "友去",
+        "去面",
+        "面试",
+        "试面",
+        "试官",
+        "官大",
+        "大概",
+        "概聊"
+      ],
+      "expectedLength": [
+        150,
+        400
+      ],
+      "skeleton": [
+        "开口先复述问题，确认你听到的是同一件事",
+        "给一个可核对数字（影响面 / 耗时 / 覆盖率）并说明口径与基线",
+        "说明你的判断与取舍：为什么这么做、还有什么选项",
+        "收尾落到结果：变化了多少，谁验收过"
+      ],
+      "viewpointCards": [],
+      "questionUrl": "https://www.zhihu.com/question/2005279929667956946",
+      "sources": [
+        {
+          "url": "https://www.zhihu.com/question/2005279929667956946/answer/2076310591107604603",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/2005279929667956946/answer/2005359202504315742",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/2005279929667956946/answer/2015349386645873110",
+          "author": "",
+          "votes": null
+        }
+      ]
+    },
+    {
+      "id": "q_26",
+      "track": "面试通用",
+      "difficulty": "进阶",
+      "title": "有没有什么面试的经验和技巧？",
+      "context": "考察能否在有分歧的问题上给出有依据、经得起追问的判断。",
+      "keywords": [
+        "有没",
+        "没有",
+        "有什",
+        "么面",
+        "面试",
+        "试的",
+        "的经",
+        "经验",
+        "验和",
+        "和技"
+      ],
+      "expectedLength": [
+        150,
+        400
+      ],
+      "skeleton": [
+        "开口先复述问题，确认你听到的是同一件事",
+        "给一个可核对数字（影响面 / 耗时 / 覆盖率）并说明口径与基线",
+        "说明你的判断与取舍：为什么这么做、还有什么选项",
+        "收尾落到结果：变化了多少，谁验收过"
+      ],
+      "viewpointCards": [],
+      "questionUrl": "https://www.zhihu.com/question/1964290786905555445",
+      "sources": [
+        {
+          "url": "https://www.zhihu.com/question/1964290786905555445/answer/2004227651594916970",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/1964290786905555445/answer/2076987301952071403",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/1964290786905555445/answer/1968997441396274193",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/1964290786905555445/answer/1970207805819585794",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/1964290786905555445/answer/2067622840363492448",
+          "author": "",
+          "votes": null
+        }
+      ]
+    },
+    {
+      "id": "q_28",
+      "track": "面试通用",
+      "difficulty": "进阶",
+      "title": "如果只能让正在秋招的应届生看见你工作中的一天，你会选哪一天？",
+      "context": "考察能否在有分歧的问题上给出有依据、经得起追问的判断。",
+      "keywords": [
+        "如果",
+        "果只",
+        "只能",
+        "能让",
+        "让正",
+        "正在",
+        "在秋",
+        "秋招",
+        "招的",
+        "的应"
+      ],
+      "expectedLength": [
+        150,
+        400
+      ],
+      "skeleton": [
+        "开口先复述问题，确认你听到的是同一件事",
+        "给一个可核对数字（影响面 / 耗时 / 覆盖率）并说明口径与基线",
+        "说明你的判断与取舍：为什么这么做、还有什么选项",
+        "收尾落到结果：变化了多少，谁验收过"
+      ],
+      "viewpointCards": [],
+      "questionUrl": "https://www.zhihu.com/question/2100685759950709737",
+      "sources": [
+        {
+          "url": "https://www.zhihu.com/question/2100685759950709737/answer/2102339779769656300",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/2100685759950709737/answer/2100936992041203438",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/2100685759950709737/answer/2100763040413128640",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/2100685759950709737/answer/2105316939090359065",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/2100685759950709737/answer/2100962668286850591",
+          "author": "",
+          "votes": null
+        }
+      ]
+    },
+    {
+      "id": "q_31",
+      "track": "面试通用",
+      "difficulty": "进阶",
+      "title": "请复盘一下纳什均衡10.18一周的推演做出反馈？",
+      "context": "考察能否在有分歧的问题上给出有依据、经得起追问的判断。",
+      "keywords": [
+        "请复",
+        "复盘",
+        "盘一",
+        "一下",
+        "下纳",
+        "纳什",
+        "什均",
+        "均衡",
+        "衡1",
+        "10"
+      ],
+      "expectedLength": [
+        150,
+        400
+      ],
+      "skeleton": [
+        "开口先复述问题，确认你听到的是同一件事",
+        "给一个可核对数字（影响面 / 耗时 / 覆盖率）并说明口径与基线",
+        "说明你的判断与取舍：为什么这么做、还有什么选项",
+        "收尾落到结果：变化了多少，谁验收过"
+      ],
+      "viewpointCards": [],
+      "questionUrl": "https://www.zhihu.com/question/2097362456666432271",
+      "sources": [
+        {
+          "url": "https://www.zhihu.com/question/2097362456666432271/answer/2097395234539942770",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/2097362456666432271/answer/2100349054911771897",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/2097362456666432271/answer/2097426051810988604",
+          "author": "",
+          "votes": null
+        }
+      ]
+    },
+    {
+      "id": "q_34",
+      "track": "论文/答辩",
+      "difficulty": "进阶",
+      "title": "一位数学家如何证明自己没有使用AI做论文？",
+      "context": "考察能否在有分歧的问题上给出有依据、经得起追问的判断。",
+      "keywords": [
+        "一位",
+        "位数",
+        "数学",
+        "学家",
+        "家如",
+        "何证",
+        "证明",
+        "明自",
+        "自己",
+        "己没"
+      ],
+      "expectedLength": [
+        150,
+        400
+      ],
+      "skeleton": [
+        "开口先复述问题，确认你听到的是同一件事",
+        "给一个可核对数字（影响面 / 耗时 / 覆盖率）并说明口径与基线",
+        "说明方法与边界：什么条件下成立、什么条件下会翻车",
+        "收尾落到结果：变化了多少，谁验收过"
+      ],
+      "viewpointCards": [],
+      "questionUrl": "https://www.zhihu.com/question/2088882471890859810",
+      "sources": [
+        {
+          "url": "https://www.zhihu.com/question/2088882471890859810/answer/2092671684855719477",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/2088882471890859810/answer/2090601899951133014",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/2088882471890859810/answer/2088906598513227362",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/2088882471890859810/answer/2089051856072982871",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/2088882471890859810/answer/2096181605870190895",
+          "author": "",
+          "votes": null
+        }
+      ]
+    },
+    {
+      "id": "q_35",
+      "track": "论文/答辩",
+      "difficulty": "进阶",
+      "title": "在没有AI的年代，大学生的论文都是怎样写？",
+      "context": "考察能否在有分歧的问题上给出有依据、经得起追问的判断。",
+      "keywords": [
+        "在没",
+        "没有",
+        "有A",
+        "AI",
+        "I的",
+        "的年",
+        "年代",
+        "代大",
+        "大学",
+        "学生"
+      ],
+      "expectedLength": [
+        150,
+        400
+      ],
+      "skeleton": [
+        "开口先复述问题，确认你听到的是同一件事",
+        "给一个可核对数字（影响面 / 耗时 / 覆盖率）并说明口径与基线",
+        "说明方法与边界：什么条件下成立、什么条件下会翻车",
+        "收尾落到结果：变化了多少，谁验收过"
+      ],
+      "viewpointCards": [],
+      "questionUrl": "https://www.zhihu.com/question/2097017993104568374",
+      "sources": [
+        {
+          "url": "https://www.zhihu.com/question/2097017993104568374/answer/2099988379949704515",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/2097017993104568374/answer/2099007656862147829",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/2097017993104568374/answer/2097807381518406241",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/2097017993104568374/answer/2097497505860788620",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/2097017993104568374/answer/2097275199842534613",
+          "author": "",
+          "votes": null
+        }
+      ]
+    },
+    {
+      "id": "q_36",
+      "track": "论文/答辩",
+      "difficulty": "进阶",
+      "title": "找机构写论文靠谱吗？",
+      "context": "考察能否在有分歧的问题上给出有依据、经得起追问的判断。",
+      "keywords": [
+        "找机",
+        "机构",
+        "构写",
+        "写论",
+        "论文",
+        "文靠",
+        "靠谱",
+        "谱吗"
+      ],
+      "expectedLength": [
+        150,
+        400
+      ],
+      "skeleton": [
+        "开口先复述问题，确认你听到的是同一件事",
+        "给一个可核对数字（影响面 / 耗时 / 覆盖率）并说明口径与基线",
+        "说明方法与边界：什么条件下成立、什么条件下会翻车",
+        "收尾落到结果：变化了多少，谁验收过"
+      ],
+      "viewpointCards": [],
+      "questionUrl": "https://www.zhihu.com/question/1922657749029885539",
+      "sources": [
+        {
+          "url": "https://www.zhihu.com/question/1922657749029885539/answer/1929473610273228049",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/1922657749029885539/answer/1923014534353887446",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/1922657749029885539/answer/2105382281208774836",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/1922657749029885539/answer/1923685497680670840",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/1922657749029885539/answer/2035356618892767563",
+          "author": "",
+          "votes": null
+        }
+      ]
+    },
+    {
+      "id": "q_37",
+      "track": "论文/答辩",
+      "difficulty": "进阶",
+      "title": "如何看待有学者提出的慢科研，但是自己一年却写 40 篇论文？",
+      "context": "考察能否在有分歧的问题上给出有依据、经得起追问的判断。",
+      "keywords": [
+        "何看",
+        "看待",
+        "待有",
+        "有学",
+        "学者",
+        "者提",
+        "提出",
+        "出的",
+        "的慢",
+        "慢科"
+      ],
+      "expectedLength": [
+        150,
+        400
+      ],
+      "skeleton": [
+        "开口先复述问题，确认你听到的是同一件事",
+        "给一个可核对数字（影响面 / 耗时 / 覆盖率）并说明口径与基线",
+        "说明方法与边界：什么条件下成立、什么条件下会翻车",
+        "收尾落到结果：变化了多少，谁验收过"
+      ],
+      "viewpointCards": [],
+      "questionUrl": "https://www.zhihu.com/question/2094727524509131289",
+      "sources": [
+        {
+          "url": "https://www.zhihu.com/question/2094727524509131289/answer/2094869711892779592",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/2094727524509131289/answer/2094877472085092155",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/2094727524509131289/answer/2095070549311595266",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/2094727524509131289/answer/2094763066953036507",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/2094727524509131289/answer/2095467555712415368",
+          "author": "",
+          "votes": null
+        }
+      ]
+    },
+    {
+      "id": "q_38",
+      "track": "论文/答辩",
+      "difficulty": "进阶",
+      "title": "如果毕业即失业，那我为什么还要花这么多时间和精力上大学（留学）？",
+      "context": "考察能否在有分歧的问题上给出有依据、经得起追问的判断。",
+      "keywords": [
+        "如果",
+        "果毕",
+        "毕业",
+        "业即",
+        "即失",
+        "失业",
+        "业那",
+        "那我",
+        "我为",
+        "么还"
+      ],
+      "expectedLength": [
+        150,
+        400
+      ],
+      "skeleton": [
+        "开口先复述问题，确认你听到的是同一件事",
+        "给一个可核对数字（影响面 / 耗时 / 覆盖率）并说明口径与基线",
+        "说明方法与边界：什么条件下成立、什么条件下会翻车",
+        "收尾落到结果：变化了多少，谁验收过"
+      ],
+      "viewpointCards": [],
+      "questionUrl": "https://www.zhihu.com/question/2101929947963119013",
+      "sources": [
+        {
+          "url": "https://www.zhihu.com/question/2101929947963119013/answer/2101998694925079508",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/2101929947963119013/answer/2102817525125988626",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/2101929947963119013/answer/2102701239549149392",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/2101929947963119013/answer/2102663780832391649",
+          "author": "",
+          "votes": null
+        },
+        {
+          "url": "https://www.zhihu.com/question/2101929947963119013/answer/2104591199789229667",
+          "author": "",
+          "votes": null
+        }
+      ]
+    }
+  ],
+  "demoSampleTranscript": {
+    "questionId": "q_1",
+    "rawText": "面试官：先简单介绍一下你在这道题上的真实经历吧。\n我：嗯，那个，我们团队之前做过类似的，我主要负责其中一块，就是做了一些优化，感觉效果还可以，后来也一直在迭代。\n面试官：具体说一下你做了什么判断，结果是多少？\n我：当时就是看别人这么做，我们也跟着做了，具体数字我不太记得了，反正比原来好一些。\n面试官：如果重做一次，你会怎么改？\n我：我会先把口径定清楚，比如把失败率从千分之十压到千分之三以内，然后写脚本复现问题，再决定方案。"
+  }
+}

@@ -1,0 +1,290 @@
+import { state } from '../state.js';
+import { navigate } from '../router.js';
+import { escapeHtml } from '../ui/citation.js';
+import { renderViewpointCard } from '../ui/components.js';
+import { LocalAudioRecorder } from '../capture/recorder.js';
+import { LiveCaptionEngine } from '../capture/caption.js';
+import { parseTranscriptToQA } from '../capture/transcript.js';
+import { runDeterministicRules } from '../rules/diagnose.js';
+import { dbPut } from '../db.js';
+import { showToast } from '../ui/toast.js';
+
+export function renderCoachScreen(root) {
+  const question = state.activeQuestion || state.bank[0];
+  if (!question) {
+    root.innerHTML = `<div class="card">题库加载中，请稍候…</div>`;
+    return;
+  }
+
+  let isRecording = false;
+  let captions = [];
+  let audioUrl = null;
+  let followupRound = 0;
+  let activeFollowupFocus = '';
+  const recorder = new LocalAudioRecorder();
+  let captionEngine = null;
+
+  const wrapper = document.createElement('div');
+  wrapper.innerHTML = `
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:8px;">
+      <div>
+        <span class="tag tag-blue">${escapeHtml(question.track)}</span>
+        <span class="tag" style="margin-left:4px;">状态：实战作答与连续追问（上限 3 轮）</span>
+      </div>
+      <div style="display:flex;gap:8px;">
+        <button id="btn-switch-q" class="btn btn-sm" type="button">换一题</button>
+        <button id="btn-fill-sample" class="btn btn-sm" type="button">填入演示回答样例</button>
+      </div>
+    </div>
+
+    <div class="grid-2" style="align-items:start;">
+      <!-- 左侧：真题与知乎多元观点对照预览 -->
+      <div style="display:flex;flex-direction:column;gap:14px;">
+        <section class="card">
+          <h2 style="margin:0 0 8px;font-size:18px;">${escapeHtml(question.title)}</h2>
+          <p style="margin:0 0 12px;font-size:13px;color:var(--text-secondary);">${escapeHtml(question.context)}</p>
+
+          <div id="followup-box" class="card" style="background:var(--amber-soft);border-color:#fedf89;margin-bottom:12px;" hidden>
+            <div style="font-size:12px;font-weight:700;color:var(--amber);margin-bottom:4px;">🔥 面试官深度追问（第 <span id="followup-round-num">1</span>/3 轮 · 取自知乎分歧观点）</div>
+            <div id="followup-question-text" style="font-weight:600;font-size:14px;"></div>
+          </div>
+
+          <details>
+            <summary style="cursor:pointer;font-size:13px;font-weight:600;color:var(--primary);">查看参考答题骨架（提示）</summary>
+            <ul style="margin:8px 0 0;padding-left:18px;font-size:13px;color:var(--text-secondary);">
+              ${(question.skeleton || []).map((s) => `<li>${escapeHtml(s)}</li>`).join('')}
+            </ul>
+          </details>
+        </section>
+
+        <section>
+          <h3 style="margin:0 0 8px;font-size:14px;color:var(--text-secondary);">锚定知乎多元观点卡（评分基准）</h3>
+          <div id="coach-vp-list" style="display:flex;flex-direction:column;gap:10px;"></div>
+        </section>
+      </div>
+
+      <!-- 右侧：录音 + 实时字幕（可点句编辑）+ 文本/转写稿导入 -->
+      <div style="display:flex;flex-direction:column;gap:14px;">
+        <section class="card">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:8px;">
+            <strong>🎙️ 本地录音与实时字幕（M2 / M3）</strong>
+            <div style="display:flex;gap:8px;">
+              <button id="btn-record-toggle" class="btn btn-primary btn-sm" type="button">开始录音</button>
+            </div>
+          </div>
+
+          <div id="caption-status" style="font-size:12px;color:var(--text-muted);margin-bottom:8px;">
+            录音文件仅保存在本机浏览器 IndexedDB，绝不上传服务器。
+          </div>
+
+          <div id="audio-playback-box" style="margin-bottom:10px;" hidden>
+            <audio id="audio-player" controls style="width:100%;height:36px;"></audio>
+          </div>
+
+          <div id="caption-list" style="max-height:180px;overflow-y:auto;border:1px solid var(--border);border-radius:6px;padding:6px;margin-bottom:10px;background:var(--bg);" hidden></div>
+
+          <label for="answer-textarea" style="display:block;font-size:13px;font-weight:600;margin-bottom:6px;">
+            作答文本 / 导入会议转写稿（支持「面试官：/ 我：」标签切分）：
+          </label>
+          <textarea id="answer-textarea" class="textarea" rows="7" placeholder="可直接在此输入回答，或点击上方「开始录音」自动落字幕，或粘贴带「面试官：/ 我：」的复盘转写稿…"></textarea>
+
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px;flex-wrap:wrap;gap:8px;">
+            <button id="btn-trigger-followup" class="btn btn-sm" type="button">触发追问（压力测试）</button>
+            <button id="btn-submit-parse" class="btn btn-primary" type="button">结束并生成复盘诊断 →</button>
+          </div>
+        </section>
+      </div>
+    </div>
+  `;
+  root.appendChild(wrapper);
+
+  const vpBox = wrapper.querySelector('#coach-vp-list');
+  (question.viewpointCards || []).forEach((vc, idx) => vpBox.appendChild(renderViewpointCard(vc, idx)));
+
+  const textarea = wrapper.querySelector('#answer-textarea');
+  const captionListEl = wrapper.querySelector('#caption-list');
+  const captionStatusEl = wrapper.querySelector('#caption-status');
+  const recordBtn = wrapper.querySelector('#btn-record-toggle');
+  const audioBox = wrapper.querySelector('#audio-playback-box');
+  const audioPlayer = wrapper.querySelector('#audio-player');
+
+  const renderCaptions = (interim = '') => {
+    if (!captions.length && !interim) {
+      captionListEl.hidden = true;
+      return;
+    }
+    captionListEl.hidden = false;
+    captionListEl.innerHTML = '';
+    captions.forEach((cap) => {
+      const row = document.createElement('div');
+      row.className = 'caption-line';
+      row.innerHTML = `
+        <span class="caption-ts">${escapeHtml(cap.timestamp)}</span>
+        <div class="caption-text" contenteditable="true" title="点击可就地编辑字幕并保留时间戳">${escapeHtml(cap.text)}</div>
+      `;
+      row.querySelector('.caption-text').addEventListener('input', (e) => {
+        cap.text = e.target.textContent;
+        textarea.value = captions.map((c) => c.text).join(' ');
+      });
+      captionListEl.appendChild(row);
+    });
+    if (interim) {
+      const row = document.createElement('div');
+      row.className = 'caption-line';
+      row.style.opacity = '0.65';
+      row.innerHTML = `<span class="caption-ts">识别中</span><div class="caption-text">${escapeHtml(interim)}…</div>`;
+      captionListEl.appendChild(row);
+    }
+  };
+
+  // 换一题
+  wrapper.querySelector('#btn-switch-q').addEventListener('click', () => {
+    const idx = state.bank.findIndex((item) => item.id === question.id);
+    const next = state.bank[(idx + 1) % state.bank.length];
+    state.activeQuestion = next;
+    renderCoachScreen(root.innerHTML = '' || root);
+  });
+
+  // 填入样例
+  wrapper.querySelector('#btn-fill-sample').addEventListener('click', () => {
+    if (state.demoSample?.rawText) {
+      textarea.value = state.demoSample.rawText;
+      showToast('已填入带说话人标签的样例转写稿');
+    }
+  });
+
+  // 录音控制 (M2 + M3)
+  recordBtn.addEventListener('click', async () => {
+    if (!isRecording) {
+      try {
+        await recorder.start();
+        isRecording = true;
+        recordBtn.textContent = '⏹ 停止录音';
+        recordBtn.className = 'btn btn-danger btn-sm';
+        captionStatusEl.textContent = '● 正在本地录音（Opus 编码），实时字幕识别中…';
+
+        captionEngine = new LiveCaptionEngine({
+          onSentence: (sent) => {
+            captions.push(sent);
+            textarea.value = captions.map((c) => c.text).join(' ');
+            renderCaptions();
+          },
+          onInterim: (txt) => renderCaptions(txt),
+          onError: (msg) => {
+            captionStatusEl.textContent = '⚠ ' + msg;
+            showToast(msg, 'warn', 4500);
+          }
+        });
+        captionEngine.start();
+      } catch (err) {
+        showToast('无法访问麦克风：' + err.message + '（可直接下方输入或导入转写稿）', 'warn', 4500);
+      }
+    } else {
+      isRecording = false;
+      recordBtn.textContent = '开始录音';
+      recordBtn.className = 'btn btn-primary btn-sm';
+      captionEngine?.stop();
+      const result = await recorder.stop();
+      if (result?.blob) {
+        if (audioUrl) URL.revokeObjectURL(audioUrl);
+        audioUrl = URL.createObjectURL(result.blob);
+        audioPlayer.src = audioUrl;
+        audioBox.hidden = false;
+        await dbPut('recordings', {
+          id: 'rec-' + Date.now(),
+          questionId: question.id,
+          durationSec: result.durationSec,
+          captions
+        });
+        captionStatusEl.textContent = `✅ 录音完成（${result.durationSec} 秒），已加密存入本机 IndexedDB，未产生任何上传请求。`;
+      }
+    }
+  });
+
+  // 追问生成（M8：单题最多 3 轮，取自观点卡分歧）
+  wrapper.querySelector('#btn-trigger-followup').addEventListener('click', () => {
+    if (followupRound >= 3) {
+      showToast('已达到单题最大追问轮次（3 轮），请结束并查看诊断报告', 'warn');
+      return;
+    }
+    followupRound++;
+    const minorityCard = question.viewpointCards?.[1] || question.viewpointCards?.[0];
+    activeFollowupFocus = (question.keywords || []).slice(0, 2).join(' ');
+    const fqText = minorityCard
+      ? `知乎上有答主提出质疑：“${minorityCard.evidenceQuote}”——针对这一点，你的具体边界条件和取舍依据是什么？`
+      : '如果线上数据分布发生漂移，你的这套指标如何保证不失真？';
+
+    wrapper.querySelector('#followup-box').hidden = false;
+    wrapper.querySelector('#followup-round-num').textContent = String(followupRound);
+    wrapper.querySelector('#followup-question-text').textContent = fqText;
+    showToast(`已生成第 ${followupRound} 轮深度追问`);
+  });
+
+  // 提交解析（M4 + M5 + M6 降级双轨）
+  wrapper.querySelector('#btn-submit-parse').addEventListener('click', async (ev) => {
+    const raw = textarea.value.trim();
+    if (!raw) {
+      showToast('请先录音、输入回答或导入样例转写稿', 'warn');
+      return;
+    }
+    const submitBtn = ev.currentTarget;
+    const originalLabel = submitBtn.textContent;
+    submitBtn.disabled = true;
+    submitBtn.textContent = '模型生成中（最多 25 秒）…';
+
+    const qaPairs = parseTranscriptToQA(raw, question.title);
+    const targetAnswer = qaPairs.map((p) => p.answer).join('\n\n');
+    const ruleFindings = runDeterministicRules(targetAnswer, {
+      ...question,
+      followupFocus: activeFollowupFocus
+    });
+
+    let llmResult = null;
+    let degraded = false;
+
+    try {
+      const ctrl = new AbortController();
+      // 实测：DeepSeek 结构化输出 10–16s，8s 超时会把成功请求 abort 掉（曾导致误降级）
+      const timer = setTimeout(() => ctrl.abort(), 25000);
+      const res = await fetch('/api/coach/parse', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ questionId: question.id, answer: targetAnswer, transcript: raw }),
+        signal: ctrl.signal
+      });
+      clearTimeout(timer);
+      if (res.ok) {
+        llmResult = await res.json();
+        degraded = !!llmResult.degraded;
+      } else {
+        degraded = true;
+      }
+    } catch (_) {
+      degraded = true;
+    }
+
+    const report = {
+      id: 'session-' + Date.now(),
+      question,
+      qaPairs,
+      answer: targetAnswer,
+      ruleFindings,
+      llmScores: llmResult?.llmScores || null,
+      improvements: llmResult?.improvements || null,
+      degraded,
+      createdAt: new Date().toISOString()
+    };
+
+    state.lastReviewReport = report;
+    await dbPut('sessions', report);
+    submitBtn.disabled = false;
+    submitBtn.textContent = originalLabel;
+
+    if (degraded) {
+      showToast('模型暂不可用，已切换规则模式并完成原话级诊断', 'warn', 3800);
+    } else {
+      showToast('复盘解析完成');
+    }
+    navigate('/review');
+  });
+}
