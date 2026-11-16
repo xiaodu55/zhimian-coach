@@ -30,6 +30,12 @@ export const config = {
   asrApiKey: (process.env.ASR_API_KEY || '').trim(),
   asrModel: (process.env.ASR_MODEL || '').trim(),
 
+  // PDF 兜底解析（按需开启；容器里通常没有 python OCR 依赖）
+  repoRoot: path.resolve(__dirname, '../../..'),
+  pdfOcrEnabled: (process.env.PDF_OCR || '1') === '1',
+  tikaUrl: (process.env.TIKA_URL || '').trim(),
+  mineruUrl: (process.env.MINERU_URL || '').trim(),
+
   webRoot: path.resolve(__dirname, '../../web'),
   bankFilePath: path.resolve(__dirname, '../../web/data/question-bank.json')
 };

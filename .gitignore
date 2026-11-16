@@ -33,3 +33,4 @@ zhihu-cli-skill.zip
 .cache/
 .tmp-*/
 .tmp-*.json
+.tmp-*.pdf

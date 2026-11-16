@@ -41,6 +41,28 @@ export function renderCoachScreen(root) {
       </div>
     </div>
 
+    <!-- 简历模式：上传简历 → 按真实经历出题（题目接地到简历定位符） -->
+    <section class="card" style="margin-bottom:14px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;">
+        <div>
+          <strong>🧾 简历模式：上传简历，按你的真实经历出题</strong>
+          <div style="font-size:12px;color:var(--text-muted);margin-top:4px;">
+            解析简历 → 抽取项目/技能/缺口 → 生成 6–10 道针对性面试题（每题挂简历定位符 + 真实知乎面经）。
+            扫描版 PDF 会自动走 OCR 兜底。
+          </div>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+          <label class="btn btn-sm">
+            📄 上传简历（PDF / MD / TXT）
+            <input id="resume-file-input" type="file" accept=".pdf,.md,.markdown,.txt" hidden />
+          </label>
+          <span id="resume-status" style="font-size:12px;color:var(--text-muted);"></span>
+        </div>
+      </div>
+      <div id="resume-profile" style="display:none;margin-top:12px;"></div>
+      <div id="resume-questions" style="display:none;margin-top:12px;display:none;flex-direction:column;gap:8px;"></div>
+    </section>
+
     <div class="grid-2" style="align-items:start;">
       <!-- 左侧：真题与知乎多元观点对照预览 -->
       <div style="display:flex;flex-direction:column;gap:14px;">
@@ -135,8 +157,19 @@ export function renderCoachScreen(root) {
   `;
   root.appendChild(wrapper);
 
+  const resumeStatus = wrapper.querySelector('#resume-status');
+  const resumeProfile = wrapper.querySelector('#resume-profile');
+  const resumeQuestions = wrapper.querySelector('#resume-questions');
+
   const vpBox = wrapper.querySelector('#coach-vp-list');
-  (question.viewpointCards || []).forEach((vc, idx) => vpBox.appendChild(renderViewpointCard(vc, idx)));
+  if ((question.viewpointCards || []).length) {
+    (question.viewpointCards || []).forEach((vc, idx) => vpBox.appendChild(renderViewpointCard(vc, idx)));
+  } else if (question.source === 'resume') {
+    vpBox.innerHTML = `<div class="card" style="font-size:12.5px;color:var(--text-muted);">
+      简历题不依赖知乎观点卡：本次只跑「规则层 10 条原话诊断」+ 面经参考，不做观点契合度评分（避免拿无关观点硬套）。
+      ${question.zhihuRef ? `参考面经：<a href="${escapeHtml(question.zhihuRef.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(question.zhihuRef.title)}</a>` : ''}
+    </div>`;
+  }
 
   const textarea = wrapper.querySelector('#answer-textarea');
   const captionListEl = wrapper.querySelector('#caption-list');
@@ -271,6 +304,138 @@ export function renderCoachScreen(root) {
     );
   });
 
+  // ---- 简历模式：解析简历 → 抽取档案 → 出题 ----
+  const renderResumeResult = (data) => {
+    resumeProfile.style.display = 'block';
+    resumeProfile.innerHTML = '';
+
+    const head = document.createElement('div');
+    head.innerHTML = `<div style="font-size:13px;font-weight:600;margin-bottom:6px;">画像</div>
+      <div style="font-size:13px;color:var(--text-secondary);margin-bottom:8px;">${escapeHtml(data.profile?.headline || '')}</div>`;
+    resumeProfile.appendChild(head);
+
+    if ((data.profile?.skills || []).length) {
+      const chips = document.createElement('div');
+      chips.style.cssText = 'display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px;';
+      for (const sk of data.profile.skills) {
+        const t = document.createElement('span');
+        t.className = 'tag tag-blue';
+        t.textContent = sk;
+        chips.appendChild(t);
+      }
+      resumeProfile.appendChild(chips);
+    }
+
+    for (const p of data.profile?.projects || []) {
+      const box = document.createElement('div');
+      box.style.cssText = 'border-left:2px solid var(--primary);padding-left:8px;margin-bottom:8px;font-size:12.5px;';
+      box.innerHTML = `<strong>${escapeHtml(p.name)}</strong>
+        <span style="color:var(--text-muted);">（${escapeHtml(p.role || '角色未写明')}）</span>
+        ${(p.tech || []).length ? `<div style="color:var(--text-secondary);">技术：${escapeHtml(p.tech.join(' / '))}</div>` : ''}
+        ${(p.metrics || []).length ? `<div style="color:var(--green);">量化：${escapeHtml(p.metrics.join(' / '))}</div>` : ''}`;
+      resumeProfile.appendChild(box);
+    }
+
+    if ((data.profile?.gaps || []).length) {
+      const gaps = document.createElement('div');
+      gaps.style.cssText = 'font-size:12.5px;color:var(--amber);background:var(--amber-soft);padding:8px 10px;border-radius:8px;';
+      gaps.innerHTML = '⚠ 简历缺口（评委会盯着问）：<br/>' + data.profile.gaps.map((g) => '· ' + escapeHtml(g)).join('<br/>');
+      resumeProfile.appendChild(gaps);
+    }
+
+    if (data.degraded) {
+      const warn = document.createElement('div');
+      warn.style.cssText = 'font-size:12px;color:var(--amber);margin-top:8px;';
+      warn.textContent = '⚠ ' + (data.degradedReason || '模型不可用：已降级为通用追问框架');
+      resumeProfile.appendChild(warn);
+    }
+
+    resumeQuestions.style.display = 'flex';
+    resumeQuestions.innerHTML = '';
+    (data.questions || []).forEach((q, idx) => {
+      const item = document.createElement('div');
+      item.style.cssText = 'border:1px solid var(--border);border-radius:8px;padding:10px;font-size:13px;';
+      item.innerHTML = `
+        <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-bottom:4px;">
+          <span class="tag tag-blue">${escapeHtml(q.focus || '追问')}</span>
+          <span class="tag">${escapeHtml(q.difficulty || '进阶')}</span>
+          <span style="font-size:11px;color:var(--text-muted);">定位：${escapeHtml(q.locator || '')}</span>
+        </div>
+        <div style="font-weight:600;margin-bottom:4px;">Q${idx + 1}. ${escapeHtml(q.q)}</div>
+        <div style="font-size:12px;color:var(--amber);margin-bottom:4px;">为什么问：${escapeHtml(q.why || '')}</div>
+        ${
+          q.zhihuRef
+            ? `<div style="font-size:12px;color:var(--text-secondary);">真实面经：<a href="${escapeHtml(q.zhihuRef.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(q.zhihuRef.title)}</a></div>`
+            : ''
+        }
+        <button type="button" class="btn btn-primary btn-sm" style="margin-top:8px;">练这题 →</button>
+      `;
+      item.querySelector('button').addEventListener('click', () => {
+        state.activeQuestion = {
+          id: q.id,
+          title: q.q,
+          context: q.why,
+          keywords: (data.profile?.skills || []).slice(0, 6),
+          expectedLength: [150, 400],
+          skeleton: ['先复述问题', '给一个可核对数字', '讲清你的判断与取舍', '落到结果与边界'],
+          viewpointCards: [],
+          source: 'resume',
+          locator: q.locator,
+          zhihuRef: q.zhihuRef || null,
+        };
+        showToast('已切到这道简历题，往下写你的回答');
+        root.innerHTML = '';
+        renderCoachScreen(root);
+      });
+      resumeQuestions.appendChild(item);
+    });
+  };
+
+  wrapper.querySelector('#resume-file-input').addEventListener('change', async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (file.size > 20 * 1024 * 1024) {
+      showToast('文件超过 20MB', 'error');
+      return;
+    }
+    resumeStatus.textContent = '解析简历中…';
+    try {
+      let segments = [];
+      let engine = 'local';
+      if (file.name.toLowerCase().endsWith('.pdf')) {
+        const fd = new FormData();
+        fd.append('file', file);
+        const res = await fetch('/api/doc/upload', { method: 'POST', body: fd });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data?.error?.message || 'PDF 解析失败');
+        segments = data.segments;
+        engine = data.engine || 'pdf';
+        resumeStatus.textContent = `解析完成（${engine}，质量 ${data.quality?.score ?? '?'}），正在按简历出题…`;
+      } else {
+        const text = await file.text();
+        segments = chunkDocumentText(text, file.name).segments;
+        resumeStatus.textContent = '解析完成，正在按简历出题…';
+      }
+
+      const res2 = await fetch('/api/resume/analyze', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          filename: file.name,
+          segments: segments.map((s) => ({ locator: s.locator, heading: s.heading, text: s.text })),
+        }),
+      });
+      const data2 = await res2.json();
+      if (!res2.ok) throw new Error(data2?.error?.message || '出题失败');
+      resumeStatus.textContent = `已生成 ${data2.questions.length} 道题（${engine} 解析 · 接地丢弃 ${data2.droppedByGrounding}）`;
+      renderResumeResult(data2);
+      showToast('简历解析完成：点「练这题」开始模拟面试');
+    } catch (err) {
+      resumeStatus.textContent = '失败';
+      showToast(err.message, 'error', 6000);
+    }
+  });
+
   // ---- 双轨回放 / 导出 / 转写 ----
   let lastTracks = null;
 
@@ -361,7 +526,8 @@ export function renderCoachScreen(root) {
     const idx = state.bank.findIndex((item) => item.id === question.id);
     const next = state.bank[(idx + 1) % state.bank.length];
     state.activeQuestion = next;
-    renderCoachScreen(root.innerHTML = '' || root);
+    root.innerHTML = '';
+    renderCoachScreen(root);
   });
 
   // 填入样例
@@ -493,6 +659,30 @@ export function renderCoachScreen(root) {
 
     let llmResult = null;
     let degraded = false;
+
+    if (question.source === 'resume') {
+      // 简历题不在题库里，观点层没有来源可用 → 直接走规则层，避免一次必然 404 的请求
+      degraded = true;
+      submitBtn.disabled = false;
+      submitBtn.textContent = originalLabel;
+      const reportResume = {
+        id: 'session-' + Date.now(),
+        question,
+        answer: targetAnswer,
+        ruleFindings,
+        llmScores: null,
+        improvements: null,
+        degraded,
+        degradedReason: '简历题：仅运行规则层（无知乎观点卡）',
+        createdAt: new Date().toISOString(),
+      };
+      state.activeQuestion = question;
+      state.lastReviewReport = reportResume;
+      await dbPut('sessions', reportResume);
+      navigate('/review');
+      showToast(`已生成复盘：命中 ${ruleFindings.length} 条原话级诊断（简历题不跑观点层）`);
+      return;
+    }
 
     try {
       const ctrl = new AbortController();

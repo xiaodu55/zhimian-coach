@@ -5,6 +5,7 @@ import { runDeterministicRules } from '../../web/js/rules/diagnose.js';
 import { parseTranscriptToQA } from '../../web/js/capture/transcript.js';
 import { mergeTracks, toTranscriptText } from '../../web/js/capture/align.js';
 import { validateStructuredClaims } from '../src/lib/citations.ts';
+import { assessText, normalizeCjkSpacing, QUALITY_THRESHOLD } from '../src/lib/pdf/quality.ts';
 
 const ctx = { keywords: ['架构', '高并发', '系统'], expectedLength: [10, 400] };
 
@@ -72,4 +73,30 @@ test('引用校验：越界/缺引用/推断无理由一律丢弃并计数', () 
   );
   assert.equal(accepted.length, 2);
   assert.equal(droppedByValidator, 3);
+});
+
+test('PDF 文本质量：汉字间空格会被归一化（pdf.js 常见瑕疵）', () => {
+  const raw = 'AI 应 用 工 程 师 ， 熟 悉 A g e n t 治 理';
+  const fixed = normalizeCjkSpacing(raw);
+  assert.ok(!/[\u4e00-\u9fa5] [\u4e00-\u9fa5]/.test(fixed), `仍有汉字间空格: ${fixed}`);
+  assert.match(fixed, /AI 应用工程师/);
+});
+
+test('PDF 文本质量：纯图片 PDF（几乎无文本）判为不达标', () => {
+  const q = assessText('');
+  assert.ok(q.score < QUALITY_THRESHOLD);
+  assert.ok(q.issues.some((i) => i.includes('扫描件')));
+});
+
+test('PDF 文本质量：正常中文文本判为达标且无 issue', () => {
+  const text = Array.from({ length: 12 }, (_, i) => `第${i + 1}段：候选人负责后端服务，把失败率从千分之十降到千分之三。`).join('\n');
+  const q = assessText(text);
+  assert.ok(q.score >= QUALITY_THRESHOLD, `score=${q.score} issues=${q.issues.join(',')}`);
+  assert.equal(q.issues.length, 0);
+});
+
+test('PDF 文本质量：大量乱码字符会拉低分数', () => {
+  const q = assessText('正常内容'.repeat(20) + '\uFFFD'.repeat(40));
+  assert.ok(q.score < QUALITY_THRESHOLD);
+  assert.ok(q.issues.some((i) => i.includes('乱码')));
 });

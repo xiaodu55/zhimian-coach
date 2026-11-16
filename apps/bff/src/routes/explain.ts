@@ -1,5 +1,6 @@
 import { Hono } from 'hono';
-import { parseDocumentContent, parsePdfBuffer, DocSegment } from '../lib/docParser.js';
+import { parseDocumentContent, DocSegment } from '../lib/docParser.js';
+import { parsePdfSmart } from '../lib/pdf/index.js';
 import { callStructuredLlm } from '../lib/llm.js';
 import { validateStructuredClaims, ClaimItem } from '../lib/citations.js';
 import { EXPLAIN_ASK_SYSTEM_PROMPT } from '../lib/prompts.js';
@@ -22,7 +23,7 @@ explainRoutes.post('/doc/upload', async (c) => {
 
   try {
     if (lowerName.endsWith('.pdf')) {
-      const parsed = await parsePdfBuffer(file.name, Buffer.from(await file.arrayBuffer()));
+      const parsed = await parsePdfSmart(file.name, Buffer.from(await file.arrayBuffer()));
       return c.json({ docId: 'doc-' + Date.now(), ...parsed });
     }
     if (lowerName.endsWith('.md') || lowerName.endsWith('.markdown') || lowerName.endsWith('.txt')) {

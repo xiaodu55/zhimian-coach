@@ -9,6 +9,7 @@ import { coachRoutes } from './routes/coach.js';
 import { explainRoutes } from './routes/explain.js';
 import { authRoutes } from './routes/auth.js';
 import { asrRoutes } from './routes/asr.js';
+import { resumeRoutes } from './routes/resume.js';
 
 const app = new Hono();
 
@@ -48,6 +49,7 @@ app.route('/api/coach', coachRoutes);
 app.route('/api', explainRoutes);
 app.route('/api/auth', authRoutes);
 app.route('/api/asr', asrRoutes);
+app.route('/api', resumeRoutes);
 
 // 同域托管 apps/web 静态站点（彻底规避 CORS）
 const relativeWebRoot = path.relative(process.cwd(), config.webRoot);
