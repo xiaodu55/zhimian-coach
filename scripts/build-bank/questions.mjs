@@ -1,123 +1,169 @@
 /**
- * 真题库构建（SDD M1 · 问题维度）
- * 用法：node scripts/build-bank/questions.mjs [--limit 20] [--reset] [--dry]
+ * 真题构建（自包含脚本，不依赖 BFF 源码，避免后端重构把跑批带崩）
+ * 用法：node scripts/build-bank/questions.mjs [--limit 15] [--reset] [--dry]
  *
- * 语义修正（关键）：练习单元必须是**知乎问题**，不是文章标题。
- *   ① question_recommendations → 拿到真人问题（Title + Url）
- *   ② question_answers        → 拿到该问题下的高赞回答摘要（可溯源）
- * 配额：问题推荐 100/天、回答摘要 100/天 → 每天最多稳定构建约 30–40 题，分两三天跑满。
+ * 配额现实（实测）：question_discovery 共享 100/天，推荐与回答摘要都从这里扣。
+ * 一个题 = 1 次推荐 + 1 次回答 → 每天最多约 30–40 题，用完就停。
  */
 import fs from 'node:fs';
 import path from 'node:path';
-import { pathToFileURL } from 'node:url';
 
 const ROOT = process.cwd();
-const { config } = await import(pathToFileURL(path.join(ROOT, 'apps/bff/src/config.js')).href);
-const zhihu = await import(pathToFileURL(path.join(ROOT, 'apps/bff/src/lib/zhihuClient.js')).href);
+const RAW = path.join(ROOT, 'data-raw-bank.json');
+
+// ---- env ----
+function loadEnv() {
+  const out = {};
+  const file = path.join(ROOT, '.env');
+  if (!fs.existsSync(file)) return out;
+  for (const l of fs.readFileSync(file, 'utf8').split(/\r?\n/)) {
+    const m = /^([A-Z_]+)=(.*)$/.exec(l.trim());
+    if (m) out[m[1]] = m[2];
+  }
+  return out;
+}
+const ENV = loadEnv();
+const SECRET = ENV.ZHIHU_ACCESS_SECRET;
+if (!SECRET) {
+  console.error('✗ .env 缺少 ZHIHU_ACCESS_SECRET');
+  process.exit(1);
+}
 
 const ARGS = process.argv.slice(2);
 const argOf = (n, d) => {
   const i = ARGS.indexOf(`--${n}`);
   return i >= 0 && ARGS[i + 1] ? ARGS[i + 1] : d;
 };
-const LIMIT = Number(argOf('limit', '20'));
+const LIMIT = Number(argOf('limit', '15'));
+const REQUIRE = argOf('require', ''); // 例：--require '答辩|评委|论文'
 const RESET = ARGS.includes('--reset');
 const DRY = ARGS.includes('--dry');
-const OUT = config.bankFile;
 
-const WHITELIST = ['面试','答辩','简历','offer','求职','秋招','实习','岗位','技术面','HR','背调','跳槽','转行','论文','评委','课题','毕业','自我介绍','追问','复盘'];
-const BLACKLIST = ['赚','副业','创业项目','推荐项目','存款','理财','带货','开店','加盟','P图','彩票'];
+const H = () => ({
+  Authorization: `Bearer ${SECRET}`,
+  'X-Request-Timestamp': String(Math.floor(Date.now() / 1000)),
+});
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
+async function get(pathname, params = {}) {
+  const url = new URL('https://developer.zhihu.com' + pathname);
+  for (const [k, v] of Object.entries(params)) url.searchParams.set(k, String(v));
+  const res = await fetch(url, { headers: H() });
+  const text = await res.text();
+  if (res.status === 429) throw Object.assign(new Error('配额或频率限制'), { code: 'QUOTA' });
+  if (!res.ok) throw Object.assign(new Error(`HTTP ${res.status}: ${text.slice(0, 120)}`), { code: 'UPSTREAM' });
+  return JSON.parse(text);
+}
+
+function items(payload) {
+  const b = payload?.Data ?? payload?.data ?? payload;
+  for (const k of ['Items', 'items', 'List', 'list']) if (Array.isArray(b?.[k])) return b[k];
+  return [];
+}
 
 const TOPICS = [
-  ['面试 自我介绍', 'interview'],
+  ['面试 自我介绍 怎么答', 'interview'],
   ['面试 项目经历 讲不清', 'interview'],
   ['面试 被追问 答不上来', 'interview'],
-  ['面试 为什么离职 跳槽', 'interview'],
+  ['面试 为什么离职', 'interview'],
   ['秋招 面试 复盘', 'interview'],
-  ['论文答辩 评委提问', 'defense'],
-  ['毕业答辩 准备 注意事项', 'defense'],
+  ['offer 选择 怎么判断', 'interview'],
+  ['论文答辩 评委 提问', 'defense'],
+  ['毕业答辩 准备', 'defense'],
   ['项目答辩 被质疑', 'defense'],
+  ['答辩 PPT 逻辑', 'defense'],
 ];
 
-const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
-const load = () => {
+const WHITELIST = ['面试', '答辩', '简历', 'offer', '求职', '秋招', '实习', '岗位', 'HR', '跳槽', '转行', '论文', '评委', '毕业', '自我介绍', '追问', '复盘'];
+const BLACKLIST = ['赚', '副业', '创业项目', '推荐项目', '存款', '理财', '带货', '开店', '加盟', '彩票'];
+
+function load() {
+  if (!fs.existsSync(RAW)) return [];
   try {
-    const raw = JSON.parse(fs.readFileSync(OUT, 'utf8'));
-    return Array.isArray(raw) ? raw : (raw.items ?? []);
+    const j = JSON.parse(fs.readFileSync(RAW, 'utf8'));
+    return Array.isArray(j) ? j : (j.items ?? []);
   } catch {
     return [];
   }
-};
-const save = (items) =>
-  fs.writeFileSync(OUT, JSON.stringify({ version: 3, updatedAt: new Date().toISOString(), items }, null, 2));
+}
+function save(list) {
+  fs.writeFileSync(
+    RAW,
+    JSON.stringify({ version: 3, updatedAt: new Date().toISOString(), items: list }, null, 2)
+  );
+}
 
 async function main() {
-  if (!config.zhihuSecret) {
-    console.error('✗ 未配置 ZHIHU_ACCESS_SECRET');
-    process.exitCode = 1;
-    return;
-  }
-  const items = RESET ? [] : load();
-  const seenQ = new Set(items.map((q) => q.questionUrl));
+  const list = RESET ? [] : load();
+  const seen = new Set(list.map((q) => q.questionUrl));
   let added = 0;
   let recCalls = 0;
   let ansCalls = 0;
 
-  for (const [topic, track] of TOPICS) {
+  console.log(`[questions] 已有 ${list.length} 题，目标新增 ${LIMIT} 题`);
+
+  outer: for (const [topic, track] of TOPICS) {
     if (added >= LIMIT) break;
-    let questions = [];
+    let qs = [];
     try {
-      questions = await zhihu.questionRecommendations(topic, 5);
+      const payload = await get('/api/v1/user/question_recommendations', { Query: topic, Count: 5 });
       recCalls += 1;
-      console.log(`[rec] "${topic}" → ${questions.length} 问`);
+      qs = items(payload).map((x) => ({ title: x.Title || '', url: String(x.Url || '').split('?')[0] }));
+      console.log(`[rec] "${topic}" → ${qs.length}`);
     } catch (err) {
-      console.warn(`[rec] "${topic}" 失败：${err.code || ''} ${err.message}`);
+      console.warn(`[rec] "${topic}" 失败：${err.code} ${err.message}`);
+      if (err.code === 'QUOTA') break outer;
       continue;
     }
-    await sleep(600);
+    await sleep(1200);
 
-    for (const q of questions) {
-      if (added >= LIMIT) break;
-      if (!q.url || seenQ.has(q.url)) continue;
-      const title = q.title || '';
-      if (title.length < 8) { console.log(`[skip] 标题过短：${title}`); continue; }
-      if (BLACKLIST.some((w) => title.includes(w))) { console.log(`[skip] 命中黑名单：${title.slice(0, 24)}…`); continue; }
-      if (!WHITELIST.some((w) => title.includes(w))) { console.log(`[skip] 非面试/答辩题：${title.slice(0, 24)}…`); continue; }
+    for (const q of qs) {
+      if (added >= LIMIT) break outer;
+      if (!q.url || seen.has(q.url)) continue;
+      if (q.title.length < 8) continue;
+      if (BLACKLIST.some((w) => q.title.includes(w))) continue;
+      if (!WHITELIST.some((w) => q.title.includes(w))) continue;
+      if (REQUIRE && !new RegExp(REQUIRE).test(q.title)) continue;
 
-      let answers;
+      let ans = [];
       try {
-        answers = await zhihu.questionAnswers(q.url, 6);
+        const payload = await get('/api/v1/content/question_answers', {
+          QuestionUrl: q.url,
+          Offset: 0,
+          Limit: 6,
+        });
         ansCalls += 1;
+        ans = items(payload);
       } catch (err) {
-        console.warn(`[ans] ${q.title.slice(0, 20)}… 失败：${err.code || ''} ${err.message}`);
-        if (err.code === 'ZH_QUOTA_EXHAUSTED') break;
+        console.warn(`[ans] 失败：${err.code} ${err.message}`);
+        if (err.code === 'QUOTA') break outer;
         continue;
       }
-      await sleep(600);
+      await sleep(1200);
 
-      const sources = (answers.items || [])
-        .filter((a) => (a.summary || '').trim().length >= 80)
-        .slice(0, 5)
+      const sources = ans
         .map((a) => ({
-          url: a.url,
-          token: a.token,
-          author: a.author,
-          votes: a.votes,
-          snippet: a.summary.slice(0, 500),
-        }));
+          url: a.Url || '',
+          token: a.ContentToken || '',
+          author: a.AuthorName || '',
+          votes: a.VoteUpCount ?? null,
+          snippet: String(a.Summary || a.ContentText || '').slice(0, 500),
+        }))
+        .filter((a) => a.url && a.snippet.length >= 80)
+        .slice(0, 5);
+
       if (sources.length < 2) {
         console.log(`[skip] 回答不足 2 条：${q.title.slice(0, 24)}…`);
         continue;
       }
 
-      seenQ.add(q.url);
-      items.push({
-        id: `q_${items.length + 1}`,
+      seen.add(q.url);
+      list.push({
+        id: `q_${list.length + 1}`,
         title: q.title,
         questionUrl: q.url,
         track,
         topic,
-        // 注意：question_answers 接口不返回赞同数/作者名，热度用来源条数近似（不虚报点赞）
         heat: sources.length,
         sources,
         viewAngleCards: [],
@@ -126,18 +172,18 @@ async function main() {
         createdAt: new Date().toISOString(),
       });
       added += 1;
-      console.log(`[+q] ${q.title.slice(0, 30)}… (${sources.length} 条回答)`);
+      console.log(`[+q] ${q.title.slice(0, 32)}… (${sources.length} 条回答)`);
     }
   }
 
-  if (!DRY) save(items);
+  if (!DRY) save(list);
   console.log(
-    `\n[questions] 新增 ${added} 题，合计 ${items.length} 题；配额消耗：推荐 ${recCalls} 次、回答 ${ansCalls} 次`
+    `\n[questions] 新增 ${added} 题 → 合计 ${list.length} 题；配额消耗：推荐 ${recCalls}、回答 ${ansCalls}`
   );
-  console.log('[questions] 下一步：node scripts/build-bank/cards.mjs --limit 5 生成观点卡');
+  if (added === 0) console.log('[questions] 提示：可能是配额用尽（question_discovery 100/天），明天再跑或调小 --limit');
 }
 
 main().catch((e) => {
   console.error('[questions] 失败', e);
-  process.exitCode = 1;
+  process.exit(1);
 });

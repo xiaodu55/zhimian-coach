@@ -28,6 +28,7 @@ apps/bff/            Node 20 + TypeScript + Hono（同域托管静态资源与 /
   src/routes/        zhihu / coach / explain / auth / asr
   dist/              tsc 产物（生产用 `node dist/index.js`，不再需要 tsx）
 scripts/build-bank/  离线跑批：questions.mjs（真题）→ cards.mjs（观点卡）→ to-v02.mjs（schema 转换）
+                    一条命令：`pnpm bank:full`（可加 --limit / --delay 控制配额与限流）
 docs / *.md          规划与规格（PLAN / sdd_v0_2 / 作品稿 / 想法 / 小红书 / 开发日志）
 ```
 

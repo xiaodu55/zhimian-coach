@@ -118,7 +118,9 @@ export function renderBankScreen(root) {
           <div style="display:flex;gap:6px;align-items:center;margin-bottom:8px;flex-wrap:wrap;">
             <span class="tag tag-blue">${escapeHtml(q.track)}</span>
             <span class="tag">${escapeHtml(q.difficulty)}</span>
-            <span class="tag tag-green">${q.viewpointCards?.length || 0} 张知乎观点卡</span>
+            ${q.viewpointCards?.length
+              ? `<span class="tag tag-green">${q.viewpointCards.length} 张知乎观点卡</span>`
+              : `<span class="tag tag-amber">观点卡待补（来源已抓取）</span>`}
           </div>
           <h3 style="margin:0 0 8px;font-size:16px;line-height:1.45;">${escapeHtml(q.title)}</h3>
           <p style="margin:0 0 12px;font-size:13px;color:var(--text-secondary);">${escapeHtml(q.context)}</p>
