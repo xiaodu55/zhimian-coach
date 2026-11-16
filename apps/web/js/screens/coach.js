@@ -70,6 +70,7 @@ export function renderCoachScreen(root) {
             📄 上传简历（PDF / MD / TXT）
             <input id="resume-file-input" type="file" accept=".pdf,.md,.markdown,.txt" hidden />
           </label>
+          <button id="btn-resume-refresh" class="btn btn-ghost btn-sm" type="button" title="忽略缓存，重新花 40–50 秒出题">重新出题</button>
           <span id="resume-status" style="font-size:12px;color:var(--text-muted);"></span>
         </div>
       </div>
@@ -398,7 +399,8 @@ export function renderCoachScreen(root) {
           keywords: (data.profile?.skills || []).slice(0, 6),
           expectedLength: [150, 400],
           skeleton: ['先复述问题', '给一个可核对数字', '讲清你的判断与取舍', '落到结果与边界'],
-          viewpointCards: [],
+          viewpointCards: q.viewpointCards || [],
+          sources: q.sources || [],
           source: 'resume',
           locator: q.locator,
           zhihuRef: q.zhihuRef || null,
@@ -410,6 +412,30 @@ export function renderCoachScreen(root) {
       resumeQuestions.appendChild(item);
     });
   };
+
+  // 重新出题：忽略缓存（同一份简历改成 force 才会再花 40–50 秒）
+  let lastResumePayload = null;
+  wrapper.querySelector('#btn-resume-refresh').addEventListener('click', async () => {
+    if (!lastResumePayload) {
+      showToast('先上传一次简历，再重新出题', 'warn');
+      return;
+    }
+    resumeStatus.textContent = '忽略缓存，重新出题（约 40–50 秒）…';
+    try {
+      const res = await fetch('/api/resume/analyze', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...lastResumePayload, force: true }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data?.error?.message || '出题失败');
+      resumeStatus.textContent = `已重新生成 ${data.questions.length} 道题（未用缓存）`;
+      renderResumeResult(data);
+    } catch (err) {
+      resumeStatus.textContent = '失败';
+      showToast(err.message, 'error', 6000);
+    }
+  });
 
   wrapper.querySelector('#resume-file-input').addEventListener('change', async (e) => {
     const file = e.target.files?.[0];
@@ -437,17 +463,20 @@ export function renderCoachScreen(root) {
         resumeStatus.textContent = '解析完成，正在按简历出题…';
       }
 
+      lastResumePayload = {
+        filename: file.name,
+        segments: segments.map((s) => ({ locator: s.locator, heading: s.heading, text: s.text })),
+      };
       const res2 = await fetch('/api/resume/analyze', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          filename: file.name,
-          segments: segments.map((s) => ({ locator: s.locator, heading: s.heading, text: s.text })),
-        }),
+        body: JSON.stringify(lastResumePayload),
       });
       const data2 = await res2.json();
       if (!res2.ok) throw new Error(data2?.error?.message || '出题失败');
-      resumeStatus.textContent = `已生成 ${data2.questions.length} 道题（${engine} 解析 · 接地丢弃 ${data2.droppedByGrounding}）`;
+      resumeStatus.textContent = data2.cached
+        ? `命中缓存：${data2.questions.length} 道题（本次未调用模型）`
+        : `已生成 ${data2.questions.length} 道题（${engine} 解析 · 接地丢弃 ${data2.droppedByGrounding}）`;
       renderResumeResult(data2);
       showToast('简历解析完成：点「练这题」开始模拟面试');
     } catch (err) {
@@ -718,11 +747,9 @@ export function renderCoachScreen(root) {
     let llmResult = null;
     let degraded = false;
 
-    if (question.source === 'resume') {
-      // 简历题不在题库里，观点层没有来源可用 → 直接走规则层，避免一次必然 404 的请求
+    // 简历题且没有面经来源（模型降级时会出现）→ 不请求观点层，直接规则层
+    if (question.source === 'resume' && !(question.viewpointCards || []).length) {
       degraded = true;
-      submitBtn.disabled = false;
-      submitBtn.textContent = originalLabel;
       const reportResume = {
         id: 'session-' + Date.now(),
         question,
@@ -731,14 +758,14 @@ export function renderCoachScreen(root) {
         llmScores: null,
         improvements: null,
         degraded,
-        degradedReason: '简历题：仅运行规则层（无知乎观点卡）',
+        degradedReason: '本题没有可核对的面经来源：只跑规则层',
         createdAt: new Date().toISOString(),
       };
       state.activeQuestion = question;
       state.lastReviewReport = reportResume;
       await dbPut('sessions', reportResume);
       navigate('/review');
-      showToast(`已生成复盘：命中 ${ruleFindings.length} 条原话级诊断（简历题不跑观点层）`);
+      showToast(`已生成复盘：命中 ${ruleFindings.length} 条原话级诊断（无面经来源，未跑观点层）`);
       return;
     }
 
@@ -749,7 +776,22 @@ export function renderCoachScreen(root) {
       const res = await fetch('/api/coach/parse', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ questionId: question.id, answer: targetAnswer, transcript: raw }),
+        body: JSON.stringify({
+          ...(question.source === 'resume'
+            ? {
+                question: question.title,
+                sources: (question.viewpointCards || []).map((c) => ({
+                  summary: c.summary,
+                  snippet: c.evidenceQuote,
+                  evidenceQuote: c.evidenceQuote,
+                  sourceUrl: c.sourceUrl,
+                  author: c.author,
+                })),
+              }
+            : { questionId: question.id }),
+          answer: targetAnswer,
+          transcript: raw,
+        }),
         signal: ctrl.signal
       });
       clearTimeout(timer);

@@ -20,7 +20,11 @@ export const COACH_PARSE_SYSTEM_PROMPT = `你是「知面陪练」的结构化�
   ],
   "followups": ["基于分歧观点的追问句"]
 }
-严禁引用来源集合之外的编号；若无直接依据，basis 必须为 "推断" 且填写 "inferenceReason"。`;
+严禁引用来源集合之外的编号。
+basis 规则：
+- 你引用了来源（refIds 非空）→ basis 必须是「外部佐证」
+- 完全不依赖来源、纯推理 → basis 必须是「推断」，且填写 inferenceReason
+- 直接复述题目/回答原文 → 「原文直述」`;
 
 export const EXPLAIN_ASK_SYSTEM_PROMPT = `你是严格可溯源的学术与技术资料讲解助手。
 只能依据给定的文档片段 [S1, S2...] 作答。若材料中未提及，必须返回 {"noEvidence": true, "answer": "未检索到直接依据", "claims": []}。

@@ -2,8 +2,20 @@ import { Hono } from 'hono';
 import { callStructuredLlm, LlmServiceError } from '../lib/llm.js';
 import { RESUME_ANALYZE_SYSTEM_PROMPT } from '../lib/prompts.js';
 import { zhihuSearch } from '../lib/zhihuClient.js';
+import { getCache, setCache, sha1Key } from '../lib/cache.js';
 
 export const resumeRoutes = new Hono();
+
+/** 只对"题目相关文本"做哈希：忽略空白差异，但保留定位符（同一份简历顺序变化也算不同） */
+function segmentsHash(segments: unknown): string {
+  if (!Array.isArray(segments)) return '';
+  return segments
+    .map((s) => {
+      const seg = s as { locator?: string; text?: string };
+      return `${seg.locator || ''}:${String(seg.text || '').replace(/\s+/g, '').slice(0, 200)}`;
+    })
+    .join('|');
+}
 
 interface SegmentInput {
   locator: string;
@@ -36,6 +48,15 @@ interface ZhihuRef {
 resumeRoutes.post('/resume/analyze', async (c) => {
   const body = await c.req.json();
   const filename = String(body?.filename || '简历').slice(0, 80);
+  const force = Boolean(body?.force);
+  // 同一份简历不重复花 40–50 秒：按内容哈希缓存（含文件名，避免同名不同内容互相覆盖）
+  const contentHash = sha1Key('resume', `${filename}::${segmentsHash(body?.segments)}`);
+  if (!force) {
+    const hit = getCache<Record<string, unknown>>(contentHash);
+    if (hit) {
+      return c.json({ ...hit, cached: true, cachedAt: new Date().toISOString() });
+    }
+  }
   const segments: SegmentInput[] = Array.isArray(body?.segments)
     ? body.segments
         .filter((s: SegmentInput) => s && typeof s.text === 'string' && s.text.trim())
@@ -140,15 +161,35 @@ resumeRoutes.post('/resume/analyze', async (c) => {
         /* 配额/网络问题不影响出题 */
       }
     }
-    questions = questions.map((q, i) => ({ ...q, zhihuRef: refs.length ? refs[i % refs.length] : null }));
+    const unique = refs.filter((r, i) => refs.findIndex((x) => x.url === r.url) === i);
+    questions = questions.map((q, i) => {
+      const picked = unique.length
+        ? [unique[i % unique.length], unique[(i + 1) % unique.length]].filter(
+            (r, idx, arr) => r && arr.findIndex((x) => x?.url === r.url) === idx
+          )
+        : [];
+      // viewpointCards 是给前端「观点层依据」用的：面经摘录即来源，字段与题库观点卡对齐
+      const viewpointCards = picked.map((r) => ({
+        stance: '面经参考',
+        summary: String(r.snippet || r.title || '').slice(0, 120),
+        evidenceQuote: String(r.snippet || r.title || '').slice(0, 200),
+        sourceUrl: r.url,
+        author: '知乎答主',
+        upvotes: 0,
+        popularity: '主流',
+      }));
+      return { ...q, viewpointCards, sources: picked, zhihuRef: picked[0] || null };
+    });
   }
 
-  return c.json({
+  const payload = {
     filename,
     degraded,
     degradedReason: degraded ? degradedReason : '',
     droppedByGrounding,
     profile,
     questions,
-  });
+  };
+  setCache(contentHash, payload, 7 * 24 * 3600_000);
+  return c.json({ ...payload, cached: false });
 });

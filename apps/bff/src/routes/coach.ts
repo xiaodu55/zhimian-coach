@@ -4,6 +4,26 @@ import { callStructuredLlm, LlmServiceError } from '../lib/llm.js';
 import { validateStructuredClaims, ClaimItem } from '../lib/citations.js';
 import { COACH_PARSE_SYSTEM_PROMPT } from '../lib/prompts.js';
 
+interface InlineSource {
+  stance?: string;
+  summary?: string;
+  snippet?: string;
+  evidenceQuote?: string;
+  sourceUrl?: string;
+  url?: string;
+  author?: string;
+}
+
+interface SourceCard {
+  stance: string;
+  summary: string;
+  evidenceQuote: string;
+  sourceUrl: string;
+  author: string;
+  upvotes: number;
+  popularity: string;
+}
+
 export const coachRoutes = new Hono();
 
 coachRoutes.post('/session', async (c) => {
@@ -27,9 +47,45 @@ coachRoutes.post('/parse', async (c) => {
     return c.json({ error: { code: 'VALIDATION_ERROR', message: '回答内容不能为空' } }, 400);
   }
 
-  const question = getQuestionById(questionId);
-  const cards = question?.viewpointCards || [];
-  const validSourceIds = new Set(cards.map((_, idx) => `S${idx + 1}`));
+  const bankQuestion = questionId ? getQuestionById(questionId) : null;
+  const inlineSources: InlineSource[] = Array.isArray(body?.sources) ? (body.sources as InlineSource[]) : [];
+
+  // 来源优先级：题库观点卡 → 前端传来的「面经来源」（简历题走这条）
+  const cards: SourceCard[] = (bankQuestion?.viewpointCards || []).length
+    ? bankQuestion!.viewpointCards.map((c) => ({
+        stance: c.stance,
+        summary: c.summary,
+        evidenceQuote: c.evidenceQuote,
+        sourceUrl: c.sourceUrl,
+        author: c.author,
+        upvotes: c.upvotes ?? 0,
+        popularity: c.popularity,
+      }))
+    : inlineSources
+        .slice(0, 4)
+        .map((s) => ({
+          stance: String(s.stance || '面经参考').slice(0, 16),
+          summary: String(s.summary || s.snippet || '').slice(0, 120),
+          evidenceQuote: String(s.evidenceQuote || s.snippet || s.summary || '').slice(0, 200),
+          sourceUrl: String(s.sourceUrl || s.url || ''),
+          author: String(s.author || '知乎答主').slice(0, 20),
+          upvotes: 0,
+          popularity: '主流',
+        }))
+        .filter((c) => Boolean(c.summary || c.evidenceQuote));
+
+  const title = bankQuestion?.title || String(body?.question || '').trim();
+  if (!title) {
+    return c.json({ error: { code: 'VALIDATION_ERROR', message: '缺少题目（questionId 或 question）' } }, 400);
+  }
+  if (!cards.length) {
+    return c.json(
+      { error: { code: 'VALIDATION_ERROR', message: '本题没有可核对的来源（需要真题观点卡或面经来源），无法做观点层评分' } },
+      400
+    );
+  }
+
+  const validSourceIds = new Set<string>(cards.map((_, idx) => `S${idx + 1}`));
 
   const sourceContext = cards
     .map((vc, idx) => `[S${idx + 1}] (${vc.stance} · ${vc.author}): ${vc.summary} 原文：“${vc.evidenceQuote}”`)
@@ -42,7 +98,7 @@ coachRoutes.post('/parse', async (c) => {
       followups?: string[];
     }>(
       COACH_PARSE_SYSTEM_PROMPT,
-      `题目：${question?.title || '技术面试题'}\n\n可用知乎来源集合：\n${sourceContext || '无外部来源'}\n\n候选人回答：\n${answer}`
+      `题目：${title}\n\n可用知乎来源集合：\n${sourceContext || '无外部来源'}\n\n候选人回答：\n${answer}`
     );
 
     const scoreCheck = validateStructuredClaims(rawLlm.llmScores || [], validSourceIds);
@@ -50,6 +106,7 @@ coachRoutes.post('/parse', async (c) => {
 
     return c.json({
       degraded: false,
+      sourcesUsed: cards.length,
       llmScores: scoreCheck.accepted,
       improvements: impCheck.accepted,
       followups: (rawLlm.followups || []).slice(0, 2),
