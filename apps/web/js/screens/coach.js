@@ -6,6 +6,8 @@ import { LocalAudioRecorder } from '../capture/recorder.js';
 import { LiveCaptionEngine, captionsToTranscript } from '../capture/caption.js';
 import { listAudioInputs, detectVirtualDevice } from '../capture/devices.js';
 import { isSystemAudioSupported, captureSystemAudio } from '../capture/systemAudio.js';
+import { saveRecording, downloadTrack, toFormData, trackUrl } from '../capture/recordings.js';
+import { mergeTracks, toTranscriptText } from '../capture/align.js';
 import { parseTranscriptToQA } from '../capture/transcript.js';
 import { runDeterministicRules } from '../rules/diagnose.js';
 import { dbPut } from '../db.js';
@@ -111,6 +113,11 @@ export function renderCoachScreen(root) {
             <audio id="audio-player" controls style="width:100%;height:36px;"></audio>
           </div>
 
+          <!-- 双轨（我 / 面试官）：可分别回放、导出、转写 -->
+          <div id="rec-tracks" style="display:none;margin-bottom:10px;font-size:12.5px;"></div>
+          <div id="rec-actions" style="display:none;gap:8px;flex-wrap:wrap;margin-bottom:8px;"></div>
+          <div id="asr-hint" style="display:none;color:var(--text-muted);font-size:12px;line-height:1.65;margin-bottom:8px;"></div>
+
           <div id="caption-list" style="max-height:180px;overflow-y:auto;border:1px solid var(--border);border-radius:6px;padding:6px;margin-bottom:10px;background:var(--bg);" hidden></div>
 
           <label for="answer-textarea" style="display:block;font-size:13px;font-weight:600;margin-bottom:6px;">
@@ -147,6 +154,9 @@ export function renderCoachScreen(root) {
   const spkInterviewerBtn = wrapper.querySelector('#btn-spk-interviewer');
   const audioBox = wrapper.querySelector('#audio-playback-box');
   const audioPlayer = wrapper.querySelector('#audio-player');
+  const recTracks = wrapper.querySelector('#rec-tracks');
+  const recActions = wrapper.querySelector('#rec-actions');
+  const asrHint = wrapper.querySelector('#asr-hint');
 
   const renderCaptions = (interim = '') => {
     if (!captions.length && !interim) {
@@ -261,6 +271,91 @@ export function renderCoachScreen(root) {
     );
   });
 
+  // ---- 双轨回放 / 导出 / 转写 ----
+  let lastTracks = null;
+
+  const renderTracks = (result) => {
+    lastTracks = { mic: result.blob, system: result.systemBlob || null };
+    recTracks.style.display = 'block';
+    recTracks.innerHTML = '';
+
+    const rows = [
+      { key: 'mic', label: '🎤 我（麦克风轨）', blob: lastTracks.mic },
+      { key: 'system', label: '🔊 面试官（系统音频轨）', blob: lastTracks.system },
+    ];
+    for (const row of rows) {
+      if (!row.blob) continue;
+      const box = document.createElement('div');
+      box.style.cssText = 'display:flex;gap:8px;align-items:center;margin-bottom:6px;';
+      const label = document.createElement('span');
+      label.style.cssText = 'min-width:170px;color:var(--text-secondary);';
+      label.textContent = row.label;
+      const audio = document.createElement('audio');
+      audio.controls = true;
+      audio.style.cssText = 'flex:1;height:32px;';
+      audio.src = trackUrl(row.blob);
+      box.append(label, audio);
+      recTracks.appendChild(box);
+    }
+    if (!lastTracks.system) {
+      const note = document.createElement('div');
+      note.style.cssText = 'color:var(--text-muted);';
+      note.textContent = '本次是单轨录音（未勾选系统声音）：说话人只能靠字幕徽标或「我说/面试官说」手工标注。';
+      recTracks.appendChild(note);
+    }
+
+    recActions.style.display = 'flex';
+    recActions.innerHTML = '';
+
+    const transcribeBtn = document.createElement('button');
+    transcribeBtn.type = 'button';
+    transcribeBtn.className = 'btn btn-primary btn-sm';
+    transcribeBtn.textContent = '转写这两轨（→ 带说话人的转写稿）';
+    transcribeBtn.addEventListener('click', async () => {
+      transcribeBtn.disabled = true;
+      transcribeBtn.textContent = '转写中…';
+      asrHint.style.display = 'block';
+      asrHint.textContent = '检查 ASR 服务…';
+      try {
+        const status = await fetch('/api/asr/status').then((r) => r.json());
+        if (!status.available) {
+          asrHint.innerHTML = `⚠ 云端 ASR 未配置。两条本地路线：<br/>① 点「导出两条音轨」→ 终端运行 <code>node scripts/asr/local-transcribe.mjs mic.webm system.webm</code>（本机 faster-whisper）→ 把 transcript.txt 粘到下面作答框；<br/>② 导入飞书妙记 / 腾讯会议 AI 笔记的转写稿。`;
+          return;
+        }
+        asrHint.textContent = '云端转写中（两轨分别转写，再按时间轴合并）…';
+        const runOne = async (blob, track, name) => {
+          const res = await fetch('/api/asr/transcribe', { method: 'POST', body: toFormData(blob, name, track) });
+          const data = await res.json();
+          if (!res.ok) throw new Error(data?.error?.message || '转写失败');
+          return data.segments || [];
+        };
+        const micSegments = await runOne(lastTracks.mic, 'mic', 'mic.webm');
+        const sysSegments = lastTracks.system ? await runOne(lastTracks.system, 'system', 'system.webm') : [];
+        const merged = mergeTracks(micSegments, sysSegments);
+        textarea.value = toTranscriptText(merged);
+        asrHint.textContent = `✅ 已合并 ${merged.length} 句（我 ${merged.filter((r) => r.speaker === 'me').length} / 面试官 ${merged.filter((r) => r.speaker === 'interviewer').length}），可直接点「结束并生成复盘诊断」。`;
+      } catch (err) {
+        asrHint.textContent = '⚠ 转写失败：' + err.message + '（可导出音轨用本地脚本）';
+      } finally {
+        transcribeBtn.disabled = false;
+        transcribeBtn.textContent = '转写这两轨（→ 带说话人的转写稿）';
+      }
+    });
+
+    const exportBtn = document.createElement('button');
+    exportBtn.type = 'button';
+    exportBtn.className = 'btn btn-ghost btn-sm';
+    exportBtn.textContent = '导出两条音轨';
+    exportBtn.addEventListener('click', () => {
+      const stamp = new Date().toISOString().slice(0, 19).replace(/[:T]/g, '-');
+      downloadTrack(lastTracks.mic, `mic-${stamp}.webm`);
+      if (lastTracks.system) downloadTrack(lastTracks.system, `system-${stamp}.webm`);
+      showToast('已导出到下载目录（本地文件，未上传）');
+    });
+
+    recActions.append(transcribeBtn, exportBtn);
+  };
+
   // 换一题
   wrapper.querySelector('#btn-switch-q').addEventListener('click', () => {
     const idx = state.bank.findIndex((item) => item.id === question.id);
@@ -340,15 +435,20 @@ export function renderCoachScreen(root) {
         audioUrl = URL.createObjectURL(result.blob);
         audioPlayer.src = audioUrl;
         audioBox.hidden = false;
-        await dbPut('recordings', {
+
+        const deviceLabel = micSelect.options[micSelect.selectedIndex]?.textContent || '系统默认输入';
+        await saveRecording({
           id: 'rec-' + Date.now(),
           questionId: question.id,
+          micBlob: result.blob,
+          systemBlob: result.systemBlob || null,
           durationSec: result.durationSec,
-          deviceId: micSelect.value || 'default',
-          hasSystemTrack: Boolean(result.systemBlob),
-          captions
+          captions,
+          deviceLabel,
         });
-        captionStatusEl.textContent = `✅ 录音完成（${result.durationSec} 秒），已加密存入本机 IndexedDB，未产生任何上传请求。`;
+
+        renderTracks(result);
+        captionStatusEl.textContent = `✅ 录音完成（${result.durationSec} 秒，${result.systemBlob ? '双轨' : '单轨'}），只存在本机 IndexedDB，未产生任何上传请求。`;
       }
     }
   });

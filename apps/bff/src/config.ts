@@ -24,6 +24,12 @@ export const config = {
   oauthAppId: (process.env.OAUTH_APP_ID || '').trim(),
   oauthAppKey: (process.env.OAUTH_APP_KEY || '').trim(),
   oauthRedirectUri: (process.env.OAUTH_REDIRECT_URI || '').trim(),
+  // ASR（可选）：未配置时 /api/asr 返回 501 + 本地转写/导入的替代路径
+  asrProvider: (process.env.ASR_PROVIDER || 'none').trim(),
+  asrBaseUrl: (process.env.ASR_BASE_URL || '').trim(),
+  asrApiKey: (process.env.ASR_API_KEY || '').trim(),
+  asrModel: (process.env.ASR_MODEL || '').trim(),
+
   webRoot: path.resolve(__dirname, '../../web'),
   bankFilePath: path.resolve(__dirname, '../../web/data/question-bank.json')
 };

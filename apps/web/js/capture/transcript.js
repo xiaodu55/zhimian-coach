@@ -9,6 +9,8 @@ export function parseTranscriptToQA(rawText, fallbackQuestion = '') {
 
   if (!lines.length) return [];
 
+  // 容忍行首时间戳：`[00:12] 面试官：…` / `00:12 我：…`（本地转写脚本与本机 whisper 输出常见）
+  const stripTs = (line) => line.replace(/^\[?\d{1,2}:\d{2}(?::\d{2})?\]?\s*/, '');
   const interviewerRe = /^(面试官|评委|老师|提问|Q|Interviewer)\s*[:：]\s*(.+)$/i;
   const candidateRe = /^(我|候选人|答辩人|回答|A|Candidate)\s*[:：]\s*(.+)$/i;
 
@@ -17,7 +19,8 @@ export function parseTranscriptToQA(rawText, fallbackQuestion = '') {
   let currentA = [];
   let hasExplicitSpeaker = false;
 
-  for (const line of lines) {
+  for (const rawLine of lines) {
+    const line = stripTs(rawLine);
     const mQ = line.match(interviewerRe);
     const mA = line.match(candidateRe);
     if (mQ) {

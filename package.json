@@ -13,5 +13,6 @@
     "bank:cards": "node scripts/build-bank/cards.mjs",
     "bank:to-v02": "node scripts/build-bank/to-v02.mjs",
     "bank:full": "node scripts/build-bank/questions.mjs && node scripts/build-bank/cards.mjs && node scripts/build-bank/to-v02.mjs"
-  }
+  },
+  "type": "module"
 }

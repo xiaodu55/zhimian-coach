@@ -27,3 +27,4 @@ data/local-*
 .archive/
 skill/
 zhihu-cli-skill.zip
+.tmp-asr/

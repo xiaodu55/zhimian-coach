@@ -105,6 +105,14 @@ pnpm build:bff && PORT=8788 pnpm start
   - 「字幕整理成转写稿」→ 输出 `面试官：… / 我：…`，直接喂给复盘解析。
 - 不支持 `getDisplayMedia` 的环境（移动端 / Tauri 桌面壳）会自动禁用双轨并给出提示。
 
+**双轨 → 复盘（转写两条路线）**
+1. 页面「转写这两轨」：调 `/api/asr/status`；配了云端 ASR（`ASR_PROVIDER` + `ASR_BASE_URL` + `ASR_API_KEY`）就直接转，两轨分别转写后按时间轴合并成 `面试官：… / 我：…`。
+2. 未配置时**不会假装能转**：返回 501 + 明确指引 —— 点「导出两条音轨」，然后在本机跑
+   ```bash
+   node scripts/asr/local-transcribe.mjs mic.webm system.webm   # 可选 --with-time
+   ```
+   本机 faster-whisper 转写两轨 → `ffmpeg silencedetect` 校正说话起点偏移 → 同一套 `align.js` 按时间轴合并 → 生成 `transcript.txt`，粘回作答框即可生成复盘。
+
 ## 已知边界（诚实标注）
 
 - 录音需 https/localhost（`getUserMedia` 安全上下文约束）；自动化环境未能验证真实麦克风，需真人点一次。
