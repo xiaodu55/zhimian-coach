@@ -16,6 +16,8 @@ interface Candidate {
   why: string;
   focus: string;
   difficulty: string;
+  /** 被问到的概率（0–100），用于排序 */
+  prob: number;
 }
 
 /**
@@ -59,6 +61,7 @@ resumeBulletRoutes.post('/resume/questions-from-bullets', async (c) => {
           why: String(q?.why || '').slice(0, 120),
           focus: String(q?.focus || '项目深挖').slice(0, 12),
           difficulty: ['基础', '进阶', '难'].includes(String(q?.difficulty)) ? String(q.difficulty) : '进阶',
+          prob: Math.max(0, Math.min(100, Math.round(Number(q?.prob ?? 60)) || 0)),
         } satisfies Candidate;
       })
       .filter((q): q is Candidate => Boolean(q))
@@ -78,8 +81,12 @@ resumeBulletRoutes.post('/resume/questions-from-bullets', async (c) => {
       why: '按要点直接追问（模型降级：使用固定模板，非定制化提问）',
       focus: '项目深挖',
       difficulty: '进阶',
+      prob: 60,
     }));
   }
+
+  // 展示顺序 = 被问到的概率（降序）；同概率时保持生成顺序
+  candidates.sort((a, b) => b.prob - a.prob);
 
   return c.json({ degraded, candidates });
 });

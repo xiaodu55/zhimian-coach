@@ -21,9 +21,24 @@ const MODE_KEY = 'zhimian.coach.mode';
 const getMode = () => (sessionStorage.getItem(MODE_KEY) === 'resume' ? 'resume' : 'bank');
 /** 两种练法各自记住上一次选的题：切回来不用重挑 */
 const rememberedQuestions = { bank: null, resume: null };
+/** 简历陪练：当前解析结果 / 选中的要点 / 该要点检索到的知乎知识 */
+let resumeRecord = null;
+let activeBullet = null;
+let bulletKnowledge = [];
+
+/** 从"为什么问"派生要点（模型没给 bullets 时的兜底） */
+function deriveBullets(why) {
+  const parts = String(why || '')
+    .split(/[；;]|，(?=.{6,})/)
+    .map((x) => x.trim())
+    .filter((x) => x.length >= 6)
+    .slice(0, 3);
+  return parts.length ? parts : ['给出一个可核对的数字与口径', '讲清你的判断与取舍', '落到结果与边界条件'];
+}
 const setMode = (mode) => sessionStorage.setItem(MODE_KEY, mode);
 import { parseTranscriptToQA } from '../capture/transcript.js';
 import { runDeterministicRules } from '../rules/diagnose.js';
+import { runReview } from '../lib/review.js';
 import { dbPut } from '../db.js';
 import { showToast } from '../ui/toast.js';
 
@@ -132,9 +147,20 @@ export function renderCoachScreen(root) {
       <div style="display:flex;flex-direction:column;gap:14px;">
         <!-- 练习区：真题陪练 / 简历陪练 -->
         <div id="practice-area" style="display:flex;flex-direction:column;gap:14px;">
+          <section class="card" id="bullet-context-card" hidden>
+            <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;">
+              <strong>🎯 当前要点</strong>
+              <span style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;">
+                <span class="tag tag-green" id="bullet-locator"></span>
+                <button id="btn-bullet-candidates" class="btn btn-sm" type="button">看可能被问到的题 →</button>
+              </span>
+            </div>
+            <div id="bullet-context-text" style="font-size:13.5px;font-weight:600;margin:6px 0 4px;line-height:1.6;"></div>
+            <div id="bullet-knowledge" style="font-size:12.5px;color:var(--text-secondary);line-height:1.7;"></div>
+          </section>
           <section class="card">
             <div id="current-question-strip" style="font-size:12.5px;color:var(--text-secondary);background:var(--surface-alt);border-radius:8px;padding:8px 10px;margin-bottom:8px;">
-              ${question.source === 'resume' ? '当前题目' : '当前题目（真题）'}：${escapeHtml(question.title)}
+              ${question.source === 'resume-bullet' ? '当前要点' : question.source === 'resume' ? '当前题目' : '当前题目（真题）'}：${escapeHtml(question.title)}
               ${question.source === 'resume' ? `<div style="color:var(--text-muted);margin-top:2px;">简历题 · 定位 ${escapeHtml(question.locator || '')}${question.zhihuRef ? ' · 面经参考挂在左栏' : ''}</div>` : ''}
             </div>
 
@@ -142,11 +168,6 @@ export function renderCoachScreen(root) {
             作答文本 / 导入会议转写稿（支持「面试官：/ 我：」标签切分）：
           </label>
           <textarea id="answer-textarea" class="textarea" rows="7" placeholder="可直接在此输入回答，或点击上方「开始录音」自动落字幕，或粘贴带「面试官：/ 我：」的复盘转写稿…"></textarea>
-
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px;flex-wrap:wrap;gap:8px;">
-            <button id="btn-trigger-followup" class="btn btn-sm" type="button">触发追问（压力测试）</button>
-            <button id="btn-submit-parse" class="btn btn-primary" type="button">结束并生成复盘诊断 →</button>
-          </div>
 
             <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px;flex-wrap:wrap;gap:8px;">
               <button id="btn-trigger-followup" class="btn btn-sm" type="button">触发追问（压力测试）</button>
@@ -243,6 +264,27 @@ export function renderCoachScreen(root) {
   const resumeStatus = wrapper.querySelector('#resume-status');
   const resumeProfile = wrapper.querySelector('#resume-profile');
   const resumeQuestions = wrapper.querySelector('#resume-questions');
+
+  // 简历要点模式：右侧显示当前要点 + 实时检索到的知乎知识
+  const bulletCard = wrapper.querySelector('#bullet-context-card');
+  if (question.source === 'resume-bullet') {
+    bulletCard.hidden = false;
+    if (!activeBullet || activeBullet.text !== question.title) {
+      activeBullet = {
+        text: question.title,
+        why: question.context || '',
+        locator: question.locator || '',
+        parentQ: question.title,
+      };
+    }
+    wrapper.querySelector('#bullet-locator').textContent = '定位 ' + (question.locator || '—');
+    wrapper.querySelector('#bullet-context-text').textContent = question.title;
+    wrapper.querySelector('#btn-bullet-candidates').addEventListener('click', () => {
+      openCandidateModal({ bullets: [activeBullet], record: resumeRecord });
+    });
+    renderBulletKnowledge();
+    if (!bulletKnowledge.length) loadBulletKnowledge(activeBullet);
+  }
 
   const vpBox = wrapper.querySelector('#coach-vp-list');
   if ((question.viewpointCards || []).length) {
@@ -390,6 +432,7 @@ export function renderCoachScreen(root) {
 
   // ---- 简历模式：解析简历 → 抽取档案 → 出题 ----
   const renderResumeResult = (data) => {
+    resumeRecord = data;
     resumeProfile.style.display = 'block';
     resumeProfile.innerHTML = '';
 
@@ -434,150 +477,369 @@ export function renderCoachScreen(root) {
       resumeProfile.appendChild(warn);
     }
 
-    renderResumeQuestionList(data);
+    renderResumeBullets(data);
   };
 
   /**
-   * 题目列表：每题带 bullets（可勾选）+ 练习状态；练过的题仍然保留在列表里。
-   * 勾选与"已练"标记都会写回 IndexedDB，刷新/换会话不丢。
+   * 简历要点（紧凑列表）：解析后只铺开"简历里抽出的要点"，不再一屏拉长题卡。
+   * 点一条要点 → 右侧练习区切到该要点 + 检索知乎知识 + 弹出按被问概率排序的候选题。
    */
-  const renderResumeQuestionList = (record) => {
-    const deriveBullets = (why) => {
-      const parts = String(why || '')
-        .split(/[；;]|，(?=.{6,})/)
-        .map((x) => x.trim())
-        .filter((x) => x.length >= 6)
-        .slice(0, 3);
-      return parts.length ? parts : ['给出一个可核对的数字与口径', '讲清你的判断与取舍', '落到结果与边界条件'];
-    };
-    const questions = (record?.questions || []).map((q) => ({
-      ...q,
-      bullets: q.bullets?.length ? q.bullets : deriveBullets(q.why),
-      coveredBullets: q.coveredBullets || [],
-      practiced: Boolean(q.practiced),
-    }));
-    const practiced = questions.filter((q) => q.practiced).length;
-
+  const renderResumeBullets = (record) => {
+    const bullets = flatBullets(record);
     resumeQuestions.style.display = 'flex';
     resumeQuestions.innerHTML = '';
 
     const head = document.createElement('div');
-    head.style.cssText = 'display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:12px;color:var(--text-muted);';
-    head.innerHTML = `<span>共 ${questions.length} 道题 · 已练 ${practiced} 道${record?.filename ? ' · ' + escapeHtml(record.filename) : ''}</span>`;
+    head.style.cssText = 'display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:12px;color:var(--text-muted);flex-wrap:wrap;';
+    head.innerHTML = `<span>简历要点 · 共 ${bullets.length} 条${record?.filename ? ' · ' + escapeHtml(record.filename) : ''}</span>`;
+
     const again = document.createElement('button');
     again.type = 'button';
     again.className = 'btn btn-ghost btn-sm';
     again.textContent = '重新出题';
     again.addEventListener('click', () => wrapper.querySelector('#btn-resume-refresh').click());
 
-    const wizardBtn = document.createElement('button');
-    wizardBtn.type = 'button';
-    wizardBtn.className = 'btn btn-primary btn-sm';
-    wizardBtn.textContent = '选择要点 → 出题';
-    wizardBtn.addEventListener('click', () => openBulletWizard(record));
+    const multiBtn = document.createElement('button');
+    multiBtn.type = 'button';
+    multiBtn.className = 'btn btn-primary btn-sm';
+    multiBtn.textContent = '为勾选要点出题 →';
+    multiBtn.addEventListener('click', () => openBulletWizard(record));
 
-    head.append(wizardBtn, again);
+    head.append(multiBtn, again);
     resumeQuestions.appendChild(head);
 
-    questions.forEach((q, idx) => {
-      const item = document.createElement('div');
-      item.style.cssText = 'border:1px solid var(--border);border-radius:8px;padding:10px;font-size:13px;';
+    const list = document.createElement('div');
+    list.id = 'resume-bullets';
+    list.style.cssText = 'display:flex;flex-direction:column;gap:2px;max-height:360px;overflow:auto;margin-top:6px;';
+    bullets.forEach((b) => {
+      const row = document.createElement('div');
+      row.className = 'bullet-row' + (activeBullet && activeBullet.text === b.text ? ' selected' : '');
+      row.title = b.parentQ || '';
 
-      const tags = document.createElement('div');
-      tags.style.cssText = 'display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-bottom:4px;';
-      const focusTag = document.createElement('span');
-      focusTag.className = 'tag tag-blue';
-      focusTag.textContent = q.focus || '追问';
-      const diffTag = document.createElement('span');
-      diffTag.className = 'tag';
-      diffTag.textContent = q.difficulty || '进阶';
-      const locTag = document.createElement('span');
-      locTag.style.cssText = 'font-size:11px;color:var(--text-muted);';
-      locTag.textContent = '定位：' + (q.locator || '');
-      tags.append(focusTag, diffTag, locTag);
-      if (q.practiced) {
-        const done = document.createElement('span');
-        done.className = 'tag tag-green';
-        done.textContent = '已练';
-        tags.appendChild(done);
-      }
+      const cb = document.createElement('input');
+      cb.type = 'checkbox';
+      cb.checked = b.covered;
+      cb.style.cssText = 'margin-top:3px;';
+      cb.addEventListener('click', (e) => e.stopPropagation());
+      cb.addEventListener('change', async () => {
+        const next = cb.checked
+          ? [...new Set([...(b.coveredAll || []), b.text])]
+          : (b.coveredAll || []).filter((x) => x !== b.text);
+        await updateResumeQuestionState(b.qid, { coveredBullets: next });
+      });
 
-      const title = document.createElement('div');
-      title.style.cssText = 'font-weight:600;margin-bottom:4px;';
-      title.textContent = `Q${idx + 1}. ${q.q}`;
+      const loc = document.createElement('span');
+      loc.className = 'bullet-loc';
+      loc.textContent = b.locator || '';
+      const txt = document.createElement('span');
+      txt.className = 'bullet-text';
+      txt.textContent = b.text;
 
-      const why = document.createElement('div');
-      why.style.cssText = 'font-size:12px;color:var(--amber);margin-bottom:6px;';
-      why.textContent = '为什么问：' + (q.why || '');
+      row.append(cb, loc, txt);
+      row.addEventListener('click', () => selectBullet(b));
+      list.appendChild(row);
+    });
+    resumeQuestions.appendChild(list);
+  };
 
-      item.append(tags, title, why);
+  /** 还没选要点时，右侧给一句引导（避免对着真题面板发呆） */
+  function showBulletHint() {
+    // 已经选过要点（或不在简历模式）就别覆盖右侧内容
+    if (activeBullet || getMode() !== 'resume') return;
+    const card = document.querySelector('#bullet-context-card');
+    if (!card) return;
+    card.hidden = false;
+    const loc = document.querySelector('#bullet-locator');
+    const txt = document.querySelector('#bullet-context-text');
+    const kb = document.querySelector('#bullet-knowledge');
+    if (loc) loc.textContent = '待选';
+    if (txt) txt.textContent = '从左侧「简历要点」里点一条，这里会显示该要点与实时检索到的知乎知识。';
+    if (kb) kb.innerHTML = '<span style="color:var(--text-muted)">选完要点后，这里会自动检索相关面经与观点。</span>';
+  }
 
-      // bullets：可勾选的覆盖点
-      if (q.bullets.length) {
-        const bl = document.createElement('div');
-        bl.style.cssText = 'margin:4px 0 8px;';
-        q.bullets.forEach((b, bi) => {
-          const row = document.createElement('label');
-          row.style.cssText = 'display:flex;gap:6px;align-items:flex-start;font-size:12.5px;cursor:pointer;margin-bottom:2px;';
-          const cb = document.createElement('input');
-          cb.type = 'checkbox';
-          cb.checked = q.coveredBullets.includes(b);
-          cb.style.cssText = 'margin-top:3px;';
-          cb.addEventListener('change', async () => {
-            const next = cb.checked
-              ? [...new Set([...q.coveredBullets, b])]
-              : q.coveredBullets.filter((x) => x !== b);
-            await updateResumeQuestionState(q.id, { coveredBullets: next });
-            showToast(cb.checked ? '已勾选覆盖点' : '已取消勾选');
-          });
-          const txt = document.createElement('span');
-          txt.textContent = b;
-          row.append(cb, txt);
-          bl.appendChild(row);
+  /** 简历解析结果 → 扁平要点列表 */
+  function flatBullets(record) {
+    const out = [];
+    for (const q of record?.questions || []) {
+      const bullets = q.bullets?.length ? q.bullets : deriveBullets(q.why);
+      for (const b of bullets) {
+        out.push({
+          text: b,
+          why: q.why || '',
+          locator: q.locator || '',
+          focus: q.focus || '',
+          difficulty: q.difficulty || '',
+          parentQ: q.q || '',
+          qid: q.id,
+          covered: (q.coveredBullets || []).includes(b),
+          coveredAll: q.coveredBullets || [],
+          sources: q.sources || [],
+          ref: q.zhihuRef || null,
         });
-        item.appendChild(bl);
       }
+    }
+    return out;
+  }
 
-      const foot = document.createElement('div');
-      foot.style.cssText = 'display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;';
-      if (q.zhihuRef || (q.sources || []).length) {
-        const ref = document.createElement('div');
-        ref.style.cssText = 'font-size:12px;color:var(--text-secondary);';
-        const first = q.zhihuRef || q.sources[0];
-        ref.innerHTML = `真实面经：<a href="${escapeHtml(first.url || '')}" target="_blank" rel="noopener noreferrer">${escapeHtml(first.title || '查看')}</a>`;
-        foot.appendChild(ref);
-      } else {
-        foot.appendChild(document.createElement('span'));
+  /** 点要点：右侧切到该要点 + 检索知乎知识 + 弹出候选题窗口 */
+  function selectBullet(b) {
+    if (!b) return;
+    activeBullet = b;
+    bulletKnowledge = [];
+    state.activeQuestion = {
+      id: 'bullet-' + (b.qid || '') + '-' + b.text.slice(0, 8),
+      title: b.text,
+      context: b.why || '',
+      keywords: (resumeRecord?.profile?.skills || []).slice(0, 6),
+      expectedLength: [150, 400],
+      skeleton: [b.text, '给一个可核对的数字与口径', '讲清你的判断与取舍', '落到结果与边界条件'],
+      viewpointCards: [],
+      sources: [],
+      source: 'resume-bullet',
+      locator: b.locator,
+      zhihuRef: b.ref || null,
+    };
+    root.innerHTML = '';
+    renderCoachScreen(root);
+    openCandidateModal({ bullets: [b], record: resumeRecord });
+  }
+
+  /** 检索该要点相关的知乎面经（右侧"检索到的知识"） */
+  async function loadBulletKnowledge(b) {
+    const box = document.querySelector('#bullet-knowledge');
+    if (!box || !b) return;
+    box.innerHTML = '<span style="color:var(--text-muted)">正在检索知乎相关面经…</span>';
+    try {
+      const res = await fetch('/api/zhihu/search', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ query: String(b.text).slice(0, 40), scope: 'zhihu', count: 4 }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data?.error?.message || '检索失败');
+      bulletKnowledge = (data.results || []).slice(0, 4);
+    } catch (err) {
+      bulletKnowledge = [];
+      const el = document.querySelector('#bullet-knowledge');
+      if (el) {
+        el.innerHTML = `<span style="color:var(--amber)">知乎检索不可用（${escapeHtml(err.message)}）：仍可基于要点直接作答</span>`;
       }
+      return;
+    }
+    renderBulletKnowledge();
+  }
+
+  function renderBulletKnowledge() {
+    const box = document.querySelector('#bullet-knowledge');
+    if (!box) return;
+    if (!bulletKnowledge.length) {
+      box.innerHTML = '<span style="color:var(--text-muted)">暂无可引用的检索结果。</span>';
+      return;
+    }
+    const wrap = document.createElement('div');
+    wrap.style.cssText = 'display:flex;flex-direction:column;gap:5px;';
+    bulletKnowledge.forEach((k, i) => {
+      const row = document.createElement('a');
+      row.href = k.url || '#';
+      row.target = '_blank';
+      row.rel = 'noopener noreferrer';
+      row.style.cssText = 'display:block;font-size:12.5px;line-height:1.6;color:var(--text-secondary);';
+      row.innerHTML = `<strong style="color:var(--primary)">${i + 1}. ${escapeHtml(k.title || '')}</strong><br/><span style="color:var(--text-muted)">${escapeHtml(String(k.snippet || '').slice(0, 120))}</span>`;
+      wrap.appendChild(row);
+    });
+    box.innerHTML = '';
+    box.appendChild(wrap);
+  }
+
+  /** 候选题窗口：按"被问到的概率"降序；点「练习」开小窗作答 */
+  async function openCandidateModal({ bullets, record, title = '② 选一道题去练' }) {
+    const list = (bullets || []).filter(Boolean);
+    if (!list.length) return;
+    const modal = createModal({
+      title,
+      subtitle: '按"被问到的概率"从高到低排序；点「练习」在弹窗里直接作答',
+      width: 780,
+    });
+    const loading = document.createElement('div');
+    loading.style.cssText = 'font-size:13px;color:var(--text-muted);';
+    loading.textContent = '正在按要点生成候选题并估算被问概率…';
+    modal.body.appendChild(loading);
+
+    let candidates = [];
+    try {
+      const res = await fetch('/api/resume/questions-from-bullets', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          bullets: list.map((b) => ({ bullet: b.text, question: b.parentQ || '' })),
+          resumeContext: JSON.stringify({
+            画像: record?.profile?.headline || '',
+            技能: (record?.profile?.skills || []).slice(0, 12),
+            项目: (record?.profile?.projects || []).map((p) => ({
+              名称: p.name,
+              角色: p.role,
+              主张: (p.claims || []).map((x) => x.text).slice(0, 4),
+            })),
+          }),
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data?.error?.message || '生成候选题失败');
+      candidates = data.candidates || [];
+    } catch (err) {
+      loading.innerHTML = `<span style="color:var(--amber)">候选题生成失败：${escapeHtml(err.message)}</span>`;
+      return;
+    }
+
+    modal.body.innerHTML = '';
+    candidates.forEach((c, i) => {
+      const prob = Math.max(0, Math.min(100, Number(c.prob) || 0));
+      const tone = prob >= 75 ? 'var(--red)' : prob >= 50 ? 'var(--amber)' : 'var(--green)';
+      const item = document.createElement('div');
+      item.style.cssText = 'border:1px solid var(--border);border-radius:8px;padding:10px;margin-bottom:8px;';
+      item.innerHTML = `
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:4px;">
+          <span style="font-size:11px;color:var(--text-muted);">第 ${i + 1} 可能 · ${escapeHtml(c.focus || '追问')} · ${escapeHtml(c.difficulty || '进阶')}</span>
+          <span style="font-size:12px;font-weight:700;color:${tone};">被问概率 ${prob}%</span>
+        </div>
+        <div style="font-weight:600;font-size:14px;margin-bottom:4px;">${escapeHtml(c.q || '')}</div>
+        <div style="font-size:12px;color:var(--amber);margin-bottom:4px;">为什么问：${escapeHtml(c.why || '')}</div>
+        <div style="font-size:11px;color:var(--text-muted);margin-bottom:6px;">来自要点：${escapeHtml(String(c.bullet || '').slice(0, 46))}</div>
+        <div style="height:4px;border-radius:999px;background:var(--border);overflow:hidden;margin-bottom:8px;">
+          <div style="height:100%;width:${prob}%;background:${tone};"></div>
+        </div>`;
       const btn = document.createElement('button');
       btn.type = 'button';
       btn.className = 'btn btn-primary btn-sm';
-      btn.textContent = q.practiced ? '再练这题 →' : '练这题 →';
-      btn.addEventListener('click', async () => {
-        await updateResumeQuestionState(q.id, { practiced: true });
-        state.activeQuestion = {
-          id: q.id,
-          title: q.q,
-          context: q.why,
-          keywords: (record?.profile?.skills || []).slice(0, 6),
-          expectedLength: [150, 400],
-          skeleton: q.bullets?.length ? q.bullets : ['先复述问题', '给一个可核对数字', '讲清你的判断与取舍', '落到结果与边界'],
-          viewpointCards: q.viewpointCards || [],
-          sources: q.sources || [],
-          source: 'resume',
-          locator: q.locator,
-          zhihuRef: q.zhihuRef || null,
-        };
-        showToast('已切到这道简历题，往下写你的回答');
-        root.innerHTML = '';
-        renderCoachScreen(root);
+      btn.textContent = '练习 →';
+      btn.addEventListener('click', () => {
+        modal.close();
+        openPracticeModal({ candidate: c, bullet: list[0], record });
       });
-      foot.appendChild(btn);
-      item.appendChild(foot);
-
-      resumeQuestions.appendChild(item);
+      item.appendChild(btn);
+      modal.body.appendChild(item);
     });
-  };
+
+    if (!candidates.length) {
+      const empty = document.createElement('div');
+      empty.style.cssText = 'font-size:13px;color:var(--text-muted);';
+      empty.textContent = '这次没生成候选题，可以在左侧要点列表里换一条再试。';
+      modal.body.appendChild(empty);
+    }
+    const closeBtn = modalButton('关闭', { ghost: true, onClick: () => modal.close() });
+    modal.footer.appendChild(closeBtn);
+  }
+
+  /** 练习小窗：题面 + 要点 + 检索到的知识 + 作答 + 复盘 */
+  function openPracticeModal({ candidate, bullet, record }) {
+    const modal = createModal({
+      title: '练习这道题',
+      subtitle: candidate?.q || bullet?.text || '',
+      width: 720,
+    });
+
+    const knowledge = bulletKnowledge.slice(0, 3);
+    const info = document.createElement('div');
+    info.style.cssText = 'font-size:13px;line-height:1.75;margin-bottom:10px;';
+    info.innerHTML = `
+      <div style="color:var(--amber);">为什么问：${escapeHtml(candidate?.why || '')}</div>
+      <div style="color:var(--text-muted);font-size:12px;">要点：${escapeHtml(bullet?.text || '')}</div>
+      ${knowledge.length
+        ? `<div style="font-size:12px;color:var(--text-secondary);margin-top:6px;">检索到的知识：${knowledge
+            .map((k) => `<a href="${escapeHtml(k.url || '')}" target="_blank" rel="noopener noreferrer">${escapeHtml(k.title || '')}</a>`)
+            .join('、')}</div>`
+        : '<div style="font-size:12px;color:var(--text-muted);margin-top:6px;">检索到的知识：暂无（知乎检索不可用或未命中）</div>'}`;
+    modal.body.appendChild(info);
+
+    const ta = document.createElement('textarea');
+    ta.className = 'textarea';
+    ta.rows = 6;
+    ta.placeholder = '按面试口吻写下你的回答（会逐条对照要点与原话规则做诊断）';
+    modal.body.appendChild(ta);
+
+    const result = document.createElement('div');
+    result.style.cssText = 'margin-top:10px;font-size:13px;';
+    modal.body.appendChild(result);
+
+    const submit = modalButton('提交并复盘', {
+      primary: true,
+      onClick: async () => {
+        const raw = ta.value.trim();
+        if (!raw) {
+          showToast('先写下你的回答', 'warn');
+          return;
+        }
+        submit.disabled = true;
+        submit.textContent = '模型生成中（最多 25 秒）…';
+        const question = {
+          id: candidate?.id || 'bullet-practice',
+          title: candidate?.q || bullet?.text || '',
+          context: candidate?.why || '',
+          keywords: (record?.profile?.skills || []).slice(0, 6),
+          skeleton: [bullet?.text].filter(Boolean),
+          viewpointCards: [],
+          sources: [],
+          source: 'resume-bullet',
+          locator: bullet?.locator || '',
+        };
+        const report = await runReview({
+          question,
+          raw,
+          sources: knowledge.map((k) => ({
+            summary: k.snippet,
+            snippet: k.snippet,
+            evidenceQuote: k.snippet,
+            sourceUrl: k.url,
+            author: '',
+          })),
+        });
+        submit.disabled = false;
+        submit.textContent = '提交并复盘';
+        renderMiniReview(result, report);
+      },
+    });
+
+    const closeBtn = modalButton('关闭', { ghost: true, onClick: () => modal.close() });
+    modal.footer.append(closeBtn, submit);
+  }
+
+  /** 小窗内的复盘结果（紧凑版） */
+  function renderMiniReview(host, report) {
+    host.innerHTML = '';
+    const head = document.createElement('div');
+    head.style.cssText = 'font-size:13px;font-weight:600;margin-bottom:6px;';
+    head.textContent = report.degraded ? '复盘（规则模式：模型层暂不可用）' : '复盘结果';
+    host.appendChild(head);
+
+    const rules = document.createElement('div');
+    rules.style.cssText = 'font-size:12.5px;color:var(--text-secondary);margin-bottom:8px;line-height:1.7;';
+    rules.textContent = report.ruleFindings.length
+      ? `原话级诊断命中 ${report.ruleFindings.length} 条：${report.ruleFindings.map((f) => f.ruleName).join('、')}`
+      : '原话级诊断：未命中规则库里的常见问题（数字/边界/取舍等）';
+    host.appendChild(rules);
+
+    for (const s of report.llmScores || []) {
+      const card = document.createElement('div');
+      card.style.cssText = 'border:1px solid var(--border);border-radius:6px;padding:8px;margin-bottom:6px;';
+      const tone = s.score >= 75 ? 'var(--green)' : s.score >= 55 ? 'var(--amber)' : 'var(--red)';
+      card.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
+          <span class="tag tag-blue">${escapeHtml(s.dimension || '维度')}</span>
+          <strong style="color:${tone};">${s.score}</strong>
+        </div><div style="margin-top:4px;line-height:1.65;">${escapeHtml(s.claim || '')}</div>`;
+      host.appendChild(card);
+    }
+
+    if ((report.improvements || []).length) {
+      const ul = document.createElement('ul');
+      ul.style.cssText = 'margin:6px 0 0;padding-left:18px;font-size:12.5px;line-height:1.75;';
+      for (const im of report.improvements) {
+        const li = document.createElement('li');
+        li.textContent = im.claim || '';
+        ul.appendChild(li);
+      }
+      host.appendChild(ul);
+    }
+  }
 
   /**
    * 两步向导：
@@ -680,7 +942,10 @@ export function renderCoachScreen(root) {
           const data = await res.json();
           if (!res.ok) throw new Error(data?.error?.message || '生成候选题目失败');
           modal.close();
-          openCandidateModal(record, data.candidates || []);
+          openCandidateModal({
+            bullets: [...selected.entries()].map(([bullet, question]) => ({ text: bullet, parentQ: question })),
+            record,
+          });
         } catch (err) {
           nextBtn.disabled = false;
           nextBtn.textContent = '生成候选题目 →';
@@ -689,62 +954,6 @@ export function renderCoachScreen(root) {
       },
     });
     modal.footer.append(cancelBtn, nextBtn);
-  };
-
-  /** 第二步：候选题目滑窗 */
-  const openCandidateModal = (record, candidates) => {
-    const modal = createModal({
-      title: '② 选一道题去练',
-      subtitle: candidates.length ? '这些题来自你勾选的要点，选哪道就练哪道' : '没有候选题',
-      width: 780,
-    });
-    const { cards, sources } = collectRefs(record);
-
-    if (!candidates.length) {
-      modal.body.append(el('p', 'hint', '这次没生成候选题：可以在下面的题目列表里直接挑一道练。'));
-    }
-
-    candidates.forEach((c) => {
-      const item = document.createElement('div');
-      item.style.cssText = 'border:1px solid var(--border);border-radius:8px;padding:10px;margin-bottom:8px;';
-      item.innerHTML = `
-        <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-bottom:4px;">
-          <span class="tag tag-blue">${escapeHtml(c.focus || '追问')}</span>
-          <span class="tag">${escapeHtml(c.difficulty || '进阶')}</span>
-          <span style="font-size:11px;color:var(--text-muted);">来自要点：${escapeHtml((c.bullet || '').slice(0, 28))}</span>
-        </div>
-        <div style="font-weight:600;font-size:14px;margin-bottom:4px;">${escapeHtml(c.q)}</div>
-        <div style="font-size:12px;color:var(--amber);">为什么问：${escapeHtml(c.why || '')}</div>
-      `;
-      const btn = document.createElement('button');
-      btn.type = 'button';
-      btn.className = 'btn btn-primary btn-sm';
-      btn.style.marginTop = '8px';
-      btn.textContent = '练这道 →';
-      btn.addEventListener('click', () => {
-        modal.close();
-        state.activeQuestion = {
-          id: c.id,
-          title: c.q,
-          context: c.why || '',
-          keywords: (record?.profile?.skills || []).slice(0, 6),
-          expectedLength: [150, 400],
-          skeleton: [c.bullet, '给一个可核对的数字与口径', '讲清你的判断与取舍', '落到结果与边界'].filter(Boolean),
-          viewpointCards: cards,
-          sources,
-          source: 'resume',
-          locator: '',
-        };
-        showToast('已切到这道题，往下写你的回答');
-        root.innerHTML = '';
-        renderCoachScreen(root);
-      });
-      item.appendChild(btn);
-      modal.body.appendChild(item);
-    });
-
-    const closeBtn = modalButton('关闭', { ghost: true, onClick: () => modal.close() });
-    modal.footer.appendChild(closeBtn);
   };
 
   // 重新出题：忽略缓存（同一份简历改成 force 才会再花 40–50 秒）
@@ -825,8 +1034,7 @@ export function renderCoachScreen(root) {
         ? `命中缓存：${data2.questions.length} 道题（本次未调用模型）`
         : `已生成 ${data2.questions.length} 道题（${engine} 解析 · 接地丢弃 ${data2.droppedByGrounding}）`;
       renderResumeResult(saved || data2);
-      showToast('简历解析完成：题目已保存到本机，随时回来练（不用重复上传）');
-      openBulletWizard(saved || data2);
+      showToast('简历解析完成：点左侧任意一条要点即可练（结果已存本机，不用重复上传）');
     } catch (err) {
       resumeStatus.textContent = '失败';
       showToast(err.message, 'error', 6000);
@@ -1054,7 +1262,9 @@ export function renderCoachScreen(root) {
     const restored = await restoreLatestResumeAnalysis();
     if (restored && (restored.questions || []).length) {
       resumeStatus.textContent = `已恢复上次的简历解析（${restored.filename || '简历'}，${restored.questions.length} 道题）`;
-      renderResumeQuestionList(restored);
+      resumeRecord = restored;
+      renderResumeBullets(restored);
+      showBulletHint();
     }
   })();
 
@@ -1272,85 +1482,12 @@ export function renderCoachScreen(root) {
     submitBtn.disabled = true;
     submitBtn.textContent = '模型生成中（最多 25 秒）…';
 
-    const qaPairs = parseTranscriptToQA(raw, question.title);
-    const targetAnswer = qaPairs.map((p) => p.answer).join('\n\n');
-    const ruleFindings = runDeterministicRules(targetAnswer, {
-      ...question,
-      followupFocus: activeFollowupFocus
-    });
-
-    let llmResult = null;
-    let degraded = false;
-
-    // 简历题且没有面经来源（模型降级时会出现）→ 不请求观点层，直接规则层
-    if (question.source === 'resume' && !(question.viewpointCards || []).length) {
-      degraded = true;
-      const reportResume = {
-        id: 'session-' + Date.now(),
-        question,
-        answer: targetAnswer,
-        ruleFindings,
-        llmScores: null,
-        improvements: null,
-        degraded,
-        degradedReason: '本题没有可核对的面经来源：只跑规则层',
-        createdAt: new Date().toISOString(),
-      };
-      state.activeQuestion = question;
-      state.lastReviewReport = reportResume;
-      await dbPut('sessions', reportResume);
-      navigate('/review');
-      showToast(`已生成复盘：命中 ${ruleFindings.length} 条原话级诊断（无面经来源，未跑观点层）`);
-      return;
-    }
-
-    try {
-      const ctrl = new AbortController();
-      // 实测：DeepSeek 结构化输出 10–16s，8s 超时会把成功请求 abort 掉（曾导致误降级）
-      const timer = setTimeout(() => ctrl.abort(), 25000);
-      const res = await fetch('/api/coach/parse', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          ...(question.source === 'resume'
-            ? {
-                question: question.title,
-                sources: (question.viewpointCards || []).map((c) => ({
-                  summary: c.summary,
-                  snippet: c.evidenceQuote,
-                  evidenceQuote: c.evidenceQuote,
-                  sourceUrl: c.sourceUrl,
-                  author: c.author,
-                })),
-              }
-            : { questionId: question.id }),
-          answer: targetAnswer,
-          transcript: raw,
-        }),
-        signal: ctrl.signal
-      });
-      clearTimeout(timer);
-      if (res.ok) {
-        llmResult = await res.json();
-        degraded = !!llmResult.degraded;
-      } else {
-        degraded = true;
-      }
-    } catch (_) {
-      degraded = true;
-    }
-
-    const report = {
-      id: 'session-' + Date.now(),
+    const review = await runReview({
       question,
-      qaPairs,
-      answer: targetAnswer,
-      ruleFindings,
-      llmScores: llmResult?.llmScores || null,
-      improvements: llmResult?.improvements || null,
-      degraded,
-      createdAt: new Date().toISOString()
-    };
+      raw,
+      followupFocus: activeFollowupFocus,
+    });
+    const { qaPairs, answer: targetAnswer, ruleFindings, llmScores, improvements, degraded } = review;
 
     state.lastReviewReport = report;
     await dbPut('sessions', report);

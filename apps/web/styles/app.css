@@ -586,3 +586,32 @@ a:hover {
   padding: 12px 16px;
 }
 .modal-footer .btn { min-width: 96px; }
+
+/* 简历要点（紧凑行）：一行一条要点，选中即切到右侧练习区 */
+.bullet-row {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  padding: 6px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  line-height: 1.55;
+  border: 1px solid transparent;
+}
+.bullet-row:hover { background: var(--surface-alt); }
+.bullet-row.selected {
+  background: var(--primary-soft);
+  border-color: var(--primary);
+}
+.bullet-row input[type="checkbox"] { margin-top: 3px; flex: none; }
+.bullet-loc {
+  flex: none;
+  font-size: 11px;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+  padding-top: 2px;
+  min-width: 46px;
+}
+.bullet-text { flex: 1; color: var(--text-secondary); }
+.bullet-row.selected .bullet-text { color: var(--text); font-weight: 600; }
