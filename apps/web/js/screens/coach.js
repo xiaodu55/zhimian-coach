@@ -42,6 +42,7 @@ export function renderCoachScreen(root) {
       <div class="mode-switch" role="tablist" aria-label="陪练方式">
         <button type="button" class="btn btn-sm" data-coach-mode="bank" role="tab">📚 真题陪练</button>
         <button type="button" class="btn btn-sm" data-coach-mode="resume" role="tab">🧾 简历陪练</button>
+        <button type="button" class="btn btn-sm" data-coach-mode="record" role="tab">🎙 录音复盘</button>
       </div>
       <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
         <span class="tag ${question.source === 'resume' ? 'tag-green' : 'tag-blue'}">${escapeHtml(question.source === 'resume' ? '简历题' : question.track)}</span>
@@ -54,6 +55,21 @@ export function renderCoachScreen(root) {
     <div class="grid-2" style="align-items:start;">
       <!-- 左侧：练法切换（简历陪练 / 真题陪练） -->
       <div style="display:flex;flex-direction:column;gap:14px;">
+        <div id="panel-record" style="display:none;flex-direction:column;gap:14px;">
+          <section class="card">
+            <strong>🎙 录音复盘：把一场对话变成可核对的复盘</strong>
+            <div style="font-size:12.5px;color:var(--text-secondary);margin-top:6px;line-height:1.8;">
+              1) 选输入设备（同时开飞书/腾讯会议也不会失效，右侧有音量与静音告警）<br/>
+              2) 开始录音 → 实时字幕逐句落时间戳，说话人可一键切换/纠正<br/>
+              3) 可选：同时录系统声音（面试官那一路），双轨各自成文件<br/>
+              4) 转写 → 生成复盘报告（规则层逐题诊断 + 可回指原话）
+            </div>
+            <div style="font-size:12px;color:var(--text-muted);margin-top:8px;">
+              录音与转写只存在你自己的浏览器里，服务端零落盘。扫描版/图片型材料请走「简历陪练」的 PDF OCR 兜底。
+            </div>
+          </section>
+        </div>
+
         <div id="panel-resume" style="display:none;flex-direction:column;gap:14px;">
         <!-- 简历陪练：上传简历 → 按真实经历出题（题目接地到简历定位符） -->
         <section class="card">
@@ -105,20 +121,45 @@ export function renderCoachScreen(root) {
         </div>
       </div>
 
-      <!-- 右侧：录音 + 实时字幕（可点句编辑）+ 文本/转写稿导入 -->
+      <!-- 右侧：按模式切换「练习区」与「录音复盘区」 -->
       <div style="display:flex;flex-direction:column;gap:14px;">
-        <section class="card">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:8px;">
-            <strong>🎙️ 本地录音与实时字幕（M2 / M3）</strong>
-            <div style="display:flex;gap:8px;">
-              <button id="btn-record-toggle" class="btn btn-primary btn-sm" type="button">开始录音</button>
+        <!-- 练习区：真题陪练 / 简历陪练 -->
+        <div id="practice-area" style="display:flex;flex-direction:column;gap:14px;">
+          <section class="card">
+            <div id="current-question-strip" style="font-size:12.5px;color:var(--text-secondary);background:var(--surface-alt);border-radius:8px;padding:8px 10px;margin-bottom:8px;">
+              ${question.source === 'resume' ? '当前题目' : '当前题目（真题）'}：${escapeHtml(question.title)}
+              ${question.source === 'resume' ? `<div style="color:var(--text-muted);margin-top:2px;">简历题 · 定位 ${escapeHtml(question.locator || '')}${question.zhihuRef ? ' · 面经参考挂在左栏' : ''}</div>` : ''}
             </div>
+
+          <label for="answer-textarea" style="display:block;font-size:13px;font-weight:600;margin-bottom:6px;">
+            作答文本 / 导入会议转写稿（支持「面试官：/ 我：」标签切分）：
+          </label>
+          <textarea id="answer-textarea" class="textarea" rows="7" placeholder="可直接在此输入回答，或点击上方「开始录音」自动落字幕，或粘贴带「面试官：/ 我：」的复盘转写稿…"></textarea>
+
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px;flex-wrap:wrap;gap:8px;">
+            <button id="btn-trigger-followup" class="btn btn-sm" type="button">触发追问（压力测试）</button>
+            <button id="btn-submit-parse" class="btn btn-primary" type="button">结束并生成复盘诊断 →</button>
           </div>
 
-          <div id="current-question-strip" style="font-size:12.5px;color:var(--text-secondary);background:var(--surface-alt);border-radius:8px;padding:8px 10px;margin-bottom:8px;">
-            ${question.source === 'resume' ? '当前题目' : '当前题目（真题）'}：${escapeHtml(question.title)}
-            ${question.source === 'resume' ? `<div style="color:var(--text-muted);margin-top:2px;">简历题 · 定位 ${escapeHtml(question.locator || '')}${question.zhihuRef ? ' · 面经参考挂在左栏' : ''}</div>` : ''}
-          </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px;flex-wrap:wrap;gap:8px;">
+              <button id="btn-trigger-followup" class="btn btn-sm" type="button">触发追问（压力测试）</button>
+              <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                <button id="btn-import-from-record" class="btn btn-ghost btn-sm" type="button">从「录音复盘」带入转写稿</button>
+                <button id="btn-submit-parse" class="btn btn-primary" type="button">结束并生成复盘诊断 →</button>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <!-- 录音复盘区：独立的录音工作台 -->
+        <div id="record-area" style="display:none;flex-direction:column;gap:14px;">
+          <section class="card">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:8px;">
+              <strong>🎙️ 录音复盘工作台</strong>
+              <div style="display:flex;gap:8px;">
+                <button id="btn-record-toggle" class="btn btn-primary btn-sm" type="button">开始录音</button>
+              </div>
+            </div>
 
           <div id="caption-status" style="font-size:12px;color:var(--text-muted);margin-bottom:8px;">
             录音文件仅保存在本机浏览器 IndexedDB，绝不上传服务器。
@@ -163,18 +204,22 @@ export function renderCoachScreen(root) {
 
           <div id="caption-list" style="max-height:180px;overflow-y:auto;border:1px solid var(--border);border-radius:6px;padding:6px;margin-bottom:10px;background:var(--bg);" hidden></div>
 
-          <label for="answer-textarea" style="display:block;font-size:13px;font-weight:600;margin-bottom:6px;">
-            作答文本 / 导入会议转写稿（支持「面试官：/ 我：」标签切分）：
-          </label>
-          <textarea id="answer-textarea" class="textarea" rows="7" placeholder="可直接在此输入回答，或点击上方「开始录音」自动落字幕，或粘贴带「面试官：/ 我：」的复盘转写稿…"></textarea>
 
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px;flex-wrap:wrap;gap:8px;">
-            <button id="btn-trigger-followup" class="btn btn-sm" type="button">触发追问（压力测试）</button>
-            <button id="btn-submit-parse" class="btn btn-primary" type="button">结束并生成复盘诊断 →</button>
-          </div>
-        </section>
+            <label for="record-transcript" style="display:block;font-size:13px;font-weight:600;margin:6px 0;">
+              转写稿（可粘贴，或导入飞书妙记 / 腾讯会议 AI 笔记导出的文本）：
+            </label>
+            <textarea id="record-transcript" class="textarea" rows="8" placeholder="面试官：… / 我：… （带说话人标签的转写稿可自动切分 Q&amp;A）"></textarea>
+
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px;flex-wrap:wrap;gap:8px;">
+              <label class="btn btn-ghost btn-sm">
+                📄 导入会议转写稿文件
+                <input id="record-transcript-file" type="file" accept=".txt,.md,.markdown" hidden />
+              </label>
+              <button id="btn-record-review" class="btn btn-primary" type="button">生成录音复盘报告 →</button>
+            </div>
+          </section>
+        </div>
       </div>
-    </div>
   `;
   root.appendChild(wrapper);
 
@@ -316,7 +361,8 @@ export function renderCoachScreen(root) {
       showToast('还没有字幕：先录音，或直接粘贴会议转写稿', 'warn');
       return;
     }
-    textarea.value = captionsToTranscript(captions);
+    const recordBox = wrapper.querySelector('#record-transcript');
+    if (recordBox) recordBox.value = captionsToTranscript(captions);
     const unknown = captions.filter((c) => !c.speaker || c.speaker === 'unknown').length;
     showToast(
       unknown
@@ -488,13 +534,20 @@ export function renderCoachScreen(root) {
   // ---- 两种练法切换（sessionStorage 记忆，刷新不丢） ----
   const panelBank = wrapper.querySelector('#panel-bank');
   const panelResume = wrapper.querySelector('#panel-resume');
+  const panelRecord = wrapper.querySelector('#panel-record');
+  const practiceArea = wrapper.querySelector('#practice-area');
+  const recordArea = wrapper.querySelector('#record-area');
   const modeButtons = Array.from(wrapper.querySelectorAll('[data-coach-mode]'));
 
   const applyMode = (mode) => {
     setMode(mode);
     const isResume = mode === 'resume';
-    panelBank.style.display = isResume ? 'none' : 'flex';
+    const isRecord = mode === 'record';
+    panelBank.style.display = isRecord || isResume ? 'none' : 'flex';
     panelResume.style.display = isResume ? 'flex' : 'none';
+    panelRecord.style.display = isRecord ? 'flex' : 'none';
+    practiceArea.style.display = isRecord ? 'none' : 'flex';
+    recordArea.style.display = isRecord ? 'flex' : 'none';
     for (const btn of modeButtons) {
       const active = btn.dataset.coachMode === mode;
       btn.className = `btn btn-sm ${active ? 'btn-primary' : ''}`;
@@ -502,6 +555,11 @@ export function renderCoachScreen(root) {
     }
   };
   const switchMode = (mode) => {
+    if (mode === 'record') {
+      // 录音复盘与题目无关：只切界面，保留当前题
+      applyMode(mode);
+      return;
+    }
     const currentSource = question.source === 'resume' ? 'resume' : 'bank';
     if (mode === currentSource) {
       applyMode(mode);
@@ -522,6 +580,69 @@ export function renderCoachScreen(root) {
     btn.addEventListener('click', () => switchMode(btn.dataset.coachMode));
   }
   applyMode(question.source === 'resume' ? 'resume' : getMode());
+
+  // ---- 录音复盘区：导入转写稿 / 生成复盘报告 / 带入练习区 ----
+  const recordTranscript = wrapper.querySelector('#record-transcript');
+
+  wrapper.querySelector('#record-transcript-file').addEventListener('change', async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const text = await file.text();
+    recordTranscript.value = text;
+    showToast(`已导入转写稿（${text.length} 字）`);
+  });
+
+  wrapper.querySelector('#btn-record-review').addEventListener('click', async () => {
+    const raw = (recordTranscript.value || '').trim();
+    if (!raw) {
+      showToast('先录音生成字幕，或导入/粘贴会议转写稿', 'warn');
+      return;
+    }
+    const qaPairs = parseTranscriptToQA(raw, '本次录音复盘');
+    if (!qaPairs.length) {
+      showToast('没切出问答对：转写稿需要带「面试官：/ 我：」标签，或至少有一问一答', 'warn', 5000);
+      return;
+    }
+    const answer = qaPairs.map((p) => `问：${p.question}\n答：${p.answer}`).join('\n\n');
+    const ruleFindings = qaPairs.flatMap((pair, i) =>
+      runDeterministicRules(pair.answer, { keywords: [], expectedLength: [30, 500], pairIndex: i })
+    );
+
+    const report = {
+      id: 'session-' + Date.now(),
+      question: {
+        id: 'record-review',
+        title: `录音复盘 · ${qaPairs.length} 组问答`,
+        context: '来源：本机录音 / 会议转写稿（未绑定具体真题，因此不跑观点层评分）',
+        keywords: [],
+        expectedLength: [30, 500],
+        skeleton: [],
+        viewpointCards: [],
+        source: 'record',
+      },
+      answer,
+      ruleFindings,
+      llmScores: null,
+      improvements: null,
+      degraded: true,
+      degradedReason: '录音复盘未绑定题目来源：只跑规则层诊断',
+      createdAt: new Date().toISOString(),
+    };
+    state.lastReviewReport = report;
+    await dbPut('sessions', report);
+    navigate('/review');
+    showToast(`已生成录音复盘报告：${qaPairs.length} 组问答，命中 ${ruleFindings.length} 条诊断`);
+  });
+
+  wrapper.querySelector('#btn-import-from-record').addEventListener('click', () => {
+    const text = (recordTranscript.value || '').trim();
+    if (!text) {
+      showToast('「录音复盘」里还没有转写稿', 'warn');
+      return;
+    }
+    textarea.value = text;
+    showToast('已把转写稿带入作答框');
+  });
 
   // ---- 双轨回放 / 导出 / 转写 ----
   let lastTracks = null;
