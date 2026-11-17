@@ -4,6 +4,9 @@ import {
   loadResumeAnalysis,
   restoreLatestResumeAnalysis,
   updateResumeQuestionState,
+  getActiveOpportunity,
+  setActiveOpportunity,
+  refreshLocalCollections,
 } from '../state.js';
 import { navigate } from '../router.js';
 import { escapeHtml } from '../ui/citation.js';
@@ -18,13 +21,50 @@ import { mergeTracks, toTranscriptText } from '../capture/align.js';
 
 /** 陪练室两种练法：真题陪练（题库+知乎观点卡）/ 简历陪练（按你的真实经历出题） */
 const MODE_KEY = 'zhimian.coach.mode';
-const getMode = () => (sessionStorage.getItem(MODE_KEY) === 'resume' ? 'resume' : 'bank');
+/** 当前模式：真题 / 简历 / 录音（台账可直接指定「去录音复盘」） */
+const getMode = () => {
+  const v = sessionStorage.getItem(MODE_KEY);
+  return v === 'resume' || v === 'record' ? v : 'bank';
+};
 /** 两种练法各自记住上一次选的题：切回来不用重挑 */
 const rememberedQuestions = { bank: null, resume: null };
 /** 简历陪练：当前解析结果 / 选中的要点 / 该要点检索到的知乎知识 */
 let resumeRecord = null;
 let activeBullet = null;
 let bulletKnowledge = [];
+
+/** 把"当前场次"绑定到简历解析结果：记录练过这场面试的岗位 */
+async function attachOpportunityToResume(record) {
+  const ctx = getActiveOpportunity();
+  if (!ctx?.id) return;
+  record.opportunityId = ctx.id;
+  try {
+    const fresh = (await dbGet('opportunities', ctx.id)) || ctx;
+    await dbPut('opportunities', { ...fresh, resumeReady: true });
+    await refreshLocalCollections();
+  } catch (err) {
+    console.warn('[coach] 场次回写失败', err);
+  }
+}
+
+/** 把"当前场次"绑定到复盘报告：状态推进到「已复盘」，台账可反查报告 */
+async function attachOpportunityToReport(report) {
+  const ctx = getActiveOpportunity();
+  if (!ctx?.id) return;
+  report.opportunityId = ctx.id;
+  try {
+    const fresh = (await dbGet('opportunities', ctx.id)) || ctx;
+    await dbPut('opportunities', {
+      ...fresh,
+      status: '已复盘',
+      reviewId: report.id,
+      resumeReady: Boolean(fresh.resumeReady),
+    });
+    await refreshLocalCollections();
+  } catch (err) {
+    console.warn('[coach] 场次回写失败', err);
+  }
+}
 
 /** 简历定位符（p1¶10）→ 人话：「简历第 1 页」；解析不了就原样返回 */
 function locatorLabel(locator) {
@@ -46,7 +86,7 @@ const setMode = (mode) => sessionStorage.setItem(MODE_KEY, mode);
 import { parseTranscriptToQA } from '../capture/transcript.js';
 import { runDeterministicRules } from '../rules/diagnose.js';
 import { runReview } from '../lib/review.js';
-import { dbPut } from '../db.js';
+import { dbPut, dbGet } from '../db.js';
 import { showToast } from '../ui/toast.js';
 
 export function renderCoachScreen(root) {
@@ -67,6 +107,10 @@ export function renderCoachScreen(root) {
 
   const wrapper = document.createElement('div');
   wrapper.innerHTML = `
+    <div id="opp-banner" hidden style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;padding:8px 12px;border:1px solid var(--primary);border-radius:8px;background:var(--primary-soft);margin-bottom:12px;font-size:13px;">
+      <span>🎯 当前场次：<strong id="opp-banner-name"></strong><span style="color:var(--text-muted);margin-left:8px;">（简历练习与复盘都会挂到这场次上）</span></span>
+      <button id="btn-opp-clear" class="btn btn-ghost btn-sm" type="button">清除场次</button>
+    </div>
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px;">
       <div class="mode-switch" role="tablist" aria-label="陪练方式">
         <button type="button" class="btn btn-sm" data-coach-mode="bank" role="tab">📚 真题陪练</button>
@@ -267,6 +311,25 @@ export function renderCoachScreen(root) {
       </div>
   `;
   root.appendChild(wrapper);
+
+  // 当前场次横幅（台账 → 陪练室的跨页关联）
+  const oppCtx = getActiveOpportunity();
+  const oppBanner = wrapper.querySelector('#opp-banner');
+  if (oppCtx?.id) {
+    oppBanner.hidden = false;
+    wrapper.querySelector('#opp-banner-name').textContent = [
+      oppCtx.company,
+      oppCtx.role,
+      oppCtx.stage,
+    ]
+      .filter(Boolean)
+      .join(' · ');
+    wrapper.querySelector('#btn-opp-clear').addEventListener('click', () => {
+      setActiveOpportunity(null);
+      root.innerHTML = '';
+      renderCoachScreen(root);
+    });
+  }
 
   const resumeStatus = wrapper.querySelector('#resume-status');
   const resumeProfile = wrapper.querySelector('#resume-profile');
@@ -1060,6 +1123,7 @@ export function renderCoachScreen(root) {
               : '（检查后端是否在运行：/api/health）';
         throw new Error((data2?.error?.message || '出题失败') + hint);
       }
+      await attachOpportunityToResume(data2);
       const saved = await saveResumeAnalysis(data2);
       if (saved && saved.persisted === false) {
         resumeStatus.textContent =
@@ -1277,6 +1341,8 @@ export function renderCoachScreen(root) {
       createdAt: new Date().toISOString(),
     };
     state.lastReviewReport = report;
+    // 先绑定场次再落库：报告里要带上 opportunityId，台账才能反查
+    await attachOpportunityToReport(report);
     await dbPut('sessions', report);
     navigate('/review');
     showToast(`已生成录音复盘报告：${qaPairs.length} 组问答，命中 ${ruleFindings.length} 条诊断`);

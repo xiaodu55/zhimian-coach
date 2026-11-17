@@ -17,8 +17,38 @@ export const state = {
   resumeAnalysis: null,
   activeDocument: null,
   weaknesses: [],
-  opportunities: []
+  opportunities: [],
+  /** 复盘报告历史（台账按场次反查复盘用） */
+  sessions: []
 };
+
+/** 当前场次上下文（台账 → 陪练室的跨页关联） */
+const ACTIVE_OPP_KEY = 'zhimian.active.opportunity';
+/** 陪练室模式记忆（真题 / 简历 / 录音） */
+export const COACH_MODE_KEY = 'zhimian.coach.mode';
+
+export function setCoachMode(mode) {
+  try { sessionStorage.setItem(COACH_MODE_KEY, mode); } catch { /* 隐私模式忽略 */ }
+}
+
+/** 台账点「去练习/去复盘」时写入当前场次 */
+export function setActiveOpportunity(opp) {
+  try {
+    sessionStorage.setItem(
+      ACTIVE_OPP_KEY,
+      JSON.stringify(opp ? { id: opp.id, company: opp.company, role: opp.role || '', stage: opp.stage || '' } : null)
+    );
+  } catch { /* 忽略 */ }
+}
+
+export function getActiveOpportunity() {
+  try {
+    const raw = sessionStorage.getItem(ACTIVE_OPP_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    return null;
+  }
+}
 
 const listeners = new Set();
 
@@ -166,10 +196,17 @@ export async function refreshLocalCollections() {
       promise,
       new Promise((resolve) => setTimeout(() => resolve(fallback), 1500)),
     ]);
-  [state.weaknesses, state.opportunities] = await withTimeout(
-    Promise.all([dbGetAll('weaknesses').catch(() => []), dbGetAll('opportunities').catch(() => [])]),
-    [[], []]
+  const [weaknesses, opportunities, sessions] = await withTimeout(
+    Promise.all([
+      dbGetAll('weaknesses').catch(() => []),
+      dbGetAll('opportunities').catch(() => []),
+      dbGetAll('sessions').catch(() => []),
+    ]),
+    [[], [], []]
   );
+  state.weaknesses = weaknesses;
+  state.opportunities = opportunities;
+  state.sessions = sessions;
   const badge = document.getElementById('nav-review-badge');
   if (badge) {
     const pendingCount = state.weaknesses.filter((w) => w.status !== 'mastered').length;
