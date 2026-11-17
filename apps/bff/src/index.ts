@@ -7,6 +7,7 @@ import { getQuestionById, loadBankFromDisk, queryBank } from './lib/knowledge/qu
 import { zhihuRoutes } from './routes/zhihu.js';
 import { coachRoutes } from './routes/coach.js';
 import { explainRoutes } from './routes/explain.js';
+import { defenseRoutes } from './routes/defense.js';
 import { authRoutes } from './routes/auth.js';
 import { asrRoutes } from './routes/asr.js';
 import { resumeRoutes } from './routes/resume.js';
@@ -56,6 +57,7 @@ app.get('/api/bank/:id', (c) => {
 app.route('/api/zhihu', zhihuRoutes);
 app.route('/api/coach', coachRoutes);
 app.route('/api', explainRoutes);
+app.route('/api', defenseRoutes);
 app.route('/api/auth', authRoutes);
 app.route('/api/asr', asrRoutes);
 app.route('/api', resumeRoutes);

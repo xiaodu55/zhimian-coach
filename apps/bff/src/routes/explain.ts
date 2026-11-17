@@ -3,7 +3,7 @@ import { parseDocumentContent, DocSegment } from '../lib/docParser.js';
 import { parsePdfSmart } from '../lib/pdf/index.js';
 import { callStructuredLlm } from '../lib/llm.js';
 import { validateStructuredClaims, ClaimItem } from '../lib/citations.js';
-import { EXPLAIN_ASK_SYSTEM_PROMPT } from '../lib/prompts.js';
+import { EXPLAIN_ASK_SYSTEM_PROMPT, EXPLAIN_SUMMARY_PROMPT } from '../lib/prompts.js';
 import { zhihuSearch } from '../lib/zhihuClient.js';
 
 export const explainRoutes = new Hono();
@@ -93,42 +93,137 @@ explainRoutes.post('/explain/ask', async (c) => {
   }
 });
 
-// 答辩预测：8 条高危追问 + 3 个薄弱点 + 真实知乎质疑（契约：{title, segments} → {predictedQuestions, topRisks, degraded}）
-explainRoutes.post('/defense/analyze', async (c) => {
+/** 讲解室：详解总结（一句话概括 + 关键论点 + 材料自身薄弱处，全部带片段引用） */
+explainRoutes.post('/explain/summary', async (c) => {
   const body = await c.req.json();
-  const title = String(body?.title || '技术方案').trim();
+  const title = String(body?.title || '资料').trim();
   const segments: DocSegment[] = Array.isArray(body?.segments) ? body.segments : [];
-
   if (!segments.length) {
-    return c.json({ error: { code: 'VALIDATION_ERROR', message: '请先上传并解析文档（缺少 segments）' } }, 400);
+    return c.json({ error: { code: 'VALIDATION_ERROR', message: '缺少 segments（先上传或粘贴资料）' } }, 400);
   }
 
-  const topic = (segments[0]?.heading || title.replace(/\.[^.]+$/, '')).slice(0, 30);
-  let critiques: Array<{ title: string; url: string; snippet: string }> = [];
-  let degraded = false;
+  const validIds = new Set(segments.map((_, i) => `S${i + 1}`));
+  const contextText = segments.map((s, i) => `[S${i + 1}] (${s.locator}): ${s.text}`).join('\n');
+
   try {
-    const { results } = await zhihuSearch(`${topic} 质疑 缺点 局限`, 'zhihu', 5);
-    critiques = results;
-    degraded = results.length === 0;
+    const raw = await callStructuredLlm<{
+      summary?: string;
+      keyPoints?: Array<{ text?: string; refIds?: string[] }>;
+      gaps?: Array<{ text?: string; refIds?: string[] }>;
+    }>(EXPLAIN_SUMMARY_PROMPT, `【资料标题】${title}\n\n【资料分段】\n${contextText}`, 30_000);
+
+    const clean = (items: Array<{ text?: string; refIds?: string[] }> = []) =>
+      items
+        .map((it) => ({
+          text: String(it?.text || '').trim().slice(0, 300),
+          refIds: (it?.refIds || []).filter((id) => validIds.has(String(id))),
+        }))
+        .filter((it) => it.text.length > 0);
+
+    return c.json({
+      summary: String(raw.summary || '').slice(0, 300),
+      keyPoints: clean(raw.keyPoints),
+      gaps: clean(raw.gaps),
+    });
   } catch {
-    degraded = true;
+    // 降级：不调模型，直接给分段前两条摘录
+    return c.json({
+      degraded: true,
+      summary: `（模型不可用）这份材料共 ${segments.length} 个片段，标题：${title}`,
+      keyPoints: segments.slice(0, 2).map((s, i) => ({ text: s.text.slice(0, 300), refIds: [`S${i + 1}`] })),
+      gaps: [],
+    });
+  }
+});
+
+/** 讲解室：视频链接解析（抓标题/简介/字幕轨，尽力而为，不做视频转码） */
+explainRoutes.post('/explain/link', async (c) => {
+  const body = await c.req.json();
+  const raw = String(body?.url || '').trim();
+  if (!raw) {
+    return c.json({ error: { code: 'VALIDATION_ERROR', message: '请填写视频链接' } }, 400);
+  }
+  let url: URL;
+  try {
+    url = new URL(/^https?:\/\//i.test(raw) ? raw : `https://${raw}`);
+  } catch {
+    return c.json({ error: { code: 'VALIDATION_ERROR', message: '链接格式不正确' } }, 400);
+  }
+  if (url.protocol !== 'http:' && url.protocol !== 'https:') {
+    return c.json({ error: { code: 'VALIDATION_ERROR', message: '只支持 http / https 链接' } }, 400);
+  }
+  // SSRF 兜底：拒绝指向本机 / 内网的地址
+  const host = url.hostname.toLowerCase();
+  const blocked =
+    host === 'localhost' ||
+    host === '::1' ||
+    /^127\./.test(host) ||
+    /^10\./.test(host) ||
+    /^192\.168\./.test(host) ||
+    /^169\.254\./.test(host) ||
+    /^172\.(1[6-9]|2\d|3[01])\./.test(host);
+  if (blocked) {
+    return c.json({ error: { code: 'VALIDATION_ERROR', message: '不支持抓取本机或内网地址' } }, 400);
   }
 
-  const topRisks = segments.slice(0, 3).map((seg, i) => ({
-    riskId: `risk-${i + 1}`,
-    locator: seg.locator,
-    title: `薄弱点 #${i + 1}：${seg.heading}`,
-    reason: `材料在 ${seg.locator} 提出了关键论断，但缺少对照基线、消融实验或极端边界数据。`,
-  }));
+  try {
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), 12000);
+    const resp = await fetch(url.toString(), {
+      headers: { 'User-Agent': 'Mozilla/5.0 (compatible; zhimian-explainer/1.0)' },
+      signal: ctrl.signal,
+    });
+    clearTimeout(timer);
+    const html = (await resp.text()).slice(0, 3_000_000);
 
-  const predictedQuestions = segments.slice(0, 8).map((seg, idx) => {
-    const ref = critiques[idx % Math.max(1, critiques.length)];
-    return {
-      q: `针对 ${seg.locator}「${seg.heading}」，如果去掉这个机制、或遇到长尾异常输入，你的指标会掉多少？依据是什么？`,
-      why: '该段是核心技术主张，评委通常用"消融实验 + 边界压力"验证它是不是真的必要。',
-      zhihuRef: ref ? { title: ref.title, url: ref.url, snippet: ref.snippet } : null,
+    const meta = (prop: string) => {
+      const re = new RegExp(`<meta[^>]+(?:property|name)=["']${prop}["'][^>]*content=["']([^"']*)["']`, 'i');
+      const m = html.match(re);
+      if (m) return m[1];
+      const re2 = new RegExp(`<meta[^>]+content=["']([^"']*)["'][^>]*(?:property|name)=["']${prop}["']`, 'i');
+      const m2 = html.match(re2);
+      return m2 ? m2[1] : '';
     };
-  });
+    const titleTag = (html.match(/<title[^>]*>([\s\S]*?)<\/title>/i) || [])[1] || '';
+    const title = (meta('og:title') || titleTag).replace(/\s+/g, ' ').trim().slice(0, 200);
+    const description = (meta('og:description') || meta('description') || '').trim().slice(0, 1000);
 
-  return c.json({ degraded, topRisks, predictedQuestions });
+    // 字幕轨：尽力抓第一个 track（VTT/SRT），抓不到就明说没抓到
+    let transcript = '';
+    const trackMatch = html.match(/<track[^>]+src=["']([^"']+)["']/i);
+    if (trackMatch) {
+      try {
+        const trackUrl = new URL(trackMatch[1], url).toString();
+        const tctrl = new AbortController();
+        const ttimer = setTimeout(() => tctrl.abort(), 8000);
+        const tres = await fetch(trackUrl, { signal: tctrl.signal });
+        clearTimeout(ttimer);
+        const raw2 = await tres.text();
+        transcript = raw2
+          .replace(/^WEBVTT.*$/m, '')
+          .replace(/\d\d:\d\d:\d\d[.,]\d\d\d[^\n]*\n/g, '')
+          .replace(/^\d+$/gm, '')
+          .replace(/<[^>]+>/g, '')
+          .replace(/\n{2,}/g, '\n')
+          .trim()
+          .slice(0, 60000);
+      } catch {
+        transcript = '';
+      }
+    }
+
+    return c.json({
+      url: url.toString(),
+      title,
+      description,
+      transcript,
+      hasTranscript: Boolean(transcript),
+      note: transcript
+        ? '已抓到字幕轨，可直接做逐段详解。'
+        : '未抓到字幕轨：详解将基于页面标题与简介，或粘贴字幕/转写稿后上传。',
+    });
+  } catch (err) {
+    const msg = err instanceof Error && err.name === 'AbortError' ? '抓取超时' : '抓取失败';
+    return c.json({ error: { code: 'UPSTREAM_ERROR', message: `${msg}：${url.hostname} 未返回可解析内容` } }, 502);
+  }
 });

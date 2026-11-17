@@ -31,7 +31,9 @@ export async function runReview({ question, raw, sources = null, followupFocus =
   let degraded = false;
   let degradedReason = '';
 
-  const isResumeLike = question.source === 'resume' || question.source === 'resume-bullet';
+  // 简历题 / 要点题 / 答辩预演题：都没有题库 id，一律走「问题 + 来源」模式
+  const isResumeLike =
+    question.source === 'resume' || question.source === 'resume-bullet' || question.source === 'defense';
   if (isResumeLike && !src.length) {
     degraded = true;
     degradedReason = '本题没有可核对的面经来源：只跑规则层';

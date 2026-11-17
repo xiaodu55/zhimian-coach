@@ -24,15 +24,17 @@ export function renderExplainScreen(root) {
   wrapper.innerHTML = `
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:10px;">
       <div>
-        <h1 style="margin:0 0 4px;font-size:20px;">讲解室 & 答辩预测（F2 / F3 闭环）</h1>
-        <div style="font-size:13px;color:var(--text-secondary);">上传文档 / 论文 / 视频转写稿 → 可溯源详解 → 就地追问 → 生成答辩高危追问</div>
+        <h1 style="margin:0 0 4px;font-size:20px;">讲解室 · 文档与视频的详解总结</h1>
+        <div style="font-size:13px;color:var(--text-secondary);">上传文档 / 论文 / 转写稿，或粘贴视频链接 → 可溯源详解总结 → 就地追问（查不到就说查不到）</div>
       </div>
-      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+      <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
         <label class="btn btn-sm">
           📂 上传 PDF / Markdown / TXT / 转写稿
           <input id="doc-file-input" type="file" accept=".pdf,.md,.txt,.markdown" hidden />
         </label>
-        <button id="btn-gen-defense" class="btn btn-primary btn-sm" type="button">🎓 生成答辩预测追问（挂知乎质疑）</button>
+        <input id="video-link-input" class="input" type="url" placeholder="视频链接（B 站 / YouTube / 公开课…）" style="width:260px;" />
+        <button id="btn-parse-link" class="btn btn-sm" type="button">解析视频链接</button>
+        <button id="btn-gen-summary" class="btn btn-primary btn-sm" type="button">📝 生成详解总结</button>
       </div>
     </div>
 
@@ -48,6 +50,13 @@ export function renderExplainScreen(root) {
 
       <!-- 右侧：就地追问（防编造严格模式）+ 答辩预测提问清单 -->
       <div style="display:flex;flex-direction:column;gap:14px;">
+        <section id="summary-card" class="card">
+          <h3 style="margin:0 0 8px;font-size:15px;">📝 详解总结（一句话概括 · 关键论点 · 材料自身的薄弱处）</h3>
+          <div id="summary-box" style="font-size:13.5px;line-height:1.75;">
+            <span style="color:var(--text-muted);">上传资料或解析视频链接后，点「生成详解总结」。每条结论都会标出它来自哪一段（S 编号可点击回看原文）。</span>
+          </div>
+        </section>
+
         <section class="card">
           <h3 style="margin:0 0 8px;font-size:15px;">🔍 就地追问（严格溯源 · 查不到就说查不到）</h3>
           <div style="display:flex;gap:8px;margin-bottom:10px;">
@@ -59,13 +68,6 @@ export function renderExplainScreen(root) {
           </div>
         </section>
 
-        <section id="defense-report-card" class="card" hidden>
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-            <h3 style="margin:0;font-size:15px;">⚔️ 预答辩高危追问预测（关联知乎真实质疑）</h3>
-            <button id="btn-export-defense-md" class="btn btn-sm" type="button">导出 Markdown 报告</button>
-          </div>
-          <div id="defense-questions-list" style="display:flex;flex-direction:column;gap:10px;"></div>
-        </section>
       </div>
     </div>
   `;
@@ -168,6 +170,133 @@ export function renderExplainScreen(root) {
     await dbPut('documents', activeDoc);
     renderSegments();
     showToast(`解析成功：共切分 ${activeDoc.segments.length} 个带定位符片段`);
+  });
+
+  // ---- 视频链接解析：抓标题/简介/字幕轨（尽力而为） ----
+  const linkInput = wrapper.querySelector('#video-link-input');
+  const linkBtn = wrapper.querySelector('#btn-parse-link');
+  const summaryBox = wrapper.querySelector('#summary-box');
+
+  const renderSummary = (data, refs) => {
+    summaryBox.innerHTML = '';
+    if (data.degraded) {
+      const warn = document.createElement('div');
+      warn.style.cssText = 'font-size:12px;color:var(--amber);margin-bottom:8px;';
+      warn.textContent = '⚠ 模型暂不可用：已降级为原文摘录模式（零幻觉）。';
+      summaryBox.appendChild(warn);
+    }
+    if (data.summary) {
+      const head = document.createElement('div');
+      head.style.cssText = 'font-size:14px;font-weight:600;margin-bottom:8px;line-height:1.7;';
+      head.textContent = data.summary;
+      summaryBox.appendChild(head);
+    }
+    const block = (title, items, tone) => {
+      if (!items?.length) return;
+      const wrap = document.createElement('div');
+      wrap.style.marginTop = '10px';
+      const h = document.createElement('div');
+      h.style.cssText = `font-size:12.5px;font-weight:700;color:${tone};margin-bottom:4px;`;
+      h.textContent = title;
+      wrap.appendChild(h);
+      for (const it of items) {
+        const row = document.createElement('div');
+        row.style.cssText = 'font-size:13px;line-height:1.7;margin-bottom:5px;';
+        row.textContent = '· ' + it.text;
+        for (const refId of it.refIds || []) {
+          const idx = Number(String(refId).replace(/[^\d]/g, '')) - 1;
+          const seg = refs?.[idx];
+          row.appendChild(
+            renderCitationChip({
+              id: refId,
+              type: seg?.type === 'time' ? 'time' : 'doc',
+              label: seg?.locator || refId,
+              sourceTitle: activeDoc.title,
+              locator: seg?.locator || '',
+              quote: seg?.text || '',
+            })
+          );
+        }
+        wrap.appendChild(row);
+      }
+      summaryBox.appendChild(wrap);
+    };
+    block('关键论点', data.keyPoints, 'var(--primary)');
+    block('材料自身的薄弱处', data.gaps, 'var(--amber)');
+  };
+
+  linkBtn.addEventListener('click', async () => {
+    const url = linkInput.value.trim();
+    if (!url) {
+      showToast('先粘贴视频链接', 'warn');
+      return;
+    }
+    linkBtn.disabled = true;
+    const origin = linkBtn.textContent;
+    linkBtn.textContent = '解析中…';
+    try {
+      const res = await fetch('/api/explain/link', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ url }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data?.error?.message || '链接解析失败');
+
+      // 有字幕 → 直接切成片段，进入正常详解流程；没有 → 只登记链接与简介
+      if (data.hasTranscript && data.transcript) {
+        activeDoc = chunkDocumentText(data.transcript, `视频：${data.title || url}`);
+        state.activeDocument = activeDoc;
+        await dbPut('documents', activeDoc);
+        renderSegments();
+      }
+      summaryBox.innerHTML = '';
+      const card = document.createElement('div');
+      card.style.cssText = 'border:1px solid var(--border);border-radius:8px;padding:10px;margin-bottom:10px;';
+      const shownTitle = data.title && data.title !== data.url ? data.title : '未能读取到页面标题（该站点可能需要登录或由 JS 渲染）';
+      card.innerHTML = `
+        <div style="font-weight:600;font-size:13.5px;margin-bottom:4px;">${escapeHtml(shownTitle)}</div>
+        ${data.description ? `<div style="font-size:12.5px;color:var(--text-secondary);line-height:1.7;margin-bottom:6px;">${escapeHtml(String(data.description).slice(0, 400))}</div>` : ''}
+        <a href="${escapeHtml(data.url)}" target="_blank" rel="noopener noreferrer" style="font-size:12px;">打开原视频 ↗</a>
+        <div style="font-size:11.5px;color:var(--text-muted);margin-top:4px;">${escapeHtml(data.note || '')}</div>
+      `;
+      summaryBox.appendChild(card);
+      showToast(data.hasTranscript ? '已抓到字幕，正在生成详解总结…' : '链接已登记（未抓到字幕，可粘贴字幕/转写稿上传）');
+      if (data.hasTranscript) summaryBtn.click();
+    } catch (err) {
+      showToast(err.message, 'error', 5000);
+    } finally {
+      linkBtn.disabled = false;
+      linkBtn.textContent = origin;
+    }
+  });
+
+  // ---- 详解总结 ----
+  const summaryBtn = wrapper.querySelector('#btn-gen-summary');
+  summaryBtn.addEventListener('click', async () => {
+    if (!activeDoc?.segments?.length) {
+      showToast('先上传资料或解析视频链接', 'warn');
+      return;
+    }
+    summaryBtn.disabled = true;
+    const origin = summaryBtn.textContent;
+    summaryBtn.textContent = '生成中…';
+    summaryBox.innerHTML = '<span style="color:var(--text-muted);font-size:13px;">正在通读材料并生成详解总结…</span>';
+    try {
+      const res = await fetch('/api/explain/summary', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ title: activeDoc.title, segments: activeDoc.segments }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data?.error?.message || '总结生成失败');
+      renderSummary(data, activeDoc.segments);
+    } catch (err) {
+      summaryBox.innerHTML = `<div style="color:var(--red);font-size:13px;">${escapeHtml(err.message)}</div>`;
+    } finally {
+      summaryBtn.disabled = false;
+      summaryBtn.textContent = origin;
+    }
   });
 
   // 就地追问（§8.3 & §14 A8：检索无果时显式返回 noEvidence，绝不编造）
@@ -285,108 +414,5 @@ export function renderExplainScreen(root) {
       askBtn.disabled = false;
       askBtn.textContent = originLabel;
     }
-  });
-
-  // F2 答辩预测追问生成（挂知乎真实质疑链接 + 导出 Markdown）
-  const defenseCard = wrapper.querySelector('#defense-report-card');
-  const defenseList = wrapper.querySelector('#defense-questions-list');
-  let generatedDefenseItems = [];
-
-  const genBtn = wrapper.querySelector('#btn-gen-defense');
-
-  genBtn.addEventListener('click', async () => {
-    if (!activeDoc?.segments?.length) {
-      showToast('先上传并解析文档，再生成答辩追问', 'warn');
-      return;
-    }
-    genBtn.disabled = true;
-    const originLabel = genBtn.textContent;
-    genBtn.textContent = '检索知乎真实质疑中…';
-
-    let data = null;
-    try {
-      const res = await fetch('/api/defense/analyze', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ title: activeDoc.title, segments: activeDoc.segments }),
-      });
-      data = await res.json();
-      if (!res.ok) throw new Error(data?.error?.message || '检索失败');
-    } catch (err) {
-      showToast(err.message, 'error', 5000);
-      genBtn.disabled = false;
-      genBtn.textContent = originLabel;
-      return;
-    } finally {
-      genBtn.disabled = false;
-      genBtn.textContent = originLabel;
-    }
-
-    generatedDefenseItems = (data.predictedQuestions || []).map((item) => ({
-      q: item.q,
-      why: item.why,
-      zhihuRef: item.zhihuRef || null,
-    }));
-
-    defenseCard.hidden = false;
-    defenseList.innerHTML = '';
-
-    if (data.degraded) {
-      const warn = document.createElement('div');
-      warn.style.cssText = 'font-size:12px;color:var(--amber);margin-bottom:8px;';
-      warn.textContent = '⚠ 知乎质疑检索不可用（额度或网络）：预测问题照常生成，但不会伪造外部引用。';
-      defenseList.appendChild(warn);
-    }
-
-    if ((data.topRisks || []).length) {
-      const riskBox = document.createElement('div');
-      riskBox.style.cssText = 'font-size:12px;background:var(--amber-soft);padding:8px 10px;border-radius:8px;margin-bottom:8px;color:var(--amber);';
-      riskBox.innerHTML = data.topRisks
-        .map((r) => `· ${escapeHtml(r.title)}：${escapeHtml(r.reason)}`)
-        .join('<br/>');
-      defenseList.appendChild(riskBox);
-    }
-
-    generatedDefenseItems.forEach((item, idx) => {
-      const el = document.createElement('div');
-      el.style.cssText = 'padding:10px;border:1px solid var(--border);border-radius:8px;';
-      el.innerHTML = `
-        <div style="font-weight:600;font-size:14px;margin-bottom:4px;">Q${idx + 1}. ${escapeHtml(item.q)}</div>
-        <div style="font-size:12px;color:var(--amber);margin-bottom:6px;">为什么会被问：${escapeHtml(item.why)}</div>
-        ${
-          item.zhihuRef
-            ? `<div style="font-size:12px;background:var(--primary-soft);padding:6px 8px;border-radius:6px;">
-                 知乎真实质疑：「${escapeHtml(item.zhihuRef.title)}」
-                 <div style="color:var(--text-secondary);margin-top:2px;">${escapeHtml((item.zhihuRef.snippet || '').slice(0, 70))}…</div>
-                 <a href="${escapeHtml(item.zhihuRef.url)}" target="_blank" rel="noopener noreferrer" style="margin-top:4px;display:inline-block;">查看知乎原文 ↗</a>
-               </div>`
-            : `<div style="font-size:12px;color:var(--text-muted);">本条暂无可核对的知乎质疑来源。</div>`
-        }
-      `;
-      defenseList.appendChild(el);
-    });
-
-    showToast(`已生成 ${generatedDefenseItems.length} 条答辩追问${data.degraded ? '（质疑降级）' : '（含知乎真实质疑）'}`);
-  });
-
-  wrapper.querySelector('#btn-export-defense-md').addEventListener('click', () => {
-    if (!generatedDefenseItems.length) return;
-    const md = [
-      `# 预答辩风险评估与追问清单 · ${activeDoc.title}`,
-      '',
-      ...generatedDefenseItems.map((it, i) =>
-        `## Q${i + 1}. ${it.q}
-- **触发原因**：${it.why}
-- **知乎类似质疑**：${it.zhihuRef ? `${it.zhihuRef.title} ${it.zhihuRef.url}` : '暂无'}
-`
-      )
-    ].join('\n');
-    const blob = new Blob([md], { type: 'text/markdown;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'pre-defense-report.md';
-    a.click();
-    URL.revokeObjectURL(url);
   });
 }

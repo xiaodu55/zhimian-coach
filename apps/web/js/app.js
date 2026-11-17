@@ -7,6 +7,7 @@ import { renderBankScreen } from './screens/bank.js';
 import { renderCoachScreen } from './screens/coach.js';
 import { renderReviewScreen } from './screens/review.js';
 import { renderExplainScreen } from './screens/explain.js';
+import { renderDefenseScreen } from './screens/defense.js';
 import { renderLedgerScreen } from './screens/ledger.js';
 
 async function bootstrap() {
@@ -52,11 +53,12 @@ async function bootstrap() {
     setTimeout(() => location.reload(), 600);
   });
 
-  // 注册 5 个核心页面路由
+  // 注册 6 个核心页面路由
   registerRoute('bank', renderBankScreen);
   registerRoute('coach', renderCoachScreen);
   registerRoute('review', renderReviewScreen);
   registerRoute('explain', renderExplainScreen);
+  registerRoute('defense', renderDefenseScreen);
   registerRoute('ledger', renderLedgerScreen);
 
   // 先加载本地种子题库并立即渲染首屏（保证 <= 1.5s 可交互）
