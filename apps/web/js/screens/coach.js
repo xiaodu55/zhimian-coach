@@ -19,6 +19,7 @@ import { mountNextStepBar, createProgress } from '../lib/nextstep.js';
 import { renderViewpointCard } from '../ui/components.js';
 // 规则编号只留在代码与日志里，界面一律翻译成人话（「⚠️ 缺少量化结果」）
 import { humanizeRule, summarizeFindings } from '../rules/labels.js';
+import { getMatchedSampleAnswer, countEffectiveChars } from '../lib/optimizer.js';
 import { createModal, modalButton } from '../ui/modal.js';
 import { LocalAudioRecorder } from '../capture/recorder.js';
 import { LiveCaptionEngine, captionsToTranscript } from '../capture/caption.js';
@@ -326,6 +327,10 @@ export function renderCoachScreen(root) {
             </button>
           </div>
           <textarea id="answer-textarea" class="textarea" rows="7" placeholder="可直接在此输入回答，或点击上方「开始录音」自动落字幕，或粘贴带「面试官：/ 我：」的复盘转写稿…"></textarea>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-top:4px;">
+            <span style="font-size:11.5px;color:var(--text-muted);">小提示：先给结论，再给一个可核对的数字与口径。</span>
+            <span id="answer-char-count" style="font-size:11.5px;color:var(--text-muted);">0 字（至少 15 字）</span>
+          </div>
 
             <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px;flex-wrap:wrap;gap:8px;">
               <button id="btn-trigger-followup" class="btn btn-sm" type="button">触发追问（压力测试）</button>
@@ -1579,6 +1584,7 @@ export function renderCoachScreen(root) {
     }
     textarea.value = text;
     updateSampleHint();
+    syncSubmitGate?.();
     showToast('已把转写稿带入作答框');
   });
 
@@ -1690,16 +1696,32 @@ export function renderCoachScreen(root) {
 
   // 样例填充按钮（放在作答框上方，空框时才显示，见 updateSampleHint）
   wrapper.querySelector('#btn-fill-sample').addEventListener('click', () => {
-    const sample = state.demoSample?.rawText;
-    if (!sample) {
-      showToast('演示样例还没加载好，稍等一下再试', 'warn');
-      return;
-    }
+    // 按当前题目的领域挑示范回答：通用题不该填出一堆技术指标
+    const sample = getMatchedSampleAnswer(question);
     textarea.value = sample;
     updateSampleHint();
+    syncSubmitGate();
     textarea.focus();
-    showToast('已填入带说话人标签的示例回答，改成你自己的经历再用');
+    showToast('已填入一段贴合这道题的示例回答，改成你自己的经历再用');
   });
+
+  // ---- 作答门禁：有效字数不足时主按钮置灰，并给出还差多少 ----
+  const submitBtn = wrapper.querySelector('#btn-submit-parse');
+  const MIN_EFFECTIVE = 15;
+  const submitLabel = submitBtn.textContent;
+  submitBtn.dataset.gated = '1';
+  const syncSubmitGate = () => {
+    const count = countEffectiveChars(textarea.value);
+    const counter = wrapper.querySelector('#answer-char-count');
+    if (counter) counter.textContent = `${count} 字${count < MIN_EFFECTIVE ? `（至少 ${MIN_EFFECTIVE} 字）` : ''}`;
+    const ready = count >= MIN_EFFECTIVE;
+    // 复盘生成中/追问等待时不要解除禁用：只在非忙碌状态控制
+    if (submitBtn.dataset.busy === '1') return;
+    submitBtn.disabled = !ready;
+    submitBtn.textContent = ready ? submitLabel : `请先输入或录制回答（至少 ${MIN_EFFECTIVE} 字）`;
+  };
+  textarea.addEventListener('input', syncSubmitGate);
+  syncSubmitGate();
 
   // ---- 思考停顿保护：静音 5 秒不自动断句，空格继续说 / Enter 发送 ----
   let pauseGuard = null;
@@ -2030,7 +2052,8 @@ export function renderCoachScreen(root) {
     // 提交即代表这一题已经答完：评分类观点卡不再需要藏
     revealAllViewpoints();
     const submitBtn = ev.currentTarget;
-    const originalLabel = submitBtn.textContent;
+    const originalLabel = submitLabel;
+    submitBtn.dataset.busy = '1';
     submitBtn.disabled = true;
     submitBtn.textContent = '模型生成中（最多 25 秒）…';
 
@@ -2082,8 +2105,10 @@ export function renderCoachScreen(root) {
       showFollowupBox(fq, deepRound);
       textarea.value = '';
       updateSampleHint();
+      submitBtn.dataset.busy = '';
       submitBtn.disabled = false;
       submitBtn.textContent = originalLabel;
+      syncSubmitGate();
       progress.done();
       showToast(`评委追问了第 ${deepRound}/${followupDepth} 轮，接着答（再点提交）`);
       return;
@@ -2114,6 +2139,7 @@ export function renderCoachScreen(root) {
     await dbPut('sessions', report);
     // 刷新本地集合：让"最近记录"（跨路由守卫的下拉）能立刻看到这次作答
     await refreshLocalCollections();
+    submitBtn.dataset.busy = '';
     submitBtn.disabled = false;
     submitBtn.textContent = originalLabel;
     progress.done();

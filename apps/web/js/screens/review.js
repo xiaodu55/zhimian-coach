@@ -8,6 +8,7 @@ import { mountEmptyContextGuard, recentQuestionOptions, recommendWarmupQuestion 
 import { mountNextStepBar, createProgress } from '../lib/nextstep.js';
 import { humanizeRule } from '../rules/labels.js';
 import { countChars } from '../capture/speechmetrics.js';
+import { countEffectiveChars, formatDimensionScore, sanitizeFlashcardData } from '../lib/optimizer.js';
 
 /**
  * 找出"我说的那句"：模型结论里提到的关键名词（术语/数字）如果在用户作答里出现过，
@@ -122,7 +123,7 @@ export async function renderReviewScreen(root) {
         <div class="card">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
             <span class="tag">你的回答原话</span>
-            <span style="font-size:12px;color:var(--text-muted);">${countChars(answer)} 字</span>
+            <span style="font-size:12px;color:var(--text-muted);">${countEffectiveChars(answer)} 字</span>
           </div>
           <div id="user-answer-highlighted" style="font-size:14px;white-space:pre-wrap;line-height:1.7;"></div>
         </div>
@@ -223,7 +224,7 @@ export async function renderReviewScreen(root) {
       <div class="card" style="display:flex;gap:14px;align-items:center;flex-wrap:wrap;">
         <div style="min-width:190px;">
           <div style="font-size:12px;color:var(--text-muted);margin-bottom:2px;">${hasDuration ? '表达节奏' : '篇幅自检'}</div>
-          <div style="font-size:16px;font-weight:700;">${escapeHtml(hasDuration ? m.verdict || '' : `${m.charCount || 0} 字`)}</div>
+          <div style="font-size:16px;font-weight:700;">${escapeHtml(hasDuration ? m.verdict || '' : `${countEffectiveChars(answer)} 字`)}</div>
           ${
             hasDuration
               ? ''
@@ -358,7 +359,9 @@ export async function renderReviewScreen(root) {
     let flashcardMsg = '';
     try {
       const mod = await import('../lib/flashcards.js');
-      const card = mod.buildFlashcard({ report, question, answer: report.answer });
+      const built = mod.buildFlashcard({ report, question, answer: report.answer });
+      // 清洗：诊断标签不能当论据、模板拼接话术要读得通
+      const card = sanitizeFlashcardData(built, question, report.answer);
       await dbPut('flashcards', card);
       flashcardMsg = '，并已提炼成一张话术闪卡';
     } catch (err) {
@@ -511,9 +514,16 @@ function renderLlmLayer(wrapper, report) {
     const left = document.createElement('div');
     left.innerHTML = `<span class="tag tag-blue">${escapeHtml(s.dimension || '维度')}</span>
       <span class="tag" style="margin-left:6px;">${escapeHtml(s.basis || '推断')}</span>`;
-    const scoreEl = document.createElement('strong');
-    scoreEl.style.cssText = `font-size:20px;color:${tone};`;
-    scoreEl.textContent = String(s.score ?? '-');
+    const fmt = formatDimensionScore(s.score);
+    const scoreEl = document.createElement('div');
+    scoreEl.className = 'dimension-score-wrap';
+    const scoreNum = document.createElement('strong');
+    scoreNum.style.cssText = `font-size:18px;color:${tone};`;
+    scoreNum.textContent = fmt.display;
+    const scoreBadge = document.createElement('span');
+    scoreBadge.className = `dimension-score-badge ${fmt.className}`;
+    scoreBadge.textContent = fmt.badge;
+    scoreEl.append(scoreNum, scoreBadge);
     head.append(left, scoreEl);
 
     const bar = document.createElement('div');

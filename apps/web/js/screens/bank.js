@@ -704,7 +704,7 @@ export function renderBankScreen(root) {
     listBox.innerHTML = '';
     pageItems.forEach((q) => {
       const card = document.createElement('article');
-      card.className = 'card';
+      card.className = 'card question-card';
       card.style.display = 'flex';
       card.style.flexDirection = 'column';
       card.style.justifyContent = 'space-between';
@@ -756,7 +756,7 @@ export function renderBankScreen(root) {
           </details>
         </div>
         <div style="display:flex;justify-content:flex-end;align-items:center;padding-top:10px;margin-top:10px;border-top:1px solid var(--border);">
-          <button type="button" class="btn btn-primary btn-sm btn-start-coach">先拆逻辑，再开口 →</button>
+          <button type="button" class="btn btn-sm card-cta-btn btn-start-coach">先拆逻辑，再开口 →</button>
         </div>
       `;
       card.querySelector('.btn-start-coach').addEventListener('click', () => openLogicCard(q));

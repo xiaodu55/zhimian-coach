@@ -752,3 +752,69 @@ a:hover {
 @media (max-width: 720px) {
   #citation-modal-body .evidence-compare { grid-template-columns: 1fr; }
 }
+
+/* ---------- 顶栏：与弹药库重复的数据按钮收起来，只留状态灯 ---------- */
+.topbar-actions #btn-export-data,
+.topbar-actions #btn-reset-data,
+.topbar-actions label[title="导入 JSON 备份"] {
+  display: none;
+}
+
+/* 吸底"下一步"条不压页脚：主内容区留出呼吸位 */
+.main-container {
+  padding-bottom: 96px;
+}
+.next-step-bar {
+  backdrop-filter: blur(8px);
+}
+
+/* ---------- 题库卡片：悬停聚焦 + CTA 从次级变主色 ---------- */
+.question-card {
+  transition: border-color .2s ease, transform .15s ease, box-shadow .2s ease;
+}
+.question-card:hover {
+  border-color: var(--primary);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(37, 99, 235, .08);
+}
+.question-card .card-cta-btn {
+  background: var(--primary-soft);
+  color: var(--primary);
+  border: 1px solid transparent;
+  transition: all .2s ease;
+}
+.question-card:hover .card-cta-btn {
+  background: var(--primary);
+  color: #fff;
+  border-color: var(--primary);
+}
+
+/* ---------- 复盘维度分：刻度 + 等级徽章 ---------- */
+.dimension-score-wrap {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+}
+.dimension-score-unit {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+.dimension-score-badge {
+  font-size: 11px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-weight: 600;
+}
+.score-warn { background: var(--amber-soft); color: #b45309; }
+.score-mid  { background: #e0f2fe; color: #0369a1; }
+.score-good { background: var(--green-soft); color: #15803d; }
+
+/* 主提交按钮的字数门禁禁用态 */
+.btn-primary[data-gated="1"]:disabled {
+  background: #cbd5e1;
+  border-color: #cbd5e1;
+  color: #64748b;
+  box-shadow: none;
+  cursor: not-allowed;
+}

@@ -7,7 +7,7 @@ import {
 import { navigate } from '../router.js';
 import { humanizeRule } from '../rules/labels.js';
 import { escapeHtml } from '../ui/citation.js';
-import { dbPut, dbDelete } from '../db.js';
+import { dbPut, dbDelete, resetLocalData } from '../db.js';
 import { showToast } from '../ui/toast.js';
 import { createModal, modalButton } from '../ui/modal.js';
 import {
@@ -29,6 +29,7 @@ import {
   downloadTextFile,
   todayStamp,
 } from '../lib/flashcards.js';
+import { sanitizeFlashcardData } from '../lib/optimizer.js';
 import {
   FLASHCARD_STORE,
   backfillMastery,
@@ -84,13 +85,15 @@ function humanizeSupport(raw) {
 function presentableCard(card) {
   const cleanText = (t) =>
     /命中\s*规则|\bR\d+\b/.test(String(t || '')) ? stripRuleCodes(t) : t;
-  return {
+  const base = {
     ...card,
     questionTitle: cleanText(card.questionTitle),
     coreConclusion: cleanText(card.coreConclusion),
     fallback: cleanText(card.fallback),
     supports: (Array.isArray(card.supports) ? card.supports : []).map(humanizeSupport).filter(Boolean),
   };
+  // 再走一遍统一清洗：诊断标签不能当论据，"边界是在 X 场景下"这类模板拼接要换成自然话术
+  return sanitizeFlashcardData(base, { track: card.track });
 }
 
 /** 论据列表改成 1. 2. 3. 的有序形式，比圆点更好对照背诵 */
@@ -121,6 +124,7 @@ export function renderLedgerScreen(root) {
         <button id="btn-export-manual" class="btn btn-ghost btn-sm" type="button" title="闪卡 + 薄弱点 + 场次台账，整理成可直接打印背诵的 Markdown">导出复习手册 .md</button>
         <button id="btn-import-restore" class="btn btn-ghost btn-sm" type="button" title="从之前导出的全量 JSON 恢复本机数据">导入恢复</button>
         <button id="btn-clean-audio" class="btn btn-ghost btn-sm" type="button" title="删除录音的原始音频，字幕与转写稿全部保留">清理音频</button>
+        <button id="btn-reset-local" class="btn btn-ghost btn-sm" type="button" title="清空本机全部数据（换机或排查本地库异常时用）">重置本机</button>
         <input id="input-import-restore" type="file" accept="application/json,.json" hidden />
       </div>
     </div>
@@ -253,6 +257,33 @@ export function renderLedgerScreen(root) {
     } catch (err) {
       showToast('导入失败：' + err.message, 'error');
     }
+  });
+
+  // 顶栏的"重置"收进工具条：排障入口不能丢，但也不该占顶栏
+  wrapper.querySelector('#btn-reset-local').addEventListener('click', async () => {
+    const modal = createModal({
+      title: '重置本机数据',
+      subtitle: '会清空录音、转写稿、薄弱点、闪卡、场次与简历解析记录，无法撤销',
+      width: 480,
+    });
+    const tip = document.createElement('div');
+    tip.style.cssText = 'font-size:13px;line-height:1.8;color:var(--text-secondary);';
+    tip.textContent = '只在"换电脑"或"本地库异常（页面卡在骨架屏）"时使用。建议先点上面的「导出 JSON」备份。';
+    modal.body.appendChild(tip);
+    const input = wrapper.querySelector('#btn-reset-local');
+    modal.footer.append(
+      modalButton('取消', { ghost: true, onClick: () => modal.close() }),
+      modalButton('确认重置', {
+        primary: true,
+        onClick: async () => {
+          modal.close();
+          await resetLocalData();
+          showToast('本地数据已清空，正在刷新…');
+          setTimeout(() => location.reload(), 600);
+        },
+      })
+    );
+    input.blur?.();
   });
 
   wrapper.querySelector('#btn-clean-audio').addEventListener('click', async () => {
