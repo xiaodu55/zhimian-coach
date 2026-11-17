@@ -8,6 +8,7 @@ import { createModal, modalButton } from '../ui/modal.js';
 import { runReview } from '../lib/review.js';
 import { mountEmptyContextGuard } from '../lib/empty-guard.js';
 import { mountNextStepBar, createProgress } from '../lib/nextstep.js';
+import { humanizeRule } from '../rules/labels.js';
 
 /**
  * 答辩预测：上传答辩材料 → 评委高危追问预演 + 知乎相关讨论（可点进去看）。
@@ -178,7 +179,7 @@ export function renderDefenseScreen(root) {
     const info = document.createElement('div');
     info.style.cssText = 'font-size:13px;line-height:1.75;margin-bottom:10px;';
     info.innerHTML = `
-      <div style="color:var(--amber);">评委会想验证什么：${escapeHtml(q.why || '')}</div>
+      <div style="color:var(--amber);">评委会想验证什么：${escapeHtml(String(q.why || '').replace(/（模型降级[^）]*）/g, '').trim())}</div>
       ${q.locator ? `<div style="color:var(--text-muted);font-size:12px;">材料依据：${escapeHtml(q.locator)}</div>` : ''}
       ${
         q.zhihuRef
@@ -367,7 +368,7 @@ export function renderDefenseScreen(root) {
     const rules = document.createElement('div');
     rules.style.cssText = 'font-size:12.5px;color:var(--text-secondary);margin-bottom:8px;line-height:1.7;';
     rules.textContent = report.ruleFindings.length
-      ? `原话级诊断命中 ${report.ruleFindings.length} 条：${report.ruleFindings.map((f) => f.ruleName).join('、')}`
+      ? `原话级诊断命中 ${report.ruleFindings.length} 条：${report.ruleFindings.map((f) => humanizeRule(f).label).join('、')}`
       : '原话级诊断：未命中常见问题（数字 / 边界 / 取舍 / 结构）';
     host.appendChild(rules);
 
@@ -476,10 +477,11 @@ export function renderDefenseScreen(root) {
     questionsCard.hidden = false;
     questionsList.innerHTML = '';
     if (data.degraded) {
-      const warn = document.createElement('div');
-      warn.style.cssText = 'font-size:12px;color:var(--amber);margin-bottom:8px;';
-      warn.textContent = '⚠ 模型暂不可用：追问按材料结构生成模板问法，知乎讨论照常返回（不伪造外部引用）。';
-      questionsList.appendChild(warn);
+      // 温和状态徽章，不打印技术报错解释
+      const chip = document.createElement('div');
+      chip.style.cssText = 'margin-bottom:8px;';
+      chip.innerHTML = '<span class="tag tag-amber" title="本次由基础模板生成，联网后可获得更贴合材料的追问">基础追问模式</span>';
+      questionsList.appendChild(chip);
     }
     questions.forEach((q, idx) => {
       const tone = q.severity === '高' ? 'tag-red' : q.severity === '低' ? 'tag-green' : 'tag-amber';
@@ -491,7 +493,7 @@ export function renderDefenseScreen(root) {
           ${q.locator ? `<span style="font-size:11px;color:var(--text-muted);">依据 ${escapeHtml(q.locator)}</span>` : ''}
         </div>
         <div style="font-weight:600;font-size:14px;margin-bottom:4px;">Q${idx + 1}. ${escapeHtml(q.q)}</div>
-        <div style="font-size:12px;color:var(--amber);margin-bottom:6px;">评委会想验证：${escapeHtml(q.why || '')}</div>
+        <div style="font-size:12px;color:var(--amber);margin-bottom:6px;">评委会想验证：${escapeHtml(String(q.why || '').replace(/（模型降级[^）]*）/g, '').trim())}</div>
         ${
           q.zhihuRef
             ? `<div style="font-size:12px;background:var(--primary-soft);padding:6px 8px;border-radius:6px;margin-bottom:8px;">
@@ -669,7 +671,7 @@ export function renderDefenseScreen(root) {
       return;
     }
     card.hidden = false;
-    wrapper.querySelector('#special-from-label').textContent = latest.ruleName || '复盘盲区';
+    wrapper.querySelector('#special-from-label').textContent = humanizeRule({ ruleName: latest.ruleName }).label || '复盘盲区';
     list.innerHTML = '';
     items.forEach((q, i) => {
       const el = document.createElement('div');
@@ -680,7 +682,7 @@ export function renderDefenseScreen(root) {
           <span style="font-size:11px;color:var(--text-muted);">${escapeHtml(latest.questionTitle || '')}</span>
         </div>
         <div style="font-weight:600;font-size:14px;margin-bottom:4px;">S${i + 1}. ${escapeHtml(q.q)}</div>
-        <div style="font-size:12px;color:var(--amber);margin-bottom:6px;">这一问在验证：${escapeHtml(q.why || '')}</div>
+        <div style="font-size:12px;color:var(--amber);margin-bottom:6px;">这一问在验证：${escapeHtml(String(q.why || '').replace(/（模型降级[^）]*）/g, '').trim())}</div>
       `;
       const btn = document.createElement('button');
       btn.type = 'button';

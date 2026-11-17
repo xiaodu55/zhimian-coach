@@ -1,7 +1,6 @@
 import { state } from '../state.js';
 import { navigate } from '../router.js';
 import { escapeHtml } from '../ui/citation.js';
-import { renderViewpointCard } from '../ui/components.js';
 import { runDeterministicRules } from '../rules/diagnose.js';
 import { dbPut } from '../db.js';
 import { showToast } from '../ui/toast.js';
@@ -19,18 +18,17 @@ export function renderBankScreen(root) {
     <section class="hero-banner" aria-label="产品定位与一键体验">
       <div>
         <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px;flex-wrap:wrap;">
-          <span class="tag tag-blue">知乎黑客松 S3 · AI × 陪伴与交互</span>
-          <span class="tag">每条诊断均锚定知乎多元观点</span>
+          <span class="tag tag-blue">知乎高赞语料驱动 · 面试与答辩 AI 陪练</span>
         </div>
         <h1 class="hero-title">别让“看懂了”变成面试时的“说不清”</h1>
         <p class="hero-desc">
           基于<strong>知乎高赞技术与行业问答</strong>构建实战题库。先通过<strong>互动讲解</strong>吃透底层逻辑，
           再进入<strong>高压连环追问</strong>实战演练，把零散知识锤炼成随时可调用的面试“弹药库”。
         </p>
-        <div class="hero-badges" style="display:flex;gap:8px;flex-wrap:wrap;margin:12px 0;">
-          <span class="tag tag-green">🔒 100% 本地浏览器存储（IndexedDB），录音与简历零上传</span>
-          <span class="tag tag-blue">📚 真实知乎高赞语料溯源，拒绝 AI 幻觉胡编</span>
-          <span class="tag">⚡ 无需注册，打开即练</span>
+        <div class="hero-badges" style="display:flex;gap:16px;flex-wrap:wrap;margin:12px 0;color:var(--text-muted);font-size:12.5px;">
+          <span>🔒 本地存储，录音与简历零上传</span>
+          <span>📚 知乎高赞语料溯源，不编答案</span>
+          <span>⚡ 无需注册，打开即练</span>
         </div>
         <div class="hero-actions">
           <button id="btn-quick-demo" class="btn btn-primary" type="button">免费开始 3 分钟实战演练</button>
@@ -602,34 +600,38 @@ export function renderBankScreen(root) {
       card.style.display = 'flex';
       card.style.flexDirection = 'column';
       card.style.justifyContent = 'space-between';
+      // 卡片默认只留「主标题 + 考察方向 + 1 条代表性知乎观点摘要」，
+      // 难度/考点/来源数量这些细节收进悬停与展开区，卡片才有呼吸感
+      const vp = q.viewpointCards?.[0];
       card.innerHTML = `
         <div>
           <div style="display:flex;gap:6px;align-items:center;margin-bottom:8px;flex-wrap:wrap;">
-            <span class="tag tag-blue">${escapeHtml(q.track)}</span>
-            <span class="tag">${escapeHtml(q.difficulty)}</span>
-            <span class="tag">${escapeHtml(domainOf(q))}</span>
-            ${
-              q.viewpointCards?.length
-                ? `<span class="tag tag-green" title="知乎来源标识">知乎 ${q.viewpointCards.length} 张高赞观点卡${
-                    q.viewpointCards[0].popularity ? ' · ' + escapeHtml(q.viewpointCards[0].popularity) : ''
-                  }${
-                    q.viewpointCards[0].upvotes ? ' · ' + q.viewpointCards[0].upvotes + ' 赞同' : ''
-                  }</span>`
-                : `<span class="tag tag-amber">观点卡待补（来源已抓取）</span>`
-            }
+            <span class="tag tag-blue">${escapeHtml(domainOf(q))}</span>
+            <span class="tag">${escapeHtml(q.track)}</span>
           </div>
-          <h3 style="margin:0 0 8px;font-size:16px;line-height:1.45;">${escapeHtml(q.title)}</h3>
-          <p style="margin:0 0 12px;font-size:13px;color:var(--text-secondary);">${escapeHtml(q.context)}</p>
-          <div class="vp-preview" style="margin-bottom:12px;"></div>
+          <h3 style="margin:0 0 8px;font-size:16px;line-height:1.5;">${escapeHtml(q.title)}</h3>
+          ${
+            vp
+              ? `<div class="card-quote" style="font-size:12.5px;color:var(--text-secondary);line-height:1.7;padding-left:8px;border-left:2px solid var(--border);">
+                   知乎高赞观点摘要：${escapeHtml(String(vp.summary || '').slice(0, 58))}…
+                 </div>`
+              : `<div style="font-size:12.5px;color:var(--text-muted);">观点卡待补</div>`
+          }
+          <details class="card-more" style="margin-top:8px;">
+            <summary style="cursor:pointer;font-size:12px;color:var(--text-muted);">展开细节</summary>
+            <div style="margin-top:6px;font-size:12px;color:var(--text-secondary);line-height:1.7;">
+              <div>难度：${escapeHtml(q.difficulty)} · 考点：${escapeHtml((q.keywords || []).slice(0, 4).join(' / '))}</div>
+              <div>考察意图：${escapeHtml(String(q.context || '').slice(0, 120))}</div>
+              <div style="color:var(--text-muted);">知乎来源：${q.viewpointCards?.length || 0} 张观点卡${
+                vp?.popularity ? ' · ' + escapeHtml(vp.popularity) : ''
+              }${vp?.upvotes ? ' · ' + vp.upvotes + ' 赞同' : ''}</div>
+            </div>
+          </details>
         </div>
-        <div style="display:flex;justify-content:space-between;align-items:center;padding-top:10px;border-top:1px solid var(--border);">
-          <span style="font-size:12px;color:var(--text-muted);">考点：${escapeHtml((q.keywords || []).slice(0, 4).join(' / '))}</span>
+        <div style="display:flex;justify-content:flex-end;align-items:center;padding-top:10px;margin-top:10px;border-top:1px solid var(--border);">
           <button type="button" class="btn btn-primary btn-sm btn-start-coach">先拆逻辑，再开口 →</button>
         </div>
       `;
-      if (q.viewpointCards?.[0]) {
-        card.querySelector('.vp-preview').appendChild(renderViewpointCard(q.viewpointCards[0], 0));
-      }
       card.querySelector('.btn-start-coach').addEventListener('click', () => openLogicCard(q));
       listBox.appendChild(card);
     });

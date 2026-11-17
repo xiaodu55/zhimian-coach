@@ -2,7 +2,7 @@ import { Hono } from 'hono';
 import { getQuestionById } from '../lib/knowledge/questionBank.js';
 import { callStructuredLlm, LlmServiceError } from '../lib/llm.js';
 import { validateStructuredClaims, ClaimItem } from '../lib/citations.js';
-import { COACH_PARSE_SYSTEM_PROMPT, INTERVIEWER_STYLES, FOLLOWUP_DEPTH_RULES } from '../lib/prompts.js';
+import { COACH_PARSE_SYSTEM_PROMPT, INTERVIEWER_STYLES, FOLLOWUP_DEPTH_RULES, POLISH_ANSWER_PROMPT } from '../lib/prompts.js';
 
 interface InlineSource {
   stance?: string;
@@ -129,4 +129,44 @@ coachRoutes.post('/parse', async (c) => {
       droppedByValidator: 0
     });
   }
+});
+
+/**
+ * 一键生成满分润色版：把用户原话改写成可直接背诵的高分版（保留事实与数字，不编造）。
+ * 契约：{question, answer, findings[]} → {polished, notes[], degraded}
+ */
+coachRoutes.post('/polish', async (c) => {
+  const body = await c.req.json();
+  const question = String(body?.question || '').trim();
+  const answer = String(body?.answer || '').trim();
+  const rawFindings: unknown[] = Array.isArray(body?.findings) ? body.findings : [];
+  const findings = rawFindings.map((f) => String(f).slice(0, 80));
+
+  if (!question || !answer) {
+    return c.json({ error: { code: 'VALIDATION_ERROR', message: '缺少题目或回答' } }, 400);
+  }
+
+  try {
+    const raw = await callStructuredLlm<{ polished?: string; notes?: string[] }>(
+      POLISH_ANSWER_PROMPT,
+      `题目：${question}\n\n候选人原话：\n${answer.slice(0, 3000)}\n\n诊断意见：\n${findings.join('；') || '（无）'}`,
+      40_000
+    );
+    const polished = String(raw.polished || '').trim();
+    if (polished) {
+      const notes: string[] = (raw.notes || []).slice(0, 3).map((n) => String(n).slice(0, 40));
+      return c.json({ polished, notes });
+    }
+  } catch {
+    // 落到下面的降级
+  }
+
+  // 降级：不编内容，直接把原话按"结论前置"重排并标注这是基础版
+  const sentences = answer.split(/(?<=[。！？!?])/).map((x) => x.trim()).filter(Boolean);
+  const base = sentences.length > 1 ? [sentences[sentences.length - 1], ...sentences.slice(0, -1)].join('') : answer;
+  return c.json({
+    degraded: true,
+    polished: base.slice(0, 400),
+    notes: ['基础版：仅把结论提到前面，联网后可得到完整润色版'],
+  });
 });

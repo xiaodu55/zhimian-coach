@@ -44,7 +44,22 @@ export function renderExplainScreen(root) {
       <!-- 左侧：分段详解与 Citation 定位 -->
       <div id="explain-context-guard"></div>
 
-      <section class="card">
+      <!-- 从题库「去拆逻辑」过来时先看这道题的 3 步答题框架（不是示例文档） -->
+      <section class="card" id="question-framework-card" hidden style="border-color:var(--primary);">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:8px;">
+          <strong style="font-size:14px;">🧭 这道题的 3 步高分框架</strong>
+          <span class="tag tag-blue" id="framework-track"></span>
+        </div>
+        <div id="framework-question" style="font-size:14px;font-weight:600;line-height:1.6;margin-bottom:10px;"></div>
+        <ol id="framework-steps" style="margin:0 0 10px;padding-left:20px;font-size:13px;line-height:1.9;color:var(--text-secondary);"></ol>
+        <div id="framework-cautions" style="font-size:12.5px;color:var(--amber);line-height:1.8;"></div>
+        <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;">
+          <button id="btn-framework-practice" class="btn btn-primary btn-sm" type="button">框架记住了，进入模拟练 →</button>
+          <button id="btn-framework-doc" class="btn btn-ghost btn-sm" type="button">改看长文档 / 视频拆解</button>
+        </div>
+      </section>
+
+      <section class="card" id="doc-explain-card">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
           <strong id="doc-title-label">📄 ${escapeHtml(activeDoc.title)}</strong>
           <span class="tag tag-green">共 ${activeDoc.segments.length} 个可溯源片段</span>
@@ -129,10 +144,48 @@ export function renderExplainScreen(root) {
   };
   renderSegments();
 
+  // ---- 上下文绑定：从题库点了「去拆逻辑」就把这道题的框架提到最前面 ----
+  (() => {
+    const q = state.activeQuestion;
+    const cardEl = wrapper.querySelector('#question-framework-card');
+    const docEl = wrapper.querySelector('#doc-explain-card');
+    // 只有"用户自己挑了题"才展示框架：题库加载会预填 activeQuestion，那不是他的选择
+    if (!q || !cardEl || !state.questionPickedByUser) return;
+
+    const steps = (q.skeleton || []).filter((x) => !/^注意避开/.test(String(x))).slice(0, 3);
+    const cautions = (q.skeleton || []).filter((x) => /^注意避开/.test(String(x)));
+
+    cardEl.hidden = false;
+    wrapper.querySelector('#framework-track').textContent = q.track || '高频真题';
+    wrapper.querySelector('#framework-question').textContent = q.title;
+    wrapper.querySelector('#framework-steps').innerHTML = (steps.length
+      ? steps
+      : ['先复述问题，确认听到的是同一件事', '给一个可核对的数字与口径', '讲清你的判断与取舍与边界']
+    )
+      .map((x) => `<li>${escapeHtml(x)}</li>`)
+      .join('');
+    wrapper.querySelector('#framework-cautions').innerHTML = cautions.length
+      ? '避开：' + cautions.map((c) => escapeHtml(c.replace(/^注意避开[：:]\s*/, ''))).join('；')
+      : '';
+
+    // 默认只显示框架，文档区收起（用户要看长文档再自己展开）
+    if (docEl) docEl.hidden = true;
+    wrapper.querySelector('#btn-framework-doc').addEventListener('click', () => {
+      if (docEl) docEl.hidden = false;
+      cardEl.hidden = true;
+      showToast('已切到长文档 / 视频拆解模式');
+    });
+    wrapper.querySelector('#btn-framework-practice').addEventListener('click', () => {
+      state.questionPickedByUser = true;
+      navigate('/coach');
+    });
+  })();
+
   // ---- 跨路由直达：没有资料时给引导（讲解室永远有示例资料，所以主要是提示可上传） ----
   (() => {
     const host = wrapper.querySelector('#explain-context-guard');
-    if (!host) return;
+    // 从题库带着题目过来时，框架卡已经承担了上下文，不再重复提示"示例资料"
+    if (!host || (state.activeQuestion && state.questionPickedByUser)) return;
     mountEmptyContextGuard(host, {
       title: '当前用的是示例资料',
       hint: '上传你自己的论文 / 技术方案 / 转写稿，就能得到针对这份材料的详解总结与逐段溯源。',

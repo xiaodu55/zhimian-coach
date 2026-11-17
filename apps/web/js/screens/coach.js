@@ -17,6 +17,8 @@ import {
 } from '../lib/empty-guard.js';
 import { mountNextStepBar, createProgress } from '../lib/nextstep.js';
 import { renderViewpointCard } from '../ui/components.js';
+// 规则编号只留在代码与日志里，界面一律翻译成人话（「⚠️ 缺少量化结果」）
+import { humanizeRule, summarizeFindings } from '../rules/labels.js';
 import { createModal, modalButton } from '../ui/modal.js';
 import { LocalAudioRecorder } from '../capture/recorder.js';
 import { LiveCaptionEngine, captionsToTranscript } from '../capture/caption.js';
@@ -179,25 +181,32 @@ export function renderCoachScreen(root) {
         <button type="button" class="btn btn-sm" data-coach-mode="resume" role="tab">🧾 简历陪练</button>
         <button type="button" class="btn btn-sm" data-coach-mode="record" role="tab">🎙 录音复盘</button>
       </div>
-      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
-        <span class="tag ${question.source === 'resume' ? 'tag-green' : 'tag-blue'}">${escapeHtml(question.source === 'resume' ? '简历题' : question.track)}</span>
-        <label class="coach-opt" title="追问深度：每轮往下钻几层，3 = 会连追到你的隐含前提">
-          追问深度
-          <select id="sel-followup-depth" class="select" style="width:auto;padding:3px 6px;font-size:12px;">
-            <option value="1">1 轮 · 广度确认</option>
-            <option value="2">2 轮 · 深挖一层</option>
-            <option value="3">3 轮 · 追到前提</option>
-          </select>
-        </label>
-        <label class="coach-opt" title="面试官人设：温和引导型顺思路，压力挑战型直接质疑方案缺陷">
-          面试官
-          <select id="sel-interviewer-style" class="select" style="width:auto;padding:3px 6px;font-size:12px;">
-            <option value="tough">压力挑战型</option>
-            <option value="gentle">温和引导型</option>
-          </select>
-        </label>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <!-- 追问深度与人设不是每题都调，收进设置浮层：默认只占一个按钮的位置 -->
+        <div style="position:relative;">
+          <button id="btn-coach-settings" class="btn btn-sm" type="button" aria-haspopup="dialog" aria-expanded="false" aria-controls="coach-settings-menu">⚙️ 陪练设置</button>
+          <div id="coach-settings-menu" role="dialog" aria-label="陪练设置" style="display:none;position:absolute;right:0;top:calc(100% + 6px);z-index:40;width:270px;padding:12px;border:1px solid var(--border);border-radius:10px;background:var(--surface-alt);box-shadow:0 10px 28px rgba(16,24,40,.14);flex-direction:column;gap:10px;">
+            <label style="display:flex;flex-direction:column;gap:4px;font-size:12.5px;color:var(--text-secondary);" title="追问深度：每轮往下钻几层，3 = 会连追到你的隐含前提">
+              追问深度
+              <select id="sel-followup-depth" class="select" style="width:100%;padding:4px 6px;font-size:12.5px;">
+                <option value="1">1 轮 · 广度确认</option>
+                <option value="2">2 轮 · 深挖一层</option>
+                <option value="3">3 轮 · 追到前提</option>
+              </select>
+            </label>
+            <label style="display:flex;flex-direction:column;gap:4px;font-size:12.5px;color:var(--text-secondary);" title="面试官人设：温和引导型顺思路，压力挑战型直接质疑方案缺陷">
+              面试官人设
+              <select id="sel-interviewer-style" class="select" style="width:100%;padding:4px 6px;font-size:12.5px;">
+                <option value="tough">压力挑战型</option>
+                <option value="gentle">温和引导型</option>
+              </select>
+            </label>
+            <div style="font-size:12px;color:var(--text-muted);line-height:1.65;border-top:1px solid var(--border);padding-top:8px;">
+              改完立即生效，下一轮追问就用新设置；本机会记住你的选择。
+            </div>
+          </div>
+        </div>
         <button id="btn-switch-q" class="btn btn-sm" type="button">换一题</button>
-        <button id="btn-fill-sample" class="btn btn-sm" type="button">填入演示回答样例</button>
       </div>
     </div>
 
@@ -211,7 +220,7 @@ export function renderCoachScreen(root) {
               1) 选输入设备（同时开飞书/腾讯会议也不会失效，右侧有音量与静音告警）<br/>
               2) 开始录音 → 实时字幕逐句落时间戳，说话人可一键切换/纠正<br/>
               3) 可选：同时录系统声音（面试官那一路），双轨各自成文件<br/>
-              4) 转写 → 生成复盘报告（规则层逐题诊断 + 可回指原话）
+              4) 转写 → 生成复盘报告（逐题原话诊断 + 可回指原话）
             </div>
             <div style="font-size:12px;color:var(--text-muted);margin-top:8px;">
               录音与转写只存在你自己的浏览器里，服务端零落盘。扫描版/图片型材料请走「简历陪练」的 PDF OCR 兜底。
@@ -247,12 +256,16 @@ export function renderCoachScreen(root) {
 
         <div id="panel-bank" style="flex-direction:column;gap:14px;">
         <section class="card">
-          <h2 style="margin:0 0 8px;font-size:18px;">${escapeHtml(question.title)}</h2>
+          <h2 style="margin:0 0 8px;font-size:18px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+            ${escapeHtml(question.title)}
+            <span class="tag ${String(question.source || '').startsWith('resume') ? 'tag-green' : 'tag-blue'}" style="font-size:11px;font-weight:500;">${escapeHtml(String(question.source || '').startsWith('resume') ? '简历题' : question.track || '真题')}</span>
+          </h2>
           <p style="margin:0 0 12px;font-size:13px;color:var(--text-secondary);">${escapeHtml(question.context)}</p>
 
           <div id="followup-box" class="card" style="background:var(--amber-soft);border-color:#fedf89;margin-bottom:12px;" hidden>
-            <div style="font-size:12px;font-weight:700;color:var(--amber);margin-bottom:4px;">
-              🔥 面试官深度追问（第 <span id="followup-round-num">1</span> 轮<span id="followup-style-label"></span>）
+            <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:12px;font-weight:700;color:var(--amber);margin-bottom:4px;">
+              <span>🔥 面试官深度追问（第 <span id="followup-round-num">1</span> 轮<span id="followup-style-label"></span>）</span>
+              <span id="followup-mode-badge" class="tag" style="display:none;font-weight:600;background:#fff;border:1px solid #fedf89;color:var(--amber);">基础追问模式</span>
             </div>
             <div id="followup-question-text" style="font-weight:600;font-size:14px;"></div>
             <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;">
@@ -272,7 +285,10 @@ export function renderCoachScreen(root) {
         </section>
 
         <section>
-          <h3 style="margin:0 0 8px;font-size:14px;color:var(--text-secondary);">锚定知乎多元观点卡（评分基准）</h3>
+          <h3 style="margin:0 0 8px;font-size:14px;color:var(--text-secondary);display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+            评分基准 · 知乎高赞观点
+            <span style="font-size:11.5px;color:var(--text-muted);font-weight:400;">先自己答，卡壳了再偷看</span>
+          </h3>
           <div id="coach-vp-list" style="display:flex;flex-direction:column;gap:10px;"></div>
         </section>
         </div>
@@ -304,6 +320,11 @@ export function renderCoachScreen(root) {
           <label for="answer-textarea" style="display:block;font-size:13px;font-weight:600;margin-bottom:6px;">
             作答文本 / 导入会议转写稿（支持「面试官：/ 我：」标签切分）：
           </label>
+          <div id="sample-fill-hint" style="display:flex;justify-content:flex-end;margin:0 0 6px;">
+            <button id="btn-fill-sample" class="btn btn-ghost btn-sm" type="button" style="font-size:12px;font-weight:400;color:var(--text-muted);padding:2px 8px;background:var(--surface-alt);border:1px dashed var(--border);">
+              试一试：填入一段示例回答
+            </button>
+          </div>
           <textarea id="answer-textarea" class="textarea" rows="7" placeholder="可直接在此输入回答，或点击上方「开始录音」自动落字幕，或粘贴带「面试官：/ 我：」的复盘转写稿…"></textarea>
 
             <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px;flex-wrap:wrap;gap:8px;">
@@ -459,17 +480,80 @@ export function renderCoachScreen(root) {
     if (!bulletKnowledge.length) loadBulletKnowledge(activeBullet);
   }
 
+  // 观点卡默认折叠：边答边看得见"标准答案"，人就只会照着念。
+  // 一次只揭晓一条，答完（提交或触发追问）后才全部摊开——那时藏着已经没有意义。
   const vpBox = wrapper.querySelector('#coach-vp-list');
-  if ((question.viewpointCards || []).length) {
-    (question.viewpointCards || []).forEach((vc, idx) => vpBox.appendChild(renderViewpointCard(vc, idx)));
-  } else if (question.source === 'resume') {
-    vpBox.innerHTML = `<div class="card" style="font-size:12.5px;color:var(--text-muted);">
-      简历题不依赖知乎观点卡：本次只跑「规则层 10 条原话诊断」+ 面经参考，不做观点契合度评分（避免拿无关观点硬套）。
-      ${question.zhihuRef ? `参考面经：<a href="${escapeHtml(question.zhihuRef.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(question.zhihuRef.title)}</a>` : ''}
-    </div>`;
-  }
+  const vpCards = question.viewpointCards || [];
+  const REVEAL_KEY = 'zhimian.coach.revealed';
+  // 键里只存"揭晓了几条"，另用一个伴生键记住属于哪道题：换题后不该白送新题的观点
+  const REVEAL_QID_KEY = REVEAL_KEY + '.qid';
+  const revealBelongsToThisQuestion = sessionStorage.getItem(REVEAL_QID_KEY) === String(question.id);
+  let revealedVp = revealBelongsToThisQuestion
+    ? Math.max(0, Math.min(Number(sessionStorage.getItem(REVEAL_KEY)) || 0, vpCards.length))
+    : 0;
+  const persistRevealedVp = () => {
+    sessionStorage.setItem(REVEAL_KEY, String(revealedVp));
+    sessionStorage.setItem(REVEAL_QID_KEY, String(question.id));
+  };
+
+  const renderViewpoints = () => {
+    vpBox.innerHTML = '';
+    if (!vpCards.length) {
+      if (question.source === 'resume') {
+        vpBox.innerHTML = `<div class="card" style="font-size:12.5px;color:var(--text-muted);">
+          简历题不按知乎观点打分：这场只做逐句原话诊断 + 面经参考，避免拿无关观点硬套。
+          ${question.zhihuRef ? `参考面经：<a href="${escapeHtml(question.zhihuRef.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(question.zhihuRef.title)}</a>` : ''}
+        </div>`;
+      }
+      return;
+    }
+    vpCards.slice(0, revealedVp).forEach((vc, idx) => vpBox.appendChild(renderViewpointCard(vc, idx)));
+
+    if (revealedVp >= vpCards.length) {
+      const done = document.createElement('div');
+      done.style.cssText = 'font-size:12px;color:var(--text-muted);padding:2px 2px 0;';
+      done.textContent = `已揭晓全部 ${vpCards.length} 条观点 · 现在可以对照它们检查自己的答案`;
+      vpBox.appendChild(done);
+      return;
+    }
+
+    const bar = document.createElement('button');
+    bar.type = 'button';
+    bar.className = 'btn btn-sm';
+    bar.style.cssText =
+      'display:flex;justify-content:space-between;align-items:center;gap:10px;width:100%;text-align:left;' +
+      'background:var(--surface-alt);color:var(--text-secondary);border:1px dashed var(--border);' +
+      'padding:10px 12px;font-size:12.5px;line-height:1.6;';
+    bar.innerHTML =
+      revealedVp === 0
+        ? `<span>🔒 评分基准已隐藏（避免照着念）· 思考卡壳？点此偷看 1 条提示</span><span style="color:var(--text-muted);flex:none;">0 / ${vpCards.length}</span>`
+        : `<span>再看一条观点提示</span><span style="color:var(--text-muted);flex:none;">已看 ${revealedVp} / ${vpCards.length} · 还剩 ${vpCards.length - revealedVp} 条</span>`;
+    bar.addEventListener('click', () => {
+      revealedVp += 1;
+      persistRevealedVp();
+      renderViewpoints();
+    });
+    vpBox.appendChild(bar);
+  };
+  renderViewpoints();
+
+  /** 已经答完（提交/触发追问）：全部摊开，并把进度对齐到 sessionStorage */
+  const revealAllViewpoints = () => {
+    if (revealedVp >= vpCards.length) return;
+    revealedVp = vpCards.length;
+    persistRevealedVp();
+    renderViewpoints();
+  };
 
   const textarea = wrapper.querySelector('#answer-textarea');
+  // 样例填充只在作答框为空时露出来：开始写就自动让位，避免"点一下就有答案"的诱导
+  const sampleHint = wrapper.querySelector('#sample-fill-hint');
+  const updateSampleHint = () => {
+    if (!sampleHint) return;
+    sampleHint.style.display = textarea.value.trim() ? 'none' : 'flex';
+  };
+  updateSampleHint();
+  textarea.addEventListener('input', updateSampleHint);
   const captionListEl = wrapper.querySelector('#caption-list');
   const captionStatusEl = wrapper.querySelector('#caption-status');
   const recordBtn = wrapper.querySelector('#btn-record-toggle');
@@ -560,8 +644,8 @@ export function renderCoachScreen(root) {
           ? '双轨说明：勾选「同时录系统声音」后会弹共享选择器，务必勾上"分享音频"，这样面试官的声音单独成轨。'
           : '当前环境不支持采集系统声音（移动端/桌面壳），请用单麦克风 + 手动标注说话人。',
       ].filter(Boolean).join('<br/>');
-    } catch (err) {
-      deviceHint.textContent = '设备枚举失败：' + err.message;
+    } catch {
+      deviceHint.textContent = '读不到麦克风列表：检查一下浏览器的麦克风权限，再点「刷新」。';
     }
   };
   refreshMicBtn.addEventListener('click', () => loadMicDevices(true));
@@ -661,9 +745,13 @@ export function renderCoachScreen(root) {
     }
 
     if (data.degraded) {
+      // 不打印技术原因：用户只需要知道"这轮用的是基础题库"，以及接下来还能做什么
       const warn = document.createElement('div');
-      warn.style.cssText = 'font-size:12px;color:var(--amber);margin-top:8px;';
-      warn.textContent = '⚠ ' + (data.degradedReason || '模型不可用：已降级为通用追问框架');
+      warn.style.cssText =
+        'display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:12px;color:var(--text-secondary);' +
+        'background:var(--surface-alt);border:1px solid var(--border);border-radius:8px;padding:8px 10px;margin-top:8px;';
+      warn.innerHTML =
+        '<span class="tag tag-amber">基础出题模式</span><span>题目照常可用，只是追问会更贴近通用题库；你可以先练，稍后再点「重新出题」。</span>';
       resumeProfile.appendChild(warn);
     }
 
@@ -808,11 +896,11 @@ export function renderCoachScreen(root) {
       const data = await res.json();
       if (!res.ok) throw new Error(data?.error?.message || '检索失败');
       bulletKnowledge = (data.results || []).slice(0, 4);
-    } catch (err) {
+    } catch {
       bulletKnowledge = [];
       const el = document.querySelector('#bullet-knowledge');
       if (el) {
-        el.innerHTML = `<span style="color:var(--amber)">知乎检索不可用（${escapeHtml(err.message)}）：仍可基于要点直接作答</span>`;
+        el.innerHTML = '<span style="color:var(--amber)">知乎参考暂时没取到，不影响作答与诊断：可以直接按自己的思路讲。</span>';
       }
       return;
     }
@@ -932,9 +1020,9 @@ export function renderCoachScreen(root) {
       const data = await res.json();
       if (!res.ok) throw new Error(data?.error?.message || '生成候选题失败');
       candidates = data.candidates || [];
-    } catch (err) {
+    } catch {
       clearInterval(tick);
-      notice.textContent = `模型生成失败（${err.message}）：下面是按要点直接生成的模板题，可以先练着。`;
+      notice.textContent = '这次没能让模型出题：下面是按你的要点直接生成的备选题，可以先挑一道练。';
       notice.style.color = 'var(--amber)';
       return;
     }
@@ -966,13 +1054,13 @@ export function renderCoachScreen(root) {
         ? `<div style="font-size:12px;color:var(--text-secondary);margin-top:6px;">检索到的知识：${knowledge
             .map((k) => `<a href="${escapeHtml(k.url || '')}" target="_blank" rel="noopener noreferrer">${escapeHtml(k.title || '')}</a>`)
             .join('、')}</div>`
-        : '<div style="font-size:12px;color:var(--text-muted);margin-top:6px;">检索到的知识：暂无（知乎检索不可用或未命中）</div>'}`;
+        : '<div style="font-size:12px;color:var(--text-muted);margin-top:6px;">这一步暂时没找到相关的知乎内容，不影响先按自己的思路答</div>'}`;
     modal.body.appendChild(info);
 
     const ta = document.createElement('textarea');
     ta.className = 'textarea';
     ta.rows = 6;
-    ta.placeholder = '按面试口吻写下你的回答（会逐条对照要点与原话规则做诊断）';
+    ta.placeholder = '按面试口吻写下你的回答（会逐条对照要点与你自己的原话做诊断）';
     modal.body.appendChild(ta);
 
     const result = document.createElement('div');
@@ -1025,15 +1113,24 @@ export function renderCoachScreen(root) {
   function renderMiniReview(host, report) {
     host.innerHTML = '';
     const head = document.createElement('div');
-    head.style.cssText = 'font-size:13px;font-weight:600;margin-bottom:6px;';
-    head.textContent = report.degraded ? '复盘（规则模式：模型层暂不可用）' : '复盘结果';
+    head.style.cssText = 'display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:13px;font-weight:600;margin-bottom:6px;';
+    head.innerHTML = report.degraded
+      ? '<span>复盘结果</span><span class="tag tag-amber" style="font-weight:600;">基础模式</span>'
+      : '<span>复盘结果</span>';
     host.appendChild(head);
 
     const rules = document.createElement('div');
     rules.style.cssText = 'font-size:12.5px;color:var(--text-secondary);margin-bottom:8px;line-height:1.7;';
-    rules.textContent = report.ruleFindings.length
-      ? `原话级诊断命中 ${report.ruleFindings.length} 条：${report.ruleFindings.map((f) => f.ruleName).join('、')}`
-      : '原话级诊断：未命中规则库里的常见问题（数字/边界/取舍等）';
+    const findings = report.ruleFindings || [];
+    const findingLabels = findings
+      .slice(0, 5)
+      .map((f) => {
+        const { icon, label } = humanizeRule(f);
+        return `${icon} ${label}`;
+      });
+    rules.textContent = findingLabels.length
+      ? `找到 ${findings.length} 处可改进：${findingLabels.join('、')}`
+      : '这一版没发现明显可优化点：数字、边界与取舍都交代得比较清楚。';
     host.appendChild(rules);
 
     for (const s of report.llmScores || []) {
@@ -1217,7 +1314,7 @@ export function renderCoachScreen(root) {
         if (!res.ok) throw new Error(data?.error?.message || 'PDF 解析失败');
         segments = data.segments;
         engine = data.engine || 'pdf';
-        resumeStatus.textContent = `解析完成（${engine}，质量 ${data.quality?.score ?? '?'}），正在按简历出题…`;
+        resumeStatus.textContent = `简历已读入（${engine}），正在按你的经历出题…`;
       } else {
         const text = await file.text();
         segments = chunkDocumentText(text, file.name).segments;
@@ -1250,8 +1347,8 @@ export function renderCoachScreen(root) {
           '题目已生成，但本地库被旧标签页占用，只保存在本次会话：关闭旧标签页或点顶部「重置」后重新上传即可长期保存';
       }
       resumeStatus.textContent = data2.cached
-        ? `命中缓存：${data2.questions.length} 道题（本次未调用模型）`
-        : `已生成 ${data2.questions.length} 道题（${engine} 解析 · 接地丢弃 ${data2.droppedByGrounding}）`;
+        ? `沿用上次的解析结果：${data2.questions.length} 道题（本次没再调用模型）`
+        : `已生成 ${data2.questions.length} 道题（按简历原文对齐，已滤掉对不上原文的 ${data2.droppedByGrounding} 条）`;
       renderResumeResult(saved || data2);
       showToast('简历解析完成：点左侧任意一条要点即可练（结果已存本机，不用重复上传）');
     } catch (err) {
@@ -1325,7 +1422,7 @@ export function renderCoachScreen(root) {
     const file = e.target.files?.[0];
     if (!file) return;
     recordTranscript.value = '';
-    showToast('正在本机转写（faster-whisper，录音越长越慢）…');
+    showToast('正在本机转写，录音越长越慢…');
     try {
       const fd = new FormData();
       fd.append('file', file, file.name);
@@ -1341,9 +1438,9 @@ export function renderCoachScreen(root) {
       lastTranscriptSource = 'local-asr';
       audioReview = null;
       if (audioReviewBox) audioReviewBox.style.display = 'none';
-      showToast(`转写完成：${segments.length} 段 / ${data.duration?.toFixed?.(0) || '?'} 秒（引擎 ${data.engine}）`);
-    } catch (err) {
-      showToast(err.message + '（可用云端 ASR 或导出后跑 node scripts/asr/local-transcribe.mjs）', 'error', 7000);
+      showToast(`转写完成：${segments.length} 段 / 约 ${data.duration?.toFixed?.(0) || '?'} 秒（只在本机处理）`);
+    } catch {
+      showToast('这段录音没能自动转写：换一段更清晰的录音，或把会议文字稿粘贴进来', 'error', 6000);
     }
   });
 
@@ -1457,7 +1554,7 @@ export function renderCoachScreen(root) {
       llmScores: null,
       improvements: null,
       degraded: true,
-      degradedReason: '录音复盘未绑定题目来源：只跑规则层诊断',
+      degradedReason: '录音复盘未绑定具体题目：只做逐题原话诊断',
       createdAt: new Date().toISOString(),
     };
     state.lastReviewReport = report;
@@ -1465,7 +1562,13 @@ export function renderCoachScreen(root) {
     await attachOpportunityToReport(report);
     await dbPut('sessions', report);
     navigate('/review');
-    showToast(`已生成录音复盘报告：${qaPairs.length} 组问答，命中 ${ruleFindings.length} 条诊断`);
+    showToast(
+      `已生成录音复盘：${qaPairs.length} 组问答，${
+        summarizeFindings(ruleFindings, 3).join('、') || '没发现明显可优化点'
+      }`,
+      'info',
+      5000
+    );
   });
 
   wrapper.querySelector('#btn-import-from-record').addEventListener('click', () => {
@@ -1475,6 +1578,7 @@ export function renderCoachScreen(root) {
       return;
     }
     textarea.value = text;
+    updateSampleHint();
     showToast('已把转写稿带入作答框');
   });
 
@@ -1533,11 +1637,11 @@ export function renderCoachScreen(root) {
       transcribeBtn.disabled = true;
       transcribeBtn.textContent = '转写中…';
       asrHint.style.display = 'block';
-      asrHint.textContent = '检查 ASR 服务…';
+      asrHint.textContent = '正在检查转写服务…';
       try {
         const status = await fetch('/api/asr/status').then((r) => r.json());
         if (!status.available) {
-          asrHint.innerHTML = `⚠ 云端 ASR 未配置。两条本地路线：<br/>① 点「导出两条音轨」→ 终端运行 <code>node scripts/asr/local-transcribe.mjs mic.webm system.webm</code>（本机 faster-whisper）→ 把 transcript.txt 粘到下面作答框；<br/>② 导入飞书妙记 / 腾讯会议 AI 笔记的转写稿。`;
+          asrHint.innerHTML = `这台设备还没开通自动转写，不影响复盘：<br/>① 点「导出两条音轨」，用你电脑上的转写工具生成文字稿，再粘贴到下面；<br/>② 或者直接导入飞书妙记 / 腾讯会议 AI 笔记的转写稿（最省事）。`;
           return;
         }
         asrHint.textContent = '云端转写中（两轨分别转写，再按时间轴合并）…';
@@ -1551,9 +1655,10 @@ export function renderCoachScreen(root) {
         const sysSegments = lastTracks.system ? await runOne(lastTracks.system, 'system', 'system.webm') : [];
         const merged = mergeTracks(micSegments, sysSegments);
         textarea.value = toTranscriptText(merged);
+        updateSampleHint();
         asrHint.textContent = `✅ 已合并 ${merged.length} 句（我 ${merged.filter((r) => r.speaker === 'me').length} / 面试官 ${merged.filter((r) => r.speaker === 'interviewer').length}），可直接点「结束并生成复盘诊断」。`;
-      } catch (err) {
-        asrHint.textContent = '⚠ 转写失败：' + err.message + '（可导出音轨用本地脚本）';
+      } catch {
+        asrHint.textContent = '⚠ 这次没转成，可以点「导出两条音轨」自己转写，再把文字稿粘到下面作答框。';
       } finally {
         transcribeBtn.disabled = false;
         transcribeBtn.textContent = '转写这两轨（→ 带说话人的转写稿）';
@@ -1583,12 +1688,17 @@ export function renderCoachScreen(root) {
     renderCoachScreen(root);
   });
 
-  // 填入样例
+  // 样例填充按钮（放在作答框上方，空框时才显示，见 updateSampleHint）
   wrapper.querySelector('#btn-fill-sample').addEventListener('click', () => {
-    if (state.demoSample?.rawText) {
-      textarea.value = state.demoSample.rawText;
-      showToast('已填入带说话人标签的样例转写稿');
+    const sample = state.demoSample?.rawText;
+    if (!sample) {
+      showToast('演示样例还没加载好，稍等一下再试', 'warn');
+      return;
     }
+    textarea.value = sample;
+    updateSampleHint();
+    textarea.focus();
+    showToast('已填入带说话人标签的示例回答，改成你自己的经历再用');
   });
 
   // ---- 思考停顿保护：静音 5 秒不自动断句，空格继续说 / Enter 发送 ----
@@ -1698,8 +1808,8 @@ export function renderCoachScreen(root) {
           }
         });
         captionEngine.start();
-      } catch (err) {
-        showToast('无法访问麦克风：' + err.message + '（可直接下方输入或导入转写稿）', 'warn', 4500);
+      } catch {
+        showToast('没能打开麦克风：检查一下浏览器权限，或直接在下面输入 / 导入转写稿', 'warn', 4500);
       }
     } else {
       isRecording = false;
@@ -1731,6 +1841,36 @@ export function renderCoachScreen(root) {
         captionStatusEl.textContent = `✅ 录音完成（${result.durationSec} 秒，${result.systemBlob ? '双轨' : '单轨'}），只存在本机 IndexedDB，未产生任何上传请求。`;
       }
     }
+  });
+
+  // ---- 陪练设置浮层：默认收起，点外面 / Esc 关闭（不占顶部工具栏版面） ----
+  const settingsBtn = wrapper.querySelector('#btn-coach-settings');
+  const settingsMenu = wrapper.querySelector('#coach-settings-menu');
+  const openSettings = () => {
+    settingsMenu.style.display = 'flex';
+    settingsBtn.setAttribute('aria-expanded', 'true');
+    document.addEventListener('pointerdown', onSettingsOutside, true);
+    document.addEventListener('keydown', onSettingsKeydown, true);
+  };
+  const closeSettings = () => {
+    if (settingsMenu.style.display === 'none') return;
+    settingsMenu.style.display = 'none';
+    settingsBtn.setAttribute('aria-expanded', 'false');
+    document.removeEventListener('pointerdown', onSettingsOutside, true);
+    document.removeEventListener('keydown', onSettingsKeydown, true);
+  };
+  function onSettingsOutside(ev) {
+    if (settingsMenu.contains(ev.target) || settingsBtn.contains(ev.target)) return;
+    closeSettings();
+  }
+  function onSettingsKeydown(ev) {
+    if (ev.key !== 'Escape') return;
+    closeSettings();
+    settingsBtn.focus();
+  }
+  settingsBtn.addEventListener('click', () => {
+    if (settingsMenu.style.display === 'none') openSettings();
+    else closeSettings();
   });
 
   // ---- 追问深度 / 面试官人设（本地记忆，切换后下一轮提交生效） ----
@@ -1803,12 +1943,14 @@ export function renderCoachScreen(root) {
     );
   };
 
-  // 追问生成（M8：单题最多 3 轮，取自观点卡分歧）
+  // 追问生成（单题最多 3 轮，取自观点卡分歧）
   wrapper.querySelector('#btn-trigger-followup').addEventListener('click', () => {
     if (followupRound >= 3) {
       showToast('已达到单题最大追问轮次（3 轮），请结束并查看诊断报告', 'warn');
       return;
     }
+    // 已经进到追问环节，说明主问题答过了：观点卡没必要再藏着
+    revealAllViewpoints();
     followupRound++;
     const minorityCard = question.viewpointCards?.[1] || question.viewpointCards?.[0];
     activeFollowupFocus = (question.keywords || []).slice(0, 2).join(' ');
@@ -1829,12 +1971,20 @@ export function renderCoachScreen(root) {
   const askedFollowups = [];      // 历次追问原文（顺序）
   const roundAnswers = [];        // 历次作答原文
   let skipFollowup = false;       // 用户选择"跳过这轮"
+  // 模型层不可用时用固定追问模板兜底：界面上只说"基础追问模式"，不打印技术原因
+  let followupModeDegraded = false;
+  const setFollowupModeBadge = (degraded) => {
+    followupModeDegraded = Boolean(degraded);
+    const badge = wrapper.querySelector('#followup-mode-badge');
+    if (badge) badge.style.display = followupModeDegraded ? 'inline-flex' : 'none';
+  };
 
   const showFollowupBox = (text, round) => {
     const box = wrapper.querySelector('#followup-box');
     if (!box) return;
     box.hidden = false;
     wrapper.querySelector('#followup-round-num').textContent = String(round);
+    setFollowupModeBadge(followupModeDegraded);
     const textBox = wrapper.querySelector('#followup-question-text');
     textBox.textContent = text;
     const label = wrapper.querySelector('#followup-style-label');
@@ -1844,7 +1994,7 @@ export function renderCoachScreen(root) {
     attachFollowupCitation(question.viewpointCards?.[1] || question.viewpointCards?.[0]);
   };
 
-  // 多轮问答拼成「面试官：/ 我：」转写稿：模型与规则层看到的都是完整现场
+  // 多轮问答拼成「面试官：/ 我：」转写稿：模型看到的是完整现场
   const buildTranscript = (finalAnswer) => {
     const qs = [question.title, ...askedFollowups];
     const as = [...roundAnswers, finalAnswer];
@@ -1859,6 +2009,7 @@ export function renderCoachScreen(root) {
   wrapper.querySelector('#btn-followup-explain')?.addEventListener('click', () => {
     const skeleton = (question.skeleton || []).slice(0, 4).join('\n');
     textarea.value = skeleton ? `（我看解析后重答）\n${skeleton}` : '（我看解析后重答）';
+    updateSampleHint();
     textarea.focus();
     showToast('已把参考答题骨架填进作答框，照着改写再答一次');
   });
@@ -1876,6 +2027,8 @@ export function renderCoachScreen(root) {
       showToast('请先录音、输入回答或导入样例转写稿', 'warn');
       return;
     }
+    // 提交即代表这一题已经答完：评分类观点卡不再需要藏
+    revealAllViewpoints();
     const submitBtn = ev.currentTarget;
     const originalLabel = submitBtn.textContent;
     submitBtn.disabled = true;
@@ -1903,6 +2056,8 @@ export function renderCoachScreen(root) {
       return;
     }
     const { qaPairs, answer: targetAnswer, ruleFindings, llmScores, improvements, degraded, followups } = review;
+    // 本轮如果走了固定模板兜底，追问框标题旁只挂「基础追问模式」徽章，不打印技术原因
+    setFollowupModeBadge(degraded);
     roundAnswers.push(raw);
 
     progress.step('正在提炼 3 个核心考察点…');
@@ -1926,6 +2081,7 @@ export function renderCoachScreen(root) {
       askedFollowups.push(fq);
       showFollowupBox(fq, deepRound);
       textarea.value = '';
+      updateSampleHint();
       submitBtn.disabled = false;
       submitBtn.textContent = originalLabel;
       progress.done();
@@ -1963,7 +2119,7 @@ export function renderCoachScreen(root) {
     progress.done();
 
     if (degraded) {
-      showToast('模型暂不可用，已切换规则模式并完成原话级诊断', 'warn', 3800);
+      showToast('模型服务正忙，本轮先用基础模式完成了逐句诊断', 'warn', 3800);
     } else {
       showToast(`复盘解析完成（${roundAnswers.length} 轮作答）`);
     }

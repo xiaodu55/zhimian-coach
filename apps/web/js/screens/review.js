@@ -5,7 +5,9 @@ import { renderViewpointCard } from '../ui/components.js';
 import { dbPut, dbGetAll } from '../db.js';
 import { showToast } from '../ui/toast.js';
 import { mountEmptyContextGuard, recentQuestionOptions, recommendWarmupQuestion } from '../lib/empty-guard.js';
-import { mountNextStepBar } from '../lib/nextstep.js';
+import { mountNextStepBar, createProgress } from '../lib/nextstep.js';
+import { humanizeRule } from '../rules/labels.js';
+import { countChars } from '../capture/speechmetrics.js';
 
 /**
  * 找出"我说的那句"：模型结论里提到的关键名词（术语/数字）如果在用户作答里出现过，
@@ -95,6 +97,18 @@ export async function renderReviewScreen(root) {
     <!-- 复盘盲区 → 专项追问（写完会给出跳转按钮） -->
     <div id="special-questions-box" class="card" style="margin-bottom:16px;display:none;" hidden></div>
 
+    <!-- 一键生成满分润色版：原话 ⇄ 可背版本的直观对比 -->
+    <div class="card" style="margin-bottom:16px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;">
+        <div>
+          <strong style="font-size:14px;">✨ 一键生成满分润色版</strong>
+          <div style="font-size:12.5px;color:var(--text-muted);margin-top:4px;">保留你的事实与数字，补上结论前置、量化基线与边界条件，产出可以直接背的版本。</div>
+        </div>
+        <button id="btn-polish" class="btn btn-primary btn-sm" type="button">生成润色版 →</button>
+      </div>
+      <div id="polish-box" style="margin-top:12px;" hidden></div>
+    </div>
+
     ${degraded ? `
       <div class="card" style="background:var(--amber-soft);border-color:#fedf89;margin-bottom:16px;padding:10px 14px;font-size:13px;color:var(--amber);">
         <strong>⚠ 显式降级提示：</strong> 当前展示为「确定性规则层诊断（10 条规则）+ 知乎观点卡对照」。每条诊断均严格回指你的回答原话与字符区间，绝无模型幻觉编造。
@@ -108,7 +122,7 @@ export async function renderReviewScreen(root) {
         <div class="card">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
             <span class="tag">你的回答原话</span>
-            <span style="font-size:12px;color:var(--text-muted);">${answer.length} 字</span>
+            <span style="font-size:12px;color:var(--text-muted);">${countChars(answer)} 字</span>
           </div>
           <div id="user-answer-highlighted" style="font-size:14px;white-space:pre-wrap;line-height:1.7;"></div>
         </div>
@@ -242,8 +256,8 @@ export async function renderReviewScreen(root) {
       item.innerHTML = `
         <div class="finding-header">
           <div>
-            <span class="tag ${f.severity === 'red' ? 'tag-red' : 'tag-amber'}">${f.severity === 'red' ? '高危项' : '优化项'}</span>
-            <strong style="margin-left:6px;font-size:14px;">${escapeHtml(f.ruleName)}</strong>
+            <span class="tag ${f.severity === 'red' ? 'tag-red' : 'tag-amber'}">${f.severity === 'red' ? '先改这条' : '可优化'}</span>
+            <strong style="margin-left:6px;font-size:14px;">${escapeHtml(humanizeRule(f).icon + ' ' + humanizeRule(f).label)}</strong>
           </div>
           <span style="font-size:12px;color:var(--primary);">点击定位原话 ▾</span>
         </div>
@@ -281,7 +295,7 @@ export async function renderReviewScreen(root) {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             questionTitle: question.title,
-            attribution: `${ruleName}：${findingsForRule(ruleName).suggestion || ''}`,
+            attribution: `${humanizeRule({ ruleName }).label}：${findingsForRule(ruleName).suggestion || ''}`,
             answerSnippet: String(report.answer || '').slice(0, 1500),
             track: question.track || '',
           }),
@@ -294,7 +308,7 @@ export async function renderReviewScreen(root) {
           source: 'review',
           questionId: question.id,
           questionTitle: question.title,
-          ruleName,
+          ruleName: humanizeRule({ ruleName }).label,
           questions,
           createdAt: new Date().toISOString(),
         });
@@ -312,7 +326,7 @@ export async function renderReviewScreen(root) {
           `;
           specialBox.querySelector('#btn-goto-defense')?.addEventListener('click', () => navigate('/defense'));
         }
-        showToast(`已生成 ${questions.length} 条专项追问（来自「${ruleName}」）`);
+        showToast(`已生成 ${questions.length} 条专项追问（来自「${humanizeRule({ ruleName }).label}」）`);
       } catch (err) {
         showToast(err.message, 'error', 5000);
       } finally {
@@ -327,7 +341,7 @@ export async function renderReviewScreen(root) {
   // M11 回流：标记薄弱点 -> 弹药库「优先复习」置顶
   wrapper.querySelector('#btn-mark-weakness').addEventListener('click', async () => {
     const existing = await dbGetAll('weaknesses');
-    const summaryTags = ruleFindings.map((f) => f.ruleName).slice(0, 3).join('；') || '待深化知乎分歧应对';
+    const summaryTags = ruleFindings.map((f) => humanizeRule(f).label).slice(0, 3).join('；') || '待深化知乎分歧应对';
     const weakness = {
       id: 'wk-' + question.id,
       questionId: question.id,
@@ -380,6 +394,59 @@ export async function renderReviewScreen(root) {
 
   wrapper.querySelector('#btn-retry-coach').addEventListener('click', () => navigate('/coach'));
 
+  // ---- 一键生成满分润色版：把"我知道哪里不对"变成"我照着这个念就能更好" ----
+  (() => {
+    const host = wrapper.querySelector('#polish-box');
+    if (!host) return;
+    const btn = wrapper.querySelector('#btn-polish');
+    btn?.addEventListener('click', async () => {
+      btn.disabled = true;
+      const origin = btn.textContent;
+      btn.textContent = '生成中…';
+      const progress = createProgress('正在按你的原话改写…');
+      try {
+        const res = await fetch('/api/coach/polish', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            question: question.title,
+            answer: String(answer || ''),
+            findings: ruleFindings.map((f) => `${humanizeRule(f).label}：${f.suggestion || ''}`),
+          }),
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data?.error?.message || '生成失败');
+        progress.done();
+        host.hidden = false;
+        host.innerHTML = `
+          <div style="font-size:13px;font-weight:700;margin-bottom:6px;">✨ 满分润色版（照着念）
+            ${data.degraded ? '<span class="tag tag-amber" style="margin-left:6px;">基础版</span>' : ''}
+          </div>
+          <div style="font-size:13.5px;line-height:1.85;white-space:pre-wrap;background:var(--primary-soft);border:1px solid var(--primary);border-radius:8px;padding:12px;">
+            ${escapeHtml(data.polished || '模型暂不可用，请稍后重试。')}
+          </div>
+          ${
+            (data.notes || []).length
+              ? `<div style="font-size:12px;color:var(--text-muted);margin-top:6px;">改了这些：${escapeHtml(data.notes.join('；'))}</div>`
+              : ''
+          }
+          <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;">
+            <button type="button" class="btn btn-ghost btn-sm" id="btn-polish-save">收进弹药库</button>
+          </div>`;
+        host.querySelector('#btn-polish-save')?.addEventListener('click', () =>
+          wrapper.querySelector('#btn-mark-weakness')?.click()
+        );
+      } catch (err) {
+        progress.done();
+        host.hidden = false;
+        host.innerHTML = `<div style="color:var(--red);font-size:13px;">润色失败：${escapeHtml(err.message)}</div>`;
+      } finally {
+        btn.disabled = false;
+        btn.textContent = origin;
+      }
+    });
+  })();
+
   // ---- 底部「下一步」主行动条：标出盲区后要么去抗压测，要么把话术存进弹药库 ----
   mountNextStepBar(root, {
     text: '下一步：把盲区变成专项追问，或把高分话术收进弹药库',
@@ -396,7 +463,7 @@ export async function renderReviewScreen(root) {
               JSON.stringify({
                 title: question.title,
                 track: question.track || '',
-                attribution: ruleFindings.map((f) => f.ruleName).slice(0, 3).join('；'),
+                attribution: ruleFindings.map((f) => humanizeRule(f).label).slice(0, 3).join('；'),
                 answerSnippet: String(answer || '').slice(0, 1200),
                 createdAt: new Date().toISOString(),
               })

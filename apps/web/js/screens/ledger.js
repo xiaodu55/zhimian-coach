@@ -5,6 +5,7 @@ import {
   setActiveOpportunity,
 } from '../state.js';
 import { navigate } from '../router.js';
+import { humanizeRule } from '../rules/labels.js';
 import { escapeHtml } from '../ui/citation.js';
 import { dbPut, dbDelete } from '../db.js';
 import { showToast } from '../ui/toast.js';
@@ -41,47 +42,92 @@ import {
   setFilterWeak,
 } from '../lib/mastery.js';
 
-/** 招聘流程轮次（保留原有语义：选到「已挂复盘」会触发归因回流） */
+/** 招聘流程轮次（保留原有语义：选到「已挂复盘」会把薄弱项补进优先复习队列） */
 const OPP_STATES = ['已投递', '一面', '二面', 'HR面', '已拿Offer', '已挂复盘'];
 /** 场次生命周期：决定卡片上"下一步该做什么" */
 const SESSION_STATUS = ['待面试', '待复盘', '已复盘'];
 const SESSION_MODES = ['线上面试', '现场面试', '论文答辩', '模拟面试'];
 
+/* ---------------- 闪卡文案清洗 ---------------- */
+
+/** 历史闪卡里存过内部规则前缀（形如「命中 规则：R4 · STAR 结构要素不足 3 项」），直接上屏等于让用户读日志 */
+const RULE_CODE = /(?:命中\s*规则[:：]?\s*|\bR\d+\b\s*[·:：-]?\s*)/g;
+/** 论据是给人一眼扫完的，超过这个长度就截断 */
+const SUPPORT_MAX = 40;
+
+/** 优先在标点处收口，避免把数字和单位劈开 */
+function clipSentence(text, max = SUPPORT_MAX) {
+  const s = String(text || '').trim();
+  if (s.length <= max) return s;
+  const head = s.slice(0, max);
+  const cut = Math.max(head.lastIndexOf('，'), head.lastIndexOf('。'), head.lastIndexOf('；'), head.lastIndexOf('、'));
+  return (cut >= max * 0.6 ? head.slice(0, cut) : head) + '…';
+}
+
+/**
+ * 单条论据 → 人话。
+ * 规则型论据翻译成「⚠️ 缺少量化结果」这种可读标签；用户自己的作答句保留原句，
+ * 只剥掉夹带的编号并截短。清洗只发生在渲染副本上，绝不回写本机库。
+ */
+function humanizeSupport(raw) {
+  const text = String(raw || '').trim();
+  if (!text) return '';
+  if (/^命中\s*规则/.test(text) || /^R\d+\b/.test(text)) {
+    const { icon, label } = humanizeRule(text.replace(/^命中\s*规则[:：]?\s*/, ''));
+    // 兜底：万一映射表里没有这条规则名，也不能把内部前缀漏到界面上
+    return `${icon} ${/命中\s*规则|\bR\d+\b/.test(label) ? '可优化点' : label}`;
+  }
+  return clipSentence(text.replace(RULE_CODE, ' ').replace(/\s{2,}/g, ' ').trim());
+}
+
+/** 渲染用副本：论据翻译成人话，其余正文顺手剥掉可能被模型带出来的编号；回调仍拿原卡 */
+function presentableCard(card) {
+  const cleanText = (t) =>
+    /命中\s*规则|\bR\d+\b/.test(String(t || '')) ? stripRuleCodes(t) : t;
+  return {
+    ...card,
+    questionTitle: cleanText(card.questionTitle),
+    coreConclusion: cleanText(card.coreConclusion),
+    fallback: cleanText(card.fallback),
+    supports: (Array.isArray(card.supports) ? card.supports : []).map(humanizeSupport).filter(Boolean),
+  };
+}
+
+/** 论据列表改成 1. 2. 3. 的有序形式，比圆点更好对照背诵 */
+function markSupportList(cardEl) {
+  const list = cardEl.querySelector('ul');
+  if (!list) return;
+  list.style.listStyle = 'decimal';
+  list.style.paddingLeft = '20px';
+}
+
+/** 薄弱点归因等长文本：只剥编号，不整句翻译，保住原意 */
+const stripRuleCodes = (text) => String(text || '').replace(RULE_CODE, ' ').replace(/\s{2,}/g, ' ').trim();
+
 export function renderLedgerScreen(root) {
   const wrapper = document.createElement('div');
   wrapper.innerHTML = `
-    <!-- 数据安全三件套：固定在页面最上方，自证数据全在用户手上 -->
-    <section class="card" style="margin-bottom:16px;border-left:3px solid var(--primary);">
-      <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px;">
-        <div>
-          <h2 style="margin:0 0 4px;font-size:16px;">🔐 数据安全三件套（数据只在本机，零上传）</h2>
-          <div style="font-size:12.5px;color:var(--text-secondary);">录音、转写稿、简历、闪卡、台账全部只存浏览器 IndexedDB；导出后由你自己决定给谁看</div>
-        </div>
-        <button id="btn-import-restore" class="btn btn-sm" type="button">📥 导入恢复（全量 JSON）</button>
+    <!-- 数据只在本地，但没必要用一整张卡来强调：压成一行工具条，把首屏让给复习队列 -->
+    <div
+      style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:6px 12px;margin-bottom:16px;background:var(--surface-alt);border-radius:8px;min-height:44px;"
+    >
+      <span style="display:inline-flex;align-items:center;gap:6px;font-size:12.5px;color:var(--text-muted);">
+        <span aria-hidden="true">🔐</span>
+        <span id="storage-usage">正在统计本机占用…</span>
+      </span>
+      <span aria-hidden="true" style="color:var(--text-muted);font-size:12px;">·</span>
+      <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-left:auto;">
+        <button id="btn-export-bundle" class="btn btn-ghost btn-sm" type="button" title="含场次、复盘报告、薄弱点、简历解析与话术闪卡，可用于换机迁移">导出 JSON</button>
+        <button id="btn-export-manual" class="btn btn-ghost btn-sm" type="button" title="闪卡 + 薄弱点 + 场次台账，整理成可直接打印背诵的 Markdown">导出复习手册 .md</button>
+        <button id="btn-import-restore" class="btn btn-ghost btn-sm" type="button" title="从之前导出的全量 JSON 恢复本机数据">导入恢复</button>
+        <button id="btn-clean-audio" class="btn btn-ghost btn-sm" type="button" title="删除录音的原始音频，字幕与转写稿全部保留">清理音频</button>
         <input id="input-import-restore" type="file" accept="application/json,.json" hidden />
       </div>
-      <div class="grid-3" style="align-items:stretch;">
-        <div style="padding:12px;border:1px solid var(--border);border-radius:8px;display:flex;flex-direction:column;gap:8px;">
-          <strong style="font-size:13.5px;">① 一键导出全量数据包（.json）</strong>
-          <span style="font-size:12px;color:var(--text-secondary);line-height:1.6;">含场次、复盘报告、薄弱点、简历解析与话术闪卡，可用于换机迁移</span>
-          <button id="btn-export-bundle" class="btn btn-primary btn-sm" type="button" style="align-self:flex-start;">导出全量 .json</button>
-        </div>
-        <div style="padding:12px;border:1px solid var(--border);border-radius:8px;display:flex;flex-direction:column;gap:8px;">
-          <strong style="font-size:13.5px;">② 一键导出面试复习手册（.md）</strong>
-          <span style="font-size:12px;color:var(--text-secondary);line-height:1.6;">闪卡 + 薄弱点 + 场次台账，整理成可直接打印背诵的 Markdown</span>
-          <button id="btn-export-manual" class="btn btn-primary btn-sm" type="button" style="align-self:flex-start;">导出复习手册 .md</button>
-        </div>
-        <div style="padding:12px;border:1px solid var(--border);border-radius:8px;display:flex;flex-direction:column;gap:8px;">
-          <strong style="font-size:13.5px;">③ 存储占用与清理</strong>
-          <span id="storage-usage" style="font-size:12px;color:var(--text-secondary);line-height:1.6;">正在统计本机占用…</span>
-          <button id="btn-clean-audio" class="btn btn-sm" type="button" style="align-self:flex-start;">🧹 清理原始音频，只留文字稿</button>
-        </div>
-      </div>
-    </section>
+    </div>
 
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px;">
       <div>
-        <h1 style="margin:0 0 4px;font-size:20px;">弹药库台账 & 优先复习置顶队列（M11 回流闭环）</h1>
+        <h1 style="margin:0 0 4px;font-size:20px;">弹药库台账 · 优先复习与话术闪卡</h1>
         <div style="font-size:13px;color:var(--text-secondary);">复盘中标记的薄弱点自动置顶；场次按状态给出下一步动作（待面试→练简历，待复盘→传录音，已复盘→看报告）</div>
       </div>
       <button id="btn-add-opp" class="btn btn-primary btn-sm" type="button">+ 新增面试 / 答辩场次</button>
@@ -125,7 +171,7 @@ export function renderLedgerScreen(root) {
 
       <!-- 右侧：机会与答辩场次状态机 -->
       <section class="card">
-        <h2 style="margin:0 0 12px;font-size:16px;">📋 面试 / 答辩场次追踪（标记「已挂」自动归因回流）</h2>
+        <h2 style="margin:0 0 12px;font-size:16px;">📋 面试 / 答辩场次追踪（标记「已挂」自动补进复习队列）</h2>
         <div id="opp-list" style="display:flex;flex-direction:column;gap:10px;"></div>
       </section>
     </div>
@@ -140,17 +186,21 @@ export function renderLedgerScreen(root) {
   const fcStats = wrapper.querySelector('#flashcard-stats');
   const storageUsage = wrapper.querySelector('#storage-usage');
 
-  /* ================= 数据安全三件套 ================= */
+  /* ================= 数据安全工具条 ================= */
 
   /** 统计本机 IndexedDB 占用；浏览器不支持时显示"不可用" */
   const refreshStorageUsage = async () => {
     const est = await estimateStorage();
     if (!est) {
-      storageUsage.textContent = '本机占用：不可用（当前浏览器不支持 storage.estimate）';
+      storageUsage.textContent = '本机占用：不可用';
+      storageUsage.title = '当前浏览器不支持存储统计，不影响导出与清理';
       return;
     }
-    const quotaText = est.quota ? ` / 配额 ${formatBytes(est.quota)}` : '';
-    storageUsage.textContent = `本机占用：${formatBytes(est.usage)}${quotaText}（含录音、转写稿、简历与闪卡）`;
+    storageUsage.textContent = `本地已用 ${formatBytes(est.usage)}`;
+    // 配额属于补充信息，放 title 里，避免工具条被撑成两行
+    storageUsage.title = est.quota
+      ? `本机配额 ${formatBytes(est.quota)}；含录音、转写稿、简历与闪卡`
+      : '含录音、转写稿、简历与闪卡';
   };
 
   wrapper.querySelector('#btn-export-bundle').addEventListener('click', async () => {
@@ -194,6 +244,8 @@ export function renderLedgerScreen(root) {
       const res = await importAllDataIncludingFlashcards(JSON.parse(text));
       await refreshLocalCollections();
       await reloadFlashcards();
+      // 导入会改变本机占用，工具条上的数字要跟着刷新
+      await refreshStorageUsage();
       showToast(
         `导入恢复完成（闪卡 ${res.flashcardsRestored}/${res.flashcardsInFile} 张）`,
         res.flashcardsInFile && !res.flashcardsRestored ? 'warn' : 'info'
@@ -322,20 +374,22 @@ export function renderLedgerScreen(root) {
           return true;
         },
       });
-      cardEl = renderFlashcardCard(card, {
+      // 传给渲染器的是清洗后的展示副本；回调仍用原卡，保证 practiced / mastery 状态写回同一对象
+      cardEl = renderFlashcardCard(presentableCard(card), {
         recite,
-        onTogglePracticed: async (c, checked) => {
-          await updateFlashcard(c, { practiced: checked });
-          c.practiced = checked;
+        onTogglePracticed: async (_displayed, checked) => {
+          await updateFlashcard(card, { practiced: checked });
+          card.practiced = checked;
           showToast(checked ? '已标记为「已掌握」' : '已取消「已掌握」标记');
         },
-        onDelete: async (c) => {
-          if (!window.confirm(`删除这张闪卡「${c.questionTitle}」？删除后无法恢复。`)) return;
-          await removeFlashcard(c.id);
+        onDelete: async () => {
+          if (!window.confirm(`删除这张闪卡「${card.questionTitle}」？删除后无法恢复。`)) return;
+          await removeFlashcard(card.id);
           await reloadFlashcards();
           showToast('已删除闪卡');
         },
       });
+      markSupportList(cardEl);
       applyMasteryBorder(cardEl, cardMastery(card));
       // 徽章插到标题行的标签区（"复盘提炼 / 手动新增" 旁边）
       const head = cardEl.firstElementChild;
@@ -390,22 +444,23 @@ export function renderLedgerScreen(root) {
     grid.className = 'grid-2';
     grid.style.alignItems = 'start';
     for (const card of previews) {
-      grid.appendChild(
-        renderFlashcardCard(card, {
-          recite,
-          preview: true,
-          onSave: async (c) => {
-            // 新提炼的卡默认「生疏」：刚整理出来的话术本来就还没背熟
-            const saved = await saveFlashcard({ ...c, mastery: '生疏' });
-            if (!saved) {
-              showToast('闪卡未能写入本机：本地库尚未建立闪卡表，请刷新页面重试', 'warn', 4500);
-              return;
-            }
-            await reloadFlashcards();
-            showToast('已存入弹药库：可在上方闪卡网格中抽背');
-          },
-        })
-      );
+      // 预览也是给用户看的，同样走一遍人话清洗；存库时存的就是清洗后的版本
+      const cardEl = renderFlashcardCard(presentableCard(card), {
+        recite,
+        preview: true,
+        onSave: async (c) => {
+          // 新提炼的卡默认「生疏」：刚整理出来的话术本来就还没背熟
+          const saved = await saveFlashcard({ ...c, mastery: '生疏' });
+          if (!saved) {
+            showToast('闪卡未能写入本机：本地库尚未建立闪卡表，请刷新页面重试', 'warn', 4500);
+            return;
+          }
+          await reloadFlashcards();
+          showToast('已存入弹药库：可在上方闪卡网格中抽背');
+        },
+      });
+      markSupportList(cardEl);
+      grid.appendChild(cardEl);
     }
     fcPreview.appendChild(grid);
   };
@@ -513,7 +568,7 @@ export function renderLedgerScreen(root) {
           <span style="font-size:12px;color:var(--text-muted);">${escapeHtml(w.track || '综合')}</span>
         </div>
         <div style="font-weight:600;font-size:14px;margin-bottom:4px;">${escapeHtml(w.questionTitle)}</div>
-        <div style="font-size:12px;color:var(--amber);margin-bottom:10px;">归因：${escapeHtml(w.attribution)}</div>
+        <div style="font-size:12px;color:var(--amber);margin-bottom:10px;">原因：${escapeHtml(stripRuleCodes(w.attribution) || '待补充')}</div>
         <div style="display:flex;gap:8px;justify-content:flex-end;">
           <button type="button" class="btn btn-sm btn-remove-wk">已掌握移除</button>
           <button type="button" class="btn btn-primary btn-sm btn-practice-wk">立即针对练习 →</button>
@@ -549,7 +604,7 @@ export function renderLedgerScreen(root) {
     if (opp.status === '已复盘') {
       return {
         text: review
-          ? `已复盘：命中 ${(review.ruleFindings || []).length} 条原话级诊断${(review.improvements || []).length ? ' · ' + review.improvements.length + ' 条改进话术' : ''}`
+          ? `已复盘：这次找出 ${(review.ruleFindings || []).length} 处可改进点${(review.improvements || []).length ? ' · ' + review.improvements.length + ' 条改进话术' : ''}`
           : '已复盘（报告未在本机找到，可能换了浏览器）',
         primary: '查看复盘报告 →',
         action: 'view-review',
@@ -648,7 +703,7 @@ export function renderLedgerScreen(root) {
           await dbPut('weaknesses', {
             id: 'wk-opp-' + opp.id,
             questionId: fallbackQ?.id || 'q-rag-eval-01',
-            questionTitle: `【复盘归因】${opp.company} 失利薄弱项`,
+            questionTitle: `【复盘发现】${opp.company} 失利薄弱项`,
             track: fallbackQ?.track || 'AI Agent & RAG',
             attribution: '场次标记为「已挂复盘」，自动触发高频真题强化',
             priority: 'pinned',
@@ -656,7 +711,7 @@ export function renderLedgerScreen(root) {
           });
           await refreshLocalCollections();
           renderWeaknesses();
-          showToast('已自动将归因薄弱项置顶至左侧「优先复习」队列', 'warn');
+          showToast('已自动把这场面试的薄弱项置顶到左侧「优先复习」队列', 'warn');
         }
       });
 
