@@ -608,3 +608,147 @@ a:hover {
 .bullet-row.selected .bullet-loc { color: var(--primary); font-weight: 700; }
 .bullet-text { flex: 1; color: var(--text-secondary); }
 .bullet-row.selected .bullet-text { color: var(--text); font-weight: 600; }
+
+/* ---------- 顶栏：步骤指示器 + 弹药库胶囊 ---------- */
+.nav-tabs {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.nav-stepper {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  flex-wrap: nowrap;
+}
+.nav-step {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 8px;
+  border-radius: 999px;
+  color: var(--text-secondary);
+  font-size: 13px;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background .15s, color .15s;
+}
+.nav-step:hover { background: var(--surface-alt); color: var(--text); }
+.nav-step.active { color: var(--primary); font-weight: 600; }
+.step-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  background: var(--border);
+  color: var(--text-muted);
+  font-size: 11px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  flex: none;
+}
+.nav-step.active .step-badge { background: var(--primary); color: #fff; }
+.step-line {
+  width: 14px;
+  height: 1px;
+  background: var(--border);
+  flex: none;
+}
+.nav-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--text-secondary);
+  font-size: 13px;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.nav-pill:hover { border-color: var(--primary); color: var(--primary); }
+.nav-pill.active { border-color: var(--primary); color: var(--primary); background: var(--primary-soft); }
+.nav-pill-label { font-weight: 600; }
+.badge-count.is-empty { opacity: .45; }
+
+/* 窄屏：步骤名收起，只留编号圆点，避免折行挤压 */
+@media (max-width: 1080px) {
+  .step-name { display: none; }
+  .step-line { width: 8px; }
+}
+@media (max-width: 720px) {
+  .nav-stepper { gap: 0; }
+  .nav-pill-label { display: none; }
+}
+
+/* ---------- 骨架屏扫光 ---------- */
+@keyframes shimmer {
+  0% { background-position: -420px 0; }
+  100% { background-position: 420px 0; }
+}
+.skeleton-bar,
+.skeleton-card {
+  background: linear-gradient(90deg, var(--surface-alt) 0%, var(--border) 40%, var(--surface-alt) 80%);
+  background-size: 840px 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+  border-radius: 6px;
+}
+.skeleton-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+
+/* ---------- 底部"下一步"主行动条 ---------- */
+.next-step-bar {
+  position: sticky;
+  bottom: 0;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 18px;
+  padding: 12px 16px;
+  border: 1px solid var(--primary);
+  border-radius: 10px;
+  background: var(--surface);
+  box-shadow: 0 -4px 16px rgba(0, 0, 0, .06);
+}
+
+/* ---------- 跨路由直达的上下文守卫 ---------- */
+.empty-guard {
+  border: 1px dashed var(--border);
+  border-radius: 10px;
+  padding: 16px;
+  background: var(--surface-alt);
+}
+
+/* ---------- 阶段性微文案（aria-live） ---------- */
+.live-progress {
+  position: fixed;
+  left: 50%;
+  bottom: 78px;
+  transform: translateX(-50%);
+  z-index: 60;
+  padding: 8px 16px;
+  border-radius: 999px;
+  background: var(--primary);
+  color: #fff;
+  font-size: 12.5px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, .16);
+  animation: shimmer 1.2s ease-in-out infinite;
+}
+.live-progress[hidden] { display: none; }
+
+/* ---------- 证据对照抽屉：左右两栏 ---------- */
+#citation-modal-body .evidence-compare {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  align-items: start;
+}
+@media (max-width: 720px) {
+  #citation-modal-body .evidence-compare { grid-template-columns: 1fr; }
+}

@@ -6,6 +6,8 @@ import { runDeterministicRules } from '../rules/diagnose.js';
 import { dbPut } from '../db.js';
 import { showToast } from '../ui/toast.js';
 import { createModal, modalButton } from '../ui/modal.js';
+import { chunkDocumentText } from '../retrieval/chunk.js';
+import { mountNextStepBar, createProgress } from '../lib/nextstep.js';
 
 export function renderBankScreen(root) {
   const tracks = ['全部赛道', ...new Set(state.bank.map((q) => q.track))];
@@ -77,14 +79,67 @@ export function renderBankScreen(root) {
       </div>
     </section>
 
-    <section class="card" style="margin-bottom:18px;">
-      <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between;">
-        <div id="track-filters" style="display:flex;gap:6px;flex-wrap:wrap;"></div>
-        <div style="min-width:240px;flex:1;max-width:340px;">
-          <input id="bank-search-input" class="input" type="search" placeholder="搜索真题、考点词或知乎观点…" />
+    <!-- 双入口：按方向刷真题 / 定制我的项目答辩 -->
+    <div class="card" style="margin-bottom:18px;">
+      <div class="mode-switch" role="tablist" aria-label="题库入口" style="margin-bottom:12px;">
+        <button type="button" class="btn btn-sm btn-primary" data-bank-tab="preset" role="tab">按方向刷真题</button>
+        <button type="button" class="btn btn-sm" data-bank-tab="custom" role="tab">定制我的项目答辩</button>
+      </div>
+
+      <div id="bank-tab-preset">
+        <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between;">
+          <div id="track-filters" style="display:flex;gap:6px;flex-wrap:wrap;"></div>
+          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+            <select id="bank-difficulty-filter" class="select" style="width:auto;padding:4px 8px;font-size:12px;">
+              <option value="">全部难度</option>
+              <option value="基础">基础</option>
+              <option value="进阶">进阶</option>
+              <option value="难">难</option>
+            </select>
+            <div style="min-width:220px;flex:1;max-width:320px;">
+              <input id="bank-search-input" class="input" type="search" placeholder="搜索真题、考点词或知乎观点…" />
+            </div>
+          </div>
+        </div>
+        <div id="bank-domain-note" style="font-size:11.5px;color:var(--text-muted);margin-top:8px;"></div>
+      </div>
+
+      <div id="bank-tab-custom" hidden>
+        <div class="grid-2" style="align-items:start;">
+          <div>
+            <strong style="font-size:14px;">粘贴一段项目 / 论文 / 技术方案</strong>
+            <div style="font-size:12.5px;color:var(--text-muted);margin-top:4px;line-height:1.7;">
+              本地切段 → 自动拆出 3–5 个核心技术点 → 按"被问概率"生成专属题单，置顶在真题列表之上。<br/>
+              内容只在你自己的浏览器里解析与分段，不上传服务器。
+            </div>
+            <textarea id="custom-project-input" class="textarea" rows="8" style="margin-top:10px;"
+              placeholder="例：负责 Agent 平台的工具调用与权限治理，用 PreToolUse 三级权限拦截高危命令；把 RAG 评测从 LLM 打分改成冻结评测集 + Recall@5 回归，线上误拦截率从 3% 降到 1.2%…"></textarea>
+            <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;align-items:center;">
+              <label class="btn btn-sm">
+                📄 拖入 / 选择文件（PDF / MD / TXT）
+                <input id="custom-project-file" type="file" accept=".pdf,.md,.txt,.markdown" hidden />
+              </label>
+              <button id="btn-custom-generate" class="btn btn-primary btn-sm" type="button">拆出技术点并生成题单 →</button>
+              <span id="custom-status" style="font-size:12px;color:var(--text-muted);"></span>
+            </div>
+          </div>
+          <div>
+            <strong style="font-size:14px;">拆出的核心技术点</strong>
+            <div id="custom-points" style="font-size:13px;color:var(--text-secondary);margin-top:6px;line-height:1.8;">
+              还没有解析。粘贴内容后点左边按钮，这里会列出抽出的技术点与生成的定制题。
+            </div>
+          </div>
         </div>
       </div>
-    </section>
+    </div>
+
+    <div id="custom-questions-block" hidden style="margin-bottom:18px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;gap:8px;">
+        <strong style="font-size:14px;">🎯 为你定制的题单</strong>
+        <span class="tag tag-green" id="custom-count">0 道</span>
+      </div>
+      <div id="custom-questions-list" class="grid-2"></div>
+    </div>
 
     <div id="bank-list" class="grid-2"></div>
   `;
@@ -318,16 +373,199 @@ export function renderBankScreen(root) {
   const trackBox = wrapper.querySelector('#track-filters');
   const listBox = wrapper.querySelector('#bank-list');
   const searchInput = wrapper.querySelector('#bank-search-input');
+  const difficultySelect = wrapper.querySelector('#bank-difficulty-filter');
+  const domainNote = wrapper.querySelector('#bank-domain-note');
+
+  // 领域维度：题库的 track 只有两档，用关键词映射出真正能筛的方向
+  const DOMAINS = [
+    { key: 'agent', label: 'AI Agent / 工具调用', match: /agent|智能体|工具调用|tool|workflow|多轮/i },
+    { key: 'rag', label: 'RAG / 检索增强', match: /rag|检索|向量|知识库|召回|rerank|embedding/i },
+    { key: 'backend', label: '后端与系统设计', match: /后端|系统设计|分布式|并发|队列|缓存|存储|数据库|微服务|架构|高可用/i },
+    { key: 'algo', label: '算法与数据', match: /算法|推荐|搜索|模型效果|评测|数据|指标|实验|特征/i },
+    { key: 'product', label: '产品与业务', match: /产品|用户|增长|运营|商业|需求|商业化/i },
+    { key: 'general', label: '通用面试素养', match: /沟通|协作|职业|规划|学习|心态|博弈|简历|自我介绍/i },
+  ];
+  const domainOf = (q) => {
+    const hay = `${q.title} ${q.context} ${(q.keywords || []).join(' ')} ${q.track}`;
+    const hit = DOMAINS.find((d) => d.match.test(hay));
+    return hit ? hit.label : '通用面试素养';
+  };
+
+  // 定制题单（本地生成，内存 + localStorage 留存）
+  const CUSTOM_KEY = 'zhimian.bank.custom';
+  let customQuestions = [];
+  try {
+    customQuestions = JSON.parse(localStorage.getItem(CUSTOM_KEY) || '[]');
+  } catch {
+    customQuestions = [];
+  }
+  const saveCustomQuestions = () => {
+    try {
+      localStorage.setItem(CUSTOM_KEY, JSON.stringify(customQuestions.slice(0, 20)));
+    } catch {
+      /* 隐私模式忽略 */
+    }
+  };
+
+  const renderCustomQuestions = () => {
+    const block = wrapper.querySelector('#custom-questions-block');
+    const list = wrapper.querySelector('#custom-questions-list');
+    if (!customQuestions.length) {
+      block.hidden = true;
+      return;
+    }
+    block.hidden = false;
+    wrapper.querySelector('#custom-count').textContent = `${customQuestions.length} 道`;
+    list.innerHTML = '';
+    customQuestions.forEach((cq, i) => {
+      const card = document.createElement('article');
+      card.className = 'card';
+      card.style.borderColor = 'var(--primary)';
+      const prob = Number(cq.prob) || 0;
+      const tone = prob >= 75 ? 'var(--red)' : prob >= 50 ? 'var(--amber)' : 'var(--green)';
+      card.innerHTML = `
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:6px;flex-wrap:wrap;">
+          <span class="tag tag-green">定制题 ${i + 1}</span>
+          <span style="font-size:12px;font-weight:700;color:${tone};">被问概率 ${prob}%</span>
+        </div>
+        <div style="font-weight:600;font-size:14px;line-height:1.5;margin-bottom:4px;">${escapeHtml(cq.q || '')}</div>
+        <div style="font-size:12px;color:var(--amber);margin-bottom:4px;">为什么问：${escapeHtml(cq.why || '')}</div>
+        <div style="font-size:11.5px;color:var(--text-muted);margin-bottom:8px;">来自技术点：${escapeHtml(String(cq.bullet || '').slice(0, 40))}</div>
+      `;
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'btn btn-primary btn-sm';
+      btn.textContent = '先拆逻辑，再开口 →';
+      btn.addEventListener('click', () =>
+        openLogicCard({
+          id: 'custom-' + i,
+          title: cq.q,
+          context: cq.why || '',
+          track: '我的项目定制题',
+          difficulty: '进阶',
+          keywords: [],
+          expectedLength: [150, 400],
+          skeleton: ['先给结论，再给依据', '给一个可核对的数字与口径', '讲清你的判断与取舍与边界'],
+          viewpointCards: [],
+          sources: [],
+          source: 'resume',
+        })
+      );
+      card.appendChild(btn);
+      list.appendChild(card);
+    });
+  };
+
+  // 定制入口：本地分段 → 拆技术点 → 生成题单
+  const customStatus = wrapper.querySelector('#custom-status');
+  const customPoints = wrapper.querySelector('#custom-points');
+  wrapper.querySelector('#custom-project-file').addEventListener('change', async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    customStatus.textContent = '读取 ' + file.name + ' …';
+    try {
+      const text = file.name.toLowerCase().endsWith('.pdf') ? '' : await file.text();
+      if (text) {
+        wrapper.querySelector('#custom-project-input').value = text.slice(0, 5000);
+        customStatus.textContent = '已读入，请点「拆出技术点并生成题单」';
+      } else {
+        customStatus.textContent = 'PDF 需要 OCR 文本：把关键几段粘贴进文本框';
+      }
+    } catch (err) {
+      customStatus.textContent = '读取失败：' + err.message;
+    }
+  });
+
+  wrapper.querySelector('#btn-custom-generate').addEventListener('click', async () => {
+    const raw = wrapper.querySelector('#custom-project-input').value.trim();
+    if (raw.length < 30) {
+      customStatus.textContent = '内容太短（至少 30 字），技术点拆不出来';
+      return;
+    }
+    const progress = createProgress('正在本地切段…');
+    customStatus.textContent = '正在本地切段…';
+    // 本地切段 → 抽出核心技术点：优先带标题的段落，否则按句子打分挑"最像技术主张"的 3–5 句
+    const doc = chunkDocumentText(raw, '我的项目');
+    const TECH_HINT = /(负责|用|基于|实现|设计|搭建|优化|上线|重构|接入|落地|指标|延迟|吞吐|准确率|召回|P\d{2}|\d+%|\d+ms|[A-Z]{2,})/;
+    const points = (() => {
+      const titled = doc.segments
+        .filter((seg) => seg.heading && seg.heading.length > 4 && !/^\d+$/.test(seg.heading))
+        .map((seg) => seg.heading.trim());
+      if (titled.length >= 2) return titled.slice(0, 5);
+      const sentences = String(raw)
+        .split(/(?<=[。！？!?；;\n])/)
+        .map((x) => x.trim())
+        .filter((x) => x.length >= 12 && x.length <= 120);
+      const scored = sentences
+        .map((x, i) => ({ x, i, score: (TECH_HINT.test(x) ? 2 : 0) + (/\d/.test(x) ? 1 : 0) }))
+        .sort((a, b) => b.score - a.score || a.i - b.i)
+        .slice(0, 5)
+        .sort((a, b) => a.i - b.i)
+        .map((x) => x.x);
+      return scored.length ? scored : sentences.slice(0, 4);
+    })();
+    progress.step(`正在提炼 ${points.length} 个核心技术点…`);
+    customPoints.innerHTML = `<div style="margin-bottom:8px;">${points.map((p, i) => `· ${escapeHtml(p)}`).join('<br/>')}</div>`;
+
+    if (!points.length) {
+      progress.done();
+      customStatus.textContent = '没拆出技术点，换一段更具体的内容试试';
+      return;
+    }
+    try {
+      const res = await fetch('/api/resume/questions-from-bullets', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          bullets: points.map((p) => ({ bullet: p, question: '' })),
+          resumeContext: JSON.stringify({ 项目要点: points }),
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data?.error?.message || '生成失败');
+      progress.step('正在按被问概率排序…');
+      const qs = (data.candidates || []).slice(0, 5).map((c) => ({
+        q: c.q,
+        why: c.why,
+        bullet: c.bullet,
+        prob: c.prob,
+      }));
+      customQuestions = qs.concat(customQuestions).slice(0, 12);
+      saveCustomQuestions();
+      renderCustomQuestions();
+      progress.done();
+      customStatus.textContent = `已生成 ${qs.length} 道定制题（按被问概率排序）`;
+      showToast('定制题单已置顶在真题列表之上');
+    } catch (err) {
+      progress.done();
+      customStatus.textContent = '生成失败：' + err.message;
+    }
+  });
+
+  // Tab 切换
+  wrapper.querySelectorAll('[data-bank-tab]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const tab = btn.dataset.bankTab;
+      wrapper.querySelectorAll('[data-bank-tab]').forEach((b) => {
+        b.className = 'btn btn-sm' + (b === btn ? ' btn-primary' : '');
+      });
+      wrapper.querySelector('#bank-tab-preset').hidden = tab !== 'preset';
+      wrapper.querySelector('#bank-tab-custom').hidden = tab !== 'custom';
+    });
+  });
+
+  let selectedDomain = '';
 
   const renderTracks = () => {
     trackBox.innerHTML = '';
-    tracks.forEach((t) => {
+    const all = [{ key: '', label: '全部方向' }, ...DOMAINS.map((d) => ({ key: d.key, label: d.label }))];
+    all.forEach((d) => {
       const btn = document.createElement('button');
       btn.type = 'button';
-      btn.className = `btn btn-sm ${selectedTrack === t ? 'btn-primary' : ''}`;
-      btn.textContent = t;
+      btn.className = `btn btn-sm ${selectedDomain === d.key ? 'btn-primary' : ''}`;
+      btn.textContent = d.label;
       btn.addEventListener('click', () => {
-        selectedTrack = t;
+        selectedDomain = d.key;
         renderTracks();
         renderList();
       });
@@ -336,12 +574,20 @@ export function renderBankScreen(root) {
   };
 
   const renderList = () => {
+    const diff = difficultySelect?.value || '';
     const filtered = state.bank.filter((q) => {
-      const matchTrack = selectedTrack === '全部赛道' || q.track === selectedTrack;
       const kw = keyword.trim().toLowerCase();
       const matchKw = !kw || q.title.toLowerCase().includes(kw) || q.context.toLowerCase().includes(kw);
-      return matchTrack && matchKw;
+      const domain = DOMAINS.find((d) => d.key === selectedDomain);
+      const matchDomain = !domain || domain.match.test(`${q.title} ${q.context} ${(q.keywords || []).join(' ')} ${q.track}`);
+      const matchDiff = !diff || q.difficulty === diff;
+      return matchKw && matchDomain && matchDiff;
     });
+
+    if (domainNote) {
+      const total = state.bank.length;
+      domainNote.textContent = `共 ${total} 道知乎高频真题 · 当前筛出 ${filtered.length} 道 · 每题都带知乎观点卡对照（来源可点开核对）`;
+    }
 
     if (!filtered.length) {
       listBox.innerHTML = `<div class="card" style="grid-column:1/-1;text-align:center;color:var(--text-muted);">未找到匹配的真题，请尝试清空筛选条件。</div>`;
@@ -360,9 +606,16 @@ export function renderBankScreen(root) {
           <div style="display:flex;gap:6px;align-items:center;margin-bottom:8px;flex-wrap:wrap;">
             <span class="tag tag-blue">${escapeHtml(q.track)}</span>
             <span class="tag">${escapeHtml(q.difficulty)}</span>
-            ${q.viewpointCards?.length
-              ? `<span class="tag tag-green">${q.viewpointCards.length} 张知乎观点卡</span>`
-              : `<span class="tag tag-amber">观点卡待补（来源已抓取）</span>`}
+            <span class="tag">${escapeHtml(domainOf(q))}</span>
+            ${
+              q.viewpointCards?.length
+                ? `<span class="tag tag-green" title="知乎来源标识">知乎 ${q.viewpointCards.length} 张高赞观点卡${
+                    q.viewpointCards[0].popularity ? ' · ' + escapeHtml(q.viewpointCards[0].popularity) : ''
+                  }${
+                    q.viewpointCards[0].upvotes ? ' · ' + q.viewpointCards[0].upvotes + ' 赞同' : ''
+                  }</span>`
+                : `<span class="tag tag-amber">观点卡待补（来源已抓取）</span>`
+            }
           </div>
           <h3 style="margin:0 0 8px;font-size:16px;line-height:1.45;">${escapeHtml(q.title)}</h3>
           <p style="margin:0 0 12px;font-size:13px;color:var(--text-secondary);">${escapeHtml(q.context)}</p>
@@ -385,8 +638,36 @@ export function renderBankScreen(root) {
     keyword = e.target.value;
     renderList();
   });
+  difficultySelect?.addEventListener('change', () => renderList());
 
   renderTracks();
   renderList();
+  renderCustomQuestions();
   showOnboarding();
+
+  // 底部"下一步"主行动条：选中题 → 去拆逻辑
+  mountNextStepBar(root, {
+    text: '下一步：去拆逻辑（30 秒看框架）',
+    hint: '先看清这题的考察意图与 3 个核心得分点，再开口说 —— 避免一上来就对着空白麦克风卡壳。',
+    actions: [
+      {
+        label: '去拆逻辑 →',
+        primary: true,
+        onClick: () => {
+          const q = state.activeQuestion || state.bank[0];
+          if (q) openLogicCard(q);
+        },
+      },
+      {
+        label: '直接去模拟练',
+        ghost: true,
+        onClick: () => {
+          const q = state.activeQuestion || state.bank[0];
+          if (!q) return;
+          state.activeQuestion = q;
+          navigate('/coach');
+        },
+      },
+    ],
+  });
 }

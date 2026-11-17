@@ -211,7 +211,8 @@ export async function refreshLocalCollections() {
   if (badge) {
     const pendingCount = state.weaknesses.filter((w) => w.status !== 'mastered').length;
     badge.textContent = String(pendingCount);
-    badge.hidden = pendingCount === 0;
+    badge.hidden = false; // 空也显示（浅灰 0）：让用户一开始就知道这里能攒东西
+    badge.classList.toggle('is-empty', pendingCount === 0);
   }
   notify();
 }
@@ -272,7 +273,7 @@ export async function checkBackendHealth() {
     if (pill) {
       if (data.ok && data.llmConfigured) {
         pill.className = 'status-pill status-online';
-        pill.textContent = '● 知乎语料库已就绪';
+        pill.textContent = '● 知乎语料已连接';
         pill.title = '知乎语料与模型服务均在线';
       } else if (data.ok && data.zhihuConfigured) {
         pill.className = 'status-pill status-degraded';

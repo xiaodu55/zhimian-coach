@@ -16,18 +16,27 @@
           <span class="brand-title">知面陪练</span>
         </a>
 
-        <!-- 导航按认知动线分组：学习准备 → 实战演练 → 沉淀复盘 -->
+        <!-- 导航：前 5 步收拢成步骤指示器（编号用小圆徽章），弹药库独立成右侧胶囊 -->
         <nav class="nav-tabs" aria-label="主导航">
-          <a href="#/bank" class="nav-link" data-route="bank" title="1. 选题库 · 挑一道知乎高频真题，或上传你的简历/项目文档">1. 选题库</a>
-          <a href="#/explain" class="nav-link" data-route="explain" title="2. 拆逻辑 · 练前预热：3 分钟看懂核心框架与高分回答结构">2. 拆逻辑</a>
-          <a href="#/coach" class="nav-link" data-route="coach" title="3. 模拟练 · 开口实战：语音/文字作答，体验真实面试官连环追问">3. 模拟练</a>
-          <a href="#/defense" class="nav-link" data-route="defense" title="4. 抗压测 · 专项攻坚：针对你的薄弱点与项目细节生成刁钻追问清单">4. 抗压测</a>
-          <a href="#/review" class="nav-link" data-route="review" title="5. 看复盘 · 逐句诊断：对比参考答案，标出卡壳点与逻辑漏洞">5. 看复盘</a>
-          <a href="#/ledger" class="nav-link nav-link-ledger" data-route="ledger" title="弹药库 · 沉淀已掌握的高分话术、薄弱点与场次台账（独立功能区）">弹药库 <span id="nav-review-badge" class="badge-count" hidden>0</span></a>
+          <div class="nav-stepper">
+            <a href="#/bank" class="nav-link nav-step" data-route="bank" title="选题库 · 挑一道知乎高频真题，或上传你的简历/项目文档"><span class="step-badge">1</span><span class="step-name">选题库</span></a>
+            <span class="step-line" aria-hidden="true"></span>
+            <a href="#/explain" class="nav-link nav-step" data-route="explain" title="拆逻辑 · 练前预热：3 分钟看懂核心框架与高分回答结构"><span class="step-badge">2</span><span class="step-name">拆逻辑</span></a>
+            <span class="step-line" aria-hidden="true"></span>
+            <a href="#/coach" class="nav-link nav-step" data-route="coach" title="模拟练 · 开口实战：语音/文字作答，体验真实面试官连环追问"><span class="step-badge">3</span><span class="step-name">模拟练</span></a>
+            <span class="step-line" aria-hidden="true"></span>
+            <a href="#/defense" class="nav-link nav-step" data-route="defense" title="抗压测 · 专项攻坚：针对你的薄弱点与项目细节生成刁钻追问清单"><span class="step-badge">4</span><span class="step-name">抗压测</span></a>
+            <span class="step-line" aria-hidden="true"></span>
+            <a href="#/review" class="nav-link nav-step" data-route="review" title="看复盘 · 逐句诊断：对比参考答案，标出卡壳点与逻辑漏洞"><span class="step-badge">5</span><span class="step-name">看复盘</span></a>
+          </div>
+          <a href="#/ledger" class="nav-link nav-pill" data-route="ledger" title="弹药库 · 沉淀已掌握的高分话术、薄弱点与场次台账（独立功能区）">
+            <span class="nav-pill-label">弹药库</span>
+            <span id="nav-review-badge" class="badge-count is-empty">0</span>
+          </a>
         </nav>
 
         <div class="topbar-actions">
-          <span id="system-status-pill" class="status-pill status-checking" title="BFF 后端与知乎接口连通性">检测服务中…</span>
+          <span id="system-status-pill" class="status-pill status-online" title="本地题库与规则引擎已可用，正在后台连接知乎语料">● 本地已就绪</span>
           <button id="btn-export-data" class="btn btn-ghost btn-sm" type="button" title="导出本地 IndexedDB 全量备份">导出数据</button>
           <button id="btn-reset-data" class="btn btn-ghost btn-sm" type="button" title="清空本机 IndexedDB（排查本地库升级阻塞时使用）">重置</button>
           <label class="btn btn-ghost btn-sm" title="导入 JSON 备份">
