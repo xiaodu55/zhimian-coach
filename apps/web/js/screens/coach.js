@@ -1,4 +1,4 @@
-import { state } from '../state.js';
+import { state, saveResumeAnalysis, loadResumeAnalysis } from '../state.js';
 import { navigate } from '../router.js';
 import { escapeHtml } from '../ui/citation.js';
 import { renderViewpointCard } from '../ui/components.js';
@@ -211,12 +211,22 @@ export function renderCoachScreen(root) {
             <textarea id="record-transcript" class="textarea" rows="8" placeholder="面试官：… / 我：… （带说话人标签的转写稿可自动切分 Q&amp;A）"></textarea>
 
             <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px;flex-wrap:wrap;gap:8px;">
-              <label class="btn btn-ghost btn-sm">
-                📄 导入会议转写稿文件
-                <input id="record-transcript-file" type="file" accept=".txt,.md,.markdown" hidden />
-              </label>
-              <button id="btn-record-review" class="btn btn-primary" type="button">生成录音复盘报告 →</button>
+              <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                <label class="btn btn-ghost btn-sm">
+                  📄 导入会议转写稿文件
+                  <input id="record-transcript-file" type="file" accept=".txt,.md,.markdown" hidden />
+                </label>
+                <label class="btn btn-ghost btn-sm">
+                  🎧 上传我的录音（自动转写）
+                  <input id="record-audio-file" type="file" accept="audio/*,.webm,.m4a,.mp3,.wav" hidden />
+                </label>
+              </div>
+              <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                <button id="btn-audio-vs-resume" class="btn btn-sm" type="button">按简历对照这段录音</button>
+                <button id="btn-record-review" class="btn btn-primary" type="button">生成录音复盘报告 →</button>
+              </div>
             </div>
+            <div id="audio-review-result" style="display:none;margin-top:10px;font-size:12.5px;"></div>
           </section>
         </div>
       </div>
@@ -520,6 +530,7 @@ export function renderCoachScreen(root) {
       });
       const data2 = await res2.json();
       if (!res2.ok) throw new Error(data2?.error?.message || '出题失败');
+      saveResumeAnalysis(data2);
       resumeStatus.textContent = data2.cached
         ? `命中缓存：${data2.questions.length} 道题（本次未调用模型）`
         : `已生成 ${data2.questions.length} 道题（${engine} 解析 · 接地丢弃 ${data2.droppedByGrounding}）`;
@@ -581,14 +592,115 @@ export function renderCoachScreen(root) {
   }
   applyMode(question.source === 'resume' ? 'resume' : getMode());
 
-  // ---- 录音复盘区：导入转写稿 / 生成复盘报告 / 带入练习区 ----
+  // ---- 录音复盘区：导入转写稿 / 上传录音转写 / 简历对照 / 生成复盘报告 ----
   const recordTranscript = wrapper.querySelector('#record-transcript');
+  const audioReviewBox = wrapper.querySelector('#audio-review-result');
+  let audioReview = null;      // 简历 × 口述 对照结果
+  let lastTranscriptSource = '';  // 'local-asr' | 'import' | 'manual'
+
+  const fmtTime = (sec) => {
+    const t = Math.max(0, Math.round(Number(sec) || 0));
+    return `${String(Math.floor(t / 60)).padStart(2, '0')}:${String(t % 60).padStart(2, '0')}`;
+  };
+
+  wrapper.querySelector('#record-audio-file').addEventListener('change', async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    recordTranscript.value = '';
+    showToast('正在本机转写（faster-whisper，录音越长越慢）…');
+    try {
+      const fd = new FormData();
+      fd.append('file', file, file.name);
+      const res = await fetch('/api/asr/local-transcribe', { method: 'POST', body: fd });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data?.error?.message || '转写失败');
+      const segments = data.segments || [];
+      if (!segments.length) {
+        showToast('没识别到语音：检查录音音量，或换更清晰的录音', 'warn', 6000);
+        return;
+      }
+      recordTranscript.value = segments.map((seg) => `[${fmtTime(seg.start)}] ${seg.text}`).join('\n');
+      lastTranscriptSource = 'local-asr';
+      audioReview = null;
+      if (audioReviewBox) audioReviewBox.style.display = 'none';
+      showToast(`转写完成：${segments.length} 段 / ${data.duration?.toFixed?.(0) || '?'} 秒（引擎 ${data.engine}）`);
+    } catch (err) {
+      showToast(err.message + '（可用云端 ASR 或导出后跑 node scripts/asr/local-transcribe.mjs）', 'error', 7000);
+    }
+  });
+
+  // 简历 × 录音 对照
+  wrapper.querySelector('#btn-audio-vs-resume').addEventListener('click', async () => {
+    const transcript = (recordTranscript.value || '').trim();
+    if (!transcript) {
+      showToast('先录音或上传音频生��转写稿', 'warn');
+      return;
+    }
+    const resume = loadResumeAnalysis();
+    if (!resume?.profile) {
+      showToast('还没有简历上下文：先到「简历陪练」上传简历', 'warn', 5000);
+      return;
+    }
+    const btn = wrapper.querySelector('#btn-audio-vs-resume');
+    btn.disabled = true;
+    btn.textContent = '对照中…';
+    try {
+      const res = await fetch('/api/review/resume-audio', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          transcript,
+          resumeContext: {
+            headline: resume.profile?.headline || '',
+            skills: resume.profile?.skills || [],
+            projects: resume.profile?.projects || [],
+            gaps: resume.profile?.gaps || [],
+          },
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data?.error?.message || '对照失败');
+      audioReview = data;
+      audioReviewBox.style.display = 'block';
+      audioReviewBox.innerHTML = `
+        <div style="font-size:13px;font-weight:600;margin-bottom:6px;">简历 × 口述对照：${escapeHtml(data.verdict || '')}</div>
+        <ul style="margin:0 0 8px;padding-left:18px;">
+          ${(data.consistency || [])
+            .map(
+              (c) => `<li><strong>${escapeHtml(c.verdict)}</strong>：简历「${escapeHtml(c.claim)}」／口述「${escapeHtml(c.said)}」${
+                c.risk ? `<br/><span style="color:var(--amber);">风险：${escapeHtml(c.risk)}</span>` : ''
+              }</li>`
+            )
+            .join('')}
+        </ul>
+        ${
+          (data.risks || []).length
+            ? `<div style="color:var(--amber);font-size:12.5px;margin-bottom:6px;">易被击穿处：${escapeHtml(data.risks.join(' / '))}</div>`
+            : ''
+        }
+        ${
+          (data.followups || []).length
+            ? `<div style="font-size:12.5px;">针对这段录音的追问：${escapeHtml(data.followups.join(' / '))}</div>`
+            : ''
+        }`;
+      showToast('已完成简历 × 口述对照');
+    } catch (err) {
+      showToast(err.message, 'error', 6000);
+    } finally {
+      btn.disabled = false;
+      btn.textContent = '按简历对照这段录音';
+    }
+  });
+
 
   wrapper.querySelector('#record-transcript-file').addEventListener('change', async (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
     const text = await file.text();
     recordTranscript.value = text;
+    lastTranscriptSource = 'import';
+    audioReview = null;
+    if (audioReviewBox) audioReviewBox.style.display = 'none';
     showToast(`已导入转写稿（${text.length} 字）`);
   });
 
@@ -610,6 +722,8 @@ export function renderCoachScreen(root) {
 
     const report = {
       id: 'session-' + Date.now(),
+      resumeReview: audioReview,
+      transcriptSource: lastTranscriptSource,
       question: {
         id: 'record-review',
         title: `录音复盘 · ${qaPairs.length} 组问答`,

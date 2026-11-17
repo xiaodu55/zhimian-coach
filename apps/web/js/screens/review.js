@@ -21,6 +21,7 @@ export function renderReviewScreen(root) {
   }
 
   const { question, answer, ruleFindings = [], degraded } = report;
+  const resumeReview = report.resumeReview || null;
   const majorityCard = question.viewpointCards?.[0];
   const minorityCard = question.viewpointCards?.[1];
 
@@ -59,10 +60,43 @@ export function renderReviewScreen(root) {
       </div>
     </section>
 
+    ${
+      resumeReview
+        ? `
+    <section style="margin-bottom:20px;">
+      <h2 style="font-size:15px;margin:0 0 10px;color:var(--text-secondary);">二、简历 × 口述对照（这段录音与你简历是否自洽）</h2>
+      <div class="card" style="background:var(--primary-soft);border-color:#cfe0ff;">
+        <div style="font-size:13.5px;font-weight:600;margin-bottom:8px;">${escapeHtml(resumeReview.verdict || '')}</div>
+        <ul style="margin:0 0 8px;padding-left:18px;font-size:13px;line-height:1.75;">
+          ${(resumeReview.consistency || [])
+            .map(
+              (c) => `<li>
+                <span class="tag ${c.verdict === '一致' ? 'tag-green' : c.verdict === '不一致' ? 'tag-red' : ''}">${escapeHtml(c.verdict || '')}</span>
+                简历「${escapeHtml(c.claim || '')}」／口述「${escapeHtml(c.said || '')}」
+                ${c.risk ? `<div style="color:var(--amber);font-size:12px;">风险：${escapeHtml(c.risk)}</div>` : ''}
+              </li>`
+            )
+            .join('')}
+        </ul>
+        ${
+          (resumeReview.risks || []).length
+            ? `<div style="font-size:12.5px;color:var(--amber);margin-bottom:6px;">易被击穿处：${escapeHtml(resumeReview.risks.join(' / '))}</div>`
+            : ''
+        }
+        ${
+          (resumeReview.followups || []).length
+            ? `<div style="font-size:12.5px;">针对这段录音的追问：${escapeHtml(resumeReview.followups.join(' / '))}</div>`
+            : ''
+        }
+      </div>
+    </section>`
+        : ''
+    }
+
     <!-- M5 确定性诊断列表（可展开看原话/字符区间/规则/改进建议） -->
     <section>
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
-        <h2 style="font-size:15px;margin:0;color:var(--text-secondary);">二、可核对原话诊断（命中 ${ruleFindings.length} 条 · 点击展开详情）</h2>
+        <h2 style="font-size:15px;margin:0;color:var(--text-secondary);">${resumeReview ? '三' : '二'}、可核对原话诊断（命中 ${ruleFindings.length} 条 · 点击展开详情）</h2>
       </div>
       <div id="findings-list"></div>
     </section>

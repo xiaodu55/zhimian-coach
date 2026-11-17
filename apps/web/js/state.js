@@ -13,6 +13,8 @@ export const state = {
   demoSample: null,
   activeQuestion: null,
   lastReviewReport: null,
+  /** 最近一次「简历陪练」分析结果（录音复盘要做"简历 × 口述"对照，需要跨模块复用） */
+  resumeAnalysis: null,
   activeDocument: null,
   weaknesses: [],
   opportunities: []
@@ -44,6 +46,37 @@ export function setDegraded(reason) {
     }
   }
   notify();
+}
+
+const RESUME_KEY = 'zhimian.resume.analysis';
+
+export function saveResumeAnalysis(data) {
+  state.resumeAnalysis = data;
+  try {
+    // 只留对照需要的字段，避免把整份题目塞进 sessionStorage
+    sessionStorage.setItem(
+      RESUME_KEY,
+      JSON.stringify({
+        filename: data?.filename || '',
+        profile: data?.profile || null,
+        questions: (data?.questions || []).map((q) => ({ id: q.id, q: q.q, locator: q.locator })),
+      })
+    );
+  } catch (err) {
+    console.warn('简历上下文缓存失败', err);
+  }
+  notify();
+}
+
+export function loadResumeAnalysis() {
+  if (state.resumeAnalysis) return state.resumeAnalysis;
+  try {
+    const raw = sessionStorage.getItem(RESUME_KEY);
+    if (raw) state.resumeAnalysis = JSON.parse(raw);
+  } catch (err) {
+    console.warn('简历上下文读取失败', err);
+  }
+  return state.resumeAnalysis;
 }
 
 export async function refreshLocalCollections() {

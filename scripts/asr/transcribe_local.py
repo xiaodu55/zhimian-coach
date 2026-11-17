@@ -28,7 +28,15 @@ def main() -> int:
         return 2
 
     model = WhisperModel(args.model, device='cpu', compute_type='int8')
-    segments, info = model.transcribe(args.audio, language=args.language, vad_filter=False)
+    # 中文场景加 initial_prompt 纠正简繁：实测不加会输出繁体（面試官/請先做個自我介紹）
+    initial_prompt = '以下是普通话的句子，使用简体中文。' if args.language.startswith('zh') else None
+    segments, info = model.transcribe(
+        args.audio,
+        language=args.language,
+        vad_filter=False,
+        initial_prompt=initial_prompt,
+        condition_on_previous_text=False,
+    )
 
     rows = []
     for seg in segments:

@@ -1,4 +1,8 @@
 import { Hono } from 'hono';
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
+import { spawnSync } from 'node:child_process';
 import { config } from '../config.js';
 
 export const asrRoutes = new Hono();
@@ -68,5 +72,77 @@ asrRoutes.post('/transcribe', async (c) => {
   } catch (err) {
     const reason = err instanceof Error ? err.message : String(err);
     return c.json({ error: { code: 'ASR_UPSTREAM_ERROR', message: `ASR 请求失败：${reason}`, hint: HINT_LOCAL } }, 502);
+  }
+});
+
+/**
+ * 本机 ASR（开发机/自建机可用）：ffmpeg → faster-whisper。
+ * 容器里没有 python/模型时明确返回 501 + 指引，绝不假装转写成功。
+ */
+asrRoutes.post('/local-transcribe', async (c) => {
+  const form = await c.req.formData();
+  const file = form.get('file');
+  if (!file || !(file instanceof File)) {
+    return c.json({ error: { code: 'VALIDATION_ERROR', message: '缺少音频文件' } }, 400);
+  }
+  if (file.size > 60 * 1024 * 1024) {
+    return c.json({ error: { code: 'PAYLOAD_TOO_LARGE', message: '音频超过 60MB' } }, 413);
+  }
+
+  const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'zm-asr-'));
+  const srcExt = (file.name.split('.').pop() || 'webm').toLowerCase();
+  const srcPath = path.join(tmpDir, `input.${srcExt}`);
+  const wavPath = path.join(tmpDir, 'audio16k.wav');
+  const outPath = path.join(tmpDir, 'asr.json');
+
+  try {
+    fs.writeFileSync(srcPath, Buffer.from(await file.arrayBuffer()));
+
+    const ffmpeg = spawnSync('ffmpeg', ['-y', '-i', srcPath, '-ac', '1', '-ar', '16000', wavPath], {
+      stdio: 'ignore',
+    });
+    if (ffmpeg.status !== 0) {
+      return c.json({ error: { code: 'ASR_UPSTREAM_ERROR', message: 'ffmpeg 转码失败（请确认音频格式可解码）' } }, 502);
+    }
+
+    const script = path.join(config.repoRoot, 'scripts/asr/transcribe_local.py');
+    const py = process.platform === 'win32' ? 'python' : 'python3';
+    const run = spawnSync(
+      py,
+      [script, wavPath, '--out', outPath, '--model', process.env.ASR_MODEL_NAME || 'small'],
+      { encoding: 'utf8', timeout: 600_000 }
+    );
+    if (run.status !== 0 || !fs.existsSync(outPath)) {
+      const detail = String(run.stderr || run.stdout || '').split('\n').slice(-2).join(' ').slice(0, 220);
+      return c.json(
+        {
+          error: {
+            code: 'CAPABILITY_UNAVAILABLE',
+            message: `本机 ASR 不可用：${detail || 'python/ffmpeg/faster-whisper 缺失'}`,
+            hint: '可改用云端 ASR（配置 ASR_PROVIDER/BASE_URL/API_KEY），或导出音频后运行 node scripts/asr/local-transcribe.mjs',
+          },
+        },
+        501
+      );
+    }
+
+    const parsed = JSON.parse(fs.readFileSync(outPath, 'utf8')) as {
+      segments?: Array<{ start?: number; end?: number; text?: string }>;
+      duration?: number;
+    };
+    const segments = (parsed.segments || []).map((seg) => ({
+      start: Number(seg.start) || 0,
+      end: Number(seg.end) || 0,
+      text: String(seg.text || '').trim(),
+    })).filter((seg) => seg.text);
+
+    return c.json({
+      engine: 'faster-whisper/local',
+      duration: parsed.duration || 0,
+      segments,
+      text: segments.map((s) => s.text).join(' '),
+    });
+  } finally {
+    fs.rmSync(tmpDir, { recursive: true, force: true });
   }
 });
