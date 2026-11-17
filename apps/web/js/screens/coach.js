@@ -26,6 +26,13 @@ let resumeRecord = null;
 let activeBullet = null;
 let bulletKnowledge = [];
 
+/** 简历定位符（p1¶10）→ 人话：「简历第 1 页」；解析不了就原样返回 */
+function locatorLabel(locator) {
+  const m = String(locator || '').match(/p(\d+)/i);
+  if (!m) return locator ? `简历 ${locator}` : '简历原文';
+  return `简历第 ${m[1]} 页`;
+}
+
 /** 从"为什么问"派生要点（模型没给 bullets 时的兜底） */
 function deriveBullets(why) {
   const parts = String(why || '')
@@ -99,7 +106,7 @@ export function renderCoachScreen(root) {
         <div>
           <strong>🧾 简历陪练：按你的真实经历出题</strong>
           <div style="font-size:12px;color:var(--text-muted);margin-top:4px;">
-            解析简历 → 抽取项目/技能/缺口 → 生成 6–10 道针对性面试题（每题挂简历定位符 + 真实知乎面经）。
+            解析简历 → 抽出项目、技能与缺口 → 生成 6–10 道针对性面试题（每题标明出自简历第几页，并挂真实知乎面经）。
             扫描版 PDF 会自动走 OCR 兜底。
           </div>
         </div>
@@ -152,7 +159,7 @@ export function renderCoachScreen(root) {
               <strong>🎯 当前要点</strong>
               <span style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;">
                 <span class="tag tag-green" id="bullet-locator"></span>
-                <button id="btn-bullet-candidates" class="btn btn-sm" type="button">看可能被问到的题 →</button>
+                <button id="btn-bullet-candidates" class="btn btn-sm" type="button">这题会怎么被问 →</button>
               </span>
             </div>
             <div id="bullet-context-text" style="font-size:13.5px;font-weight:600;margin:6px 0 4px;line-height:1.6;"></div>
@@ -161,7 +168,7 @@ export function renderCoachScreen(root) {
           <section class="card">
             <div id="current-question-strip" style="font-size:12.5px;color:var(--text-secondary);background:var(--surface-alt);border-radius:8px;padding:8px 10px;margin-bottom:8px;">
               ${question.source === 'resume-bullet' ? '当前要点' : question.source === 'resume' ? '当前题目' : '当前题目（真题）'}：${escapeHtml(question.title)}
-              ${question.source === 'resume' ? `<div style="color:var(--text-muted);margin-top:2px;">简历题 · 定位 ${escapeHtml(question.locator || '')}${question.zhihuRef ? ' · 面经参考挂在左栏' : ''}</div>` : ''}
+              ${question.source === 'resume' ? `<div style="color:var(--text-muted);margin-top:2px;">简历题 · 出自${escapeHtml(locatorLabel(question.locator))}${question.zhihuRef ? ' · 面经参考挂在左栏' : ''}</div>` : ''}
             </div>
 
           <label for="answer-textarea" style="display:block;font-size:13px;font-weight:600;margin-bottom:6px;">
@@ -277,7 +284,7 @@ export function renderCoachScreen(root) {
         parentQ: question.title,
       };
     }
-    wrapper.querySelector('#bullet-locator').textContent = '定位 ' + (question.locator || '—');
+    wrapper.querySelector('#bullet-locator').textContent = locatorLabel(question.locator);
     wrapper.querySelector('#bullet-context-text').textContent = question.title;
     wrapper.querySelector('#btn-bullet-candidates').addEventListener('click', () => {
       openCandidateModal({ bullets: [activeBullet], record: resumeRecord, title: '可能被问到的题 · 按被问概率排序' });
@@ -514,7 +521,7 @@ export function renderCoachScreen(root) {
     bullets.forEach((b, bi) => {
       const row = document.createElement('div');
       row.className = 'bullet-row' + (activeBullet && activeBullet.text === b.text ? ' selected' : '');
-      row.title = `第 ${bi + 1} 条 · 定位 ${b.locator || '—'}`;
+      row.title = `第 ${bi + 1} 条 · ${locatorLabel(b.locator)}`;
 
       const cb = document.createElement('input');
       cb.type = 'checkbox';
