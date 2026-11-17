@@ -8,6 +8,7 @@ import {
 import { navigate } from '../router.js';
 import { escapeHtml } from '../ui/citation.js';
 import { renderViewpointCard } from '../ui/components.js';
+import { createModal, modalButton } from '../ui/modal.js';
 import { LocalAudioRecorder } from '../capture/recorder.js';
 import { LiveCaptionEngine, captionsToTranscript } from '../capture/caption.js';
 import { listAudioInputs, detectVirtualDevice } from '../capture/devices.js';
@@ -468,7 +469,14 @@ export function renderCoachScreen(root) {
     again.className = 'btn btn-ghost btn-sm';
     again.textContent = '重新出题';
     again.addEventListener('click', () => wrapper.querySelector('#btn-resume-refresh').click());
-    head.appendChild(again);
+
+    const wizardBtn = document.createElement('button');
+    wizardBtn.type = 'button';
+    wizardBtn.className = 'btn btn-primary btn-sm';
+    wizardBtn.textContent = '选择要点 → 出题';
+    wizardBtn.addEventListener('click', () => openBulletWizard(record));
+
+    head.append(wizardBtn, again);
     resumeQuestions.appendChild(head);
 
     questions.forEach((q, idx) => {
@@ -571,6 +579,174 @@ export function renderCoachScreen(root) {
     });
   };
 
+  /**
+   * 两步向导：
+   *   ① 滑窗一：勾选要点（来自每道题的 bullets）
+   *   ② 滑窗二：列出这些要点对应的"可能被问到的题"，挑一道去练
+   */
+  const collectRefs = (record) => {
+    const cards = [];
+    const sources = [];
+    for (const q of record?.questions || []) {
+      for (const c of q.viewpointCards || []) {
+        if (c.sourceUrl && !cards.some((x) => x.sourceUrl === c.sourceUrl)) cards.push(c);
+      }
+      for (const s of q.sources || []) {
+        if (s.url && !sources.some((x) => x.url === s.url)) sources.push(s);
+      }
+    }
+    return { cards, sources };
+  };
+
+  const openBulletWizard = (record) => {
+    const questions = record?.questions || [];
+    if (!questions.length) {
+      showToast('还没有可勾选的要点：先上传简历或重新出题', 'warn');
+      return;
+    }
+    const selected = new Map(); // bullet -> 所属题目
+
+    const modal = createModal({
+      title: '① 选择要练的要点',
+      subtitle: '勾选你想练的要点（来自每道面试题的必备覆盖点），下一步会给出对应的候选题目',
+      width: 780,
+    });
+
+    const counter = document.createElement('div');
+    counter.style.cssText = 'font-size:12.5px;color:var(--text-muted);margin-bottom:8px;';
+    const renderCounter = () => {
+      counter.textContent = `已选 ${selected.size} 个要点`;
+    };
+    renderCounter();
+    modal.body.appendChild(counter);
+
+    questions.forEach((q, qi) => {
+      const group = document.createElement('div');
+      group.style.cssText = 'border:1px solid var(--border);border-radius:8px;padding:10px;margin-bottom:8px;';
+      const head = document.createElement('div');
+      head.style.cssText = 'font-size:12px;color:var(--text-muted);margin-bottom:6px;';
+      head.textContent = `Q${qi + 1} · ${q.q}`;
+      group.appendChild(head);
+
+      const bullets = q.bullets?.length ? q.bullets : [q.why || ''].filter(Boolean);
+      if (!bullets.length) return;
+      for (const b of bullets) {
+        const row = document.createElement('label');
+        row.style.cssText = 'display:flex;gap:8px;align-items:flex-start;cursor:pointer;font-size:13px;padding:3px 0;';
+        const cb = document.createElement('input');
+        cb.type = 'checkbox';
+        cb.style.cssText = 'margin-top:3px;';
+        cb.addEventListener('change', () => {
+          if (cb.checked) selected.set(b, q.q);
+          else selected.delete(b);
+          renderCounter();
+        });
+        const txt = document.createElement('span');
+        txt.textContent = b;
+        row.append(cb, txt);
+        group.appendChild(row);
+      }
+      modal.body.appendChild(group);
+    });
+
+    const cancelBtn = modalButton('取消', { ghost: true, onClick: () => modal.close() });
+    const nextBtn = modalButton('生成候选题目 →', {
+      primary: true,
+      onClick: async () => {
+        if (!selected.size) {
+          showToast('先勾选至少一个要点', 'warn');
+          return;
+        }
+        nextBtn.disabled = true;
+        nextBtn.textContent = '生成中…';
+        const bullets = [...selected.entries()].map(([bullet, question]) => ({ bullet, question }));
+        try {
+          const res = await fetch('/api/resume/questions-from-bullets', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              bullets,
+              resumeContext: JSON.stringify({
+                画像: record?.profile?.headline || '',
+                技能: (record?.profile?.skills || []).slice(0, 12),
+                项目: (record?.profile?.projects || []).map((p) => ({
+                  名称: p.name,
+                  角色: p.role,
+                  主张: (p.claims || []).map((x) => x.text).slice(0, 4),
+                })),
+              }),
+            }),
+          });
+          const data = await res.json();
+          if (!res.ok) throw new Error(data?.error?.message || '生成候选题目失败');
+          modal.close();
+          openCandidateModal(record, data.candidates || []);
+        } catch (err) {
+          nextBtn.disabled = false;
+          nextBtn.textContent = '生成候选题目 →';
+          showToast(err.message, 'error', 6000);
+        }
+      },
+    });
+    modal.footer.append(cancelBtn, nextBtn);
+  };
+
+  /** 第二步：候选题目滑窗 */
+  const openCandidateModal = (record, candidates) => {
+    const modal = createModal({
+      title: '② 选一道题去练',
+      subtitle: candidates.length ? '这些题来自你勾选的要点，选哪道就练哪道' : '没有候选题',
+      width: 780,
+    });
+    const { cards, sources } = collectRefs(record);
+
+    if (!candidates.length) {
+      modal.body.append(el('p', 'hint', '这次没生成候选题：可以在下面的题目列表里直接挑一道练。'));
+    }
+
+    candidates.forEach((c) => {
+      const item = document.createElement('div');
+      item.style.cssText = 'border:1px solid var(--border);border-radius:8px;padding:10px;margin-bottom:8px;';
+      item.innerHTML = `
+        <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-bottom:4px;">
+          <span class="tag tag-blue">${escapeHtml(c.focus || '追问')}</span>
+          <span class="tag">${escapeHtml(c.difficulty || '进阶')}</span>
+          <span style="font-size:11px;color:var(--text-muted);">来自要点：${escapeHtml((c.bullet || '').slice(0, 28))}</span>
+        </div>
+        <div style="font-weight:600;font-size:14px;margin-bottom:4px;">${escapeHtml(c.q)}</div>
+        <div style="font-size:12px;color:var(--amber);">为什么问：${escapeHtml(c.why || '')}</div>
+      `;
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'btn btn-primary btn-sm';
+      btn.style.marginTop = '8px';
+      btn.textContent = '练这道 →';
+      btn.addEventListener('click', () => {
+        modal.close();
+        state.activeQuestion = {
+          id: c.id,
+          title: c.q,
+          context: c.why || '',
+          keywords: (record?.profile?.skills || []).slice(0, 6),
+          expectedLength: [150, 400],
+          skeleton: [c.bullet, '给一个可核对的数字与口径', '讲清你的判断与取舍', '落到结果与边界'].filter(Boolean),
+          viewpointCards: cards,
+          sources,
+          source: 'resume',
+          locator: '',
+        };
+        showToast('已切到这道题，往下写你的回答');
+        root.innerHTML = '';
+        renderCoachScreen(root);
+      });
+      item.appendChild(btn);
+      modal.body.appendChild(item);
+    });
+
+    const closeBtn = modalButton('关闭', { ghost: true, onClick: () => modal.close() });
+    modal.footer.appendChild(closeBtn);
+  };
+
   // 重新出题：忽略缓存（同一份简历改成 force 才会再花 40–50 秒）
   let lastResumePayload = null;
   wrapper.querySelector('#btn-resume-refresh').addEventListener('click', async () => {
@@ -650,6 +826,7 @@ export function renderCoachScreen(root) {
         : `已生成 ${data2.questions.length} 道题（${engine} 解析 · 接地丢弃 ${data2.droppedByGrounding}）`;
       renderResumeResult(saved || data2);
       showToast('简历解析完成：题目已保存到本机，随时回来练（不用重复上传）');
+      openBulletWizard(saved || data2);
     } catch (err) {
       resumeStatus.textContent = '失败';
       showToast(err.message, 'error', 6000);

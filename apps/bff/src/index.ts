@@ -11,6 +11,7 @@ import { authRoutes } from './routes/auth.js';
 import { asrRoutes } from './routes/asr.js';
 import { resumeRoutes } from './routes/resume.js';
 import { reviewRoutes } from './routes/review.js';
+import { resumeBulletRoutes } from './routes/resumeBullets.js';
 
 const app = new Hono();
 
@@ -59,6 +60,7 @@ app.route('/api/auth', authRoutes);
 app.route('/api/asr', asrRoutes);
 app.route('/api', resumeRoutes);
 app.route('/api/review', reviewRoutes);
+app.route('/api', resumeBulletRoutes);
 
 // 同域托管 apps/web 静态站点（彻底规避 CORS）
 const relativeWebRoot = path.relative(process.cwd(), config.webRoot);
