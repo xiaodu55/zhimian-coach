@@ -175,7 +175,8 @@ pnpm build:bff && PORT=8788 pnpm start
 - 讲解室已端到端验证（上传→分段→BM25 检索→模型仅依据片段作答→引用 chip→无依据显式兜底）。
   **PDF 支持**：`.pdf` 走 BFF 逐页解析（`p{页码}¶{段号}` 定位符），自动折叠中文汉字间空格；扫描件（无文本层）会明确报错，不假装解析成功。
 - **答辩预测**（独立页面 `#/defense`）：契约 `POST /api/defense/analyze {title, segments}` → `{degraded, topRisks[], predictedQuestions[{q, why, locator, severity, zhihuRef}], references[]}`；模型按材料真实内容出评委高危追问（可自曝材料里的指标矛盾），每条挂一条真实知乎讨论；知乎检索失败时 `degraded:true` 且不伪造引用。
-  - 另有 `POST /api/defense/references` 只取知乎相关讨论（可点击列表）。
+  - 另有 `POST /api/defense/references` 只取知乎相关讨论（可点击列表）；`POST /api/defense/followup` 生成评委的连续追问（主问题 + 最多 3 轮，问到头了返回 `exhausted:true`）。
+  - 预演小窗是**多轮**的：每轮作答后评委顺着你的漏洞继续追，整场对话（`面试官：/ 我：`）最后汇总成一次复盘。
 - **讲解室**（`#/explain`）只做"读懂资料"：上传文档 / 粘贴视频链接 → 详解总结（`POST /api/explain/summary`）→ 就地追问。视频链接由 `POST /api/explain/link` 尽力抓标题/简介/字幕轨（抓不到字幕会明说，可粘贴字幕或转写稿）。
 - **单元测试**：`pnpm test`（7 条：规则、转写切分、时间戳容忍、双轨对齐、引用校验）。
 

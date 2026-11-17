@@ -1,7 +1,7 @@
 import { Hono } from 'hono';
 import { callStructuredLlm } from '../lib/llm.js';
 import { zhihuSearch } from '../lib/zhihuClient.js';
-import { DEFENSE_QUESTIONS_PROMPT } from '../lib/prompts.js';
+import { DEFENSE_QUESTIONS_PROMPT, DEFENSE_FOLLOWUP_PROMPT } from '../lib/prompts.js';
 
 export const defenseRoutes = new Hono();
 
@@ -128,4 +128,55 @@ defenseRoutes.post('/defense/analyze', async (c) => {
   }));
 
   return c.json({ degraded, topRisks, predictedQuestions, references });
+});
+
+/**
+ * 答辩连续追问：评委针对候选人的回答继续追（最多 3 轮，由前端控制）。
+ * 契约：{question, answer, segments[]} → {exhausted, followup: {q, why, severity}}
+ */
+defenseRoutes.post('/defense/followup', async (c) => {
+  const body = await c.req.json();
+  const question = String(body?.question || '').trim();
+  const answer = String(body?.answer || '').trim();
+  const segments = Array.isArray(body?.segments) ? body.segments : [];
+
+  if (!question || !answer) {
+    return c.json({ error: { code: 'VALIDATION_ERROR', message: '缺少 question 或 answer' } }, 400);
+  }
+
+  const segs = segments as Array<{ locator?: string; heading?: string; text?: string }>;
+  const contextText = segs
+    .slice(0, 12)
+    .map((s, i) => `[S${i + 1}] (${s.locator}) ${s.heading}：${s.text}`)
+    .join('\n');
+
+  try {
+    const raw = await callStructuredLlm<{ questions?: Array<Record<string, unknown>> }>(
+      DEFENSE_FOLLOWUP_PROMPT,
+      `【评委的问题】\n${question}\n\n【答辩人的回答】\n${answer}\n\n【答辩材料（评委手里的底稿）】\n${contextText || '（无）'}`,
+      40_000
+    );
+    const items = (raw.questions || [])
+      .map((q) => {
+        const text = String(q?.q || '').trim().slice(0, 120);
+        if (!text) return null;
+        const severity = ['高', '中', '低'].includes(String(q?.severity)) ? String(q.severity) : '中';
+        return { q: text, why: String(q?.why || '').slice(0, 140), severity };
+      })
+      .filter((q): q is { q: string; why: string; severity: string } => q !== null)
+      .slice(0, 1);
+    const followup = items[0] || null;
+    return c.json({ exhausted: !followup, followup });
+  } catch {
+    // 模型不可用：给一条固定但有指向性的追问（不空白、不编造材料内容）
+    return c.json({
+      degraded: true,
+      exhausted: false,
+      followup: {
+        q: '你刚才这个结论有没有对照实验或线上数据支撑？具体是在什么条件下测的？',
+        why: '追回答里是否只有结论、缺少可核对的证据（模型降级：使用固定追问模板）',
+        severity: '中',
+      },
+    });
+  }
 });

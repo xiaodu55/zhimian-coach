@@ -18,7 +18,7 @@ export function renderDefenseScreen(root) {
     <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:14px;flex-wrap:wrap;gap:10px;">
       <div>
         <h1 style="margin:0 0 4px;font-size:20px;">答辩预测 · 上传材料 → 预演</h1>
-        <div style="font-size:13px;color:var(--text-secondary);">上传答辩要用的东西（论文 / PPT 讲稿 / 技术方案）→ 生成评委高危追问 → 逐题预演作答 → 拿到复盘</div>
+        <div style="font-size:13px;color:var(--text-secondary);">上传答辩要用的东西（论文 / PPT 讲稿 / 技术方案）→ 生成评委高危追问 → 逐题预演（评委连续追问最多 3 轮）→ 拿到整场复盘</div>
       </div>
       <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
         <label class="btn btn-sm">
@@ -147,14 +147,21 @@ export function renderDefenseScreen(root) {
     });
   };
 
-  /** 预演小窗：评委问题 + 材料依据 + 知乎讨论 + 作答 → 复盘 */
+  /** 预演小窗：评委主问题 → 连续追问（最多 3 轮）→ 整场复盘 */
+  const MAX_FOLLOWUP = 3;
   const openRehearse = (q) => {
     const modal = createModal({
-      title: '预演这一题',
+      title: '预演这一题（连续追问）',
       subtitle: q.q,
-      width: 760,
+      width: 780,
     });
 
+    const transcript = []; // {q, a}：每一轮已完成作答
+    let pendingQ = q.q;   // 当前待作答的评委问题（主问题 → 追问）
+    let followups = 0;
+    let finished = false;
+
+    // 评委信息（主问题）
     const info = document.createElement('div');
     info.style.cssText = 'font-size:13px;line-height:1.75;margin-bottom:10px;';
     info.innerHTML = `
@@ -170,17 +177,111 @@ export function renderDefenseScreen(root) {
       }`;
     modal.body.appendChild(info);
 
+    const roundBadge = document.createElement('div');
+    roundBadge.style.cssText = 'font-size:12px;color:var(--text-muted);margin-bottom:6px;';
+    modal.body.appendChild(roundBadge);
+
+    const transcriptBox = document.createElement('div');
+    transcriptBox.style.cssText =
+      'border:1px solid var(--border);border-radius:8px;padding:8px 10px;max-height:220px;overflow-y:auto;margin-bottom:10px;font-size:13px;line-height:1.7;';
+    modal.body.appendChild(transcriptBox);
+
+    const renderTranscript = () => {
+      roundBadge.textContent = finished
+        ? `共 ${transcript.length} 轮作答（追问已到头，下面是整场复盘）`
+        : `第 ${transcript.length + 1} 轮作答 · 最多 ${MAX_FOLLOWUP + 1} 轮（主问题 + ${MAX_FOLLOWUP} 次追问）`;
+      transcriptBox.innerHTML = '';
+      if (!transcript.length) {
+        transcriptBox.innerHTML = '<span style="color:var(--text-muted);">还没作答：先写下你上台时真实会说的话。</span>';
+        return;
+      }
+      transcript.forEach((t, i) => {
+        const row = document.createElement('div');
+        row.style.cssText = i ? 'margin-top:8px;padding-top:8px;border-top:1px dashed var(--border);' : '';
+        const qq = document.createElement('div');
+        qq.style.cssText = 'font-weight:600;color:var(--primary);';
+        qq.textContent = `面试官：${t.q}`;
+        const aa = document.createElement('div');
+        aa.style.cssText = 'color:var(--text-secondary);white-space:pre-wrap;';
+        aa.textContent = `我：${t.a}`;
+        row.append(qq, aa);
+        transcriptBox.appendChild(row);
+      });
+      if (!finished && transcript.length) {
+        const pending = document.createElement('div');
+        pending.style.cssText = 'margin-top:6px;padding-top:6px;border-top:1px dashed var(--border);color:var(--primary);font-weight:600;';
+        pending.textContent = `面试官（待你回答）：${pendingQ}`;
+        transcriptBox.appendChild(pending);
+      }
+      transcriptBox.scrollTop = transcriptBox.scrollHeight;
+    };
+    renderTranscript();
+
     const ta = document.createElement('textarea');
     ta.className = 'textarea';
-    ta.rows = 7;
-    ta.placeholder = '按你上台时真实会说的话写（导师/评委最在意的是：有没有数据、有没有边界、有没有回退方案）';
+    ta.rows = 5;
+    ta.placeholder = '按你上台时真实会说的话写（评委最在意：有没有数据、有没有边界、有没有回退方案）';
     modal.body.appendChild(ta);
 
     const result = document.createElement('div');
     result.style.cssText = 'margin-top:10px;font-size:13px;';
     modal.body.appendChild(result);
 
-    const submit = modalButton('提交并复盘', {
+    const buildRaw = () =>
+      transcript.map((t) => `面试官：${t.q}\n我：${t.a}`).join('\n\n');
+
+    const runFinalReview = async () => {
+      if (!transcript.length) {
+        showToast('先作答一轮再出复盘', 'warn');
+        return;
+      }
+      finished = true;
+      ta.disabled = true;
+      submit.disabled = true;
+      submit.textContent = '生成复盘中…';
+      finalBtn.disabled = true;
+      roundBadge.textContent = '正在汇总整场作答…';
+      const question = {
+        id: 'defense-' + Date.now(),
+        title: q.q,
+        context: q.why || '',
+        keywords: [],
+        skeleton: [],
+        viewpointCards: [],
+        sources: [],
+        source: 'defense',
+        locator: q.locator || '',
+      };
+      // 来源 = 知乎质疑 + 答辩材料片段（后端最多取 4 条，把最相关的放前面）
+      const segSources = (doc?.segments || []).slice(0, 4).map((seg) => ({
+        summary: `${seg.heading}：${String(seg.text).slice(0, 120)}`,
+        snippet: String(seg.text).slice(0, 200),
+        evidenceQuote: String(seg.text).slice(0, 200),
+        sourceUrl: '',
+        author: '答辩材料',
+      }));
+      const zhihuSource = q.zhihuRef
+        ? [
+            {
+              summary: q.zhihuRef.snippet || '',
+              snippet: q.zhihuRef.snippet || '',
+              evidenceQuote: q.zhihuRef.snippet || '',
+              sourceUrl: q.zhihuRef.url,
+              author: '知乎',
+            },
+          ]
+        : [];
+      const report = await runReview({
+        question,
+        raw: buildRaw(),
+        sources: [...zhihuSource, ...segSources].slice(0, 4),
+      });
+      submit.textContent = '已提交';
+      renderTranscript();
+      renderMini(result, report);
+    };
+
+    const submit = modalButton('提交本轮并追问', {
       primary: true,
       onClick: async () => {
         const raw = ta.value.trim();
@@ -188,41 +289,59 @@ export function renderDefenseScreen(root) {
           showToast('先写下你的回答', 'warn');
           return;
         }
+        transcript.push({ q: pendingQ, a: raw });
+        ta.value = '';
         submit.disabled = true;
-        submit.textContent = '模型生成中（最多 25 秒）…';
-        const question = {
-          id: 'defense-' + Date.now(),
-          title: q.q,
-          context: q.why || '',
-          keywords: [],
-          skeleton: [],
-          viewpointCards: [],
-          sources: [],
-          source: 'defense',
-          locator: q.locator || '',
-        };
-        const report = await runReview({
-          question,
-          raw,
-          sources: q.zhihuRef
-            ? [
-                {
-                  summary: q.zhihuRef.snippet || '',
-                  snippet: q.zhihuRef.snippet || '',
-                  evidenceQuote: q.zhihuRef.snippet || '',
-                  sourceUrl: q.zhihuRef.url,
-                  author: '',
-                },
-              ]
-            : [],
-        });
-        submit.disabled = false;
-        submit.textContent = '提交并复盘';
-        renderMini(result, report);
+        submit.textContent = '评委思考中…';
+
+        if (followups >= MAX_FOLLOWUP) {
+          await runFinalReview();
+          return;
+        }
+
+        try {
+          const ctrl = new AbortController();
+          const timer = setTimeout(() => ctrl.abort(), 45000);
+          const res = await fetch('/api/defense/followup', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              question: q.q,
+              answer: transcript.map((t) => `我：${t.a}`).join('\n'),
+              segments: doc?.segments || [],
+            }),
+            signal: ctrl.signal,
+          });
+          clearTimeout(timer);
+          const data = await res.json();
+          if (!res.ok) throw new Error(data?.error?.message || '追问生成失败');
+
+          if (data.exhausted || !data.followup) {
+            await runFinalReview();
+            return;
+          }
+          followups++;
+          // 追问成为下一轮要回答的"面试官问题"
+          pendingQ = data.followup.q;
+          renderTranscript();
+          showToast(`第 ${followups} 轮追问：${data.followup.q.slice(0, 40)}…`);
+        } catch (err) {
+          showToast(err.message + '（可直接出复盘）', 'warn', 5000);
+          await runFinalReview();
+          return;
+        } finally {
+          submit.disabled = false;
+          submit.textContent = '提交本轮并追问';
+        }
       },
     });
 
-    modal.footer.append(modalButton('关闭', { ghost: true, onClick: () => modal.close() }), submit);
+    const finalBtn = modalButton('直接出复盘', {
+      ghost: true,
+      onClick: () => runFinalReview(),
+    });
+
+    modal.footer.append(modalButton('关闭', { ghost: true, onClick: () => modal.close() }), finalBtn, submit);
   };
 
   const renderMini = (host, report) => {
