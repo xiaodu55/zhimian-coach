@@ -11,7 +11,14 @@ import { runDeterministicRules } from '../rules/diagnose.js';
  * @param {Array|null} p.sources  可核对的来源（面经/检索结果）；null 时取 question.viewpointCards
  * @param {string} p.followupFocus 当前追问焦点
  */
-export async function runReview({ question, raw, sources = null, followupFocus = '' }) {
+export async function runReview({
+  question,
+  raw,
+  sources = null,
+  followupFocus = '',
+  interviewerStyle = 'tough',
+  followupDepth = 2,
+}) {
   const qaPairs = parseTranscriptToQA(raw, question.title);
   const targetAnswer = qaPairs.map((p) => p.answer).join('\n\n');
   const ruleFindings = runDeterministicRules(targetAnswer, { ...question, followupFocus });
@@ -28,6 +35,7 @@ export async function runReview({ question, raw, sources = null, followupFocus =
 
   let llmScores = null;
   let improvements = null;
+  let followups = null;
   let degraded = false;
   let degradedReason = '';
 
@@ -47,8 +55,21 @@ export async function runReview({ question, raw, sources = null, followupFocus =
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(
           isResumeLike
-            ? { question: question.title, sources: src, answer: targetAnswer, transcript: raw }
-            : { questionId: question.id, answer: targetAnswer, transcript: raw }
+            ? {
+                question: question.title,
+                sources: src,
+                answer: targetAnswer,
+                transcript: raw,
+                interviewerStyle,
+                followupDepth,
+              }
+            : {
+                questionId: question.id,
+                answer: targetAnswer,
+                transcript: raw,
+                interviewerStyle,
+                followupDepth,
+              }
         ),
         signal: ctrl.signal,
       });
@@ -58,6 +79,7 @@ export async function runReview({ question, raw, sources = null, followupFocus =
         degraded = !!j.degraded;
         llmScores = j.llmScores || null;
         improvements = j.improvements || null;
+        followups = j.followups || null;
       } else {
         degraded = true;
       }
@@ -66,5 +88,5 @@ export async function runReview({ question, raw, sources = null, followupFocus =
     }
   }
 
-  return { qaPairs, answer: targetAnswer, ruleFindings, llmScores, improvements, degraded, degradedReason };
+  return { qaPairs, answer: targetAnswer, ruleFindings, llmScores, improvements, followups, degraded, degradedReason };
 }

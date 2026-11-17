@@ -2,7 +2,7 @@ import { Hono } from 'hono';
 import { getQuestionById } from '../lib/knowledge/questionBank.js';
 import { callStructuredLlm, LlmServiceError } from '../lib/llm.js';
 import { validateStructuredClaims, ClaimItem } from '../lib/citations.js';
-import { COACH_PARSE_SYSTEM_PROMPT } from '../lib/prompts.js';
+import { COACH_PARSE_SYSTEM_PROMPT, INTERVIEWER_STYLES, FOLLOWUP_DEPTH_RULES } from '../lib/prompts.js';
 
 interface InlineSource {
   stance?: string;
@@ -92,13 +92,19 @@ coachRoutes.post('/parse', async (c) => {
     .join('\n');
 
   try {
+    // 面试官人设 + 追问深度：写进 prompt，控制 followups 的语气与钻取层数
+    const styleKey = String(body?.interviewerStyle || 'tough') === 'gentle' ? 'gentle' : 'tough';
+    const style = INTERVIEWER_STYLES[styleKey];
+    const depth = Math.min(3, Math.max(1, Number(body?.followupDepth) || 2));
+    const followupRule = FOLLOWUP_DEPTH_RULES[depth - 1];
+
     const rawLlm = await callStructuredLlm<{
       llmScores?: ClaimItem[];
       improvements?: ClaimItem[];
       followups?: string[];
     }>(
       COACH_PARSE_SYSTEM_PROMPT,
-      `题目：${title}\n\n可用知乎来源集合：\n${sourceContext || '无外部来源'}\n\n候选人回答：\n${answer}`
+      `题目：${title}\n\n可用知乎来源集合：\n${sourceContext || '无外部来源'}\n\n候选人回答：\n${answer}\n\n【本轮追问要求】\n${style.rule}\n${followupRule}`
     );
 
     const scoreCheck = validateStructuredClaims(rawLlm.llmScores || [], validSourceIds);

@@ -272,20 +272,40 @@ export async function checkBackendHealth() {
     if (pill) {
       if (data.ok && data.llmConfigured) {
         pill.className = 'status-pill status-online';
-        pill.textContent = '● 在线服务就绪';
+        pill.textContent = '● 知乎语料库已就绪';
+        pill.title = '知乎语料与模型服务均在线';
+      } else if (data.ok && data.zhihuConfigured) {
+        pill.className = 'status-pill status-degraded';
+        pill.textContent = '◐ 本地离线模式（练习记录正常保存）';
+        pill.title = '模型服务未配置：已切换本地确定性规则模式，练习记录照常保存在本机';
+        setDegraded(
+          '后端模型服务暂未配置，已自动切换「本地确定性规则模式」。' +
+            '【仍可用】浏览题库、录音与转写、10 条原话级诊断、历史复盘与弹药库；' +
+            '【暂不可用】模型评分与知乎实时检索。'
+        );
       } else {
         pill.className = 'status-pill status-degraded';
-        pill.textContent = '◐ 规则模式（模型未配置）';
-        setDegraded('后端模型服务暂未配置，系统已自动切换「本地确定性规则模式」，10 条原话级诊断照常可用。');
+        pill.textContent = '◐ 本地离线模式（练习记录正常保存）';
+        pill.title = '知乎语料暂不可用：本地题库与规则引擎照常工作，练习记录保存在本机';
+        setDegraded(
+          '知乎语料接口暂不可用，已切换本地题库 + 确定性规则引擎。' +
+            '【仍可用】浏览本地题库、录音与转写、10 条原话级诊断、历史复盘与弹药库、数据导出；' +
+            '【暂不可用】知乎实时检索与观点卡对照。'
+        );
       }
     }
   } catch (_) {
     state.health = { checked: true, ok: false, zhihuConfigured: false, llmConfigured: false, bankSize: state.bank.length };
     if (pill) {
       pill.className = 'status-pill status-degraded';
-      pill.textContent = '◐ 纯前端离线兜底模式';
+      pill.textContent = '◐ 本地离线模式（练习记录正常保存）';
+      pill.title = '后端未启动：本地题库 + 确定性规则引擎可用，练习记录保存在本机';
     }
-    setDegraded('当前为纯静态预览/离线模式（BFF 未启动），已自动启用本地题库 + 10 条确定性规则引擎 + 本地 BM25 检索。');
+    setDegraded(
+      '当前为纯静态预览/离线模式（BFF 未启动）。' +
+        '【仍可用】浏览本地题库与搜索、录音与转写、10 条确定性规则诊断、查看历史复盘与弹药库台账、数据导出；' +
+        '【暂不可用】模型评分、知乎实时检索、简历出题与答辩预测。'
+    );
   }
   notify();
 }

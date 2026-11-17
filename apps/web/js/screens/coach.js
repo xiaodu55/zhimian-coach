@@ -9,7 +9,7 @@ import {
   refreshLocalCollections,
 } from '../state.js';
 import { navigate } from '../router.js';
-import { escapeHtml } from '../ui/citation.js';
+import { escapeHtml, renderCitationChip } from '../ui/citation.js';
 import { renderViewpointCard } from '../ui/components.js';
 import { createModal, modalButton } from '../ui/modal.js';
 import { LocalAudioRecorder } from '../capture/recorder.js';
@@ -29,6 +29,8 @@ const getMode = () => {
 /** 两种练法各自记住上一次选的题：切回来不用重挑 */
 const rememberedQuestions = { bank: null, resume: null };
 /** 简历陪练：当前解析结果 / 选中的要点 / 该要点检索到的知乎知识 */
+/** 最后一次录音时长（秒）：用于复盘台的"答题时长与语速雷达" */
+let lastAnswerDurationSec = 0;
 let resumeRecord = null;
 let activeBullet = null;
 let bulletKnowledge = [];
@@ -86,6 +88,9 @@ const setMode = (mode) => sessionStorage.setItem(MODE_KEY, mode);
 import { parseTranscriptToQA } from '../capture/transcript.js';
 import { runDeterministicRules } from '../rules/diagnose.js';
 import { runReview } from '../lib/review.js';
+import { computeSpeechMetrics } from '../capture/speechmetrics.js';
+import { buildDomainLexicon, correctTranscript } from '../capture/hotwords.js';
+import { PauseGuard, PAUSE_GUARD_HINT } from '../capture/pauseguard.js';
 import { dbPut, dbGet } from '../db.js';
 import { showToast } from '../ui/toast.js';
 
@@ -119,7 +124,21 @@ export function renderCoachScreen(root) {
       </div>
       <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
         <span class="tag ${question.source === 'resume' ? 'tag-green' : 'tag-blue'}">${escapeHtml(question.source === 'resume' ? '简历题' : question.track)}</span>
-        <span class="tag">连续追问上限 3 轮</span>
+        <label class="coach-opt" title="追问深度：每轮往下钻几层，3 = 会连追到你的隐含前提">
+          追问深度
+          <select id="sel-followup-depth" class="select" style="width:auto;padding:3px 6px;font-size:12px;">
+            <option value="1">1 轮 · 广度确认</option>
+            <option value="2">2 轮 · 深挖一层</option>
+            <option value="3">3 轮 · 追到前提</option>
+          </select>
+        </label>
+        <label class="coach-opt" title="面试官人设：温和引导型顺思路，压力挑战型直接质疑方案缺陷">
+          面试官
+          <select id="sel-interviewer-style" class="select" style="width:auto;padding:3px 6px;font-size:12px;">
+            <option value="tough">压力挑战型</option>
+            <option value="gentle">温和引导型</option>
+          </select>
+        </label>
         <button id="btn-switch-q" class="btn btn-sm" type="button">换一题</button>
         <button id="btn-fill-sample" class="btn btn-sm" type="button">填入演示回答样例</button>
       </div>
@@ -175,14 +194,22 @@ export function renderCoachScreen(root) {
           <p style="margin:0 0 12px;font-size:13px;color:var(--text-secondary);">${escapeHtml(question.context)}</p>
 
           <div id="followup-box" class="card" style="background:var(--amber-soft);border-color:#fedf89;margin-bottom:12px;" hidden>
-            <div style="font-size:12px;font-weight:700;color:var(--amber);margin-bottom:4px;">🔥 面试官深度追问（第 <span id="followup-round-num">1</span>/3 轮 · 取自知乎分歧观点）</div>
+            <div style="font-size:12px;font-weight:700;color:var(--amber);margin-bottom:4px;">
+              🔥 面试官深度追问（第 <span id="followup-round-num">1</span> 轮<span id="followup-style-label"></span>）
+            </div>
             <div id="followup-question-text" style="font-weight:600;font-size:14px;"></div>
+            <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;">
+              <button id="btn-followup-explain" class="btn btn-ghost btn-sm" type="button">看不懂，看解析</button>
+              <button id="btn-followup-skip" class="btn btn-ghost btn-sm" type="button">跳过这轮，直接出复盘</button>
+            </div>
           </div>
 
           <details>
-            <summary style="cursor:pointer;font-size:13px;font-weight:600;color:var(--primary);">查看参考答题骨架（提示）</summary>
-            <ul style="margin:8px 0 0;padding-left:18px;font-size:13px;color:var(--text-secondary);">
-              ${(question.skeleton || []).map((s) => `<li>${escapeHtml(s)}</li>`).join('')}
+            <summary style="cursor:pointer;font-size:13px;font-weight:600;color:var(--primary);">
+              查看参考答题骨架（提示）<span class="tag tag-green" style="margin-left:6px;">知乎高赞溯源</span>
+            </summary>
+            <ul style="margin:8px 0 0;padding-left:18px;font-size:13px;color:var(--text-secondary);" id="coach-skeleton-list">
+              ${(question.skeleton || []).map((s, i) => `<li data-skeleton-idx="${i}">${escapeHtml(s)}</li>`).join('')}
             </ul>
           </details>
         </section>
@@ -485,13 +512,30 @@ export function renderCoachScreen(root) {
   spkInterviewerBtn.addEventListener('click', () => setSpeakerMode('interviewer'));
 
   // ---- 字幕 → 带说话人标签的转写稿（直接喂给「解析并生成复盘」）----
+  /** 专有名词热词纠错：识别错的技术词先改过来，避免 AI 误判"你答错了" */
+  const applyHotwordFix = (raw) => {
+    const text = String(raw || '');
+    if (!text.trim()) return text;
+    const lexicon = buildDomainLexicon({
+      title: question.title,
+      context: question.context,
+      keywords: question.keywords,
+      skeleton: question.skeleton,
+    });
+    const out = correctTranscript(text, lexicon);
+    if (out.changes.length) {
+      showToast(`已自动纠正 ${out.changes.length} 处专有名词，可在作答框里再改`, 'warn', 5000);
+    }
+    return out.text;
+  };
+
   wrapper.querySelector('#btn-captions-to-text').addEventListener('click', () => {
     if (!captions.length) {
       showToast('还没有字幕：先录音，或直接粘贴会议转写稿', 'warn');
       return;
     }
     const recordBox = wrapper.querySelector('#record-transcript');
-    if (recordBox) recordBox.value = captionsToTranscript(captions);
+    if (recordBox) recordBox.value = applyHotwordFix(captionsToTranscript(captions));
     const unknown = captions.filter((c) => !c.speaker || c.speaker === 'unknown').length;
     showToast(
       unknown
@@ -1471,6 +1515,54 @@ export function renderCoachScreen(root) {
     }
   });
 
+  // ---- 思考停顿保护：静音 5 秒不自动断句，空格继续说 / Enter 发送 ----
+  let pauseGuard = null;
+  const startPauseGuard = () => {
+    pauseGuard?.reset?.();
+    pauseGuard = new PauseGuard({
+      silenceMs: 5000,
+      onHint: (hint) => {
+        captionStatusEl.textContent = `⏸ ${hint}`;
+        silenceWarning.textContent = `⏸ ${hint}`;
+        silenceWarning.style.display = 'block';
+      },
+      onFlush: (info) => {
+        if (info?.reason === 'silence') {
+          captionStatusEl.textContent = `⏸ ${info.hint}`;
+        }
+      },
+    });
+    return pauseGuard;
+  };
+  const stopPauseGuard = () => {
+    pauseGuard?.reset?.();
+    pauseGuard = null;
+  };
+  // 录音中：空格 = 继续说，Enter = 结束并把字幕填进作答框
+  const onRecordKey = (e) => {
+    if (!isRecording || !pauseGuard) return;
+    if (e.code === 'Space' || e.key === ' ') {
+      e.preventDefault();
+      const next = pauseGuard.handleKey(' ');
+      if (next === 'listening') {
+        try {
+          captionEngine?.recognition?.start?.();
+        } catch {
+          /* 已在识别中 */
+        }
+        captionStatusEl.textContent = '● 继续说…';
+        silenceWarning.style.display = 'none';
+      }
+    } else if (e.key === 'Enter' && pauseGuard.isAwaitingUser) {
+      e.preventDefault();
+      pauseGuard.handleKey('Enter');
+      recordBtn.click();
+      const box = wrapper.querySelector('#answer-textarea');
+      if (box && captions.length) box.value = applyHotwordFix(captionsToTranscript(captions));
+    }
+  };
+  document.addEventListener('keydown', onRecordKey);
+
   // 录音控制 (M2 + M3)
   recordBtn.addEventListener('click', async () => {
     if (!isRecording) {
@@ -1503,18 +1595,28 @@ export function renderCoachScreen(root) {
         });
 
         await recorder.start({ deviceId: micSelect.value || undefined, systemStream });
+        startPauseGuard();
         isRecording = true;
         recordBtn.textContent = '⏹ 停止录音';
         recordBtn.className = 'btn btn-danger btn-sm';
         captionStatusEl.textContent = '● 正在本地录音（Opus 编码），实时字幕识别中…';
 
         captionEngine = new LiveCaptionEngine({
+          pauseGuard,
           onSentence: (sent) => {
             captions.push(sent);
             renderCaptions();
           },
           onInterim: (txt) => renderCaptions(txt),
           onError: (msg) => {
+            // 「没听到声音」多半是用户在想，不是设备坏了 → 交给停顿保护，等用户决定
+            if (/没听到声音|no-speech/i.test(msg)) {
+              pauseGuard?.noteSpeech();
+              pauseGuard?.tick();
+              captionStatusEl.textContent = `⏸ ${PAUSE_GUARD_HINT}`;
+              showToast(PAUSE_GUARD_HINT, 'warn', 6000);
+              return;
+            }
             captionStatusEl.textContent = '⚠ ' + msg;
             showToast(msg, 'warn', 4500);
           }
@@ -1525,6 +1627,8 @@ export function renderCoachScreen(root) {
       }
     } else {
       isRecording = false;
+      stopPauseGuard();
+      document.removeEventListener('keydown', onRecordKey);
       recordBtn.textContent = '开始录音';
       recordBtn.className = 'btn btn-primary btn-sm';
       captionEngine?.stop();
@@ -1547,10 +1651,57 @@ export function renderCoachScreen(root) {
         });
 
         renderTracks(result);
+        lastAnswerDurationSec = result.durationSec;
         captionStatusEl.textContent = `✅ 录音完成（${result.durationSec} 秒，${result.systemBlob ? '双轨' : '单轨'}），只存在本机 IndexedDB，未产生任何上传请求。`;
       }
     }
   });
+
+  // ---- 追问深度 / 面试官人设（本地记忆，切换后下一轮提交生效） ----
+  const DEPTH_KEY = 'zhimian.coach.depth';
+  const STYLE_KEY = 'zhimian.coach.style';
+  const depthSelect = wrapper.querySelector('#sel-followup-depth');
+  const styleSelect = wrapper.querySelector('#sel-interviewer-style');
+  const readNum = (k, d) => {
+    const v = Number(localStorage.getItem(k));
+    return Number.isFinite(v) && v >= 1 && v <= 3 ? v : d;
+  };
+  let followupDepth = readNum(DEPTH_KEY, 2);
+  let interviewerStyle = localStorage.getItem(STYLE_KEY) === 'gentle' ? 'gentle' : 'tough';
+  depthSelect.value = String(followupDepth);
+  styleSelect.value = interviewerStyle;
+  depthSelect.addEventListener('change', () => {
+    followupDepth = Number(depthSelect.value) || 2;
+    localStorage.setItem(DEPTH_KEY, String(followupDepth));
+    showToast(`追问深度：${followupDepth} 轮`);
+  });
+  styleSelect.addEventListener('change', () => {
+    interviewerStyle = styleSelect.value === 'gentle' ? 'gentle' : 'tough';
+    localStorage.setItem(STYLE_KEY, interviewerStyle);
+    showToast(`面试官人设：${interviewerStyle === 'gentle' ? '温和引导型' : '压力挑战型'}`);
+  });
+
+  // 参考答题骨架上挂可点击的知乎溯源 chip（抗 AI 幻觉的关键说服力）
+  (() => {
+    const list = wrapper.querySelector('#coach-skeleton-list');
+    if (!list) return;
+    const cards = (question.viewpointCards || []).slice(0, 3);
+    cards.forEach((vc, i) => {
+      const li = list.querySelector(`[data-skeleton-idx="${i}"]`);
+      if (!li) return;
+      li.appendChild(
+        renderCitationChip({
+          id: `S${i + 1}`,
+          type: 'zhihu',
+          label: `知乎高赞溯源 ${i + 1}`,
+          sourceTitle: vc.author || '知乎高赞回答',
+          locator: vc.stance || '',
+          quote: vc.evidenceQuote || '',
+          url: vc.sourceUrl || '',
+        })
+      );
+    });
+  })();
 
   // 追问生成（M8：单题最多 3 轮，取自观点卡分歧）
   wrapper.querySelector('#btn-trigger-followup').addEventListener('click', () => {
@@ -1571,7 +1722,49 @@ export function renderCoachScreen(root) {
     showToast(`已生成第 ${followupRound} 轮深度追问`);
   });
 
-  // 提交解析（M4 + M5 + M6 降级双轨）
+  // ---- 深挖轮次：主问题 → 评委追问（最多 followupDepth 轮）→ 整场复盘 ----
+  let deepRound = 0;              // 已提出的追问轮次
+  const askedFollowups = [];      // 历次追问原文（顺序）
+  const roundAnswers = [];        // 历次作答原文
+  let skipFollowup = false;       // 用户选择"跳过这轮"
+
+  const showFollowupBox = (text, round) => {
+    const box = wrapper.querySelector('#followup-box');
+    if (!box) return;
+    box.hidden = false;
+    wrapper.querySelector('#followup-round-num').textContent = String(round);
+    wrapper.querySelector('#followup-question-text').textContent = text;
+    const label = wrapper.querySelector('#followup-style-label');
+    if (label) label.textContent = ' · ' + (interviewerStyle === 'gentle' ? '温和引导型' : '压力挑战型');
+    activeFollowupFocus = text;
+  };
+
+  // 多轮问答拼成「面试官：/ 我：」转写稿：模型与规则层看到的都是完整现场
+  const buildTranscript = (finalAnswer) => {
+    const qs = [question.title, ...askedFollowups];
+    const as = [...roundAnswers, finalAnswer];
+    const lines = [];
+    for (let i = 0; i < as.length; i++) {
+      lines.push(`面试官：${qs[i] || question.title}`);
+      lines.push(`我：${as[i]}`);
+    }
+    return lines.join('\n');
+  };
+
+  wrapper.querySelector('#btn-followup-explain')?.addEventListener('click', () => {
+    const skeleton = (question.skeleton || []).slice(0, 4).join('\n');
+    textarea.value = skeleton ? `（我看解析后重答）\n${skeleton}` : '（我看解析后重答）';
+    textarea.focus();
+    showToast('已把参考答题骨架填进作答框，照着改写再答一次');
+  });
+
+  wrapper.querySelector('#btn-followup-skip')?.addEventListener('click', () => {
+    skipFollowup = true;
+    showToast('已跳过追问，直接生成复盘');
+    wrapper.querySelector('#btn-submit-parse').click();
+  });
+
+  // 提交解析（M4 + M5 + M6 降级双轨 + 深挖轮次）
   wrapper.querySelector('#btn-submit-parse').addEventListener('click', async (ev) => {
     const raw = textarea.value.trim();
     if (!raw) {
@@ -1583,12 +1776,51 @@ export function renderCoachScreen(root) {
     submitBtn.disabled = true;
     submitBtn.textContent = '模型生成中（最多 25 秒）…';
 
+    const transcript = buildTranscript(raw);
     const review = await runReview({
       question,
-      raw,
+      raw: transcript,
       followupFocus: activeFollowupFocus,
+      interviewerStyle,
+      followupDepth,
     });
-    const { qaPairs, answer: targetAnswer, ruleFindings, llmScores, improvements, degraded } = review;
+    const { qaPairs, answer: targetAnswer, ruleFindings, llmScores, improvements, degraded, followups } = review;
+    roundAnswers.push(raw);
+
+    // 深挖模式：评委还有下一问 → 先追问，别急着出复盘
+    const nextFollowups = followups || [];
+    if (!skipFollowup && nextFollowups.length && deepRound < followupDepth) {
+      deepRound++;
+      const fq = nextFollowups[0];
+      askedFollowups.push(fq);
+      showFollowupBox(fq, deepRound);
+      textarea.value = '';
+      submitBtn.disabled = false;
+      submitBtn.textContent = originalLabel;
+      showToast(`评委追问了第 ${deepRound}/${followupDepth} 轮，接着答（再点提交）`);
+      return;
+    }
+
+    const report = {
+      id: 'session-' + Date.now(),
+      question,
+      qaPairs,
+      answer: targetAnswer,
+      transcript,
+      rounds: roundAnswers.length,
+      followupDepth,
+      interviewerStyle,
+      speechMetrics: computeSpeechMetrics({
+        durationSec: lastAnswerDurationSec,
+        text: roundAnswers.join('\n'),
+        expectedLength: question.expectedLength || [120, 400],
+      }),
+      ruleFindings,
+      llmScores: llmScores || null,
+      improvements: improvements || null,
+      degraded,
+      createdAt: new Date().toISOString(),
+    };
 
     state.lastReviewReport = report;
     await dbPut('sessions', report);
@@ -1598,7 +1830,7 @@ export function renderCoachScreen(root) {
     if (degraded) {
       showToast('模型暂不可用，已切换规则模式并完成原话级诊断', 'warn', 3800);
     } else {
-      showToast('复盘解析完成');
+      showToast(`复盘解析完成（${roundAnswers.length} 轮作答）`);
     }
     navigate('/review');
   });

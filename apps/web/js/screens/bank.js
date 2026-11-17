@@ -5,6 +5,7 @@ import { renderViewpointCard } from '../ui/components.js';
 import { runDeterministicRules } from '../rules/diagnose.js';
 import { dbPut } from '../db.js';
 import { showToast } from '../ui/toast.js';
+import { createModal, modalButton } from '../ui/modal.js';
 
 export function renderBankScreen(root) {
   const tracks = ['全部赛道', ...new Set(state.bank.map((q) => q.track))];
@@ -15,20 +16,64 @@ export function renderBankScreen(root) {
   wrapper.innerHTML = `
     <section class="hero-banner" aria-label="产品定位与一键体验">
       <div>
-        <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px;">
+        <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px;flex-wrap:wrap;">
           <span class="tag tag-blue">知乎黑客松 S3 · AI × 陪伴与交互</span>
           <span class="tag">每条诊断均锚定知乎多元观点</span>
         </div>
-        <h1 class="hero-title">知面陪练：把“答得像不像”变成“每句有出处”</h1>
+        <h1 class="hero-title">别让“看懂了”变成面试时的“说不清”</h1>
         <p class="hero-desc">
-          闭环覆盖 <strong>读懂资料 → 开口说清 → 被追问压力测试 → 查清楚来源</strong>。
-          结合 10 条确定性原话诊断规则与知乎高赞/分歧观点卡，拒绝单一模型口味幻觉。
+          基于<strong>知乎高赞技术与行业问答</strong>构建实战题库。先通过<strong>互动讲解</strong>吃透底层逻辑，
+          再进入<strong>高压连环追问</strong>实战演练，把零散知识锤炼成随时可调用的面试“弹药库”。
         </p>
-        <div class="hero-actions">
-          <button id="btn-quick-demo" class="btn btn-primary" type="button">⚡ 30 秒免麦一键体验完整闭环</button>
-          <button id="btn-go-defense" class="btn" type="button">🎓 上传论文 / 预测答辩追问</button>
-          <button id="btn-go-explain" class="btn" type="button">📖 文档可溯源详解</button>
+        <div class="hero-badges" style="display:flex;gap:8px;flex-wrap:wrap;margin:12px 0;">
+          <span class="tag tag-green">🔒 100% 本地浏览器存储（IndexedDB），录音与简历零上传</span>
+          <span class="tag tag-blue">📚 真实知乎高赞语料溯源，拒绝 AI 幻觉胡编</span>
+          <span class="tag">⚡ 无需注册，打开即练</span>
         </div>
+        <div class="hero-actions">
+          <button id="btn-quick-demo" class="btn btn-primary" type="button">免费开始 3 分钟实战演练</button>
+          <button id="btn-go-explain" class="btn" type="button">浏览题库 / 导入我的项目文档</button>
+          <button id="btn-go-defense" class="btn btn-ghost" type="button">🎓 论文答辩预测</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 旧的一键演示入口保留为隐藏按钮（评委用：加载预设带瑕疵回答跑完整闭环） -->
+    <button id="btn-quick-demo-legacy" type="button" hidden>30 秒免麦一键体验完整闭环</button>
+
+    <!-- 新用户破冰卡：只第一次显示，可关闭 -->
+    <section id="onboarding-card" class="card" style="margin-bottom:18px;border-color:var(--primary);display:none;">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex-wrap:wrap;">
+        <div>
+          <strong style="font-size:15px;">开启你的第一场陪练</strong>
+          <div style="font-size:12.5px;color:var(--text-muted);margin-top:4px;">选一个入口，30 秒内进入实战；所有记录只存在你自己的浏览器里。</div>
+        </div>
+        <button id="btn-onboarding-close" class="btn-icon" type="button" aria-label="关闭">✕</button>
+      </div>
+      <div style="display:flex;gap:10px;margin-top:12px;flex-wrap:wrap;">
+        <button id="btn-onboard-warmup" class="btn btn-primary btn-sm" type="button">① 我是来刷高频题的</button>
+        <button id="btn-onboard-jd" class="btn btn-sm" type="button">② 我在准备具体面试 / 答辩</button>
+      </div>
+      <div id="onboard-warmup-panel" style="display:none;margin-top:12px;">
+        <div style="font-size:12.5px;color:var(--text-secondary);margin-bottom:6px;">选个方向，我给你挑一道 5 分钟热身题：</div>
+        <div id="onboard-directions" style="display:flex;gap:8px;flex-wrap:wrap;"></div>
+      </div>
+      <div id="onboard-jd-panel" style="display:none;margin-top:12px;">
+        <div style="font-size:12.5px;color:var(--text-secondary);margin-bottom:6px;">
+          把 JD 粘贴进来，或把项目 / 论文摘要拖进来 → 生成 3 道只针对它的定制追问题：
+        </div>
+        <div id="onboard-dropzone" style="border:1px dashed var(--border);border-radius:8px;padding:14px;background:var(--surface-alt);">
+          <textarea id="onboard-jd-input" class="textarea" rows="4" placeholder="例：负责 Agent 平台的工具调用与权限治理，要求有 RAG 评测与高并发队列经验…"></textarea>
+          <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;align-items:center;">
+            <label class="btn btn-sm">
+              📄 拖入 / 选择文件（PDF / MD / TXT）
+              <input id="onboard-jd-file" type="file" accept=".pdf,.md,.txt,.markdown" hidden />
+            </label>
+            <button id="btn-onboard-jd-generate" class="btn btn-primary btn-sm" type="button">生成 3 道定制题 →</button>
+            <span id="onboard-jd-status" style="font-size:12px;color:var(--text-muted);"></span>
+          </div>
+        </div>
+        <div id="onboard-jd-questions" style="display:flex;flex-direction:column;gap:8px;margin-top:10px;"></div>
       </div>
     </section>
 
@@ -45,8 +90,24 @@ export function renderBankScreen(root) {
   `;
   root.appendChild(wrapper);
 
+  // 主 CTA「免费开始 3 分钟实战演练」：跳过空状态，直接进拆逻辑卡片 → 陪练室深挖 → 复盘
+  wrapper.querySelector('#btn-quick-demo').addEventListener('click', () => {
+    const pool = state.bank.filter((q) => q.difficulty === '基础');
+    const warm = pool[0] || state.bank[0];
+    if (!warm) return;
+    localStorage.setItem('zhimian.onboard.done', '1');
+    onboarding.style.display = 'none';
+    openLogicCard(warm);
+  });
+
+  // 次 CTA「浏览题库 / 导入我的项目文档」：滚到题库列表
+  wrapper.querySelector('#btn-go-explain').addEventListener('click', () => {
+    listBox?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    showToast('下面就是全部真题；要导入自己的项目文档，去「拆逻辑」页上传');
+  });
+
   // 评委一键体验流（静音免麦，直接加载预设带瑕疵回答跑通规则诊断 + 三方对照）
-  wrapper.querySelector('#btn-quick-demo').addEventListener('click', async () => {
+  wrapper.querySelector('#btn-quick-demo-legacy').addEventListener('click', async () => {
     const sample = state.demoSample;
     const q = state.bank.find((item) => item.id === sample?.questionId) || state.bank[0];
     if (!q) return;
@@ -70,8 +131,189 @@ export function renderBankScreen(root) {
     navigate('/review');
   });
 
-  wrapper.querySelector('#btn-go-defense').addEventListener('click', () => navigate('/explain'));
-  wrapper.querySelector('#btn-go-explain').addEventListener('click', () => navigate('/explain'));
+  wrapper.querySelector('#btn-go-defense').addEventListener('click', () => navigate('/defense'));
+
+  // ---- 拆逻辑卡片：先看骨架再开口（避免对着空白麦克风卡壳） ----
+  const openLogicCard = (q, extra = {}) => {
+    const skeleton = (q.skeleton || []).filter((s) => !/^注意避开/.test(String(s)));
+    const cautions = (q.skeleton || []).filter((s) => /^注意避开/.test(String(s)));
+    const points = (skeleton.length ? skeleton : ['先复述问题，确认听到的是同一件事', '给一个可核对的数字与口径', '讲清你的判断与取舍']).slice(0, 3);
+
+    const modal = createModal({
+      title: '先拆逻辑，再开口',
+      subtitle: q.q || '',
+      width: 640,
+    });
+
+    const body = document.createElement('div');
+    body.style.cssText = 'font-size:13.5px;line-height:1.75;';
+    body.innerHTML = `
+      <div style="margin-bottom:10px;">
+        <span class="tag tag-blue">考察意图</span>
+        <div style="margin-top:4px;color:var(--text-secondary);">${escapeHtml(q.context || extra.context || '（未标注）')}</div>
+      </div>
+      <div style="margin-bottom:10px;">
+        <span class="tag tag-green">3 个核心得分点</span>
+        <ul style="margin:6px 0 0;padding-left:18px;">
+          ${points.map((p) => `<li>${escapeHtml(p)}</li>`).join('')}
+        </ul>
+      </div>
+      ${
+        cautions.length
+          ? `<details style="margin-bottom:10px;">
+               <summary style="cursor:pointer;font-size:12.5px;color:var(--amber);">避开这 ${cautions.length} 个坑</summary>
+               <ul style="margin:6px 0 0;padding-left:18px;color:var(--text-secondary);">
+                 ${cautions.map((c) => `<li>${escapeHtml(c.replace(/^注意避开[：:]\s*/, ''))}</li>`).join('')}
+               </ul>
+             </details>`
+          : ''
+      }
+      ${
+        q.viewpointCards?.length
+          ? `<div style="font-size:12px;color:var(--text-muted);">这一题的评分基准来自 ${q.viewpointCards.length} 张知乎观点卡，作答时会逐句对照。</div>`
+          : ''
+      }
+    `;
+    modal.body.appendChild(body);
+
+    const go = modalButton('我准备好了，开始作答 →', {
+      primary: true,
+      onClick: () => {
+        state.activeQuestion = { ...q, ...extra, viewpointCards: q.viewpointCards || extra.viewpointCards || [] };
+        modal.close();
+        navigate('/coach');
+      },
+    });
+    const later = modalButton('先看看别的', { ghost: true, onClick: () => modal.close() });
+    modal.footer.append(later, go);
+  };
+
+  // ---- 新用户破冰：只第一次出现 ----
+  const onboarding = wrapper.querySelector('#onboarding-card');
+  const onboardPanel = (id) => {
+    wrapper.querySelector('#onboard-warmup-panel').style.display = id === 'warmup' ? 'block' : 'none';
+    wrapper.querySelector('#onboard-jd-panel').style.display = id === 'jd' ? 'block' : 'none';
+  };
+  const showOnboarding = () => {
+    if (localStorage.getItem('zhimian.onboard.done')) return;
+    onboarding.style.display = 'block';
+  };
+  wrapper.querySelector('#btn-onboarding-close').addEventListener('click', () => {
+    onboarding.style.display = 'none';
+    localStorage.setItem('zhimian.onboard.done', '1');
+  });
+  wrapper.querySelector('#btn-onboard-warmup').addEventListener('click', () => onboardPanel('warmup'));
+  wrapper.querySelector('#btn-onboard-jd').addEventListener('click', () => onboardPanel('jd'));
+
+  // 方向 → 高亮一道 5 分钟热身题
+  const DIRECTIONS = [
+    { key: 'ai', label: '后端 / AI 工程', match: (q) => /AI|Agent|RAG|后端|工程|架构|系统/.test(q.track + q.title) },
+    { key: 'product', label: '产品 / 运营', match: (q) => /产品|运营|增长|用户|商业/.test(q.track + q.title) },
+    { key: 'general', label: '通用综合', match: () => true },
+  ];
+  const dirBox = wrapper.querySelector('#onboard-directions');
+  DIRECTIONS.forEach((d) => {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'btn btn-sm';
+    btn.textContent = d.label;
+    btn.addEventListener('click', () => {
+      const pool = state.bank.filter(d.match);
+      const warm = pool.find((q) => q.difficulty === '基础') || pool[0] || state.bank[0];
+      if (!warm) return;
+      localStorage.setItem('zhimian.onboard.done', '1');
+      onboarding.style.display = 'none';
+      showToast(`给你挑了热身题：${warm.title.slice(0, 24)}…`);
+      // 高亮 + 滚到该题
+      renderList();
+      setTimeout(() => {
+        const cards = Array.from(listBox.querySelectorAll('.card'));
+        const target = cards.find((c) => c.innerText.includes(warm.title.slice(0, 18)));
+        if (target) {
+          target.style.outline = '2px solid var(--primary)';
+          target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          setTimeout(() => (target.style.outline = ''), 6000);
+        }
+      }, 60);
+      openLogicCard(warm);
+    });
+    dirBox.appendChild(btn);
+  });
+
+  // JD / 摘要 → 3 道定制追问题
+  const jdStatus = wrapper.querySelector('#onboard-jd-status');
+  const jdQuestions = wrapper.querySelector('#onboard-jd-questions');
+  const jdInput = wrapper.querySelector('#onboard-jd-input');
+  wrapper.querySelector('#onboard-jd-file').addEventListener('change', async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    jdStatus.textContent = '读取 ' + file.name + ' …';
+    try {
+      const text = file.name.toLowerCase().endsWith('.pdf') ? '' : await file.text();
+      if (text) jdInput.value = text.slice(0, 3000);
+      else jdStatus.textContent = 'PDF 需要 OCR：请把关键几段粘贴进文本框';
+    } catch (err) {
+      jdStatus.textContent = '读取失败：' + err.message;
+    }
+  });
+  wrapper.querySelector('#btn-onboard-jd-generate').addEventListener('click', async () => {
+    const text = jdInput.value.trim();
+    if (text.length < 10) {
+      jdStatus.textContent = '至少写 10 个字，或上传文件';
+      return;
+    }
+    jdStatus.textContent = '正在生成定制题…';
+    try {
+      const res = await fetch('/api/defense/questions-from-jd', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data?.error?.message || '生成失败');
+      jdStatus.textContent = data.degraded ? '模型暂不可用：下面是通用模板题' : `已生成 ${data.questions.length} 道定制题`;
+      jdQuestions.innerHTML = '';
+      (data.questions || []).forEach((q, i) => {
+        const el = document.createElement('div');
+        el.style.cssText = 'border:1px solid var(--border);border-radius:8px;padding:10px;';
+        el.innerHTML = `
+          <div style="display:flex;gap:6px;align-items:center;margin-bottom:4px;">
+            <span class="tag ${q.severity === '高' ? 'tag-red' : 'tag-amber'}">${escapeHtml(q.severity || '中')}危</span>
+          </div>
+          <div style="font-weight:600;font-size:13.5px;margin-bottom:4px;">Q${i + 1}. ${escapeHtml(q.q)}</div>
+          <div style="font-size:12px;color:var(--amber);margin-bottom:6px;">这一问在验证：${escapeHtml(q.why || '')}</div>
+        `;
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'btn btn-primary btn-sm';
+        btn.textContent = '拆逻辑 → 开始练这道 →';
+        btn.addEventListener('click', () => {
+          localStorage.setItem('zhimian.onboard.done', '1');
+          onboarding.style.display = 'none';
+          openLogicCard(
+            {
+              id: 'jd-' + Date.now(),
+              title: q.q,
+              context: q.why || '',
+              track: '定制题（基于你给的 JD）',
+              difficulty: '进阶',
+              keywords: [],
+              expectedLength: [150, 400],
+              skeleton: ['先给结论，再给依据', '给一个可核对的数字与口径', '讲清你的判断与取舍与边界'],
+              viewpointCards: [],
+              sources: [],
+              source: 'resume',
+            },
+            { context: q.why || '' }
+          );
+        });
+        el.appendChild(btn);
+        jdQuestions.appendChild(el);
+      });
+    } catch (err) {
+      jdStatus.textContent = '生成失败：' + err.message;
+    }
+  });
 
   const trackBox = wrapper.querySelector('#track-filters');
   const listBox = wrapper.querySelector('#bank-list');
@@ -128,16 +370,13 @@ export function renderBankScreen(root) {
         </div>
         <div style="display:flex;justify-content:space-between;align-items:center;padding-top:10px;border-top:1px solid var(--border);">
           <span style="font-size:12px;color:var(--text-muted);">考点：${escapeHtml((q.keywords || []).slice(0, 4).join(' / '))}</span>
-          <button type="button" class="btn btn-primary btn-sm btn-start-coach">进入陪练 →</button>
+          <button type="button" class="btn btn-primary btn-sm btn-start-coach">先拆逻辑，再开口 →</button>
         </div>
       `;
       if (q.viewpointCards?.[0]) {
         card.querySelector('.vp-preview').appendChild(renderViewpointCard(q.viewpointCards[0], 0));
       }
-      card.querySelector('.btn-start-coach').addEventListener('click', () => {
-        state.activeQuestion = q;
-        navigate('/coach');
-      });
+      card.querySelector('.btn-start-coach').addEventListener('click', () => openLogicCard(q));
       listBox.appendChild(card);
     });
   };
@@ -149,4 +388,5 @@ export function renderBankScreen(root) {
 
   renderTracks();
   renderList();
+  showOnboarding();
 }

@@ -2,7 +2,7 @@
  * 本地 IndexedDB 存储层（§12 隐私承诺：所有录音、转写稿、答题记录、答辩材料、薄弱点仅存浏览器本地）
  */
 const DB_NAME = 'zhimian_coach_db';
-const DB_VERSION = 2;
+const DB_VERSION = 3;
 
 const STORES = [
   'recordings',   // 录音 Blob 与关联字幕时间戳
@@ -10,7 +10,9 @@ const STORES = [
   'documents',    // 上传解析后的文档分段 (segments[])
   'weaknesses',   // 薄弱点弹药库与复习优先级队列
   'opportunities', // 台账：面试/答辩机会状态机
-  'resumeAnalyses' // 简历解析结果（含题目与练习状态），跨会话持久
+  'resumeAnalyses', // 简历解析结果（含题目与练习状态），跨会话持久
+  'flashcards',      // 结构化话术闪卡（30 秒结论 + 支撑论据 + 防杠话术）
+  'specialQuestions' // 复盘盲区生成的专项追问（复盘台 → 答辩预测）
 ];
 
 let dbPromise = null;
@@ -131,7 +133,7 @@ export async function exportAllData() {
     exportedAt: new Date().toISOString(),
     stores: {}
   };
-  for (const name of ['sessions', 'documents', 'weaknesses', 'opportunities']) {
+  for (const name of ['sessions', 'documents', 'weaknesses', 'opportunities', 'flashcards']) {
     dump.stores[name] = await dbGetAll(name);
   }
   return dump;

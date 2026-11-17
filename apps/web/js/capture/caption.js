@@ -22,10 +22,20 @@ export function inferSpeaker(text, lastSpeaker = 'unknown') {
 }
 
 export class LiveCaptionEngine {
-  constructor({ onSentence, onInterim, onError } = {}) {
+  /**
+   * @param {object} opts
+   * @param {Function} opts.onSentence 一句最终字幕
+   * @param {Function} opts.onInterim 临时字幕
+   * @param {Function} opts.onError   错误提示
+   * @param {PauseGuard} [opts.pauseGuard] 思考停顿保护（可选）：
+   *   传入后引擎每次识别到语音会通知它"用户还在说"，
+   *   静音超时由 PauseGuard 决定提醒还是提交，引擎本身不改变断句行为。
+   */
+  constructor({ onSentence, onInterim, onError, pauseGuard } = {}) {
     this.onSentence = onSentence;
     this.onInterim = onInterim;
     this.onError = onError;
+    this.pauseGuard = pauseGuard || null;
     this.recognition = null;
     this.startTime = 0;
     this.running = false;
@@ -73,6 +83,8 @@ export class LiveCaptionEngine {
         if (res.isFinal) {
           const speaker = this.speakerMode === 'auto' ? inferSpeaker(text, this.lastSpeaker) : this.speakerMode;
           this.lastSpeaker = speaker;
+          // 用户还在说：通知停顿保护重置静音计时，避免把"正在想措辞"当成"说完了"
+          this.pauseGuard?.noteSpeech();
           this.onSentence?.({
             id: `cap-${Date.now()}-${i}`,
             timestamp: this.formatOffset(Date.now() - this.startTime),
@@ -109,6 +121,8 @@ export class LiveCaptionEngine {
 
     try {
       this.recognition.start();
+      // 停顿保护自己起定时器：静音 5 秒不自动断句，只提示"按空格继续 / 按 Enter 发送"
+      this.pauseGuard?.start();
       return true;
     } catch (err) {
       this.onError?.('无法启动语音识别：' + err.message);
@@ -118,11 +132,23 @@ export class LiveCaptionEngine {
 
   stop() {
     this.running = false;
+    this.pauseGuard?.stop();
     try {
       this.recognition?.stop();
     } catch {
       /* 忽略 */
     }
+  }
+
+  /**
+   * 接入思考停顿保护（新增能力，不影响已有调用方式）。
+   * 上层拿到 guard 后可以：
+   *   - 监听 onHint 显示"还在思考？按空格继续说，按 Enter 发送"；
+   *   - 在 keydown 里调 guard.handleKey(' ' | 'Enter')。
+   */
+  setPauseGuard(guard) {
+    this.pauseGuard = guard || null;
+    return this.pauseGuard;
   }
 }
 
@@ -131,3 +157,6 @@ export function captionsToTranscript(captions) {
   const label = { me: '我', interviewer: '面试官', unknown: '（未标注）' };
   return captions.map((c) => `${label[c.speaker] || '（未标注）'}：${c.text}`).join('\n');
 }
+
+// 停顿保护与字幕引擎是一对：上层从同一个入口拿到两者，避免 import 路径分散
+export { PauseGuard, PAUSE_GUARD_HINT } from './pauseguard.js';

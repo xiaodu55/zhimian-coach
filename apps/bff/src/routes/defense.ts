@@ -1,7 +1,7 @@
 import { Hono } from 'hono';
 import { callStructuredLlm } from '../lib/llm.js';
 import { zhihuSearch } from '../lib/zhihuClient.js';
-import { DEFENSE_QUESTIONS_PROMPT, DEFENSE_FOLLOWUP_PROMPT } from '../lib/prompts.js';
+import { DEFENSE_QUESTIONS_PROMPT, DEFENSE_FOLLOWUP_PROMPT, SPECIAL_QUESTIONS_PROMPT, JD_QUESTIONS_PROMPT } from '../lib/prompts.js';
 
 export const defenseRoutes = new Hono();
 
@@ -179,4 +179,96 @@ defenseRoutes.post('/defense/followup', async (c) => {
       },
     });
   }
+});
+
+/**
+ * 复盘盲区 → 专项刁钻问题（打通「复盘台」与「答辩预测」）。
+ * 契约：{questionTitle, attribution, answerSnippet, track?} → {questions:[{q, why, severity}]}
+ */
+defenseRoutes.post('/defense/special-questions', async (c) => {
+  const body = await c.req.json();
+  const questionTitle = String(body?.questionTitle || '').trim();
+  const attribution = String(body?.attribution || '').trim();
+  const answerSnippet = String(body?.answerSnippet || '').trim().slice(0, 2000);
+  const track = String(body?.track || '').trim();
+
+  if (!questionTitle) {
+    return c.json({ error: { code: 'VALIDATION_ERROR', message: '缺少题目上下文' } }, 400);
+  }
+
+  try {
+    const raw = await callStructuredLlm<{ questions?: Array<Record<string, unknown>> }>(
+      SPECIAL_QUESTIONS_PROMPT,
+      `【没答好的题】${questionTitle}\n${track ? `【考察方向】${track}\n` : ''}` +
+        `【暴露的漏洞】${attribution || '（未标注）'}\n【用户作答摘要】${answerSnippet || '（无）'}`,
+      35_000
+    );
+    const questions = (raw.questions || [])
+      .map((q) => {
+        const text = String(q?.q || '').trim().slice(0, 120);
+        if (!text) return null;
+        const severity = ['高', '中', '低'].includes(String(q?.severity)) ? String(q.severity) : '中';
+        return { q: text, why: String(q?.why || '').slice(0, 140), severity };
+      })
+      .filter((q): q is { q: string; why: string; severity: string } => q !== null)
+      .slice(0, 3);
+    if (questions.length) return c.json({ degraded: false, questions });
+  } catch {
+    // 落到模板兜底
+  }
+
+  return c.json({
+    degraded: true,
+    questions: [
+      {
+        q: `${questionTitle}——这一条你刚才没有讲透：具体怎么做的？在什么条件下会失效？`,
+        why: '针对暴露的漏洞追问实现细节与边界（模型降级：使用固定追问模板）',
+        severity: '高',
+      },
+      {
+        q: '你刚才这个结论有没有对照数据或线上验证？能给一个可核对的数字吗？',
+        why: '追回答里是否只有结论、缺少可核对证据（模型降级：使用固定追问模板）',
+        severity: '中',
+      },
+    ],
+  });
+});
+
+/**
+ * JD / 项目摘要 → 3 道定制追问题（新用户破冰动线用）。
+ * 契约：{text} → {questions:[{q, why, severity}]}
+ */
+defenseRoutes.post('/defense/questions-from-jd', async (c) => {
+  const body = await c.req.json();
+  const text = String(body?.text || '').trim().slice(0, 4000);
+  if (text.length < 10) {
+    return c.json({ error: { code: 'VALIDATION_ERROR', message: 'JD 或摘要太短，至少写 10 个字' } }, 400);
+  }
+  try {
+    const raw = await callStructuredLlm<{ questions?: Array<Record<string, unknown>> }>(
+      JD_QUESTIONS_PROMPT,
+      `【岗位描述 / 项目摘要】\n${text}`,
+      35_000
+    );
+    const questions = (raw.questions || [])
+      .map((q) => {
+        const t = String(q?.q || '').trim().slice(0, 120);
+        if (!t) return null;
+        const severity = ['高', '中', '低'].includes(String(q?.severity)) ? String(q.severity) : '中';
+        return { q: t, why: String(q?.why || '').slice(0, 140), severity };
+      })
+      .filter((q): q is { q: string; why: string; severity: string } => q !== null)
+      .slice(0, 3);
+    if (questions.length) return c.json({ degraded: false, questions });
+  } catch {
+    // 落到模板兜底
+  }
+  return c.json({
+    degraded: true,
+    questions: [
+      { q: '结合你投的这个岗位，你最想让我们知道的一件事是什么？', why: '开场自我定位（模型降级：使用固定模板）', severity: '中' },
+      { q: '你做过最接近这份 JD 要求的一段经历是什么？具体怎么做的？', why: '对齐 JD 的最相关经历（模型降级：使用固定模板）', severity: '高' },
+      { q: '如果按你的方案上线，最大的风险是什么？你打算怎么兜底？', why: '边界意识与兜底方案（模型降级：使用固定模板）', severity: '中' },
+    ],
+  });
 });

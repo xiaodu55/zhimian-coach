@@ -1,18 +1,36 @@
 import { state, refreshLocalCollections } from '../state.js';
-import { navigate } from '../router.js';
+import { navigate, getCurrentRoute } from '../router.js';
 import { escapeHtml, renderCitationChip } from '../ui/citation.js';
 import { renderViewpointCard } from '../ui/components.js';
 import { dbPut, dbGetAll } from '../db.js';
 import { showToast } from '../ui/toast.js';
 
-export function renderReviewScreen(root) {
-  const report = state.lastReviewReport;
+export async function renderReviewScreen(root) {
+  // 刷新/换页后 state 里没有报告时，从本地 IndexedDB 取最近一次复盘（数据只在本地）
+  let report = state.lastReviewReport;
+  if (!report) {
+    try {
+      const sessions = await dbGetAll('sessions').catch(() => []);
+      const usable = sessions
+        .filter((x) => x && x.question && (x.ruleFindings || x.llmScores))
+        .sort((a, b) => String(b.createdAt || '').localeCompare(String(a.createdAt || '')));
+      if (usable.length) {
+        report = usable[0];
+        state.lastReviewReport = report;
+      }
+    } catch {
+      /* 本地库不可用：保持空状态 */
+    }
+  }
+
+  // 取本地记录是异步的：期间用户可能已经切走页面，这时不要再往 root 里写
+  if (getCurrentRoute() !== 'review') return;
 
   if (!report) {
     root.innerHTML = `
       <div class="card" style="text-align:center;padding:36px 20px;">
         <h2 style="margin:0 0 8px;">暂无待复盘的作答记录</h2>
-        <p style="color:var(--text-secondary);margin:0 0 16px;">你可以前往陪练室完成一次作答，或在首页点击「30 秒一键体验」。</p>
+        <p style="color:var(--text-secondary);margin:0 0 16px;">你可以前往陪练室完成一次作答，或在首页点击「免费开始 3 分钟实战演练」。</p>
         <button id="btn-back-bank" class="btn btn-primary" type="button">返回题库首页</button>
       </div>
     `;
@@ -33,10 +51,16 @@ export function renderReviewScreen(root) {
         <div style="font-size:13px;color:var(--text-secondary);">题目：${escapeHtml(question.title)}</div>
       </div>
       <div style="display:flex;gap:8px;flex-wrap:wrap;">
-        <button id="btn-mark-weakness" class="btn btn-danger btn-sm" type="button">📌 标记薄弱点并加入「优先复习」</button>
+        <button id="btn-mark-weakness" class="btn btn-danger btn-sm" type="button">📌 存入我的弹药库（本地）</button>
         <button id="btn-retry-coach" class="btn btn-sm" type="button">再练一题 →</button>
       </div>
     </div>
+
+    <!-- 答题时长与语速雷达：面试里"讲 45 秒"和"讲 5 分钟"完全不同 -->
+    <div id="speech-metrics-box" style="margin-bottom:16px;" hidden></div>
+
+    <!-- 复盘盲区 → 专项追问（写完会给出跳转按钮） -->
+    <div id="special-questions-box" class="card" style="margin-bottom:16px;display:none;" hidden></div>
 
     ${degraded ? `
       <div class="card" style="background:var(--amber-soft);border-color:#fedf89;margin-bottom:16px;padding:10px 14px;font-size:13px;color:var(--amber);">
@@ -140,6 +164,40 @@ export function renderReviewScreen(root) {
   // 三、AI 观点层（数据来自陪练室提交时 /api/coach/parse 的返回）
   renderLlmLayer(wrapper, report);
 
+  // 答题时长与语速雷达
+  (() => {
+    const box = wrapper.querySelector('#speech-metrics-box');
+    const m = report.speechMetrics;
+    if (!box || !m) return;
+    box.hidden = false;
+    const hasDuration = Number(m.durationSec) > 0;
+    const paceTone = m.pace === '适中' ? 'var(--green)' : m.pace === '偏快' ? 'var(--amber)' : 'var(--primary)';
+    box.innerHTML = `
+      <div class="card" style="display:flex;gap:14px;align-items:center;flex-wrap:wrap;">
+        <div style="min-width:190px;">
+          <div style="font-size:12px;color:var(--text-muted);margin-bottom:2px;">${hasDuration ? '表达节奏' : '篇幅自检'}</div>
+          <div style="font-size:16px;font-weight:700;">${escapeHtml(hasDuration ? m.verdict || '' : `${m.charCount || 0} 字`)}</div>
+          ${
+            hasDuration
+              ? ''
+              : `<div style="font-size:11.5px;color:var(--text-muted);margin-top:2px;">这次是文字作答，没有录音时长可比</div>`
+          }
+        </div>
+        <div style="flex:1;min-width:220px;">
+          ${
+            hasDuration
+              ? `<div style="height:8px;border-radius:999px;background:var(--border);overflow:hidden;">
+                   <div style="height:100%;width:${Math.max(2, Math.min(100, Math.round((Number(m.cpm) || 0) / 4)))}%;background:${paceTone};"></div>
+                 </div>`
+              : ''
+          }
+          <div style="font-size:12.5px;color:var(--text-secondary);margin-top:6px;line-height:1.7;">${escapeHtml(
+            hasDuration ? m.suggestion || '' : String(m.suggestion || '').split('；')[0]
+          )}</div>
+        </div>
+      </div>`;
+  })();
+
   // 渲染诊断列表
   const findingsList = wrapper.querySelector('#findings-list');
   if (!ruleFindings.length) {
@@ -162,6 +220,9 @@ export function renderReviewScreen(root) {
             <span style="background:#fff3c4;padding:1px 5px;border-radius:3px;">“${escapeHtml(f.quote)}”</span>
           </div>
           <div><strong>改进建议：</strong>${escapeHtml(f.suggestion)}</div>
+          <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap;">
+            <button type="button" class="btn btn-sm btn-special" data-rule="${escapeHtml(f.ruleName)}">生成专项追问（加入答辩预测）→</button>
+          </div>
         </div>
       `;
       item.querySelector('.finding-header').addEventListener('click', () => {
@@ -172,6 +233,63 @@ export function renderReviewScreen(root) {
       findingsList.appendChild(item);
     });
   }
+
+  // ---- 复盘盲区 → 答辩预测：把"没讲透的地方"变成专项刁钻追问 ----
+  const specialBox = wrapper.querySelector('#special-questions-box');
+  wrapper.querySelectorAll('.btn-special').forEach((btn) => {
+    btn.addEventListener('click', async () => {
+      const ruleName = btn.dataset.rule || '薄弱点';
+      btn.disabled = true;
+      const origin = btn.textContent;
+      btn.textContent = '生成中…';
+      try {
+        const res = await fetch('/api/defense/special-questions', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            questionTitle: question.title,
+            attribution: `${ruleName}：${findingsForRule(ruleName).suggestion || ''}`,
+            answerSnippet: String(report.answer || '').slice(0, 1500),
+            track: question.track || '',
+          }),
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data?.error?.message || '生成失败');
+        const questions = data.questions || [];
+        await dbPut('specialQuestions', {
+          id: 'sq-' + Date.now(),
+          source: 'review',
+          questionId: question.id,
+          questionTitle: question.title,
+          ruleName,
+          questions,
+          createdAt: new Date().toISOString(),
+        });
+        if (specialBox) {
+          specialBox.hidden = false;
+          specialBox.innerHTML = `
+            <div style="font-size:13px;font-weight:600;margin-bottom:6px;">已生成 ${questions.length} 条专项追问，已放入「答辩预测」</div>
+            ${questions
+              .map(
+                (q, i) =>
+                  `<div style="font-size:12.5px;margin-bottom:4px;">Q${i + 1}（${escapeHtml(q.severity || '中')}）：${escapeHtml(q.q)}</div>`
+              )
+              .join('')}
+            <button type="button" class="btn btn-primary btn-sm" id="btn-goto-defense" style="margin-top:8px;">去答辩预测预演 →</button>
+          `;
+          specialBox.querySelector('#btn-goto-defense')?.addEventListener('click', () => navigate('/defense'));
+        }
+        showToast(`已生成 ${questions.length} 条专项追问（来自「${ruleName}」）`);
+      } catch (err) {
+        showToast(err.message, 'error', 5000);
+      } finally {
+        btn.disabled = false;
+        btn.textContent = origin;
+      }
+    });
+  });
+
+  const findingsForRule = (ruleName) => ruleFindings.find((f) => f.ruleName === ruleName) || {};
 
   // M11 回流：标记薄弱点 -> 弹药库「优先复习」置顶
   wrapper.querySelector('#btn-mark-weakness').addEventListener('click', async () => {
@@ -188,9 +306,44 @@ export function renderReviewScreen(root) {
       createdAt: new Date().toISOString()
     };
     await dbPut('weaknesses', weakness);
+
+    // 顺手把这次作答提炼成结构化闪卡（30 秒结论 + 支撑论据 + 防杠话术），存到弹药库
+    let flashcardMsg = '';
+    try {
+      const mod = await import('../lib/flashcards.js');
+      const card = mod.buildFlashcard({ report, question, answer: report.answer });
+      await dbPut('flashcards', card);
+      flashcardMsg = '，并已提炼成一张话术闪卡';
+    } catch (err) {
+      console.warn('[review] 闪卡提炼跳过：', err?.message || err);
+    }
+
     await refreshLocalCollections();
-    showToast(`已入库并置顶至「弹药库台账 · 优先复习」（当前共 ${existing.length + 1} 项）`);
+    showToast(`已安全存入本地浏览器：薄弱点已置顶至「弹药库」（当前共 ${existing.length + 1} 项）${flashcardMsg}`);
+
+    // 首次入库的气泡：告诉用户数据在哪、怎么备份
+    if (!localStorage.getItem('zhimian.ammo.hintShown')) {
+      localStorage.setItem('zhimian.ammo.hintShown', '1');
+      showAmmoHint();
+    }
   });
+
+  /** 首次入库提示：本地存储 + 定期导出 JSON 备份 */
+  const showAmmoHint = () => {
+    const tip = document.createElement('div');
+    tip.id = 'ammo-hint';
+    tip.style.cssText =
+      'position:fixed;top:64px;right:20px;z-index:999;max-width:320px;border:1px solid var(--primary);background:var(--surface);border-radius:10px;padding:12px 14px;font-size:12.5px;line-height:1.7;box-shadow:0 8px 24px rgba(0,0,0,.12);';
+    tip.innerHTML = `
+      <strong style="display:block;margin-bottom:4px;">已安全存入本地浏览器</strong>
+      所有录音、转写稿与话术都不经过服务器，只存在你这台设备的 IndexedDB 里。
+      <div style="color:var(--text-muted);margin-top:6px;">建议定期在「弹药库」页一键导出 JSON 备份，避免清缓存后丢失。</div>
+      <button type="button" class="btn btn-ghost btn-sm" id="ammo-hint-close" style="margin-top:8px;">知道了</button>
+    `;
+    document.body.appendChild(tip);
+    tip.querySelector('#ammo-hint-close').addEventListener('click', () => tip.remove());
+    setTimeout(() => tip.remove(), 12000);
+  };
 
   wrapper.querySelector('#btn-retry-coach').addEventListener('click', () => navigate('/coach'));
 }

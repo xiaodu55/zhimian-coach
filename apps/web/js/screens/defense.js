@@ -1,7 +1,7 @@
 import { state } from '../state.js';
 import { escapeHtml } from '../ui/citation.js';
 import { showToast } from '../ui/toast.js';
-import { dbPut } from '../db.js';
+import { dbPut, dbGetAll } from '../db.js';
 import { chunkDocumentText } from '../retrieval/chunk.js';
 import { createModal, modalButton } from '../ui/modal.js';
 import { runReview } from '../lib/review.js';
@@ -65,6 +65,14 @@ export function renderDefenseScreen(root) {
               上传材料后自动检索知乎上关于这个主题的质疑 / 对比 / 踩坑讨论。
             </div>
           </div>
+        </section>
+
+        <section id="special-questions-card" class="card" hidden style="border-color:var(--primary);">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;gap:8px;">
+            <h3 style="margin:0;font-size:15px;">🎯 来自复盘盲点的专项追问</h3>
+            <span class="tag tag-green" id="special-from-label"></span>
+          </div>
+          <div id="special-questions-list" style="display:flex;flex-direction:column;gap:10px;"></div>
         </section>
 
         <section id="defense-risks-card" class="card" hidden>
@@ -538,6 +546,59 @@ export function renderDefenseScreen(root) {
     a.click();
     URL.revokeObjectURL(url);
   });
+
+  // ---- 读取复盘台生成的专项追问（跨页上下文不断层） ----
+  const loadSpecialQuestions = async () => {
+    const card = wrapper.querySelector('#special-questions-card');
+    const list = wrapper.querySelector('#special-questions-list');
+    let all = [];
+    try {
+      all = await dbGetAll('specialQuestions').catch(() => []);
+    } catch {
+      all = [];
+    }
+    if (!all.length) {
+      card.hidden = true;
+      return;
+    }
+    const latest = all.sort((a, b) => String(b.createdAt || '').localeCompare(String(a.createdAt || '')))[0];
+    const items = latest.questions || [];
+    if (!items.length) {
+      card.hidden = true;
+      return;
+    }
+    card.hidden = false;
+    wrapper.querySelector('#special-from-label').textContent = latest.ruleName || '复盘盲区';
+    list.innerHTML = '';
+    items.forEach((q, i) => {
+      const el = document.createElement('div');
+      el.style.cssText = 'padding:10px;border:1px solid var(--border);border-radius:8px;';
+      el.innerHTML = `
+        <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-bottom:4px;">
+          <span class="tag ${q.severity === '高' ? 'tag-red' : q.severity === '低' ? 'tag-green' : 'tag-amber'}">${escapeHtml(q.severity || '中')}危</span>
+          <span style="font-size:11px;color:var(--text-muted);">${escapeHtml(latest.questionTitle || '')}</span>
+        </div>
+        <div style="font-weight:600;font-size:14px;margin-bottom:4px;">S${i + 1}. ${escapeHtml(q.q)}</div>
+        <div style="font-size:12px;color:var(--amber);margin-bottom:6px;">这一问在验证：${escapeHtml(q.why || '')}</div>
+      `;
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'btn btn-primary btn-sm';
+      btn.textContent = '预演这一题 →';
+      btn.addEventListener('click', () =>
+        openRehearse({
+          q: q.q,
+          why: q.why || '',
+          severity: q.severity || '中',
+          locator: latest.questionTitle || '',
+          zhihuRef: null,
+        })
+      );
+      el.appendChild(btn);
+      list.appendChild(el);
+    });
+  };
+  loadSpecialQuestions();
 
   // 复用讲解室已解析的文档（同一台机器不必重复上传）
   if (state.activeDocument?.segments?.length) {
