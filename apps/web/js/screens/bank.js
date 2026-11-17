@@ -88,13 +88,21 @@ export function renderBankScreen(root) {
         <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between;">
           <div id="track-filters" style="display:flex;gap:6px;flex-wrap:wrap;"></div>
           <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
-            <select id="bank-difficulty-filter" class="select" style="width:auto;padding:4px 8px;font-size:12px;">
+            <select id="bank-category-filter" class="select" style="width:auto;padding:4px 8px;font-size:12px;" title="按类别筛选">
+              <option value="">全部类别</option>
+            </select>
+            <select id="bank-difficulty-filter" class="select" style="width:auto;padding:4px 8px;font-size:12px;" title="按难度筛选">
               <option value="">全部难度</option>
               <option value="基础">基础</option>
               <option value="进阶">进阶</option>
               <option value="难">难</option>
             </select>
-            <div style="min-width:220px;flex:1;max-width:320px;">
+            <select id="bank-pagesize-filter" class="select" style="width:auto;padding:4px 8px;font-size:12px;" title="每页显示条数">
+              <option value="12">每页 12 条</option>
+              <option value="24">每页 24 条</option>
+              <option value="48">每页 48 条</option>
+            </select>
+            <div style="min-width:200px;flex:1;max-width:300px;">
               <input id="bank-search-input" class="input" type="search" placeholder="搜索真题、考点词或知乎观点…" />
             </div>
           </div>
@@ -140,6 +148,7 @@ export function renderBankScreen(root) {
     </div>
 
     <div id="bank-list" class="grid-2"></div>
+    <div id="bank-pager" style="display:flex;justify-content:center;align-items:center;gap:8px;flex-wrap:wrap;margin:18px 0 4px;"></div>
   `;
   root.appendChild(wrapper);
 
@@ -389,7 +398,25 @@ export function renderBankScreen(root) {
   const listBox = wrapper.querySelector('#bank-list');
   const searchInput = wrapper.querySelector('#bank-search-input');
   const difficultySelect = wrapper.querySelector('#bank-difficulty-filter');
+  const categorySelect = wrapper.querySelector('#bank-category-filter');
+  const pageSizeSelect = wrapper.querySelector('#bank-pagesize-filter');
+  const pagerBox = wrapper.querySelector('#bank-pager');
   const domainNote = wrapper.querySelector('#bank-domain-note');
+
+  // 分页：一屏最多 12 张卡，剩下的翻页看（题库 50+ 道，不翻页会滑很长）
+  let page = 1;
+  let pageSize = 12;
+  const resetPage = () => {
+    page = 1;
+  };
+
+  // 类别 = 题库自带的 track（面试通用 / 论文答辩…），与"方向"是两层筛选
+  const categories = [...new Set(state.bank.map((q) => q.track).filter(Boolean))];
+  if (categorySelect) {
+    categorySelect.innerHTML =
+      '<option value="">全部类别</option>' +
+      categories.map((c) => `<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`).join('');
+  }
 
   // 领域维度：题库的 track 只有两档，用关键词映射出真正能筛的方向
   const DOMAINS = [
@@ -581,6 +608,7 @@ export function renderBankScreen(root) {
       btn.textContent = d.label;
       btn.addEventListener('click', () => {
         selectedDomain = d.key;
+        resetPage();
         renderTracks();
         renderList();
       });
@@ -588,29 +616,93 @@ export function renderBankScreen(root) {
     });
   };
 
+  /** 分页器：上一页 / 页码 / 下一页 + 当前范围 */
+  const renderPager = (totalCount) => {
+    if (!pagerBox) return;
+    pagerBox.innerHTML = '';
+    const totalPages = Math.max(1, Math.ceil(totalCount / pageSize));
+    if (page > totalPages) page = totalPages;
+    if (totalCount <= pageSize) return; // 一页放得下就不显示分页
+
+    const mkBtn = (label, target, opts = {}) => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.className = `btn btn-sm ${opts.active ? 'btn-primary' : ''}`.trim();
+      b.textContent = label;
+      if (opts.disabled) b.disabled = true;
+      if (!opts.disabled && !opts.active) {
+        b.addEventListener('click', () => {
+          page = target;
+          renderList();
+          listBox.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+      }
+      return b;
+    };
+
+    pagerBox.appendChild(mkBtn('‹ 上一页', page - 1, { disabled: page <= 1 }));
+
+    // 页码：当前页附近 5 个（首尾始终可达）
+    const nums = new Set([1, totalPages]);
+    for (let i = page - 2; i <= page + 2; i++) if (i >= 1 && i <= totalPages) nums.add(i);
+    const sorted = [...nums].sort((a, b) => a - b);
+    let prev = 0;
+    for (const n of sorted) {
+      if (prev && n - prev > 1) {
+        const gap = document.createElement('span');
+        gap.textContent = '…';
+        gap.style.cssText = 'font-size:12px;color:var(--text-muted);';
+        pagerBox.appendChild(gap);
+      }
+      pagerBox.appendChild(mkBtn(String(n), n, { active: n === page }));
+      prev = n;
+    }
+
+    pagerBox.appendChild(mkBtn('下一页 ›', page + 1, { disabled: page >= totalPages }));
+
+    const info = document.createElement('span');
+    info.style.cssText = 'font-size:12px;color:var(--text-muted);margin-left:6px;';
+    const from = (page - 1) * pageSize + 1;
+    const to = Math.min(totalCount, page * pageSize);
+    info.textContent = `第 ${page}/${totalPages} 页 · 显示 ${from}–${to} 条（共 ${totalCount} 道）`;
+    pagerBox.appendChild(info);
+  };
+
   const renderList = () => {
     const diff = difficultySelect?.value || '';
+    const category = categorySelect?.value || '';
     const filtered = state.bank.filter((q) => {
       const kw = keyword.trim().toLowerCase();
       const matchKw = !kw || q.title.toLowerCase().includes(kw) || q.context.toLowerCase().includes(kw);
       const domain = DOMAINS.find((d) => d.key === selectedDomain);
       const matchDomain = !domain || domain.match.test(`${q.title} ${q.context} ${(q.keywords || []).join(' ')} ${q.track}`);
       const matchDiff = !diff || q.difficulty === diff;
-      return matchKw && matchDomain && matchDiff;
+      const matchCategory = !category || q.track === category;
+      return matchKw && matchDomain && matchDiff && matchCategory;
     });
+
+    const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
+    if (page > totalPages) page = totalPages;
 
     if (domainNote) {
       const total = state.bank.length;
-      domainNote.textContent = `共 ${total} 道知乎高频真题 · 当前筛出 ${filtered.length} 道 · 每题都带知乎观点卡对照（来源可点开核对）`;
+      domainNote.textContent =
+        `共 ${total} 道知乎高频真题 · 当前筛出 ${filtered.length} 道` +
+        (filtered.length > pageSize ? `（第 ${page}/${totalPages} 页）` : '') +
+        ' · 每题都带知乎观点卡对照（来源可点开核对）';
     }
 
     if (!filtered.length) {
       listBox.innerHTML = `<div class="card" style="grid-column:1/-1;text-align:center;color:var(--text-muted);">未找到匹配的真题，请尝试清空筛选条件。</div>`;
+      renderPager(0);
       return;
     }
 
+    // 只渲染当前页，避免 50+ 张卡全塞进 DOM 导致页面很长
+    const pageItems = filtered.slice((page - 1) * pageSize, page * pageSize);
+
     listBox.innerHTML = '';
-    filtered.forEach((q) => {
+    pageItems.forEach((q) => {
       const card = document.createElement('article');
       card.className = 'card';
       card.style.display = 'flex';
@@ -670,13 +762,28 @@ export function renderBankScreen(root) {
       card.querySelector('.btn-start-coach').addEventListener('click', () => openLogicCard(q));
       listBox.appendChild(card);
     });
+
+    renderPager(filtered.length);
   };
 
   searchInput.addEventListener('input', (e) => {
     keyword = e.target.value;
+    resetPage();
     renderList();
   });
-  difficultySelect?.addEventListener('change', () => renderList());
+  difficultySelect?.addEventListener('change', () => {
+    resetPage();
+    renderList();
+  });
+  categorySelect?.addEventListener('change', () => {
+    resetPage();
+    renderList();
+  });
+  pageSizeSelect?.addEventListener('change', () => {
+    pageSize = Number(pageSizeSelect.value) || 12;
+    resetPage();
+    renderList();
+  });
 
   renderTracks();
   renderList();
@@ -684,6 +791,10 @@ export function renderBankScreen(root) {
   showOnboarding();
 
   // 底部"下一步"主行动条：选中题 → 去拆逻辑
+  // 吸底条会盖住最后一行，补一块等高留白，避免分页器被压在条下面点不到
+  const barSpacer = document.createElement('div');
+  barSpacer.style.cssText = 'height:72px;';
+  root.appendChild(barSpacer);
   mountNextStepBar(root, {
     text: '下一步：去拆逻辑（30 秒看框架）',
     hint: '先看清这题的考察意图与 3 个核心得分点，再开口说 —— 避免一上来就对着空白麦克风卡壳。',
