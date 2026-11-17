@@ -53,6 +53,7 @@ export function renderExplainScreen(root) {
         <div id="framework-question" style="font-size:14px;font-weight:600;line-height:1.6;margin-bottom:10px;"></div>
         <ol id="framework-steps" style="margin:0 0 10px;padding-left:20px;font-size:13px;line-height:1.9;color:var(--text-secondary);"></ol>
         <div id="framework-cautions" style="font-size:12.5px;color:var(--amber);line-height:1.8;"></div>
+        <div id="framework-sources" style="font-size:12.5px;line-height:1.8;margin-top:8px;"></div>
         <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;">
           <button id="btn-framework-practice" class="btn btn-primary btn-sm" type="button">框架记住了，进入模拟练 →</button>
           <button id="btn-framework-doc" class="btn btn-ghost btn-sm" type="button">改看长文档 / 视频拆解</button>
@@ -166,6 +167,18 @@ export function renderExplainScreen(root) {
       .join('');
     wrapper.querySelector('#framework-cautions').innerHTML = cautions.length
       ? '避开：' + cautions.map((c) => escapeHtml(c.replace(/^注意避开[：:]\s*/, ''))).join('；')
+      : '';
+
+    // 这道题的评分基准来自知乎原答：给出可直接点开的链接
+    const sources = (q.viewpointCards || []).filter((c) => c.sourceUrl).slice(0, 3);
+    wrapper.querySelector('#framework-sources').innerHTML = sources.length
+      ? '<span style="color:var(--text-muted);">知乎高赞原答：</span>' +
+        sources
+          .map(
+            (c, i) =>
+              `<a href="${escapeHtml(c.sourceUrl)}" target="_blank" rel="noopener noreferrer" style="color:var(--primary);margin-right:10px;">看原答 ${i + 1} ↗</a>`
+          )
+          .join('')
       : '';
 
     // 默认只显示框架，文档区收起（用户要看长文档再自己展开）

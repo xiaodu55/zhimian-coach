@@ -223,7 +223,23 @@ export function renderBankScreen(root) {
       }
       ${
         q.viewpointCards?.length
-          ? `<div style="font-size:12px;color:var(--text-muted);">这一题的评分基准来自 ${q.viewpointCards.length} 张知乎观点卡，作答时会逐句对照。</div>`
+          ? `<div style="font-size:12px;color:var(--text-muted);margin-bottom:6px;">这一题的评分基准来自 ${q.viewpointCards.length} 张知乎观点卡，作答时会逐句对照。</div>
+             <div style="display:flex;flex-direction:column;gap:6px;">
+               ${(q.viewpointCards || [])
+                 .slice(0, 2)
+                 .map(
+                   (vc, i) => `<div style="font-size:12.5px;line-height:1.6;">
+                      <span class="tag ${vc.stance && vc.stance.includes('主流') ? 'tag-blue' : 'tag-amber'}" style="margin-right:6px;">${escapeHtml(vc.stance || '观点')}</span>
+                      ${escapeHtml(String(vc.summary || '').slice(0, 46))}…
+                      ${
+                        vc.sourceUrl
+                          ? `<a href="${escapeHtml(vc.sourceUrl)}" target="_blank" rel="noopener noreferrer" style="color:var(--primary);white-space:nowrap;">看原答 ${i + 1} ↗</a>`
+                          : ''
+                      }
+                    </div>`
+                 )
+                 .join('')}
+             </div>`
           : ''
       }
     `;
@@ -612,9 +628,16 @@ export function renderBankScreen(root) {
           <h3 style="margin:0 0 8px;font-size:16px;line-height:1.5;">${escapeHtml(q.title)}</h3>
           ${
             vp
-              ? `<div class="card-quote" style="font-size:12.5px;color:var(--text-secondary);line-height:1.7;padding-left:8px;border-left:2px solid var(--border);">
-                   知乎高赞观点摘要：${escapeHtml(String(vp.summary || '').slice(0, 58))}…
-                 </div>`
+              ? vp.sourceUrl
+                ? `<a class="card-quote" href="${escapeHtml(vp.sourceUrl)}" target="_blank" rel="noopener noreferrer"
+                      style="display:block;font-size:12.5px;color:var(--text-secondary);line-height:1.7;padding-left:8px;border-left:2px solid var(--border);text-decoration:none;"
+                      title="点击打开这条知乎原答">
+                     知乎高赞观点摘要：${escapeHtml(String(vp.summary || '').slice(0, 58))}…
+                     <span style="color:var(--primary);white-space:nowrap;">看原答 ↗</span>
+                   </a>`
+                : `<div class="card-quote" style="font-size:12.5px;color:var(--text-secondary);line-height:1.7;padding-left:8px;border-left:2px solid var(--border);">
+                     知乎高赞观点摘要：${escapeHtml(String(vp.summary || '').slice(0, 58))}…
+                   </div>`
               : `<div style="font-size:12.5px;color:var(--text-muted);">观点卡待补</div>`
           }
           <details class="card-more" style="margin-top:8px;">
@@ -625,6 +648,18 @@ export function renderBankScreen(root) {
               <div style="color:var(--text-muted);">知乎来源：${q.viewpointCards?.length || 0} 张观点卡${
                 vp?.popularity ? ' · ' + escapeHtml(vp.popularity) : ''
               }${vp?.upvotes ? ' · ' + vp.upvotes + ' 赞同' : ''}</div>
+              ${
+                (q.viewpointCards || []).some((c) => c.sourceUrl)
+                  ? `<div style="margin-top:4px;display:flex;flex-wrap:wrap;gap:10px;">${(q.viewpointCards || [])
+                      .filter((c) => c.sourceUrl)
+                      .slice(0, 3)
+                      .map(
+                        (c, i) =>
+                          `<a href="${escapeHtml(c.sourceUrl)}" target="_blank" rel="noopener noreferrer" style="font-size:12px;color:var(--primary);">看知乎原答 ${i + 1} ↗</a>`
+                      )
+                      .join('')}</div>`
+                  : ''
+              }
             </div>
           </details>
         </div>
