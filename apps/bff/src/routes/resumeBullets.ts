@@ -47,7 +47,8 @@ resumeBulletRoutes.post('/resume/questions-from-bullets', async (c) => {
     const raw = await callStructuredLlm<{ questions?: Array<Record<string, unknown>> }>(
       RESUME_BULLET_QUESTIONS_PROMPT,
       prompt,
-      90_000
+      // 45s：超时就走本地兜底模板题，别让用户盯着空窗等一分钟
+      45_000
     );
     candidates = (raw.questions || [])
       .map((q, i) => {

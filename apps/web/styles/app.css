@@ -610,8 +610,10 @@ a:hover {
   font-size: 11px;
   color: var(--text-muted);
   font-variant-numeric: tabular-nums;
-  padding-top: 2px;
-  min-width: 46px;
+  padding-top: 3px;
+  min-width: 22px;
+  text-align: right;
 }
+.bullet-row.selected .bullet-loc { color: var(--primary); font-weight: 700; }
 .bullet-text { flex: 1; color: var(--text-secondary); }
 .bullet-row.selected .bullet-text { color: var(--text); font-weight: 600; }

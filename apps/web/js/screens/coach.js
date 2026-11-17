@@ -280,7 +280,7 @@ export function renderCoachScreen(root) {
     wrapper.querySelector('#bullet-locator').textContent = '定位 ' + (question.locator || '—');
     wrapper.querySelector('#bullet-context-text').textContent = question.title;
     wrapper.querySelector('#btn-bullet-candidates').addEventListener('click', () => {
-      openCandidateModal({ bullets: [activeBullet], record: resumeRecord });
+      openCandidateModal({ bullets: [activeBullet], record: resumeRecord, title: '可能被问到的题 · 按被问概率排序' });
     });
     renderBulletKnowledge();
     if (!bulletKnowledge.length) loadBulletKnowledge(activeBullet);
@@ -511,10 +511,10 @@ export function renderCoachScreen(root) {
     const list = document.createElement('div');
     list.id = 'resume-bullets';
     list.style.cssText = 'display:flex;flex-direction:column;gap:2px;max-height:360px;overflow:auto;margin-top:6px;';
-    bullets.forEach((b) => {
+    bullets.forEach((b, bi) => {
       const row = document.createElement('div');
       row.className = 'bullet-row' + (activeBullet && activeBullet.text === b.text ? ' selected' : '');
-      row.title = b.parentQ || '';
+      row.title = `第 ${bi + 1} 条 · 定位 ${b.locator || '—'}`;
 
       const cb = document.createElement('input');
       cb.type = 'checkbox';
@@ -530,7 +530,7 @@ export function renderCoachScreen(root) {
 
       const loc = document.createElement('span');
       loc.className = 'bullet-loc';
-      loc.textContent = b.locator || '';
+      loc.textContent = String(bi + 1);
       const txt = document.createElement('span');
       txt.className = 'bullet-text';
       txt.textContent = b.text;
@@ -601,7 +601,7 @@ export function renderCoachScreen(root) {
     };
     root.innerHTML = '';
     renderCoachScreen(root);
-    openCandidateModal({ bullets: [b], record: resumeRecord });
+    openCandidateModal({ bullets: [b], record: resumeRecord, title: '可能被问到的题 · 按被问概率排序' });
   }
 
   /** 检索该要点相关的知乎面经（右侧"检索到的知识"） */
@@ -660,39 +660,33 @@ export function renderCoachScreen(root) {
       subtitle: '按"被问到的概率"从高到低排序；点「练习」在弹窗里直接作答',
       width: 780,
     });
-    const loading = document.createElement('div');
-    loading.style.cssText = 'font-size:13px;color:var(--text-muted);';
-    loading.textContent = '正在按要点生成候选题并估算被问概率…';
-    modal.body.appendChild(loading);
+    const closeBtn = modalButton('关闭', { ghost: true, onClick: () => modal.close() });
+    modal.footer.appendChild(closeBtn);
 
-    let candidates = [];
-    try {
-      const res = await fetch('/api/resume/questions-from-bullets', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          bullets: list.map((b) => ({ bullet: b.text, question: b.parentQ || '' })),
-          resumeContext: JSON.stringify({
-            画像: record?.profile?.headline || '',
-            技能: (record?.profile?.skills || []).slice(0, 12),
-            项目: (record?.profile?.projects || []).map((p) => ({
-              名称: p.name,
-              角色: p.role,
-              主张: (p.claims || []).map((x) => x.text).slice(0, 4),
-            })),
-          }),
-        }),
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data?.error?.message || '生成候选题失败');
-      candidates = data.candidates || [];
-    } catch (err) {
-      loading.innerHTML = `<span style="color:var(--amber)">候选题生成失败：${escapeHtml(err.message)}</span>`;
-      return;
-    }
+    const notice = document.createElement('div');
+    notice.style.cssText = 'font-size:12.5px;color:var(--text-muted);margin-bottom:8px;';
+    const startedAt = Date.now();
+    const tick = setInterval(() => {
+      notice.textContent = `正在按要点生成候选题并估算被问概率…（${Math.round((Date.now() - startedAt) / 1000)}s）`;
+    }, 1000);
+    modal.body.appendChild(notice);
 
-    modal.body.innerHTML = '';
-    candidates.forEach((c, i) => {
+    // 先用本地模板兜底把窗口填满，模型结果到了再替换 —— 窗口永远不是空的
+    const templateCandidates = list.flatMap((b) => [
+      {
+        id: 'tpl-1',
+        bullet: b.text,
+        q: `请具体讲讲「${String(b.text || '').slice(0, 34)}」：你的角色、一个可核对的数字、以及一次取舍。`,
+        why: '按要点直接追问（模板题，模型结果生成后会自动替换）',
+        focus: '项目深挖',
+        difficulty: '进阶',
+        prob: 60,
+      },
+    ]);
+    const renderCandidates = (candidates, { pending = false } = {}) => {
+      modal.body.innerHTML = '';
+      if (pending) modal.body.appendChild(notice);
+      candidates.forEach((c, i) => {
       const prob = Math.max(0, Math.min(100, Number(c.prob) || 0));
       const tone = prob >= 75 ? 'var(--red)' : prob >= 50 ? 'var(--amber)' : 'var(--green)';
       const item = document.createElement('div');
@@ -718,16 +712,50 @@ export function renderCoachScreen(root) {
       });
       item.appendChild(btn);
       modal.body.appendChild(item);
-    });
+      });
+    };
+
+    renderCandidates(templateCandidates, { pending: true });
+
+    let candidates = [];
+    try {
+      const ctrl = new AbortController();
+      const timer = setTimeout(() => ctrl.abort(), 70000);
+      const res = await fetch('/api/resume/questions-from-bullets', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          bullets: list.map((b) => ({ bullet: b.text, question: b.parentQ || '' })),
+          resumeContext: JSON.stringify({
+            画像: record?.profile?.headline || '',
+            技能: (record?.profile?.skills || []).slice(0, 12),
+            项目: (record?.profile?.projects || []).map((p) => ({
+              名称: p.name,
+              角色: p.role,
+              主张: (p.claims || []).map((x) => x.text).slice(0, 4),
+            })),
+          }),
+        }),
+        signal: ctrl.signal,
+      });
+      clearTimeout(timer);
+      const data = await res.json();
+      if (!res.ok) throw new Error(data?.error?.message || '生成候选题失败');
+      candidates = data.candidates || [];
+    } catch (err) {
+      clearInterval(tick);
+      notice.textContent = `模型生成失败（${err.message}）：下面是按要点直接生成的模板题，可以先练着。`;
+      notice.style.color = 'var(--amber)';
+      return;
+    }
+    clearInterval(tick);
 
     if (!candidates.length) {
-      const empty = document.createElement('div');
-      empty.style.cssText = 'font-size:13px;color:var(--text-muted);';
-      empty.textContent = '这次没生成候选题，可以在左侧要点列表里换一条再试。';
-      modal.body.appendChild(empty);
+      notice.textContent = '模型这次没给出候选题，下面是按要点直接生成的模板题。';
+      notice.style.color = 'var(--amber)';
+      return;
     }
-    const closeBtn = modalButton('关闭', { ghost: true, onClick: () => modal.close() });
-    modal.footer.appendChild(closeBtn);
+    renderCandidates(candidates);
   }
 
   /** 练习小窗：题面 + 要点 + 检索到的知识 + 作答 + 复盘 */
