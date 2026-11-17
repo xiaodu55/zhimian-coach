@@ -1,4 +1,4 @@
-import { dbGetAll } from './db.js';
+import { dbGetAll, dbPut, dbGet } from './db.js';
 
 export const state = {
   health: {
@@ -50,22 +50,76 @@ export function setDegraded(reason) {
 
 const RESUME_KEY = 'zhimian.resume.analysis';
 
+/**
+ * 保存简历解析结果。
+ * 落盘顺序：IndexedDB（永久，跨会话）→ sessionStorage（快速读取）→ 内存。
+ * 练习状态（哪题练过、哪些 bullet 已覆盖）也写回同一条记录，刷新不丢。
+ */
 export function saveResumeAnalysis(data) {
   state.resumeAnalysis = data;
+  const record = {
+    id: data?.id || 'ra_' + Date.now().toString(36),
+    filename: data?.filename || '',
+    createdAt: data?.createdAt || new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    profile: data?.profile || null,
+    questions: (data?.questions || []).map((q) => ({
+      id: q.id,
+      q: q.q,
+      why: q.why,
+      focus: q.focus,
+      difficulty: q.difficulty,
+      locator: q.locator,
+      bullets: q.bullets || [],
+      sources: q.sources || [],
+      viewpointCards: q.viewpointCards || [],
+      practiced: Boolean(q.practiced),
+      coveredBullets: q.coveredBullets || [],
+    })),
+  };
+
+  // 1) 先同步写 sessionStorage：立刻生效，不被 IndexedDB 的等待拖住
   try {
-    // 只留对照需要的字段，避免把整份题目塞进 sessionStorage
-    sessionStorage.setItem(
-      RESUME_KEY,
-      JSON.stringify({
-        filename: data?.filename || '',
-        profile: data?.profile || null,
-        questions: (data?.questions || []).map((q) => ({ id: q.id, q: q.q, locator: q.locator })),
-      })
-    );
+    sessionStorage.setItem(RESUME_KEY, JSON.stringify(record));
   } catch (err) {
     console.warn('简历上下文缓存失败', err);
   }
+
+  // 2) 再异步写 IndexedDB（跨会话持久）；被旧标签页阻塞时降级为"仅本次会话"
+  dbPut('resumeAnalyses', record)
+    .then(() => {
+      record.persisted = true;
+      notify();
+    })
+    .catch((err) => {
+      record.persisted = false;
+      console.warn('简历解析结果写入 IndexedDB 失败（已降级为会话内保存）', err);
+      notify();
+    });
+
   notify();
+  return record;
+}
+
+/** 更新单题状态（已练 / bullet 勾选），并回写 IndexedDB */
+export async function updateResumeQuestionState(questionId, patch) {
+  const current = state.resumeAnalysis;
+  if (!current) return null;
+  const questions = (current.questions || []).map((q) =>
+    q.id === questionId ? { ...q, ...patch } : q
+  );
+  return saveResumeAnalysis({ ...current, questions });
+}
+
+/** 历史简历列表（可切换） */
+export async function listResumeAnalyses() {
+  try {
+    const all = await dbGetAll('resumeAnalyses');
+    return (all || []).sort((a, b) => String(b.updatedAt || '').localeCompare(String(a.updatedAt || '')));
+  } catch (err) {
+    console.warn('简历历史读取失败', err);
+    return [];
+  }
 }
 
 export function loadResumeAnalysis() {
@@ -79,9 +133,43 @@ export function loadResumeAnalysis() {
   return state.resumeAnalysis;
 }
 
+/** 冷启动恢复：IndexedDB 里最近一份简历解析（不用每练一题就重新上传） */
+export async function restoreLatestResumeAnalysis() {
+  if (state.resumeAnalysis) return state.resumeAnalysis;
+  // 1) 先看会话缓存（同一标签页刷新仍在）
+  const fromSession = loadResumeAnalysis();
+  if (fromSession) {
+    notify();
+    return fromSession;
+  }
+  // 2) 再看 IndexedDB（跨会话/关标签页仍在）
+  const list = await Promise.race([
+    listResumeAnalyses(),
+    new Promise((resolve) => setTimeout(() => resolve([]), 2000)),
+  ]);
+  if (!list.length) return null;
+  const latest = list[0];
+  state.resumeAnalysis = latest;
+  try {
+    sessionStorage.setItem(RESUME_KEY, JSON.stringify(latest));
+  } catch {
+    /* 忽略 */
+  }
+  notify();
+  return latest;
+}
+
 export async function refreshLocalCollections() {
-  state.weaknesses = await dbGetAll('weaknesses');
-  state.opportunities = await dbGetAll('opportunities');
+  // 本地库不可用时（升级被阻塞 / store 缺失）不能让首屏卡住：超时即用空列表继续
+  const withTimeout = (promise, fallback) =>
+    Promise.race([
+      promise,
+      new Promise((resolve) => setTimeout(() => resolve(fallback), 1500)),
+    ]);
+  [state.weaknesses, state.opportunities] = await withTimeout(
+    Promise.all([dbGetAll('weaknesses').catch(() => []), dbGetAll('opportunities').catch(() => [])]),
+    [[], []]
+  );
   const badge = document.getElementById('nav-review-badge');
   if (badge) {
     const pendingCount = state.weaknesses.filter((w) => w.status !== 'mastered').length;

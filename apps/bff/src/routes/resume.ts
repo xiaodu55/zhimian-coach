@@ -6,6 +6,18 @@ import { getCache, setCache, sha1Key } from '../lib/cache.js';
 
 export const resumeRoutes = new Hono();
 
+/** 模型没输出 bullets 时，从"为什么问"派生可勾选的覆盖点，保证每题都有 checklist */
+function fallbackBullets(why: string): string[] {
+  const parts = String(why || '')
+    .split(/[；;]|，(?=.{6,})/)
+    .map((s) => s.trim())
+    .filter((s) => s.length >= 6)
+    .slice(0, 3);
+  return parts.length
+    ? parts
+    : ['给出一个可核对的数字与口径', '讲清你的判断与取舍（为什么不是另一种做法）', '落到结果与边界条件'];
+}
+
 /** 只对"题目相关文本"做哈希：忽略空白差异，但保留定位符（同一份简历顺序变化也算不同） */
 function segmentsHash(segments: unknown): string {
   if (!Array.isArray(segments)) return '';
@@ -36,6 +48,7 @@ interface RawQuestion {
   focus?: string;
   locator?: string;
   difficulty?: string;
+  bullets?: string[];
 }
 
 interface ZhihuRef {
@@ -50,7 +63,8 @@ resumeRoutes.post('/resume/analyze', async (c) => {
   const filename = String(body?.filename || '简历').slice(0, 80);
   const force = Boolean(body?.force);
   // 同一份简历不重复花 40–50 秒：按内容哈希缓存（含文件名，避免同名不同内容互相覆盖）
-  const contentHash = sha1Key('resume', `${filename}::${segmentsHash(body?.segments)}`);
+  // v3：出题结构新增 bullets，缓存键随结构升版（v2 的旧缓存没有 bullets 字段）
+  const contentHash = sha1Key('resume-v3', `${filename}::${segmentsHash(body?.segments)}`);
   if (!force) {
     const hit = getCache<Record<string, unknown>>(contentHash);
     if (hit) {
@@ -110,7 +124,11 @@ resumeRoutes.post('/resume/analyze', async (c) => {
         why: String(q?.why || '').slice(0, 120),
         focus: String(q?.focus || '项目深挖').slice(0, 12),
         locator: String(q?.locator || '').trim(),
-        difficulty: ['基础', '进阶', '难'].includes(String(q?.difficulty)) ? String(q?.difficulty) : '进阶',
+        difficulty: ['基础', '进阶', '难'].includes(String(q?.difficulty)) ? String(q.difficulty) : '进阶',
+        bullets: (Array.isArray(q?.bullets) ? q.bullets : [])
+          .map((b: unknown) => String(b).trim().slice(0, 60))
+          .filter((b: string) => b.length >= 4)
+          .slice(0, 4),
         zhihuRef: null as ZhihuRef | null,
       }))
       .filter((q) => {
@@ -121,6 +139,10 @@ resumeRoutes.post('/resume/analyze', async (c) => {
         }
         return true;
       })
+      .map((q) => ({
+        ...q,
+        bullets: q.bullets.length ? q.bullets : fallbackBullets(q.why),
+      }))
       .slice(0, 10);
   } catch (err) {
     degraded = true;

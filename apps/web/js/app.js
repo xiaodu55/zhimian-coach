@@ -1,6 +1,6 @@
 import { registerRoute, initRouter } from './router.js';
 import { loadQuestionBank, checkBackendHealth, refreshLocalCollections, setDegraded } from './state.js';
-import { exportAllData, importAllData } from './db.js';
+import { exportAllData, importAllData, resetLocalData } from './db.js';
 import { initCitationModal } from './ui/citation.js';
 import { showToast } from './ui/toast.js';
 import { renderBankScreen } from './screens/bank.js';
@@ -42,6 +42,14 @@ async function bootstrap() {
     } catch (err) {
       showToast('导入失败：' + err.message, 'error');
     }
+  });
+
+  // 重置本地数据（本地库升级被旧标签页阻塞时，先清库再刷新）
+  document.getElementById('btn-reset-data')?.addEventListener('click', async () => {
+    if (!window.confirm('将清空本机 IndexedDB 里的录音、转写稿、薄弱点与简历解析记录（无法恢复），确定吗？')) return;
+    await resetLocalData();
+    showToast('本地数据已清空，正在刷新…');
+    setTimeout(() => location.reload(), 600);
   });
 
   // 注册 5 个核心页面路由
