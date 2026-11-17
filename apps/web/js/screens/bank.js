@@ -235,6 +235,7 @@ export function renderBankScreen(root) {
       primary: true,
       onClick: () => {
         state.activeQuestion = { ...q, ...extra, viewpointCards: q.viewpointCards || extra.viewpointCards || [] };
+        state.questionPickedByUser = true;
         modal.close();
         navigate('/coach');
       },
@@ -665,6 +666,7 @@ export function renderBankScreen(root) {
           const q = state.activeQuestion || state.bank[0];
           if (!q) return;
           state.activeQuestion = q;
+          state.questionPickedByUser = true;
           navigate('/coach');
         },
       },

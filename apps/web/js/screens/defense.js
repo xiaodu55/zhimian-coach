@@ -1,10 +1,13 @@
 import { state } from '../state.js';
+import { navigate } from '../router.js';
 import { escapeHtml } from '../ui/citation.js';
 import { showToast } from '../ui/toast.js';
 import { dbPut, dbGetAll } from '../db.js';
 import { chunkDocumentText } from '../retrieval/chunk.js';
 import { createModal, modalButton } from '../ui/modal.js';
 import { runReview } from '../lib/review.js';
+import { mountEmptyContextGuard } from '../lib/empty-guard.js';
+import { mountNextStepBar, createProgress } from '../lib/nextstep.js';
 
 /**
  * 答辩预测：上传答辩材料 → 评委高危追问预演 + 知乎相关讨论（可点进去看）。
@@ -32,6 +35,8 @@ export function renderDefenseScreen(root) {
     <div class="grid-2" style="align-items:start;">
       <!-- 左：材料分段 + 评委追问 -->
       <div style="display:flex;flex-direction:column;gap:14px;">
+        <div id="defense-context-guard"></div>
+
         <section class="card">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;gap:8px;">
             <strong id="defense-doc-title">📄 还没有上传答辩材料</strong>
@@ -436,6 +441,7 @@ export function renderDefenseScreen(root) {
     genBtn.disabled = true;
     const origin = genBtn.textContent;
     genBtn.textContent = '检索知乎 + 生成追问中…';
+    const progress = createProgress('正在检索知乎相关讨论…');
 
     let data = null;
     try {
@@ -446,7 +452,9 @@ export function renderDefenseScreen(root) {
       });
       data = await res.json();
       if (!res.ok) throw new Error(data?.error?.message || '生成失败');
+      progress.step('正在按材料生成评委追问…');
     } catch (err) {
+      progress.done();
       showToast(err.message, 'error', 5000);
       genBtn.disabled = false;
       genBtn.textContent = origin;
@@ -454,6 +462,7 @@ export function renderDefenseScreen(root) {
     } finally {
       genBtn.disabled = false;
       genBtn.textContent = origin;
+      progress.done();
     }
 
     questions = (data.predictedQuestions || []).slice().sort((a, b) => {
@@ -547,6 +556,98 @@ export function renderDefenseScreen(root) {
     URL.revokeObjectURL(url);
   });
 
+  // ---- 跨路由直达：没有材料时给可点击的引导，而不是一个空上传框 ----
+  const guardHost = wrapper.querySelector('#defense-context-guard');
+  const demoMaterial = `面向多轮工具调用的 Agent 权限模型
+
+## 1. 三级权限设计
+只读工具直接放行，写类操作需要询问，高危 Bash 自动转人工审批。判定输入是工具名、参数、Bash 子命令和工作区路径三层。
+
+## 2. 组合命令解析边界
+覆盖分隔符、管道、重定向、命令替换等组合命令的解析边界，避免 rm -rf 这类高危组合绕过。
+
+## 3. 性能开销
+每轮判定引入约 12ms 延迟，P99 为 8ms，样本量 120 万次线上调用。`;
+
+  const showDefenseGuard = () => {
+    if (!guardHost) return;
+    mountEmptyContextGuard(guardHost, {
+      title: '还没有上传答辩材料',
+      hint: '上传论文 / 讲稿 / 技术方案，或先用一份示例材料看看追问长什么样。',
+      recommend: [],
+      onPick: () => {},
+      onRender: (wrap) => {
+        const row = document.createElement('div');
+        row.style.cssText = 'display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;';
+        const demoBtn = document.createElement('button');
+        demoBtn.type = 'button';
+        demoBtn.className = 'btn btn-primary btn-sm';
+        demoBtn.textContent = '先看一份示例材料的追问 →';
+        demoBtn.addEventListener('click', () => {
+          doc = chunkDocumentText(demoMaterial, '示例：Agent 权限模型方案.md');
+          renderSegments();
+          genBtn.disabled = false;
+          refreshRefsBtn.disabled = false;
+          guardHost.innerHTML = '';
+          showToast('已载入示例材料，点「开始预演」看追问');
+        });
+        const uploadBtn = document.createElement('label');
+        uploadBtn.className = 'btn btn-sm';
+        uploadBtn.textContent = '📄 上传答辩材料';
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = '.pdf,.md,.txt,.markdown';
+        input.hidden = true;
+        input.addEventListener('change', async () => {
+          const file = input.files?.[0];
+          if (!file) return;
+          if (file.name.toLowerCase().endsWith('.pdf')) {
+            showToast('PDF 解析需要 BFF 在线，请稍等或改用 MD/TXT', 'warn');
+            return;
+          }
+          doc = chunkDocumentText(await file.text(), file.name);
+          renderSegments();
+          genBtn.disabled = false;
+          refreshRefsBtn.disabled = false;
+          guardHost.innerHTML = '';
+          showToast(`材料已就绪：${doc.segments.length} 个可溯源片段`);
+        });
+        uploadBtn.appendChild(input);
+        row.append(demoBtn, uploadBtn);
+        wrap.appendChild(row);
+      },
+    });
+  };
+
+  // 来自复盘台「针对薄弱点做抗压测」的上下文
+  (() => {
+    try {
+      const raw = sessionStorage.getItem('zhimian.pendingDefenseTopic');
+      if (!raw) return;
+      const topic = JSON.parse(raw);
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.style.cssText = 'margin-bottom:12px;border-color:var(--primary);';
+      card.innerHTML = `
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
+          <strong style="font-size:13.5px;">🎯 来自复盘盲点：${escapeHtml(String(topic.title || '').slice(0, 40))}</strong>
+          <button type="button" class="btn btn-ghost btn-sm" id="btn-clear-topic">清除</button>
+        </div>
+        <div style="font-size:12.5px;color:var(--text-secondary);margin-top:6px;line-height:1.7;">
+          盲区：${escapeHtml(String(topic.attribution || '（未标注）'))}<br/>
+          点「开始预演」会针对这个盲区生成专项追问（而不是泛泛的模板题）。
+        </div>
+      `;
+      card.querySelector('#btn-clear-topic').addEventListener('click', () => {
+        sessionStorage.removeItem('zhimian.pendingDefenseTopic');
+        card.remove();
+      });
+      wrapper.querySelector('#defense-context-guard')?.appendChild(card);
+    } catch {
+      /* 忽略解析失败 */
+    }
+  })();
+
   // ---- 读取复盘台生成的专项追问（跨页上下文不断层） ----
   const loadSpecialQuestions = async () => {
     const card = wrapper.querySelector('#special-questions-card');
@@ -599,6 +700,26 @@ export function renderDefenseScreen(root) {
     });
   };
   loadSpecialQuestions();
+
+  // ---- 底部「下一步」主行动条 ----
+  mountNextStepBar(root, {
+    text: '下一步：挑一题预演，或带着这份材料去讲解室拆逻辑',
+    hint: '预演会开一个可交互的小窗：评委连续追问最多 3 轮，整场作答最后汇总成复盘。',
+    actions: [
+      {
+        label: '看逐句复盘 →',
+        primary: true,
+        onClick: () => navigate('/review'),
+      },
+      {
+        label: '回选题库',
+        ghost: true,
+        onClick: () => navigate('/bank'),
+      },
+    ],
+  });
+
+  if (!doc) showDefenseGuard();
 
   // 复用讲解室已解析的文档（同一台机器不必重复上传）
   if (state.activeDocument?.segments?.length) {

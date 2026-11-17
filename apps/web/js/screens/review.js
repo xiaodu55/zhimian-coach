@@ -4,6 +4,24 @@ import { escapeHtml, renderCitationChip } from '../ui/citation.js';
 import { renderViewpointCard } from '../ui/components.js';
 import { dbPut, dbGetAll } from '../db.js';
 import { showToast } from '../ui/toast.js';
+import { mountEmptyContextGuard, recentQuestionOptions, recommendWarmupQuestion } from '../lib/empty-guard.js';
+import { mountNextStepBar } from '../lib/nextstep.js';
+
+/**
+ * 找出"我说的那句"：模型结论里提到的关键名词（术语/数字）如果在用户作答里出现过，
+ * 就用那句作答做证据对照的左栏；找不到就退回作答的前两句。
+ */
+function myStatementFor(answer, claim) {
+  const mine = String(answer || '');
+  if (!mine) return '';
+  const tokens = String(claim || '').match(/[A-Za-z]{2,}|[0-9]+(?:\.[0-9]+)?%?/g) || [];
+  const sentences = mine.split(/(?<=[。！？!?\n])/).map((x) => x.trim()).filter(Boolean);
+  const hit = sentences.find((sent) => {
+    const st = sent.match(/[A-Za-z]{2,}|[0-9]+(?:\.[0-9]+)?%?/g) || [];
+    return tokens.some((tk) => st.includes(tk));
+  });
+  return (hit || sentences.slice(0, 2).join('')).slice(0, 400);
+}
 
 export async function renderReviewScreen(root) {
   // 刷新/换页后 state 里没有报告时，从本地 IndexedDB 取最近一次复盘（数据只在本地）
@@ -27,14 +45,29 @@ export async function renderReviewScreen(root) {
   if (getCurrentRoute() !== 'review') return;
 
   if (!report) {
-    root.innerHTML = `
-      <div class="card" style="text-align:center;padding:36px 20px;">
-        <h2 style="margin:0 0 8px;">暂无待复盘的作答记录</h2>
-        <p style="color:var(--text-secondary);margin:0 0 16px;">你可以前往陪练室完成一次作答，或在首页点击「免费开始 3 分钟实战演练」。</p>
-        <button id="btn-back-bank" class="btn btn-primary" type="button">返回题库首页</button>
-      </div>
-    `;
-    root.querySelector('#btn-back-bank').addEventListener('click', () => navigate('/bank'));
+    // 没有可复盘的记录 → 上下文守卫：给推荐题与最近记录，而不是一张空页面
+    root.innerHTML = '<div id="review-empty-guard"></div>';
+    const recent = recentQuestionOptions(state.sessions);
+    const warm = recommendWarmupQuestion(state.bank);
+    mountEmptyContextGuard(root.querySelector('#review-empty-guard'), {
+      title: '你还没有可复盘的作答记录',
+      hint: '可以直接开始这道高频热身题（系统会带你去模拟练），或者恢复上次练过的题目上下文。',
+      recent,
+      recommend: warm ? [warm] : [],
+      onPick: (q) => {
+        state.activeQuestion = q;
+        navigate('/coach');
+      },
+      onRender: (wrap) => {
+        const back = document.createElement('button');
+        back.type = 'button';
+        back.className = 'btn btn-ghost btn-sm';
+        back.style.marginTop = '10px';
+        back.textContent = '返回题库首页';
+        back.addEventListener('click', () => navigate('/bank'));
+        wrap.appendChild(back);
+      },
+    });
     return;
   }
 
@@ -346,6 +379,40 @@ export async function renderReviewScreen(root) {
   };
 
   wrapper.querySelector('#btn-retry-coach').addEventListener('click', () => navigate('/coach'));
+
+  // ---- 底部「下一步」主行动条：标出盲区后要么去抗压测，要么把话术存进弹药库 ----
+  mountNextStepBar(root, {
+    text: '下一步：把盲区变成专项追问，或把高分话术收进弹药库',
+    hint: '抗压测会针对上面的薄弱点生成刁钻追问；收入弹药库会提炼成「结论 + 论据 + 防杠话术」的闪卡，只存在本机。',
+    actions: [
+      {
+        label: '针对薄弱点做抗压测 →',
+        primary: true,
+        onClick: () => {
+          // 把这次复盘的盲区带到答辩预测：那边会据此生成专项追问
+          try {
+            sessionStorage.setItem(
+              'zhimian.pendingDefenseTopic',
+              JSON.stringify({
+                title: question.title,
+                track: question.track || '',
+                attribution: ruleFindings.map((f) => f.ruleName).slice(0, 3).join('；'),
+                answerSnippet: String(answer || '').slice(0, 1200),
+                createdAt: new Date().toISOString(),
+              })
+            );
+          } catch {
+            /* 隐私模式忽略 */
+          }
+          navigate('/defense');
+        },
+      },
+      {
+        label: '把高分话术收入弹药库 →',
+        onClick: () => wrapper.querySelector('#btn-mark-weakness')?.click(),
+      },
+    ],
+  });
 }
 
 /** 三、AI 观点层渲染：分数卡片 + S 编号引用 chip + 改进话术 */
@@ -405,6 +472,8 @@ function renderLlmLayer(wrapper, report) {
         locator: card?.stance || '',
         quote: card?.evidenceQuote || '来源原文未随结果返回',
         url: card?.sourceUrl || '',
+        // 左栏放"你的说法"，右栏放知乎原话 —— 点开就是对照
+        myText: myStatementFor(report.answer, s.claim),
       }));
     }
     card.append(head, bar, claim, chips);
@@ -432,6 +501,7 @@ function renderLlmLayer(wrapper, report) {
           id: refId, type: 'zhihu', label: refId,
           sourceTitle: vc?.author || '知乎高赞回答', locator: vc?.stance || '',
           quote: vc?.evidenceQuote || '', url: vc?.sourceUrl || '',
+          myText: myStatementFor(report.answer, im.claim),
         }));
       }
       ul.appendChild(li);

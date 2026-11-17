@@ -4,6 +4,8 @@ import { searchSegmentsBM25 } from '../retrieval/bm25.js';
 import { escapeHtml, renderCitationChip } from '../ui/citation.js';
 import { dbPut } from '../db.js';
 import { showToast } from '../ui/toast.js';
+import { mountEmptyContextGuard } from '../lib/empty-guard.js';
+import { mountNextStepBar, createProgress } from '../lib/nextstep.js';
 
 export function renderExplainScreen(root) {
   let activeDoc = state.activeDocument || chunkDocumentText(
@@ -40,6 +42,8 @@ export function renderExplainScreen(root) {
 
     <div class="grid-2" style="align-items:start;">
       <!-- 左侧：分段详解与 Citation 定位 -->
+      <div id="explain-context-guard"></div>
+
       <section class="card">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
           <strong id="doc-title-label">📄 ${escapeHtml(activeDoc.title)}</strong>
@@ -124,6 +128,60 @@ export function renderExplainScreen(root) {
     });
   };
   renderSegments();
+
+  // ---- 跨路由直达：没有资料时给引导（讲解室永远有示例资料，所以主要是提示可上传） ----
+  (() => {
+    const host = wrapper.querySelector('#explain-context-guard');
+    if (!host) return;
+    mountEmptyContextGuard(host, {
+      title: '当前用的是示例资料',
+      hint: '上传你自己的论文 / 技术方案 / 转写稿，就能得到针对这份材料的详解总结与逐段溯源。',
+      recommend: [],
+      onPick: () => {},
+      onRender: (wrap) => {
+        const row = document.createElement('div');
+        row.style.cssText = 'display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;';
+        const label = document.createElement('label');
+        label.className = 'btn btn-primary btn-sm';
+        label.textContent = '📄 上传我的资料';
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = '.pdf,.md,.txt,.markdown';
+        input.hidden = true;
+        input.addEventListener('change', () => {
+          const f = input.files?.[0];
+          if (!f) return;
+          const dt = new DataTransfer();
+          dt.items.add(f);
+          const real = wrapper.querySelector('#doc-file-input');
+          real.files = dt.files;
+          real.dispatchEvent(new Event('change'));
+          host.innerHTML = '';
+        });
+        label.appendChild(input);
+        row.appendChild(label);
+        wrap.appendChild(row);
+      },
+    });
+  })();
+
+  // ---- 底部「下一步」主行动条：看完框架就去开口练 ----
+  mountNextStepBar(root, {
+    text: '下一步：带着这个框架去模拟练',
+    hint: '拆逻辑是为了开口时能踩到得分点 —— 框架记住了，就去对着同一个知识点练一次。',
+    actions: [
+      {
+        label: '进入模拟练 →',
+        primary: true,
+        onClick: () => navigate('/coach'),
+      },
+      {
+        label: '回选题库',
+        ghost: true,
+        onClick: () => navigate('/bank'),
+      },
+    ],
+  });
 
   // 上传本地文档解析（零落盘，直接前端分段 + 存 IndexedDB）
   wrapper.querySelector('#doc-file-input').addEventListener('change', async (e) => {
@@ -281,6 +339,7 @@ export function renderExplainScreen(root) {
     summaryBtn.disabled = true;
     const origin = summaryBtn.textContent;
     summaryBtn.textContent = '生成中…';
+    const progress = createProgress('正在通读资料…');
     summaryBox.innerHTML = '<span style="color:var(--text-muted);font-size:13px;">正在通读材料并生成详解总结…</span>';
     try {
       const res = await fetch('/api/explain/summary', {
@@ -290,10 +349,12 @@ export function renderExplainScreen(root) {
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data?.error?.message || '总结生成失败');
+      progress.step('正在提炼关键论点…');
       renderSummary(data, activeDoc.segments);
     } catch (err) {
       summaryBox.innerHTML = `<div style="color:var(--red);font-size:13px;">${escapeHtml(err.message)}</div>`;
     } finally {
+      progress.done();
       summaryBtn.disabled = false;
       summaryBtn.textContent = origin;
     }

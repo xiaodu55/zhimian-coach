@@ -25,10 +25,21 @@ import {
   formatBytes,
   listRecordingsWithAudio,
   clearRecordingAudio,
-  buildReviewManualMarkdown,
   downloadTextFile,
   todayStamp,
 } from '../lib/flashcards.js';
+import {
+  FLASHCARD_STORE,
+  backfillMastery,
+  buildMasteryManualMarkdown,
+  cardMastery,
+  countMastery,
+  createMasteryBadge,
+  createMasteryControl,
+  getFilterWeak,
+  masteryColor,
+  setFilterWeak,
+} from '../lib/mastery.js';
 
 /** 招聘流程轮次（保留原有语义：选到「已挂复盘」会触发归因回流） */
 const OPP_STATES = ['已投递', '一面', '二面', 'HR面', '已拿Offer', '已挂复盘'];
@@ -90,6 +101,14 @@ export function renderLedgerScreen(root) {
         复盘台会把每次作答里最好的那一版提炼成闪卡存进「弹药库」（核心结论 / 支撑论据 / 防杠兜底），只存在本机 IndexedDB。
         抽背模式下卡片默认遮住答案，点一下翻面；模式记在本次标签页，刷新后仍然生效。
       </div>
+      <!-- 掌握度统计 + 只看生疏的筛选：与抽背模式互不冲突，一个决定"看哪些卡"，一个决定"答案要不要遮" -->
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px;padding:10px 12px;border:1px solid var(--border);border-radius:8px;background:var(--surface-alt);">
+        <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text);cursor:pointer;user-select:none;">
+          <input type="checkbox" id="flashcard-filter-weak" style="width:16px;height:16px;accent-color:var(--red);cursor:pointer;" />
+          <span>只看生疏的</span>
+        </label>
+        <span id="flashcard-stats" style="font-size:12.5px;color:var(--text-secondary);"></span>
+      </div>
       <div id="flashcard-grid" class="grid-2" style="align-items:start;"></div>
       <div id="flashcard-preview" style="margin-top:14px;"></div>
     </section>
@@ -118,6 +137,7 @@ export function renderLedgerScreen(root) {
   const fcGrid = wrapper.querySelector('#flashcard-grid');
   const fcPreview = wrapper.querySelector('#flashcard-preview');
   const fcCount = wrapper.querySelector('#flashcard-count');
+  const fcStats = wrapper.querySelector('#flashcard-stats');
   const storageUsage = wrapper.querySelector('#storage-usage');
 
   /* ================= 数据安全三件套 ================= */
@@ -148,13 +168,17 @@ export function renderLedgerScreen(root) {
 
   wrapper.querySelector('#btn-export-manual').addEventListener('click', async () => {
     const cards = await loadFlashcards();
-    const md = buildReviewManualMarkdown({
+    // 导出的手册按掌握度分组：生疏排最前，冲刺期照着生疏那组背
+    const md = buildMasteryManualMarkdown({
       cards,
       weaknesses: state.weaknesses,
       opportunities: state.opportunities,
     });
+    const counts = countMastery(cards);
     const name = downloadTextFile(`面试复习手册-${todayStamp()}.md`, md, 'text/markdown;charset=utf-8');
-    showToast(`已导出 ${name}（闪卡 ${cards.length} 张 · 薄弱点 ${state.weaknesses.length} 项 · 场次 ${state.opportunities.length} 条）`);
+    showToast(
+      `已导出 ${name}（闪卡 ${cards.length} 张：生疏 ${counts['生疏']} · 熟练 ${counts['熟练']} · 随时可讲 ${counts['随时可讲']}）`
+    );
   });
 
   wrapper.querySelector('#btn-import-restore').addEventListener('click', () => {
@@ -222,39 +246,120 @@ export function renderLedgerScreen(root) {
   /** 本机已存闪卡（不在 state 里，避免改动共享 state 模块） */
   let flashcards = [];
   let recite = getReciteMode();
+  /** 「只看生疏的」突击模式：记在 sessionStorage，刷新后保持 */
+  let filterWeak = getFilterWeak();
+
+  const weakToggle = wrapper.querySelector('#flashcard-filter-weak');
+  weakToggle.checked = filterWeak;
+
+  /** 只刷计数与统计行，不重建卡片（避免抽背模式下翻开的卡片被重置） */
+  const renderFlashcardMeta = () => {
+    const counts = countMastery(flashcards);
+    const visible = filterWeak ? flashcards.filter((c) => cardMastery(c) === '生疏').length : flashcards.length;
+    fcStats.textContent =
+      `共 ${flashcards.length} 张 · 生疏 ${counts['生疏']} 张 · 熟练 ${counts['熟练']} 张 · 随时可讲 ${counts['随时可讲']} 张`;
+    fcCount.textContent = filterWeak ? `${visible} / ${flashcards.length} 张` : `${flashcards.length} 张`;
+  };
+
+  /** 写回掌握度：只写本机 IndexedDB，不发任何网络请求 */
+  const persistMastery = async (card, level) => {
+    const next = { ...card, mastery: level, updatedAt: new Date().toISOString() };
+    try {
+      const res = await dbPut(FLASHCARD_STORE, next);
+      if (!res) {
+        showToast('掌握度未能写入本机：本地库尚未建立闪卡表，请刷新页面重试', 'warn', 4500);
+        return false;
+      }
+      return true;
+    } catch (err) {
+      showToast('掌握度保存失败：' + (err?.message || '本机存储不可用'), 'error');
+      return false;
+    }
+  };
+
+  /** 突击模式下没有生疏卡时的提示 */
+  const renderFlashcardEmptyState = () => {
+    fcGrid.innerHTML = `<div style="color:var(--text-muted);font-size:13px;padding:16px 0;text-align:center;grid-column:1/-1;">当前没有生疏的闪卡 —— 全部卡片都已标记为熟练或随时可讲。取消上方「只看生疏的」可以看全部。</div>`;
+  };
+
+  /**
+   * 卡片左边框 = 掌握度颜色，一眼扫出哪几张还没背熟。
+   * 抽背模式的「答案已遮住」提示已经承担了模式信号，这里可以放心复用边框。
+   */
+  const applyMasteryBorder = (cardEl, level) => {
+    cardEl.style.borderLeftColor = masteryColor(level);
+  };
 
   const renderFlashcards = () => {
     fcGrid.innerHTML = '';
-    fcCount.textContent = `${flashcards.length} 张`;
+    renderFlashcardMeta();
     if (!flashcards.length) {
       fcGrid.innerHTML = `<div style="color:var(--text-muted);font-size:13px;padding:16px 0;text-align:center;grid-column:1/-1;">还没有话术闪卡。完成一次复盘后，下面的「最近复盘提炼预览」里点「存为闪卡」即可入库，或点右上角「+ 手动新增闪卡」。</div>`;
       return;
     }
-    for (const card of flashcards) {
-      fcGrid.appendChild(
-        renderFlashcardCard(card, {
-          recite,
-          onTogglePracticed: async (c, checked) => {
-            await updateFlashcard(c, { practiced: checked });
-            c.practiced = checked;
-            showToast(checked ? '已标记为「已掌握」' : '已取消「已掌握」标记');
-          },
-          onDelete: async (c) => {
-            if (!window.confirm(`删除这张闪卡「${c.questionTitle}」？删除后无法恢复。`)) return;
-            await removeFlashcard(c.id);
-            await reloadFlashcards();
-            showToast('已删除闪卡');
-          },
-        })
-      );
+    const visible = filterWeak ? flashcards.filter((c) => cardMastery(c) === '生疏') : flashcards;
+    if (!visible.length) {
+      renderFlashcardEmptyState();
+      return;
+    }
+    for (const card of visible) {
+      let cardEl = null;
+      const badge = createMasteryBadge(card);
+      const control = createMasteryControl(card, {
+        onChange: async (c, level) => {
+          const ok = await persistMastery(c, level);
+          if (!ok) return false;
+          c.mastery = level;
+          // 徽章、边框一起跟着掌握度走，扫一眼就能分出哪几张还没背熟
+          badge.apply(level);
+          if (cardEl) applyMasteryBorder(cardEl, level);
+          renderFlashcardMeta();
+          // 突击模式下刚被改成「熟练」的卡要立刻离开视野
+          if (filterWeak && level !== '生疏' && cardEl?.parentNode) {
+            cardEl.remove();
+            if (!fcGrid.querySelector('.card')) renderFlashcardEmptyState();
+          }
+          return true;
+        },
+      });
+      cardEl = renderFlashcardCard(card, {
+        recite,
+        onTogglePracticed: async (c, checked) => {
+          await updateFlashcard(c, { practiced: checked });
+          c.practiced = checked;
+          showToast(checked ? '已标记为「已掌握」' : '已取消「已掌握」标记');
+        },
+        onDelete: async (c) => {
+          if (!window.confirm(`删除这张闪卡「${c.questionTitle}」？删除后无法恢复。`)) return;
+          await removeFlashcard(c.id);
+          await reloadFlashcards();
+          showToast('已删除闪卡');
+        },
+      });
+      applyMasteryBorder(cardEl, cardMastery(card));
+      // 徽章插到标题行的标签区（"复盘提炼 / 手动新增" 旁边）
+      const head = cardEl.firstElementChild;
+      const tagRow = head.lastElementChild;
+      tagRow.insertBefore(badge.element, tagRow.firstChild);
+      // 掌握度控件放在标题之下：抽背模式遮住的是答案区，这一行始终可见
+      cardEl.insertBefore(control.element, head.nextSibling);
+      fcGrid.appendChild(cardEl);
     }
   };
 
   const reloadFlashcards = async () => {
     flashcards = await loadFlashcards();
+    // 老卡没有 mastery 字段：统一按「生疏」补齐并写回本机
+    await backfillMastery(flashcards);
     renderFlashcards();
     renderPreviews();
   };
+
+  weakToggle.addEventListener('change', () => {
+    filterWeak = setFilterWeak(weakToggle.checked);
+    renderFlashcards();
+    showToast(filterWeak ? '已进入「只看生疏的」突击模式' : '已恢复显示全部闪卡');
+  });
 
   /** 从最近几份复盘报告提炼预览（不落库，用户确认后才写入） */
   const buildPreviews = () => {
@@ -290,7 +395,8 @@ export function renderLedgerScreen(root) {
           recite,
           preview: true,
           onSave: async (c) => {
-            const saved = await saveFlashcard(c);
+            // 新提炼的卡默认「生疏」：刚整理出来的话术本来就还没背熟
+            const saved = await saveFlashcard({ ...c, mastery: '生疏' });
             if (!saved) {
               showToast('闪卡未能写入本机：本地库尚未建立闪卡表，请刷新页面重试', 'warn', 4500);
               return;
@@ -374,7 +480,8 @@ export function renderLedgerScreen(root) {
           supports: supports.value.split('\n').map((s) => s.trim()).filter(Boolean),
           fallback: fallback.value.trim(),
         });
-        const saved = await saveFlashcard(card);
+        // 手动新增的卡同样默认「生疏」
+        const saved = await saveFlashcard({ ...card, mastery: '生疏' });
         if (!saved) {
           showToast('闪卡未能写入本机：本地库尚未建立闪卡表，请刷新页面重试', 'warn', 4500);
           return;

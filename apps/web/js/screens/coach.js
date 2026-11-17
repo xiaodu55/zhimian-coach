@@ -10,6 +10,12 @@ import {
 } from '../state.js';
 import { navigate } from '../router.js';
 import { escapeHtml, renderCitationChip } from '../ui/citation.js';
+import {
+  mountEmptyContextGuard,
+  recentQuestionOptions,
+  recommendWarmupQuestion,
+} from '../lib/empty-guard.js';
+import { mountNextStepBar, createProgress } from '../lib/nextstep.js';
 import { renderViewpointCard } from '../ui/components.js';
 import { createModal, modalButton } from '../ui/modal.js';
 import { LocalAudioRecorder } from '../capture/recorder.js';
@@ -75,6 +81,11 @@ function locatorLabel(locator) {
   return `简历第 ${m[1]} 页`;
 }
 
+/** 让出一小段时间：阶段性微文案必须真的被画出来，否则三句话会挤在同一帧里等于没播报 */
+function nextPaint() {
+  return new Promise((resolve) => setTimeout(resolve, 150));
+}
+
 /** 从"为什么问"派生要点（模型没给 bullets 时的兜底） */
 function deriveBullets(why) {
   const parts = String(why || '')
@@ -95,10 +106,56 @@ import { dbPut, dbGet } from '../db.js';
 import { showToast } from '../ui/toast.js';
 
 export function renderCoachScreen(root) {
-  const question = state.activeQuestion || state.bank[0];
-  if (question) rememberedQuestions[question.source === 'resume' ? 'resume' : 'bank'] = question;
+  // 跨路由直达：用户可能跳过了第 1 步（题库）直接点导航进陪练室。
+  // 这时既没有 activeQuestion，也没有"上次选过的题"，就不能拿兜底题冒充用户的选择
+  // （否则 rememberedQuestions 被污染，守卫永远不再出现）。
+  const pickedQuestion = state.activeQuestion;
+  const rememberedQuestion =
+    (getMode() === 'resume' ? rememberedQuestions.resume : rememberedQuestions.bank) || null;
+  if (pickedQuestion) {
+    rememberedQuestions[pickedQuestion.source === 'resume' ? 'resume' : 'bank'] = pickedQuestion;
+  }
+  const warmup = recommendWarmupQuestion(state.bank);
+  const question = pickedQuestion || rememberedQuestion || warmup || state.bank[0] || null;
+  // 题库加载会预填 activeQuestion，但那不是"用户挑的题" → 用 questionPickedByUser 判断
+  const needsContextGuard = !state.questionPickedByUser && !rememberedQuestion;
+
+  /** 守卫给回来的可能是一道完整题，也可能只是"最近记录"里的摘要：统一还原成可练习的完整题 */
+  const resolveQuestionById = (id) => {
+    if (!id) return null;
+    const fromBank = state.bank.find((q) => q.id === id);
+    if (fromBank) return fromBank;
+    for (const s of state.sessions || []) {
+      if (s?.question?.id === id) return s.question;
+    }
+    return null;
+  };
+  /** 载入题目 → 进入真正的练习状态（重渲染本页） */
+  const loadQuestionFromOption = (opt) => {
+    if (!opt) return;
+    const resolved = opt.skeleton || opt.viewpointCards ? opt : resolveQuestionById(opt.id);
+    if (!resolved) {
+      showToast('这道题的上下文已经不在本机了，换一道试试', 'warn');
+      return;
+    }
+    state.activeQuestion = resolved;
+    state.questionPickedByUser = true;
+    root.innerHTML = '';
+    renderCoachScreen(root);
+  };
+
   if (!question) {
     root.innerHTML = `<div class="card">题库加载中，请稍候…</div>`;
+    const guardHost = document.createElement('div');
+    guardHost.style.marginTop = '12px';
+    root.appendChild(guardHost);
+    mountEmptyContextGuard(guardHost, {
+      title: '你还没有选定当前练习题目',
+      hint: '可以直接开始这道高频热身题，也可以恢复上次的练习上下文',
+      recent: recentQuestionOptions(state.sessions),
+      recommend: warmup ? [warmup] : [],
+      onPick: (opt) => loadQuestionFromOption(opt),
+    });
     return;
   }
 
@@ -225,6 +282,8 @@ export function renderCoachScreen(root) {
       <div style="display:flex;flex-direction:column;gap:14px;">
         <!-- 练习区：真题陪练 / 简历陪练 -->
         <div id="practice-area" style="display:flex;flex-direction:column;gap:14px;">
+          <!-- 跨路由直达守卫：没有"当前题目"上下文时，这里给出可点击的引导而不是空白 -->
+          <div id="coach-context-guard"></div>
           <section class="card" id="bullet-context-card" hidden>
             <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;">
               <strong>🎯 当前要点</strong>
@@ -338,6 +397,23 @@ export function renderCoachScreen(root) {
       </div>
   `;
   root.appendChild(wrapper);
+
+  // 跨路由直达守卫：没有"当前题目"上下文（既没选过题、也没上次记录）时，
+  // 练习区顶部给出可点击的引导，而不是让用户对着一个空页面发呆。
+  const guardHost = wrapper.querySelector('#coach-context-guard');
+  if (guardHost) {
+    if (needsContextGuard) {
+      mountEmptyContextGuard(guardHost, {
+        title: '你还没有选定当前练习题目',
+        hint: '可以直接开始这道高频热身题，也可以恢复上次的练习上下文',
+        recent: recentQuestionOptions(state.sessions),
+        recommend: warmup ? [warmup] : [],
+        onPick: (opt) => loadQuestionFromOption(opt),
+      });
+    } else {
+      guardHost.style.display = 'none';
+    }
+  }
 
   // 当前场次横幅（台账 → 陪练室的跨页关联）
   const oppCtx = getActiveOpportunity();
@@ -1686,6 +1762,7 @@ export function renderCoachScreen(root) {
     const list = wrapper.querySelector('#coach-skeleton-list');
     if (!list) return;
     const cards = (question.viewpointCards || []).slice(0, 3);
+    const skeleton = question.skeleton || [];
     cards.forEach((vc, i) => {
       const li = list.querySelector(`[data-skeleton-idx="${i}"]`);
       if (!li) return;
@@ -1698,10 +1775,33 @@ export function renderCoachScreen(root) {
           locator: vc.stance || '',
           quote: vc.evidenceQuote || '',
           url: vc.sourceUrl || '',
+          // 左栏是这条骨架要点、右栏是知乎原话：点开就是"该怎么说 vs 别人怎么说"的对照
+          myText: skeleton[i] || '',
         })
       );
     });
   })();
+
+  // 追问若来自观点卡分歧，就在追问框里挂一个角标：
+  // 左栏是用户上一轮的说法，右栏是知乎该视角的原话 —— 一眼看出"我说的"和"别人说的"差在哪
+  const attachFollowupCitation = (vc) => {
+    if (!vc) return;
+    const box = wrapper.querySelector('#followup-question-text');
+    if (!box) return;
+    const prev = String(roundAnswers[roundAnswers.length - 1] || textarea.value || '').trim();
+    box.appendChild(
+      renderCitationChip({
+        id: 'S-F',
+        type: 'zhihu',
+        label: '知乎高赞溯源',
+        sourceTitle: vc.author || '知乎高赞回答',
+        locator: vc.stance || '',
+        quote: vc.evidenceQuote || '',
+        url: vc.sourceUrl || '',
+        myText: prev.slice(0, 400),
+      })
+    );
+  };
 
   // 追问生成（M8：单题最多 3 轮，取自观点卡分歧）
   wrapper.querySelector('#btn-trigger-followup').addEventListener('click', () => {
@@ -1718,7 +1818,9 @@ export function renderCoachScreen(root) {
 
     wrapper.querySelector('#followup-box').hidden = false;
     wrapper.querySelector('#followup-round-num').textContent = String(followupRound);
-    wrapper.querySelector('#followup-question-text').textContent = fqText;
+    const textBox = wrapper.querySelector('#followup-question-text');
+    textBox.textContent = fqText;
+    attachFollowupCitation(minorityCard);
     showToast(`已生成第 ${followupRound} 轮深度追问`);
   });
 
@@ -1733,10 +1835,13 @@ export function renderCoachScreen(root) {
     if (!box) return;
     box.hidden = false;
     wrapper.querySelector('#followup-round-num').textContent = String(round);
-    wrapper.querySelector('#followup-question-text').textContent = text;
+    const textBox = wrapper.querySelector('#followup-question-text');
+    textBox.textContent = text;
     const label = wrapper.querySelector('#followup-style-label');
     if (label) label.textContent = ' · ' + (interviewerStyle === 'gentle' ? '温和引导型' : '压力挑战型');
     activeFollowupFocus = text;
+    // 深挖轮次的追问同样来自观点分歧，挂上角标才能看出"评委在质疑哪句话"
+    attachFollowupCitation(question.viewpointCards?.[1] || question.viewpointCards?.[0]);
   };
 
   // 多轮问答拼成「面试官：/ 我：」转写稿：模型与规则层看到的都是完整现场
@@ -1776,16 +1881,42 @@ export function renderCoachScreen(root) {
     submitBtn.disabled = true;
     submitBtn.textContent = '模型生成中（最多 25 秒）…';
 
+    // 阶段性微文案：长耗时的模型调用期间必须告诉用户"现在在做什么"
+    const progress = createProgress('正在检索知乎高赞回答结构…');
+
     const transcript = buildTranscript(raw);
-    const review = await runReview({
-      question,
-      raw: transcript,
-      followupFocus: activeFollowupFocus,
-      interviewerStyle,
-      followupDepth,
-    });
+    let review;
+    try {
+      review = await runReview({
+        question,
+        raw: transcript,
+        followupFocus: activeFollowupFocus,
+        interviewerStyle,
+        followupDepth,
+      });
+    } catch (err) {
+      // 模型层异常时也要收尾：微文案必须消失、按钮必须可点，否则页面会卡在"生成中"
+      progress.done();
+      submitBtn.disabled = false;
+      submitBtn.textContent = originalLabel;
+      showToast(err.message || '生成复盘失败，请重试', 'error', 6000);
+      return;
+    }
     const { qaPairs, answer: targetAnswer, ruleFindings, llmScores, improvements, degraded, followups } = review;
     roundAnswers.push(raw);
+
+    progress.step('正在提炼 3 个核心考察点…');
+    // 让 live region 把上一句播报出去再切下一句（否则三句话会挤在同一帧里看不到过程）
+    await nextPaint();
+    // 核心考察点：优先用题库给的骨架，题库没给就用追问焦点兜底
+    const corePoints = (question.skeleton || []).slice(0, 3);
+    progress.step('正在对照你的原话逐句诊断…');
+    await nextPaint();
+    const speechMetrics = computeSpeechMetrics({
+      durationSec: lastAnswerDurationSec,
+      text: roundAnswers.join('\n'),
+      expectedLength: question.expectedLength || [120, 400],
+    });
 
     // 深挖模式：评委还有下一问 → 先追问，别急着出复盘
     const nextFollowups = followups || [];
@@ -1797,6 +1928,7 @@ export function renderCoachScreen(root) {
       textarea.value = '';
       submitBtn.disabled = false;
       submitBtn.textContent = originalLabel;
+      progress.done();
       showToast(`评委追问了第 ${deepRound}/${followupDepth} 轮，接着答（再点提交）`);
       return;
     }
@@ -1824,8 +1956,11 @@ export function renderCoachScreen(root) {
 
     state.lastReviewReport = report;
     await dbPut('sessions', report);
+    // 刷新本地集合：让"最近记录"（跨路由守卫的下拉）能立刻看到这次作答
+    await refreshLocalCollections();
     submitBtn.disabled = false;
     submitBtn.textContent = originalLabel;
+    progress.done();
 
     if (degraded) {
       showToast('模型暂不可用，已切换规则模式并完成原话级诊断', 'warn', 3800);
@@ -1834,4 +1969,52 @@ export function renderCoachScreen(root) {
     }
     navigate('/review');
   });
+
+  // ---- 底部「下一步」主行动条：作答完成、追问结束后就该出复盘诊断 ----
+  // 吸底常驻，用户不用抬头找顶部导航就能知道下一步做什么。
+  const hasQuestion = Boolean(state.activeQuestion);
+  const nextStepBar = mountNextStepBar(root, {
+    text: hasQuestion
+      ? '下一步：先写下你的回答，再结束并生成复盘诊断'
+      : '下一步：先载入一道题，开始这一轮练习',
+    hint: '复盘会逐条回指你的原话，并对照知乎高赞原话给出可核对的改进话术（只存在本机浏览器）。',
+    actions: [
+      hasQuestion
+        ? {
+            label: '结束并生成复盘诊断 →',
+            primary: true,
+            onClick: () => {
+              const submit = wrapper.querySelector('#btn-submit-parse');
+              if (!submit) return;
+              if (submit.disabled) {
+                showToast('正在生成中，稍等一下', 'warn');
+                return;
+              }
+              submit.click();
+            },
+          }
+        : {
+            // 没有"当前题目"时，这一步是先把题选上（守卫里的推荐卡也做同一件事）
+            label: '一键载入热身题 →',
+            primary: true,
+            onClick: () => {
+              if (!warmup) {
+                showToast('题库还在加载中，请稍候再试', 'warn');
+                return;
+              }
+              loadQuestionFromOption(warmup);
+            },
+          },
+    ],
+  });
+  // 只改文案、不重挂整条 bar：避免每次输入都把吸底条从 DOM 里摘下来再插回去（会闪）
+  const nextStepText = nextStepBar?.firstElementChild?.firstElementChild || null;
+  if (hasQuestion) {
+    textarea.addEventListener('input', () => {
+      if (!nextStepText) return;
+      nextStepText.textContent = textarea.value.trim()
+        ? '下一步：结束并生成复盘诊断'
+        : '下一步：先写下你的回答，再结束并生成复盘诊断';
+    });
+  }
 }

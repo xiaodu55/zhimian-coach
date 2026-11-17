@@ -12,6 +12,9 @@ export const state = {
   bank: [],
   demoSample: null,
   activeQuestion: null,
+  /** 用户是否"自己挑过"一道题：题库加载会预填 activeQuestion，但那不算用户的选择。
+      跨路由直达下游页面时，用它判断要不要给上下文守卫。 */
+  questionPickedByUser: false,
   lastReviewReport: null,
   /** 最近一次「简历陪练」分析结果（录音复盘要做"简历 × 口述"对照，需要跨模块复用） */
   resumeAnalysis: null,
