@@ -135,6 +135,15 @@ export async function checkBackendHealth() {
     if (!res.ok) throw new Error('HTTP ' + res.status);
     const data = await res.json();
     state.health = { checked: true, ...data };
+    const caps = data.capabilities || {};
+    if (caps.resume === false) {
+      if (pill) {
+        pill.className = 'status-pill status-degraded';
+        pill.textContent = '◐ 后端版本过旧（缺简历出题）';
+      }
+      setDegraded('当前后端是旧版本实例，没有「简历出题」接口。请在项目目录执行 npm run dev:restart 重启为最新实例。');
+      return;
+    }
     if (pill) {
       if (data.ok && data.llmConfigured) {
         pill.className = 'status-pill status-online';

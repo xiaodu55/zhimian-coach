@@ -21,7 +21,14 @@ app.get('/api/health', (c) => {
     ok: true,
     zhihuConfigured: hasZhihuSecret(),
     llmConfigured: hasLlmKey(),
-    bankSize: bank.length
+    bankSize: bank.length,
+    // 前端据此识别"跑的是旧实例"（例如旧实例没有简历出题接口）
+    capabilities: {
+      resume: true,
+      resumeAudio: true,
+      localAsr: true,
+      pdfSmart: true
+    }
   });
 });
 

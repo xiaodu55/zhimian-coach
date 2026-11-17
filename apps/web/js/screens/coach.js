@@ -529,7 +529,15 @@ export function renderCoachScreen(root) {
         body: JSON.stringify(lastResumePayload),
       });
       const data2 = await res2.json();
-      if (!res2.ok) throw new Error(data2?.error?.message || '出题失败');
+      if (!res2.ok) {
+        const hint =
+          res2.status === 404
+            ? '（后端实例过旧或未运行：在项目目录执行 npm run dev:restart）'
+            : res2.status === 501
+              ? '（模型未配置或不可用）'
+              : '（检查后端是否在运行：/api/health）';
+        throw new Error((data2?.error?.message || '出题失败') + hint);
+      }
       saveResumeAnalysis(data2);
       resumeStatus.textContent = data2.cached
         ? `命中缓存：${data2.questions.length} 道题（本次未调用模型）`
