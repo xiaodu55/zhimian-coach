@@ -34,3 +34,6 @@ zhihu-cli-skill.zip
 .tmp-*/
 .tmp-*.json
 .tmp-*.pdf
+
+# 公网隧道本地目录
+.tunnel/

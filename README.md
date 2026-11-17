@@ -195,3 +195,19 @@ pnpm build:bff && PORT=8788 pnpm start
 - 场次上下文通过 `sessionStorage` 跨页传递，陪练室顶部有「🎯 当前场次」横幅（可清除）。
 - 简历解析记录与复盘报告都写入 `opportunityId`，台账据此回填「简历已备 / 已复盘」并显示复盘摘要。
 - 新增场次是正经表单（公司/岗位/轮次/状态/日期/形式/备注），不再用浏览器原生 prompt。
+
+---
+
+## 公网体验链接（提报用）
+
+```bash
+pnpm dev:restart     # 本地服务跑在 8787
+pnpm tunnel          # 申请 Cloudflare 快速隧道，打印 https://xxx.trycloudflare.com
+```
+
+- 隧道用的是 **npm 内置的 cloudflared 二进制**（`@botharness/cloudflared-win32-x64`，devDependency），
+  不需要 GitHub 下载、不需要账号，`pnpm install` 后即可用。
+- 每次启动的公网域名都不同（Cloudflare 随机分配），提报表单里填当次打印出来的那个。
+- 隧道进程退出即失效 → **评审期（12.05–12.19）这台机器要保持开机 + `pnpm tunnel` 常驻**。
+  想用固定域名，需要自建 Cloudflare Named Tunnel（`cloudflared tunnel login` + 自己的域名）。
+- ⚠️ 公网期间**任何拿到链接的人都能消耗你的模型额度与知乎配额**，演示完请 Ctrl+C 关掉隧道。

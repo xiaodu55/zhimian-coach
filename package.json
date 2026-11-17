@@ -15,7 +15,11 @@
     "bank:full": "node scripts/build-bank/questions.mjs && node scripts/build-bank/cards.mjs && node scripts/build-bank/to-v02.mjs",
     "test": "pnpm --filter @zhimian/bff test",
     "dev:restart": "node scripts/dev/restart.mjs",
-    "build:all": "pnpm --filter @zhimian/bff build"
+    "build:all": "pnpm --filter @zhimian/bff build",
+    "tunnel": "node scripts/dev/tunnel.mjs"
   },
-  "type": "module"
+  "type": "module",
+  "devDependencies": {
+    "@botharness/cloudflared-win32-x64": "^1.7.0"
+  }
 }
