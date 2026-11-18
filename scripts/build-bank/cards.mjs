@@ -43,17 +43,30 @@ const DRY = ARGS.includes('--dry');
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 async function zhida(prompt, model = 'zhida-fast-1p5') {
-  const res = await fetch('https://developer.zhihu.com/v1/chat/completions', {
-    method: 'POST',
-    headers: {
-      Authorization: `Bearer ${SECRET}`,
-      'X-Request-Timestamp': String(Math.floor(Date.now() / 1000)),
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ model, messages: [{ role: 'user', content: prompt }], stream: false }),
-    signal: AbortSignal.timeout(40000),
-  });
-  const text = await res.text();
+  // developer.zhihu.com 偶发 connect timeout，网络层错误重试 3 次；
+  // 429（QPS 限流）不重试，直接抛给外层走退避逻辑。
+  let res = null;
+  let text = '';
+  for (let attempt = 0; attempt < 3; attempt += 1) {
+    try {
+      res = await fetch('https://developer.zhihu.com/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${SECRET}`,
+          'X-Request-Timestamp': String(Math.floor(Date.now() / 1000)),
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ model, messages: [{ role: 'user', content: prompt }], stream: false }),
+        signal: AbortSignal.timeout(40000),
+      });
+      text = await res.text();
+      break;
+    } catch (err) {
+      console.warn(`   ↳ 网络失败第 ${attempt + 1} 次：${err.cause?.code || err.message}`);
+      await sleep(3000 * (attempt + 1));
+    }
+  }
+  if (!res) throw Object.assign(new Error('网络失败'), { code: 'NET' });
   if (res.status === 429) throw Object.assign(new Error('rate limit'), { code: 'RATE' });
   if (!res.ok) throw Object.assign(new Error(`HTTP ${res.status}: ${text.slice(0, 100)}`), { code: 'UPSTREAM' });
   const j = JSON.parse(text);
@@ -63,8 +76,10 @@ async function zhida(prompt, model = 'zhida-fast-1p5') {
 const norm = (s) => String(s || '').replace(/\s+/g, '').replace(/[「」“”"'’‘]/g, '');
 
 function buildPrompt(q) {
+  // 每段摘要截到 300 字：直答在长上下文下会退回「自我介绍」话术，不吐 JSON；
+  // 300 字足够取到一句完整原话，校验时仍按整段摘要做逐字比对。
   const src = (q.sources || [])
-    .map((s, i) => `[S${i + 1}] 作者：${s.author || '匿名'}\n${s.snippet}`)
+    .map((s, i) => `[S${i + 1}] 作者：${s.author || '匿名'}\n${String(s.snippet || '').slice(0, 300)}`)
     .join('\n\n');
   return `你在为「面试/答辩陪练」整理一道真题的观点对照材料。禁止编造：所有证据必须逐字来自下面给出的来源。
 
@@ -73,7 +88,7 @@ function buildPrompt(q) {
 【知乎来源回答（编号即来源）】
 ${src}
 
-输出**严格 JSON**（不要 markdown 代码块、不要解释）：
+输出**严格 JSON**（不要 markdown 代码块、不要解释、不要开场白）：第一个字符必须是左花括号，最后一个字符必须是右花括号，除此之外不要输出任何文字：
 {
   "benchmark": "这题真正在考什么，一句话",
   "views": [
@@ -119,10 +134,13 @@ function verifyCard(q, c) {
 async function buildOne(q) {
   let attempt = 0;
   let lastErr = '';
-  while (attempt < 2) {
+  while (attempt < 3) {
     attempt += 1;
     try {
-      const content = await zhida(buildPrompt(q) + (attempt > 1 ? '\n注意：上次未通过校验，evidence 必须逐字取自来源。' : ''));
+      const repair = attempt > 1
+        ? '\n\n【重要】上一次输出没有返回 JSON。请重新输出：**第一个字符必须是左花括号，最后一个字符必须是右花括号，中间只放上面要求的 JSON 对象，不要写任何解释、前言或结束语。**另外 evidence 必须逐字取自来源。'
+        : '';
+      const content = await zhida(buildPrompt(q) + repair);
       const json = parseJson(content);
       const cards = (json.views || []).slice(0, 4).map((c) => verifyCard(q, c)).filter((c) => c && c.evidence);
       if (!cards.length) throw new Error('观点卡为空');

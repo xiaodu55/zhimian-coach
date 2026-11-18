@@ -378,7 +378,9 @@ export function renderLedgerScreen(root) {
    * 抽一张卡 → 只看题干与"必须覆盖的要点" → 自己讲 → 翻面对照 → 自评（讲清 / 还卡壳），
    * 自评结果直接回写掌握度：卡壳的卡留在「生疏」里，下次还会被抽到。
    */
-  const openQuickQuiz = (card) => {
+  const openQuickQuiz = (rawCard) => {
+    // 用清洗后的副本：诊断标签不能当"必须覆盖的要点"念给用户听
+    const card = presentableCard(rawCard);
     const modal = createModal({
       title: '快问快答',
       subtitle: '按抽背顺序讲一遍，再对照你的标准答案',
