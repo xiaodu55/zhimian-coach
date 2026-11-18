@@ -6,7 +6,14 @@ settings:
 
 importers:
 
-  .: {}
+  .:
+    devDependencies:
+      '@botharness/cloudflared-win32-x64':
+        specifier: ^1.7.0
+        version: 1.7.0
+      playwright-core:
+        specifier: ^1.65.1
+        version: 1.65.1
 
   apps/bff:
     dependencies:
@@ -40,6 +47,11 @@ importers:
         version: 5.9.3
 
 packages:
+
+  '@botharness/cloudflared-win32-x64@1.7.0':
+    resolution: {integrity: sha512-V16KvIpTkEITrjdG1OQIkBz/GwhjaqegOrwkEDKSxKYMavzj2KC4EaUmHIF/z5OrS4K7Zax674B6McrMEmpE9g==}
+    cpu: [x64]
+    os: [win32]
 
   '@esbuild/aix-ppc64@0.28.2':
     resolution: {integrity: sha512-XExcO+dvLKvVtNTibSTBej1NCAbaGhWn9Ww1ZPx80qsahhPFe/8jgWP0IchNe0F3HwkU7n8ejhH8bjonqht8mQ==}
@@ -268,6 +280,11 @@ packages:
     resolution: {integrity: sha512-v6ZJ/efsBpGrGGknjtq9J/oC8tZWq0KWL5vQrk2GlzLEQPUDB1ex+13Rmidl1neNN358Jn9EHZw5y07FFtaC7A==}
     engines: {node: '>=6.8.1'}
 
+  playwright-core@1.65.1:
+    resolution: {integrity: sha512-hqPpz7blSMPxWVdoeE1yiBSzXsKiVOd2k+kjCvmUywD2GPO2Dd9HfcWnq9NN0GHbNZDFgZ9JfBFr+X5/BLo0qw==}
+    engines: {node: '>=20'}
+    hasBin: true
+
   punycode.js@2.3.1:
     resolution: {integrity: sha512-uxFIHU0YlHYhDQtV4R9J6a52SLx28BCjT+4ieh7IGbgwVJWO+km431c4yRlREUAsAmt/uMjQUyQHNEPf0M39CA==}
     engines: {node: '>=6'}
@@ -289,6 +306,8 @@ packages:
     resolution: {integrity: sha512-iwDZqg0QAGrg9Rav5H4n0M64c3mkR59cJ6wQp+7C4nI0gsmExaedaYLNO44eT4AtBBwjbTiGPMlt2Md0T9H9JQ==}
 
 snapshots:
+
+  '@botharness/cloudflared-win32-x64@1.7.0': {}
 
   '@esbuild/aix-ppc64@0.28.2':
     optional: true
@@ -454,6 +473,8 @@ snapshots:
       node-ensure: 0.0.0
     transitivePeerDependencies:
       - supports-color
+
+  playwright-core@1.65.1: {}
 
   punycode.js@2.3.1: {}
 

@@ -8,7 +8,7 @@
     "check:secrets": "node scripts/check-secrets.mjs",
     "dev:port": "pnpm --filter @zhimian/bff exec tsx src/index.ts --port",
     "build:bff": "pnpm --filter @zhimian/bff build",
-    "start": "pnpm --filter @zhimian/bff start:dist",
+    "start": "node scripts/dev/start-prod.mjs",
     "bank:questions": "node scripts/build-bank/questions.mjs",
     "bank:cards": "node scripts/build-bank/cards.mjs",
     "bank:to-v02": "node scripts/build-bank/to-v02.mjs",
@@ -16,11 +16,16 @@
     "test": "pnpm --filter @zhimian/bff test",
     "dev:restart": "node scripts/dev/restart.mjs",
     "build:all": "pnpm --filter @zhimian/bff build",
-    "tunnel": "node scripts/dev/tunnel.mjs"
+    "tunnel": "node scripts/dev/tunnel.mjs",
+    "verify:deploy": "node scripts/test/smoke.mjs"
   },
   "type": "module",
   "devDependencies": {
     "@botharness/cloudflared-win32-x64": "^1.7.0",
     "playwright-core": "^1.65.1"
-  }
+  },
+  "workspaces": [
+    "apps/*",
+    "scripts/*"
+  ]
 }

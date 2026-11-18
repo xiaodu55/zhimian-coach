@@ -310,6 +310,14 @@ pnpm tunnel          # 申请 Cloudflare 快速隧道，打印 https://xxx.trycl
 **前端 + Node 后端、不含数据库写入的全栈项目 → 用知乎 [AiWorks](https://www.zhihu.com/project-square) 提供的部署能力**（本项目正是这一类）。
 
 完整步骤、环境变量清单、HTTPS 要求、自检清单与常见坑：**[`docs/部署指南.md`](docs/部署指南.md)**。
+选路线 A（知乎 AiWorks）的照点清单：**[`docs/AiWorks部署清单.md`](docs/AiWorks部署清单.md)**。
+
+```bash
+# 打印要粘到平台「环境变量」框里的内容（必填/建议/可选分三段）
+node scripts/dev/print-env-for-deploy.mjs
+# 部署完，一条命令跑完 9 条主链路自检（把 --base 换成你的域名）
+node scripts/test/smoke.mjs --base https://你的域名
+```
 
 三条铁律：
 1. **必须 HTTPS**（录音 `getUserMedia` 只在安全上下文可用）；
