@@ -2,9 +2,14 @@
  * 把「真实知乎跑批题库」转换成 v0.2 前端/后端约定的 schema
  * 用法：node scripts/build-bank/to-v02.mjs [--in data-raw-bank.json] [--out apps/web/data/question-bank.json]
  *
- * 输入（我方跑批产物）：{ version, items:[{id,title,questionUrl,track,heat,sources[],viewAngleCards[],benchmark,pitfalls[]}] }
- * 输出（v0.2 契约）：{ version, generatedAt, questions:[{id,track,difficulty,title,context,keywords,
- *                      expectedLength,skeleton,viewpointCards[]}], demoSampleTranscript:{questionId,rawText} }
+ * 输入（我方跑批产物）：{ version, items:[{id,title,questionUrl,track,topic,domain,kind,heat,sources[],viewAngleCards[],benchmark,pitfalls[]}] }
+ * 输出（v0.2 契约）：{ version, generatedAt, note, questions:[{id,track,domain,kind,difficulty,title,context,keywords,
+ *                      expectedLength,skeleton,viewpointCards[],sources[]}], demoSampleTranscript:{questionId,rawText} }
+ *
+ * 三条硬约定（前端直接按字段筛，不要再用关键词正则猜）：
+ *   domain   = ai-agent | rag | backend | algo-data | product | general | defense
+ *   kind     = tech（技术/工程题，后端按技术维度评分）| soft（通用软素质题）
+ *   difficulty= 基础 | 进阶 | 难
  */
 import fs from 'node:fs';
 import path from 'node:path';
@@ -18,7 +23,62 @@ const IN = path.resolve(ROOT, argOf('in', 'data-raw-bank.json'));
 const OUT = path.resolve(ROOT, argOf('out', 'apps/web/data/question-bank.json'));
 
 const TRACK_LABEL = { interview: '面试通用', defense: '论文/答辩' };
-const DIFFICULTY = { 1: '基础', 2: '进阶', 3: '高阶' };
+
+/**
+ * 老题（跑批之前抓的 53 道）没有 domain 字段，按标题定点归类：
+ * 软素质题一律 general，答辩题一律 defense，只有这 3 道本身是技术/业务题。
+ */
+const LEGACY_DOMAIN = [
+  ['面试 AI Agent 岗位时', 'ai-agent'],
+  ['100杯水里', 'algo-data'],
+  ['纳什均衡', 'algo-data'],
+];
+
+/** 通用常识型软素质题（沟通、离职原因、自我介绍…）默认难度是「基础」 */
+const BASE_SOFT = /自我介绍|离职|跳槽|offer|简历|群面|笔试|紧张|焦虑|结巴|被拒|快��|轻松|吐槽|焦虑/;
+/** 需要权衡/判断的软素质题，比「基础」高一档 */
+const ADVANCED_SOFT = /权衡|判断.*核心|职业规划|规划|冲突|意见不合|如何选择|怎么选|比较|取舍|复盘|为什么.*失败|怎么回|如何回答|深挖|追问|反馈|偏见|潜力|翻盘/;
+
+/**
+ * 「难」的判据：题目要求落到架构级取舍或量化评估设计。
+ * （系统设计、高并发、一致性、幂等、RAG 评测、权限治理……）
+ */
+const HARD_TECH =
+  /系统设计|架构|高并发|并发|QPS|一致性|幂等|削峰|熔断|限流|降级|事务|分布式|缓存一致|慢查询|索引|监控|可观测|排查|链路追踪|评测|评估|评测集|基准|A\/B|AB测试|实验设计|对照组|消融|显著性|指标拆解|数据闭环|指标体系|特征工程|召回|重排|切分|切块|Chunk|向量|知识库|护栏|越权|幻觉|兜底|权限|沙箱|编排|多轮|稳定性|冷启动|效果评估|数据清洗|数据标注|搜索排序|推荐系统|精排|排序模型|特征|样本|治理|埋点|商业化|定价|付费转化|留存|增长|数据驱动|业务场景|落地/;
+
+/** 「基础」的技术题：问的是概念/定义/区别，没有量化与基线要求 */
+const BASE_TECH = /是什么|什么是|有哪些|定义|含义|区别|为什么是|入门|基础概念|怎么理解|如何理解|简单介绍|科普|了解|是不是/;
+/** 「为什么这么设计」型原理题也属于基础（概念理解，不是架构取舍） */
+const BASE_TECH_WHY = /为什么.*(设计|原理|区别|机制)/;
+
+const DOMAIN_LABEL = {
+  'ai-agent': 'AI Agent / 工具调用',
+  rag: 'RAG / 检索增强',
+  backend: '后端与系统设计',
+  'algo-data': '算法与数据',
+  product: '产品与业务',
+  general: '通用面试素养',
+  defense: '论文与答辩',
+};
+
+/**
+ * 软素质题限量（题库契约）：general 只保留 8–10 道，其余全部是技术题。
+ * 原始抓取数据 data-raw-bank.json 保持完整（一条都不删），策展只发生在组装这一步，
+ * 所以后面想扩题库，改这张清单就能把老软题放回去。
+ * 保留清单覆盖契约要求的六类：自我介绍 / 离职原因 / offer 比较 / 沟通协作 / 职业规划 / 压力应对。
+ */
+const SOFT_KEEP = [
+  '大厂员工吐槽新来的校招生', // 面试在选什么样的人
+  '面试的时候，如何自我介绍', // 自我介绍
+  '你手上还有其它 offer 吗', // offer 比较
+  '当面试官问到「跳槽原因」时', // 离职原因
+  '在职业生涯中，如何判断是否应该跳槽或离职', // 职业规划 / 取舍
+  '如果与上级意见不合', // 沟通协作冲突
+  '秋招结束还没拿到 offer', // 压力应对
+  '面试中遇到面试官提问一些刁钻的', // 刁钻问题怎么回
+  '秋招简历上的项目经历写参与还是负责', // 表达分寸
+  '疯狂画大饼', // 谈条件 / 追问真实待遇',
+];
 
 /** 从标题里抽二元组关键词（无分词器的稳妥做法），并补上观点立场词 */
 function keywordsOf(item) {
@@ -37,7 +97,7 @@ function skeletonOf(item) {
   const base = [
     '开口先复述问题，确认你听到的是同一件事',
     '给一个可核对数字（影响面 / 耗时 / 覆盖率）并说明口径与基线',
-    item.track === 'defense' ? '说明方法与边界：什么条件下成立、什么条件下会翻车' : '说明你的判断与取舍：为什么这么做、还有什么选项',
+    item.domain === 'defense' ? '说明方法与边界：什么条件下成立、什么条件下会翻车' : '说明你的判断与取舍：为什么这么做、还有什么选项',
     '收尾落到结果：变化了多少，谁验收过',
   ];
   for (const p of (item.pitfalls || []).slice(0, 2)) base.push(`注意避开：${p}`);
@@ -47,7 +107,8 @@ function skeletonOf(item) {
 function contextOf(item) {
   if (item.benchmark) return item.benchmark;
   const pits = (item.pitfalls || []).slice(0, 3).join(' / ');
-  return pits ? `这道题真正在考：${pits}` : '考察能否在有分歧的问题上给出有依据、经得起追问的判断。';
+  if (pits) return `这道题真正在考：${pits}`;
+  return '考察能否在有分歧的问题上给出有依据、经得起追问的判断。';
 }
 
 function toCard(v, i, item) {
@@ -58,9 +119,46 @@ function toCard(v, i, item) {
     evidenceQuote: v.evidence || '',
     sourceUrl: v.sourceUrl || '',
     author: v.sourceAuthor || '',
-    upvotes: Number(v.sourceVotes) || 0,
+    // 知乎开发者 API 只返回 {ContentType,ContentToken,Url,Summary}，没有作者与赞同数：
+    // 这里固定为 0 / 空串，前端不得把它当成真实热度展示（也不要说「高赞」）
+    upvotes: 0,
     popularity: v.popularity === 'minority' ? '少数派' : '主流',
   };
+}
+
+/** 题目方向：raw 里有 domain 就用；老题按定点表 + track 兜底 */
+function domainOf(item) {
+  if (item.domain && DOMAIN_LABEL[item.domain]) return item.domain;
+  for (const [frag, dom] of LEGACY_DOMAIN) if (item.title.includes(frag)) return dom;
+  if (item.track === 'defense') return 'defense';
+  return 'general';
+}
+
+/** 题型：raw 里有 kind 就用；否则 general=soft，其余=tech */
+function kindOf(item, domain) {
+  if (item.kind === 'tech' || item.kind === 'soft') return item.kind;
+  return domain === 'general' ? 'soft' : 'tech';
+}
+
+/**
+ * 难度三档：
+ *   基础 = 通用常识，骨架里没有量化/基线要求（沟通、离职原因、自我介绍…）
+ *   难   = 要求落到架构级取舍或量化评估设计（系统设计、高并发、RAG 评测、权限治理…）
+ *   进阶 = 其余
+ * 实现：先按 domain/kind 给默认档，再用标题关键词微调。
+ */
+function difficultyOf(item, domain, kind) {
+  const hay = `${item.title} ${item.benchmark || ''} ${item.context || ''}`;
+  if (kind === 'soft' || domain === 'general') {
+    if (ADVANCED_SOFT.test(hay)) return '进阶';
+    return '基础';
+  }
+  if (domain === 'defense') {
+    return HARD_TECH.test(hay) && !BASE_TECH.test(hay) ? '难' : '进阶';
+  }
+  if (HARD_TECH.test(hay)) return '难';
+  if (BASE_TECH.test(hay) || BASE_TECH_WHY.test(hay)) return '基础';
+  return '进阶';
 }
 
 /** 一键体验用的合成转写稿：故意含缺陷，保证规则层能命中 */
@@ -85,19 +183,38 @@ function main() {
   const raw = JSON.parse(fs.readFileSync(IN, 'utf8'));
   const items = Array.isArray(raw) ? raw : (raw.items ?? []);
 
-  const questions = items
+  // 先把每道题的方向/题型定下来，再按契约限量（软素质题只留 SOFT_KEEP 里的）
+  const classified = items
     .filter((it) => it.title)
     .map((it) => {
+      const domain = domainOf(it);
+      const kind = kindOf(it, domain);
+      return { it, domain, kind };
+    });
+
+  const droppedSoft = classified.filter(
+    (c) => c.kind === 'soft' && !SOFT_KEEP.some((f) => c.it.title.includes(f))
+  );
+  const kept = classified.filter((c) => !droppedSoft.includes(c));
+  if (droppedSoft.length) {
+    console.log(`[to-v02] 软素质题限量：保留 ${classified.length - droppedSoft.length} / ${classified.length}（原始数据仍完整保留在 data-raw-bank.json）`);
+  }
+
+  const questions = kept
+    .map(({ it, domain, kind }) => {
+      const enriched = { ...it, domain, kind };
       const cards = (it.viewAngleCards || []).map((v, i) => toCard(v, i, it));
       return {
         id: it.id,
         track: TRACK_LABEL[it.track] || TRACK_LABEL.interview,
-        difficulty: DIFFICULTY[it.difficulty] || '进阶',
+        domain,
+        kind,
+        difficulty: difficultyOf(enriched, domain, kind),
         title: it.title,
         context: contextOf(it),
         keywords: keywordsOf(it),
         expectedLength: [150, 400],
-        skeleton: skeletonOf(it),
+        skeleton: skeletonOf(enriched),
         viewpointCards: cards,
         // 保真：原知乎问题链接与来源（前端不渲染也没关系，留作溯源）
         questionUrl: it.questionUrl || '',
@@ -111,7 +228,7 @@ function main() {
   const out = {
     version: '0.2.0-real',
     generatedAt: new Date().toISOString(),
-    note: '真题来自知乎开放平台（question_recommendations + question_answers），观点卡由直答生成并逐字校验 evidence',
+    note: '真题来自知乎开放平台（question_recommendations + question_answers），观点卡由直答生成并逐字校验 evidence；知乎 API 不返回作者与赞同数，卡片作者留空、upvotes 固定 0',
     questions,
     demoSampleTranscript: demoQuestion ? demoTranscriptFor(demoQuestion) : null,
   };
@@ -120,12 +237,20 @@ function main() {
   fs.writeFileSync(OUT, JSON.stringify(out, null, 2));
 
   const withCards = questions.filter((q) => q.viewpointCards.length).length;
-  const verified = questions.reduce(
-    (s, q) => s + q.viewpointCards.filter((c) => c.evidenceQuote).length,
-    0
-  );
+  const verified = questions.reduce((s, q) => s + q.viewpointCards.filter((c) => c.evidenceQuote).length, 0);
+  const byDomain = {};
+  const byKind = {};
+  const byDiff = {};
+  for (const q of questions) {
+    byDomain[q.domain] = (byDomain[q.domain] || 0) + 1;
+    byKind[q.kind] = (byKind[q.kind] || 0) + 1;
+    byDiff[q.difficulty] = (byDiff[q.difficulty] || 0) + 1;
+  }
   console.log(`[to-v02] 写入 ${OUT}`);
   console.log(`[to-v02] 题 ${questions.length}｜带观点卡 ${withCards}｜卡片 ${verified}｜体积 ${(fs.statSync(OUT).size / 1024).toFixed(0)}KB`);
+  console.log('[to-v02] domain', byDomain);
+  console.log('[to-v02] kind  ', byKind);
+  console.log('[to-v02] difficulty', byDiff);
   console.log(`[to-v02] 一键体验题目：${demoQuestion?.id} ${String(demoQuestion?.title || '').slice(0, 40)}`);
 }
 

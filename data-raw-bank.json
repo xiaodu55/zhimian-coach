@@ -1,6 +1,6 @@
 {
   "version": 3,
-  "updatedAt": "2026-11-18T09:03:51.435Z",
+  "updatedAt": "2026-11-18T09:18:50.873Z",
   "items": [
     {
       "id": "q_1",
@@ -4067,10 +4067,65 @@
           "snippet": "你只是在自嗨，你没有让企业相信，你进门第二天就能开始产出价值的实力题主你把面试当成了闭卷考试，以为自己背熟了答案就能拿高分。但企业那边根本不是这套打分逻辑 你觉得自己对答如流、聊得挺嗨，其实在面试官眼里，你只是个答题机器，没让他看见任何这人来了能帮我干活的证据。 企业最怕招来的人是个半成品，还得培训三个月才能上手。 所以你光说我做过什么项目没用，你得说我在那个项目里具体干了啥、遇到了什么麻烦、我是…"
         }
       ],
-      "viewAngleCards": [],
-      "benchmark": "",
-      "pitfalls": [],
-      "createdAt": "2026-11-16T14:34:48.131Z"
+      "viewAngleCards": [
+        {
+          "stance": "匹配运气论",
+          "summary": "面试成功取决于时间、职位与面试官刚好匹配，失败不一定是个人问题。",
+          "evidence": "不是最合适的，而是刚好匹配的",
+          "sourceIndex": 1,
+          "sourceUrl": "https://www.zhihu.com/question/1914417114938319777/answer/2101212130720616996",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "多因归因论",
+          "summary": "失败可能因不适合岗位、薪资过高或有更合适人选，聊得好不等于被认可。",
+          "evidence": "别看HR表面上与你聊的很愉快，说不定人家内心早就已经把你给否掉了",
+          "sourceIndex": 2,
+          "sourceUrl": "https://www.zhihu.com/question/1914417114938319777/answer/2010623964226012781",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "背稿反效果",
+          "summary": "过度结构化准备导致照本宣科，缺乏真实自然，反而降低面试表现。",
+          "evidence": "你讲的东西太结构化，有点照本宣科",
+          "sourceIndex": 3,
+          "sourceUrl": "https://www.zhihu.com/question/1914417114938319777/answer/2005574676253020473",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "minority",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "价值证明缺失",
+          "summary": "自我感觉良好只是自嗨，未让企业相信入职即可产出价值。",
+          "evidence": "你只是在自嗨，你没有让企业相信，你进门第二天就能开始产出价值的实力",
+          "sourceIndex": 5,
+          "sourceUrl": "https://www.zhihu.com/question/1914417114938319777/answer/2005628345853957582",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        }
+      ],
+      "benchmark": "考察能否识别面试失败未必源于准备不足，而在于匹配度、表达真实性与评价标准错位。",
+      "pitfalls": [
+        "把聊得好等同录用",
+        "背稿导致照本宣科",
+        "只讲做过不讲怎么做",
+        "求职方向错位"
+      ],
+      "createdAt": "2026-11-16T14:34:48.131Z",
+      "cardsMeta": {
+        "attempts": 1,
+        "verified": 4,
+        "total": 4
+      }
     },
     {
       "id": "q_44",
@@ -4116,10 +4171,65 @@
           "snippet": "成年人的世界里，我们从来不说「撒谎」。 我们一般用两个更高级的词汇，叫做博弈，或者谈判技巧。 哈佛商学院的教材《哈佛经典谈判术》里面开篇的经典案例，是某位总统候选人的竞选团队在竞选的时候出了一个乌龙。 他们在竞选材料上打印的这个候选人的照片在印好了之后才发现没有版权，但是这个时候竞选团队已经没有任何预算去购买照片的版权了。 因为理论上，像这种竞选材料的照片。对于摄影师来说，都会借机卖一个天价，但是这…"
         }
       ],
-      "viewAngleCards": [],
-      "benchmark": "",
-      "pitfalls": [],
-      "createdAt": "2026-11-16T14:34:51.313Z"
+      "viewAngleCards": [
+        {
+          "stance": "措辞不决定诚实",
+          "summary": "面试官判断依据是回答质量，而非简历写参与或负责，进入面试后讲述质量更关键。",
+          "evidence": "面试官做判断，并不是根据你简历上的描述，而是针对你的回答质量。",
+          "sourceIndex": 2,
+          "sourceUrl": "https://www.zhihu.com/question/2099856053609542214/answer/2102101690191179852",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "美化必被问穿",
+          "summary": "吹出来的经历在行为面试中很难藏住，细节追问会暴露真实贡献。",
+          "evidence": "只要是吹出来的经历，放到行为面试里，大多很难藏得住。",
+          "sourceIndex": 4,
+          "sourceUrl": "https://www.zhihu.com/question/2099856053609542214/answer/2101261360315290670",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "优化不改变事实",
+          "summary": "简历可适当优化但不能改变事实，负责指第一责任人，参与是执行者。",
+          "evidence": "简历可以适当的优化、美化，但不能改变事实。",
+          "sourceIndex": 3,
+          "sourceUrl": "https://www.zhihu.com/question/2099856053609542214/answer/2100500530472797590",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "措辞即博弈技巧",
+          "summary": "把措辞选择视为谈判博弈而非撒谎，用技巧性表述处理贡献边界。",
+          "evidence": "成年人的世界里，我们从来不说「撒谎」。",
+          "sourceIndex": 5,
+          "sourceUrl": "https://www.zhihu.com/question/2099856053609542214/answer/2105569840488519129",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "minority",
+          "evidenceVerified": true
+        }
+      ],
+      "benchmark": "考的是简历措辞与真实贡献的边界，以及面试细节追问下的可信度。",
+      "pitfalls": [
+        "把参与硬写成负责",
+        "担心被识破致紧张",
+        "美化改变事实",
+        "只纠结措辞不备细节"
+      ],
+      "createdAt": "2026-11-16T14:34:51.313Z",
+      "cardsMeta": {
+        "attempts": 1,
+        "verified": 4,
+        "total": 4
+      }
     },
     {
       "id": "q_45",
@@ -4207,10 +4317,65 @@
           "snippet": "这吃相也属实离谱了，这么一个连社保都没交过一分钱的皮包公司，倒先盘算着从还没进门的求职者身上白嫖两杯饮料，连杯咖啡钱都想白嫖，这假老板是真穷疯了呀。 [1] [视频] 根据相关报道，涉事企业上海佐棠国际贸易有限公司注册资本100万，连续多年参保人数是刺眼的零，办公地址还被上海市嘉定区市监局盖戳“无法联系”。 [2] [图片] 这种零参保加地址失联的空壳，账上连半个参保人员都没有，请问哪来的专职人事？ 大抵屏幕上那个顶着HR头衔发号施…"
         }
       ],
-      "viewAngleCards": [],
-      "benchmark": "",
-      "pitfalls": [],
-      "createdAt": "2026-11-16T14:34:54.122Z"
+      "viewAngleCards": [
+        {
+          "stance": "平台责任缺失",
+          "summary": "问题不止于HR和企业，招聘平台对经营异常企业长期放行、缺乏对灰色索求的识别机制，同样失职",
+          "evidence": "一个连续多年0人参保、2024年就被列入经营异常名录的公司，为什么能在平台上正常招聘、正常用平台自己的聊天系统，向求职者提出这种要求？",
+          "sourceIndex": 2,
+          "sourceUrl": "https://www.zhihu.com/question/2104925918871529406/answer/2105322422002045257",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "草台班子论",
+          "summary": "事件本质是空壳公司加嘴贱的招聘者再加不负责任的平台，不必过度理论化",
+          "evidence": "一个草台班子加一个嘴贱的HR（老板）再加一个不负责任的平台，干出一件不过脑子的事而已。",
+          "sourceIndex": 1,
+          "sourceUrl": "https://www.zhihu.com/question/2104925918871529406/answer/2105667525166080309",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "minority",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "服从性测试",
+          "summary": "带咖啡是试探求职者底线的职场PUA，筛选的是听话好拿捏而非能力",
+          "evidence": "",
+          "sourceIndex": 13,
+          "sourceUrl": "",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": false
+        },
+        {
+          "stance": "企业深层违法",
+          "summary": "索要饮品只是表象，根子是连社保都不缴的企业漠视劳动者权益、规避法定责任",
+          "evidence": "",
+          "sourceIndex": 10,
+          "sourceUrl": "",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": false
+        }
+      ],
+      "benchmark": "透过个案看招聘方权力越界、平台审核漏洞与求职者维权成本",
+      "pitfalls": [
+        "就咖啡论咖啡",
+        "只骂HR不追平台",
+        "忽视企业参保异常",
+        "把个案当成普遍现象"
+      ],
+      "createdAt": "2026-11-16T14:34:54.122Z",
+      "cardsMeta": {
+        "attempts": 1,
+        "verified": 2,
+        "total": 4
+      }
     },
     {
       "id": "q_47",
@@ -4256,10 +4421,53 @@
           "snippet": "笃定前行，继续奋斗。肯定成功。其实这个问题我觉得比较简单，给自己回血有以下几个方面： 1.坚定信念十分重要。不要几次失败就会心灰意冷了，要有坚定的信心，才能够继续前行。先坐下来，给自己一个足够的时间放松一下自己，走出去看看山山水水，把心态调整好，迎接下一次的面试。 2.降低期望十分重要。一般而言，你肯定是从高到低的模式进行面试的，当然，拿不到最高的机会肯定是自己的期望值高的原因。如果遇到这个问题，那你…"
         }
       ],
-      "viewAngleCards": [],
-      "benchmark": "",
-      "pitfalls": [],
-      "createdAt": "2026-11-16T14:34:55.497Z"
+      "viewAngleCards": [
+        {
+          "stance": "坚定信念",
+          "summary": "靠信念与心态调整走出挫败，先放松再迎接下一次面试。",
+          "evidence": "坚定信念十分重要。不要几次失败就会心灰意冷了，要有坚定的信心，才能够继续前行。",
+          "sourceIndex": 5,
+          "sourceUrl": "https://www.zhihu.com/question/2099517835743597368/answer/2101007646564291931",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "降低期望",
+          "summary": "逐次下调目标与期望值，减少落差带来的打击。",
+          "evidence": "降低期望十分重要。一般而言，你肯定是从高到低的模式进行面试的",
+          "sourceIndex": 5,
+          "sourceUrl": "https://www.zhihu.com/question/2099517835743597368/answer/2101007646564291931",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "看透工作分类",
+          "summary": "把工作分成不同类型看待，认清就业面以缓解焦虑。",
+          "evidence": "工作其实就分三类： 第一类，知名公司、大厂、公务员。",
+          "sourceIndex": 2,
+          "sourceUrl": "https://www.zhihu.com/question/2099517835743597368/answer/2101715266661101951",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "minority",
+          "evidenceVerified": true
+        }
+      ],
+      "benchmark": "考察连续失利后自我调节与心态重建的真实方法",
+      "pitfalls": [
+        "只靠鸡汤不行动",
+        "把失败归因运气",
+        "期望过高落差大"
+      ],
+      "createdAt": "2026-11-16T14:34:55.497Z",
+      "cardsMeta": {
+        "attempts": 1,
+        "verified": 3,
+        "total": 3
+      }
     },
     {
       "id": "q_48",
@@ -4354,10 +4562,65 @@
           "snippet": "朋友，我讲几点浅薄的认知： 1、信息不对称。在你真正开始一份工作之前，你很难完全了解它，大多数职位描述都不准确，HR嘴上说出口的话也总让人觉得像是在画大饼。你当然可以问，可以去调研，但依然可能每个人说法都不一样。同理，你递给HR的学历学位证书明明盖着钢印，她也要再去学信网上查一下是不是真的。这是一个相当令人讨厌的“先有鸡，还是先有蛋”的矛盾，会让你和很多潜在的机会失之交臂。 2、机会成本。基于1，我们需…"
         }
       ],
-      "viewAngleCards": [],
-      "benchmark": "",
-      "pitfalls": [],
-      "createdAt": "2026-11-16T14:35:00.222Z"
+      "viewAngleCards": [
+        {
+          "stance": "不必硬刚但必问",
+          "summary": "硬刚无益且有害，但薪资必须问清，宜用委婉方式追问真实待遇",
+          "evidence": "硬刚绝对是没有必要的，硬刚只会让事情变得糟糕，反而不利于获取真实待遇的消息",
+          "sourceIndex": 3,
+          "sourceUrl": "https://www.zhihu.com/question/2040841316603536863/answer/2045631743831576685",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "不硬刚但要追问",
+          "summary": "求职者身份不宜硬刚，但应坚持追问待遇，并理解HR谈成长的多种动机",
+          "evidence": "不要硬刚，毕竟你还是个求职者；但要追问。",
+          "sourceIndex": 4,
+          "sourceUrl": "https://www.zhihu.com/question/2040841316603536863/answer/2078433179510358046",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "视为无效表演",
+          "summary": "把画饼当未标价商品，一律视为没说，安静听完再切入正题即可",
+          "evidence": "不管对方怎么绕圈子画饼不说，都一律视为对方啥也没说。",
+          "sourceIndex": 1,
+          "sourceUrl": "https://www.zhihu.com/question/2040841316603536863/answer/2052706081953019556",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "minority",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "可刚但目的落空",
+          "summary": "识破画饼后硬刚只消解情绪，仍听不到真实答案，关键还是问到薪资",
+          "evidence": "吵一架，无非消解的是情绪罢了。",
+          "sourceIndex": 2,
+          "sourceUrl": "https://www.zhihu.com/question/2040841316603536863/answer/2053154228114289340",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "minority",
+          "evidenceVerified": true
+        }
+      ],
+      "benchmark": "考察求职者在信息不对称下的谈判分寸与目标导向沟通能力",
+      "pitfalls": [
+        "当场硬刚错失机会",
+        "怯于谈薪轻信大饼",
+        "只关注钱被贴标签",
+        "把画饼当承诺"
+      ],
+      "createdAt": "2026-11-16T14:35:00.222Z",
+      "cardsMeta": {
+        "attempts": 1,
+        "verified": 4,
+        "total": 4
+      }
     },
     {
       "id": "q_50",
@@ -4403,10 +4666,54 @@
           "snippet": "大家好，我是大志。 Memory（记忆）几乎是所有 AI Agent 面试都会涉及的核心知识点。从短期记忆、长期记忆，到 Memory Summary、用户画像、记忆召回、记忆压缩，这些问题在面试中都非常高频，也是实际开发中绕不开的内容。本篇文章我结合自己的学习和项目经验，整理了一份 记忆管理相关的高频面试题。不仅会介绍每个知识点是什么，还会结合实际开发场景，分享生产环境中常见的设计思路，希望能够帮助大家建立完整的 Memory 知识…"
         }
       ],
-      "viewAngleCards": [],
-      "benchmark": "",
-      "pitfalls": [],
-      "createdAt": "2026-11-16T14:35:01.611Z"
+      "viewAngleCards": [
+        {
+          "stance": "面试官实战派",
+          "summary": "不考八股，用排障类追问看基础、自驱力与代码落地能力。",
+          "evidence": "我不考八股。ReAct、MCP、RAG 这些搜一下就有，背出来说明不了什么。",
+          "sourceIndex": 1,
+          "sourceUrl": "https://www.zhihu.com/question/2049047173677987500/answer/2103137149558247545",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "反套路筛选派",
+          "summary": "大厂筛选不看刷题，看是否真懂 Agent 而非套框架。",
+          "evidence": "现在大厂筛选AI Agent人才，其实看这几个关键点就知道你是真懂Agent，还是只是会套框架！",
+          "sourceIndex": 2,
+          "sourceUrl": "https://www.zhihu.com/question/2049047173677987500/answer/2062637529636124587",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "题库资源派",
+          "summary": "主张用高频真题与图解题库系统备战 Agent 面试。",
+          "evidence": "如果你在准备AI 大模型/AI Agent开发岗面试，先把这套面试题收藏好了",
+          "sourceIndex": 3,
+          "sourceUrl": "https://www.zhihu.com/question/2049047173677987500/answer/2056369515190133399",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "minority",
+          "evidenceVerified": true
+        }
+      ],
+      "benchmark": "考察能否用追问识破背八股，判断真实排障与落地能力。",
+      "pitfalls": [
+        "只背八股术语",
+        "空谈框架不讲排障",
+        "不会结合原经验",
+        "答不出代码落地"
+      ],
+      "createdAt": "2026-11-16T14:35:01.611Z",
+      "cardsMeta": {
+        "attempts": 1,
+        "verified": 3,
+        "total": 3
+      }
     },
     {
       "id": "q_51",
@@ -4452,10 +4759,64 @@
           "snippet": "不用如果，我就是业务部门的面试官，我的答案是：不会…即使候选人面试结果再优秀或者再差劲，我都不会当场表露情绪，更不用说反馈面试结果，因为没有盖棺定论前一切看似板上钉钉的结果都会存在变数，关于候选人的选择，也不是我这个层级可以决定的，我没有拍板的权力，我只能选择中庸。 倒也不是说故意藏着掖着不坦诚，也不是有自己的小心机。 而是因为吃过亏，才知道，不是所有人都能心平气和的接纳对自己不利的结果的。要知道…"
         }
       ],
-      "viewAngleCards": [],
-      "benchmark": "",
-      "pitfalls": [],
-      "createdAt": "2026-11-16T14:35:02.980Z"
+      "viewAngleCards": [
+        {
+          "stance": "绝不当场反馈",
+          "summary": "认为面试是流程的一环，结果需汇总与比较后再定，当场表态既越权又可能让招聘方被动。",
+          "evidence": "肯定不会，正常情况相信没有人会当场拒绝，也绝对不建议当场反馈！",
+          "sourceIndex": 1,
+          "sourceUrl": "https://www.zhihu.com/question/1907206298069610762/answer/1928012548856353801",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "看情况偶发直告",
+          "summary": "多数情况不当场回复，仅在本部门且可自主决定、候选人明显不合适时极少数直接告知。",
+          "evidence": "我自己部门的，且候选人明显不合适的，我会直接回复。",
+          "sourceIndex": 2,
+          "sourceUrl": "https://www.zhihu.com/question/1907206298069610762/answer/1928786061049444112",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "minority",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "顾及体面不直告",
+          "summary": "从职业素养与对方感受出发，不合适也不当场让对方难堪，双方多能从态度预判结果。",
+          "evidence": "哪怕对方不合适，我也不会当场直接反馈面试结果。",
+          "sourceIndex": 3,
+          "sourceUrl": "https://www.zhihu.com/question/1907206298069610762/answer/1928515111477285747",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "无权定论不表态",
+          "summary": "结果存在变数且非本层级可拍板，面试官选择不表露情绪、不反馈结果，保持中庸。",
+          "evidence": "关于候选人的选择，也不是我这个层级可以决定的，我没有拍板的权力，我只能选择中庸。",
+          "sourceIndex": 5,
+          "sourceUrl": "https://www.zhihu.com/question/1907206298069610762/answer/1930189503131267246",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        }
+      ],
+      "benchmark": "考察面试官在信息未定、无权拍板与顾及候选人感受时如何处置当场反馈的边界判断。",
+      "pitfalls": [
+        "把当场拒绝当坦诚",
+        "忽视流程与比较",
+        "越权替公司定论"
+      ],
+      "createdAt": "2026-11-16T14:35:02.980Z",
+      "cardsMeta": {
+        "attempts": 1,
+        "verified": 4,
+        "total": 4
+      }
     },
     {
       "id": "q_52",
@@ -4501,10 +4862,53 @@
           "snippet": "作为一个笔试第一、面试被翻盘三次，最后才上岸的倒霉蛋来说，这个问题我最有发言权了。今天我就用我被刷了三次的血泪史，跟你们说说这里面的事情 先泼盆冰水醒醒脑：你以为笔试第一就稳了？错l！ 那只是拿到了决赛入场券，真正的猎杀时刻现在才开始。 面试场，就是你从做题家变身社会人的第一现场，残酷得很。 一、笔试VS面试：根本是两种生物 笔试就是密室逃脱，答案就在房间里，你只要够快、够准、记得牢，你就是王者。考的是…"
         }
       ],
-      "viewAngleCards": [],
-      "benchmark": "",
-      "pitfalls": [],
-      "createdAt": "2026-11-16T14:35:04.372Z"
+      "viewAngleCards": [
+        {
+          "stance": "小概率事件",
+          "summary": "面试官视角下笔试第一被翻盘并不普遍，多数笔试第一总分仍居首，属小概率现象",
+          "evidence": "所以在我的印象中，笔试成绩第一，面试被翻盘是小概率事件。",
+          "sourceIndex": 1,
+          "sourceUrl": "https://www.zhihu.com/question/1935992585484239151/answer/1937123282475266434",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "考生自身短板",
+          "summary": "现象虽不普遍但确实存在，根源在考生语言表达差、性格内向等自身因素",
+          "evidence": "第一个是，考生语言表达能力太差。",
+          "sourceIndex": 2,
+          "sourceUrl": "https://www.zhihu.com/question/1935992585484239151/answer/1946970461394149454",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "分差不足论",
+          "summary": "翻盘多因报岗分差没拉开，把岗位期望调低、拉大笔试分差可提高守擂成功率",
+          "evidence": "分差拉的不够大（5分以上），心理素质又一般，很容易守擂失败被人逆袭。",
+          "sourceIndex": 3,
+          "sourceUrl": "https://www.zhihu.com/question/1935992585484239151/answer/1938590256799683621",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "minority",
+          "evidenceVerified": true
+        }
+      ],
+      "benchmark": "辨析笔试第一被面试翻盘的成因，区分概率性事件与考生个体短板",
+      "pitfalls": [
+        "误以为笔试第一必稳",
+        "忽视笔试面试性质差异",
+        "只归因外因而非自身"
+      ],
+      "createdAt": "2026-11-16T14:35:04.372Z",
+      "cardsMeta": {
+        "attempts": 2,
+        "verified": 3,
+        "total": 3
+      }
     },
     {
       "id": "q_53",
@@ -4550,10 +4954,53 @@
           "snippet": "一份论文答辩PPT和演讲稿攻略，等你查收 临近毕业，一份合格的论文答辩PPT是如何成型的呢？与之匹配的答辩稿又是如何写的呢，下面给大家介绍一下 [图片] ☆专注答辩PPT/答辩演讲稿制作☆ ☆答辩PPT/答辩演讲稿/论文降重/论文查重/公司经营，点击下方插件直接联系！ 一、如何制作一份优秀的答辩PPT？众所周知，答辩PPT有三个让人恐“巨”的地方： 第一，内容框架巨复杂； 第二，图巨丑； 第三，字巨多； 这些都是同…"
         }
       ],
-      "viewAngleCards": [],
-      "benchmark": "",
-      "pitfalls": [],
-      "createdAt": "2026-11-16T14:44:50.253Z"
+      "viewAngleCards": [
+        {
+          "stance": "结构优先",
+          "summary": "答辩PPT按背景意义、相关知识、自己完成部分、总结展望四段组织，控制页数匹配时长。",
+          "evidence": "干货部分最好的分为四部分，背景意义，相关知识（或相关文献），自己完成部分，总结和展望。",
+          "sourceIndex": 2,
+          "sourceUrl": "https://www.zhihu.com/question/30546281/answer/701821496",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "简洁专业",
+          "summary": "模板避免单调白底黑字，适度艺术设计但不过于花哨，去掉无关LOGO。",
+          "evidence": "忌单调的白底黑字，应进行一些艺术设计，使人看着画面舒服，但不必过于花哨。",
+          "sourceIndex": 1,
+          "sourceUrl": "https://www.zhihu.com/question/30546281/answer/614706954",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "内容为王",
+          "summary": "好结构加好内容加好模板，才是优质毕业答辩PPT。",
+          "evidence": "好结构+好内容+好模板=优质毕业答辩PPT",
+          "sourceIndex": 3,
+          "sourceUrl": "https://www.zhihu.com/question/30546281/answer/2341121362",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "minority",
+          "evidenceVerified": true
+        }
+      ],
+      "benchmark": "考察答辩PPT在内容取舍、结构与时长控制上的实操判断力",
+      "pitfalls": [
+        "内容框架复杂",
+        "图巨丑",
+        "字巨多"
+      ],
+      "createdAt": "2026-11-16T14:44:50.253Z",
+      "cardsMeta": {
+        "attempts": 2,
+        "verified": 3,
+        "total": 3
+      }
     },
     {
       "id": "q_54",
@@ -4601,10 +5048,53 @@
           "snippet": "作者: Lilian Weng 原文: https://lilianweng.github.io/posts/2026-07-04-harness/ 发布时间: 2026年7月4日 递归自我改进（RSI）的概念可以追溯到 I. J. Good (1965) ，他在论文中将”超智能机器”定义为能够在所有智力活动上超越人类，并设计出更好的机器来改进自身的系统。Yudkowsky (2008) 使用”递归自我改进”这个短语来描述一个特定的反馈循环：AI 使用其当前的智能来改进产生其智能的认知机制。在现代 AI 中，这种反馈循环可能表现为模型直接重写自身的权重…"
         }
       ],
-      "viewAngleCards": [],
-      "benchmark": "",
-      "pitfalls": [],
-      "createdAt": "2026-11-18T08:51:48.247Z"
+      "viewAngleCards": [
+        {
+          "stance": "概念质疑",
+          "summary": "认为 harness 等概念多是跟风造词，不构成真正的工程能力差异。",
+          "evidence": "我现在发现，llm这一轮真的看出了很多人骨子里的愚昧、无知、跟风。 一开始是pr",
+          "sourceIndex": 1,
+          "sourceUrl": "https://www.zhihu.com/question/2048423563489814242/answer/2062147967314924234",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "minority",
+          "evidenceVerified": false
+        },
+        {
+          "stance": "上下文时机论",
+          "summary": "Harness 核心是在合适时机给模型合适上下文，难点在于多轮状态判断。",
+          "evidence": "Agent Harness，就是在最合适的时机，给 Agent 的 LLM 喂最合适的 Context",
+          "sourceIndex": 2,
+          "sourceUrl": "https://www.zhihu.com/question/2048423563489814242/answer/2095130831320789804",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "经验沉淀论",
+          "summary": "从真实会话识别重复工作路径，将可复用经验沉淀为 SKILL。",
+          "evidence": "从 Agent 的真实会话中识别重复出现的工作路径，再判断其中哪些经验值得进一步沉淀成可复用的 SKILL",
+          "sourceIndex": 3,
+          "sourceUrl": "https://www.zhihu.com/question/2048423563489814242/answer/2071679668789440760",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        }
+      ],
+      "benchmark": "考察能否用具体工程细节而非概念标签解释 Agent Harness 的实践价值。",
+      "pitfalls": [
+        "把概念当答案",
+        "只谈模型能力",
+        "忽视多轮状态"
+      ],
+      "createdAt": "2026-11-18T08:51:48.247Z",
+      "cardsMeta": {
+        "attempts": 1,
+        "verified": 2,
+        "total": 3
+      }
     },
     {
       "id": "q_55",
@@ -4652,10 +5142,54 @@
           "snippet": "回答之前有必要先说说MCP是啥，它的全称是“Model Context Protocol”，是一种由Anthropic主导开发的开放标准协议，旨在实现大语言模型（LLMs）与外部数据源、工具及服务之间的标准化交互。简单来说，它就像一个“万用插座”，把大模型和外部系统连接起来。 通过MCP实现AI Agent的最佳实践，目前主要集中在开发工具集成、自动化工作流、跨领域协作以及生态扩展等方面。我们一个个来看。 典型MCP集成案例MCP包含Client和Server两…"
         }
       ],
-      "viewAngleCards": [],
-      "benchmark": "",
-      "pitfalls": [],
-      "createdAt": "2026-11-18T08:51:51.123Z"
+      "viewAngleCards": [
+        {
+          "stance": "分步搭建落地",
+          "summary": "以Blender+Claude Desktop为例，按安装、配置、连接三步联动MCP",
+          "evidence": "总体方法很简单，就三步： 1 软件下载安装 2 软件配置 3 连接并使用",
+          "sourceIndex": 1,
+          "sourceUrl": "https://www.zhihu.com/question/15117069800/answer/128138402465",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "生态集成扩展",
+          "summary": "实践集中于开发工具集成、自动化工作流、跨领域协作与生态扩展",
+          "evidence": "通过MCP实现AI Agent的最佳实践，目前主要集中在开发工具集成、自动化工作流、跨领域协作以及生态扩展等方面。",
+          "sourceIndex": 5,
+          "sourceUrl": "https://www.zhihu.com/question/15117069800/answer/1895760455273796450",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "客户端先行验证",
+          "summary": "先用轻量MCP客户端快速测试各类工具，再搭建垂直搜索Agent",
+          "evidence": "是个人认为最目前简单易用的mcp客户端（很接近原生claude）。可以帮助大家快速测试各种mcp工具。",
+          "sourceIndex": 2,
+          "sourceUrl": "https://www.zhihu.com/question/15117069800/answer/1891428649439302574",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "minority",
+          "evidenceVerified": true
+        }
+      ],
+      "benchmark": "考查能否用真实案例归纳MCP落地AI Agent的实践路径与常见风险",
+      "pitfalls": [
+        "架构耦合混乱",
+        "工具调用幻觉",
+        "接口超时无熔断",
+        "权限安全漏洞"
+      ],
+      "createdAt": "2026-11-18T08:51:51.123Z",
+      "cardsMeta": {
+        "attempts": 1,
+        "verified": 3,
+        "total": 3
+      }
     },
     {
       "id": "q_56",
@@ -4703,10 +5237,53 @@
           "snippet": "什么是 Harness Engineering：聊聊最近爆火的技术词2026 年春天，一个英文单词在开发者社区里忽然火起来。一个月前还很少人提，一个月后已经出现在各平台技术帖和文章里里。这个词就是 Harness Engineering。有意思的地方是，越多人讨论它，它就越难被讲清楚。有人说它是”马具工程”，有人说它是”驾驭工程”，有人说它是上下文工程的放大版，有人说它是软件工程思想在 AI 时代的回魂，还有人干脆认定这又是一次新瓶装旧酒。各…"
         }
       ],
-      "viewAngleCards": [],
-      "benchmark": "",
-      "pitfalls": [],
-      "createdAt": "2026-11-18T08:51:59.113Z"
+      "viewAngleCards": [
+        {
+          "stance": "环境决定论",
+          "summary": "Agent 的表现上限可能由工作环境而非模型决定，Harness 即模型之外的那套环境",
+          "evidence": "决定 Agent 表现上限的，可能不是模型，而是你给模型搭的那套工作环境。",
+          "sourceIndex": 1,
+          "sourceUrl": "https://www.zhihu.com/question/2021371233627845218/answer/2038548287511328673",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "长任务刚需论",
+          "summary": "提示工程在长程任务中失效，Harness 工程是应对注意力衰减与上下文漂移的完整方案",
+          "evidence": "Harness engineering 是完整的答案。",
+          "sourceIndex": 2,
+          "sourceUrl": "https://www.zhihu.com/question/2021371233627845218/answer/2025626522501887228",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "配置救场论",
+          "summary": "换模型无效往往源于缺少项目背景与工具边界，补齐配置即可显著提升效果",
+          "evidence": "后来我们只改了一点，加了个 AGENTS.md 文件，再给Agent配了三个工具：读文件、跑测试、看 git diff。效果立刻提升，漏报率降了一半以上",
+          "sourceIndex": 3,
+          "sourceUrl": "https://www.zhihu.com/question/2021371233627845218/answer/2073807225534137763",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "minority",
+          "evidenceVerified": true
+        }
+      ],
+      "benchmark": "这题考的是能否说清：决定 Agent 表现上限的往往不是模型本身，而是围绕模型搭建的工作环境与工程支撑",
+      "pitfalls": [
+        "混同提示工程",
+        "只换模型不改环境",
+        "概念炒冷饭"
+      ],
+      "createdAt": "2026-11-18T08:51:59.113Z",
+      "cardsMeta": {
+        "attempts": 1,
+        "verified": 3,
+        "total": 3
+      }
     },
     {
       "id": "q_57",
@@ -4754,10 +5331,53 @@
           "snippet": "12 个 RAG 痛点和建议的解决方案-解决检索增强生成的核心挑战 原文链接： https://archive.is/bNbZo [图片] 受到 Barnett 等人的论文《 设计检索增强生成系统时的七个故障点》 的启发，让我们在本文中探讨该论文中提到的七个故障点以及开发 RAG 管道时的另外五个常见痛点。更重要的是，我们将深入研究这些 RAG 痛点的解决方案，以便我们能够更好地解决日常 RAG 开发中的这些痛点。 我用“痛点”而不是“失败点”主要是因为这些点都有相应…"
         }
       ],
-      "viewAngleCards": [],
-      "benchmark": "",
-      "pitfalls": [],
-      "createdAt": "2026-11-18T08:53:02.435Z"
+      "viewAngleCards": [
+        {
+          "stance": "工程调优派",
+          "summary": "RAG成败在于落地场景定位与逐环节调优，成功标准是准确返回所需内容不多不少",
+          "evidence": "现在回头看RAG失败的原因可以有一堆，但成功的情况归纳下来只有一种",
+          "sourceIndex": 4,
+          "sourceUrl": "https://www.zhihu.com/question/643138720/answer/1950593714356465927",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "综述框架派",
+          "summary": "借助文献综述系统性掌握RAG全貌与各类新方案，再针对性设计改进",
+          "evidence": "不管看啥，看survey最能get全",
+          "sourceIndex": 2,
+          "sourceUrl": "https://www.zhihu.com/question/643138720/answer/3442214608",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "痛点驱动派",
+          "summary": "先识别RAG管道的故障点与痛点，再逐一匹配对应的解决方案",
+          "evidence": "12 个 RAG 痛点和建议的解决方案-解决检索增强生成的核心挑战 原文链接： ",
+          "sourceIndex": 5,
+          "sourceUrl": "https://www.zhihu.com/question/643138720/answer/3425882959",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "minority",
+          "evidenceVerified": false
+        }
+      ],
+      "benchmark": "考察能否系统梳理RAG各环节的优化手段而非罗列零散技巧",
+      "pitfalls": [
+        "只堆技巧不成体系",
+        "忽视检索质量",
+        "照搬通用方案"
+      ],
+      "createdAt": "2026-11-18T08:53:02.435Z",
+      "cardsMeta": {
+        "attempts": 1,
+        "verified": 2,
+        "total": 3
+      }
     },
     {
       "id": "q_58",
@@ -4856,10 +5476,65 @@
           "snippet": "从纯业务端的角度来说，不但不会消亡，还有可能在未来的3-5年里大行其道。 表面原因非常简单：RAG几乎是目前唯一一种兼具门槛低+可观察+控制准+见效快的路线。 今年下半年对大模型微调和RAG有了比较直观的理解。 9月份趁着智谱举办大模型微调大赛的机会薅了不少token，通过LoRA微调试水了一把大模型（用的是glm-4-flash）微调的流程。 10月份到现在在做To B的RAG应用，几乎试过了市面上大部分开源/闭源的技术框架，包括但不限于C…"
         }
       ],
-      "viewAngleCards": [],
-      "benchmark": "",
-      "pitfalls": [],
-      "createdAt": "2026-11-18T08:53:05.439Z"
+      "viewAngleCards": [
+        {
+          "stance": "不会消亡",
+          "summary": "RAG可解决幻觉并外挂知识，知识库远超上下文长度，仍需检索",
+          "evidence": "结论：不会。",
+          "sourceIndex": 3,
+          "sourceUrl": "https://www.zhihu.com/question/637421964/answer/3344775790",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "不会且更重要",
+          "summary": "私域问答效果证明RAG重要，比赛实践支持其价值",
+          "evidence": "私域领域问答的优秀效果说明RAG真的很重要",
+          "sourceIndex": 2,
+          "sourceUrl": "https://www.zhihu.com/question/637421964/answer/33309712475",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "业务端大行其道",
+          "summary": "RAG门槛低、可观察、控制准、见效快，未来3-5年仍将流行",
+          "evidence": "RAG几乎是目前唯一一种兼具门槛低+可观察+控制准+见效快的路线。",
+          "sourceIndex": 5,
+          "sourceUrl": "https://www.zhihu.com/question/637421964/answer/61089640105",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "批外行论调",
+          "summary": "批评仅因长上下文就否定检索的观点，强调RAG提升信噪比与控制性",
+          "evidence": "一帮纯外行在这里不负责任的分析RAG的未来",
+          "sourceIndex": 4,
+          "sourceUrl": "https://www.zhihu.com/question/637421964/answer/3413359755",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "minority",
+          "evidenceVerified": true
+        }
+      ],
+      "benchmark": "考察对RAG与长上下文关系的理解，能否基于证据形成有立场、有边界的判断",
+      "pitfalls": [
+        "只凭长上下文否定RAG",
+        "混淆检索与分块",
+        "忽视信噪比与控制性",
+        "把成本低当效果"
+      ],
+      "createdAt": "2026-11-18T08:53:05.439Z",
+      "cardsMeta": {
+        "attempts": 2,
+        "verified": 4,
+        "total": 4
+      }
     },
     {
       "id": "q_60",
@@ -4907,10 +5582,64 @@
           "snippet": "背景介绍最近刚刚结束 CCF 的 基于运营商文本数据的知识库检索 ，截止目前成绩还算不错，A榜和B榜排名都比较靠前。因为在比赛中实际是从 0 迭代最终的策略，因此耗时较长。最近在考虑 RAG 是否存在一些最佳实践，在不同的数据集或通用场景下都能取得不错的效果，这样就可以避免从头开始构建策略。刚好注意到近期有一些相对靠谱的行业进展， AutoRAG 就尝试基于数据集构造 QA 问答对，之后利用定义的指标，寻找最佳的 RAG 策略组合…"
         }
       ],
-      "viewAngleCards": [],
-      "benchmark": "",
-      "pitfalls": [],
-      "createdAt": "2026-11-18T08:53:06.886Z"
+      "viewAngleCards": [
+        {
+          "stance": "数据清洗最难",
+          "summary": "半结构化数据多样，主流清洗方式难通吃，常需人工逐文档审核。",
+          "evidence": "主流的数据清洗方式很难通吃多样的半结构化数据",
+          "sourceIndex": 1,
+          "sourceUrl": "https://www.zhihu.com/question/642650878/answer/57968449225",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "文档处理最难",
+          "summary": "文档处理和短文本语义挖掘最难，向量模型选择影响不大。",
+          "evidence": "文档的处理、短文本的语义挖掘是最难搞定的",
+          "sourceIndex": 2,
+          "sourceUrl": "https://www.zhihu.com/question/642650878/answer/3392651718",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "召回质量最难",
+          "summary": "知识库越大召回越差，混合知识库易引入答非所问的结果。",
+          "evidence": "坑一：知识库越大，召回越差。这个最反直觉。",
+          "sourceIndex": 3,
+          "sourceUrl": "https://www.zhihu.com/question/642650878/answer/2035642655955269537",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "信息充分性最难",
+          "summary": "难点在长度范围内信息是否充分完备正确，可用规划式反复检索收敛。",
+          "evidence": "最难搞定的就是长度L内的信息是否充分完备和正确",
+          "sourceIndex": 4,
+          "sourceUrl": "https://www.zhihu.com/question/642650878/answer/3605094993",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "minority",
+          "evidenceVerified": true
+        }
+      ],
+      "benchmark": "考察对大模型RAG系统真实工程难点的判断，而非框架搭建本身。",
+      "pitfalls": [
+        "把搭demo当难点",
+        "只调TopK硬凑",
+        "忽视数据多样性"
+      ],
+      "createdAt": "2026-11-18T08:53:06.886Z",
+      "cardsMeta": {
+        "attempts": 2,
+        "verified": 4,
+        "total": 4
+      }
     },
     {
       "id": "q_61",
@@ -4958,10 +5687,53 @@
           "snippet": "上周知识星球内有个关于合同生成的提问，就是想把历史文档作为知识库在工作流中召回仿写。实际我在 4 月底就在星球中回复过合同生成的相关实现思路参考，大致就是 LLM 负责理解与初步生成，使用 Code 节点接收 LLM 提取出的结构化信息，最后使用 LM 负责最终润色。 [图片] 这部分内容我分两篇文章来介绍，这篇先聚焦于构建一个基于知识库的智能合同生成工作流。通过“离线知识预处理”与“在线并行生成”相结合的架构，实现针对不同业务…"
         }
       ],
-      "viewAngleCards": [],
-      "benchmark": "",
-      "pitfalls": [],
-      "createdAt": "2026-11-18T08:53:08.304Z"
+      "viewAngleCards": [
+        {
+          "stance": "金融落地案例",
+          "summary": "OpenAI开发者分享金融客户用RAG将问答准确率从45%提升至98%",
+          "evidence": "他们使用RAG为金融领域的客户将问答准确率从原始的45% 提升到98%",
+          "sourceIndex": 1,
+          "sourceUrl": "https://www.zhihu.com/question/638503601/answer/3384081209",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "语义检索优势",
+          "summary": "RAG以语义理解替代字面匹配，能召回近义词与相关主题内容",
+          "evidence": "这种从字面匹配到语义理解，正是RAG技术的优势。",
+          "sourceIndex": 4,
+          "sourceUrl": "https://www.zhihu.com/question/638503601/answer/1923754378721997185",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "知识图谱防幻觉",
+          "summary": "应对LLM幻觉，知识图谱比向量数据库更适合捕捉复杂关系",
+          "evidence": "对于LLM中的幻觉问题，知识图谱是一个比向量数据库更好的解决方案。",
+          "sourceIndex": 3,
+          "sourceUrl": "https://www.zhihu.com/question/638503601/answer/3387063009",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "minority",
+          "evidenceVerified": true
+        }
+      ],
+      "benchmark": "考察能否给出RAG提升生成能力的具体案例并辨析其证据强度",
+      "pitfalls": [
+        "把个别案例当普遍",
+        "证据未标注出处",
+        "混淆技术方案"
+      ],
+      "createdAt": "2026-11-18T08:53:08.304Z",
+      "cardsMeta": {
+        "attempts": 1,
+        "verified": 3,
+        "total": 3
+      }
     },
     {
       "id": "q_62",
@@ -5009,10 +5781,53 @@
           "snippet": "我曾经从传统的非互联网公司成功跳槽到腾讯，我来给大伙儿分享一些经验。 首先为啥面试官喜欢问高并发、性能调优相关的问题，我想有两点原因： 第一，本身互联网区别于传统软件行业的特点之一就是海量请求。传统软件公司每秒用户几个、几十个的请求很常见，但是互联网公司哪怕一个二线的 App，后端接口请求一天几个亿也很正常。业务特点导致对候选人在海量请求相关的技术上考察的会比较多。 第二、高并发性能调优等方面的问题相…"
         }
       ],
-      "viewAngleCards": [],
-      "benchmark": "",
-      "pitfalls": [],
-      "createdAt": "2026-11-18T08:53:16.678Z"
+      "viewAngleCards": [
+        {
+          "stance": "懂原理即可应对",
+          "summary": "并发问题底层逻辑有限，掌握后即可应对面试，不依赖高并发项目经历。",
+          "evidence": "实际上这玩意远没你想的那么神秘，一旦把这个问题的底层逻辑搞懂了，我保证你能秒杀任何类似问题。",
+          "sourceIndex": 4,
+          "sourceUrl": "https://www.zhihu.com/question/421237964/answer/116324552458",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "minority",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "系统总结套路",
+          "summary": "整理后台高性能常见解决方式，形成清晰思路，足以支撑面试表达。",
+          "evidence": "总结了十几条后台高并发、高性能的常见解决方式，当时面试BAT，都被面试官说答得很好，思路非常正确。",
+          "sourceIndex": 3,
+          "sourceUrl": "https://www.zhihu.com/question/421237964/answer/1810636619",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "拆解答不好类型",
+          "summary": "先归纳面试中答不好的典型类型，如指标无概念，再针对性补足。",
+          "evidence": "我觉得「答得不好」的情况分成以下几类： 1、对数据化的指标没有概念",
+          "sourceIndex": 1,
+          "sourceUrl": "https://www.zhihu.com/question/421237964/answer/1795200233",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        }
+      ],
+      "benchmark": "考察能否把高并发原理迁移到无场景经验中，而非是否有实战经历。",
+      "pitfalls": [
+        "只背题不懂指标",
+        "混淆并发量与QPS",
+        "无场景不会迁移"
+      ],
+      "createdAt": "2026-11-18T08:53:16.678Z",
+      "cardsMeta": {
+        "attempts": 1,
+        "verified": 3,
+        "total": 3
+      }
     },
     {
       "id": "q_63",
@@ -5104,10 +5919,53 @@
           "snippet": "一开始是harness的能力，但是现在模型内化了很多harness的能力，所有慢慢的就是因为模型强。 Claude opus是那种完全不用吃harness，直接裸跑就很强的模型。其他模型基本上都有吃专门的harness的优化，有的少一点，有的多一点。 但是如果你原因花时间好好优化你的harness和工作流的话，你会发现其实主流模型区别没有那么大。"
         }
       ],
-      "viewAngleCards": [],
-      "benchmark": "",
-      "pitfalls": [],
-      "createdAt": "2026-11-18T08:54:29.309Z"
+      "viewAngleCards": [
+        {
+          "stance": "模型决定上限",
+          "summary": "agent 框架保证模型下限，模型能力决定实际效果上限",
+          "evidence": "Agent保证模型下限，模型决定上限。",
+          "sourceIndex": 3,
+          "sourceUrl": "https://www.zhihu.com/question/2029815121220748785/answer/2042630574142124497",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "harness 权重被低",
+          "summary": "仅改 harness 默认值、模型权重不变，用户体感即可大变",
+          "evidence": "模型权重一行没动，纯粹改了三处 harness 默认值，用户体感判若两人。",
+          "sourceIndex": 4,
+          "sourceUrl": "https://www.zhihu.com/question/2029815121220748785/answer/2078944102566072720",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "minority",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "模型已内化harness",
+          "summary": "早期靠 harness，如今模型内化了部分 harness 能力，裸跑也强",
+          "evidence": "Claude opus是那种完全不用吃harness，直接裸跑就很强的模型。",
+          "sourceIndex": 5,
+          "sourceUrl": "https://www.zhihu.com/question/2029815121220748785/answer/2048850270935855747",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        }
+      ],
+      "benchmark": "考察能否区分模型能力与 agent harness 工程实现各自对 Claude Code 体验的贡献",
+      "pitfalls": [
+        "只归因单侧",
+        "混淆体感与能力",
+        "忽视版本差异"
+      ],
+      "createdAt": "2026-11-18T08:54:29.309Z",
+      "cardsMeta": {
+        "attempts": 1,
+        "verified": 3,
+        "total": 3
+      }
     },
     {
       "id": "q_65",
@@ -5206,10 +6064,65 @@
           "snippet": "Agent 会自己调工具、会改数据库、会一步错之后步步错。给它做评估，不只是准备一批题跑一遍打个分，而是搭一套从衡量标准、测试环境、判分、定位错误到失败回流的完整系统。这篇把这套系统的每一块拆开讲清楚。 同一个 Agent 的成功率可以是 99% 也可以是 7.8%搭评估的第一件事不是写用例，是先想清楚 用什么方式衡量成功。Agent 有个函数没有的特性。同样的输入跑两次，结果可能不一样，模型采样有随机性。所以一条用例的成功…"
         }
       ],
-      "viewAngleCards": [],
-      "benchmark": "",
-      "pitfalls": [],
-      "createdAt": "2026-11-18T08:54:33.865Z"
+      "viewAngleCards": [
+        {
+          "stance": "过程与结果并重",
+          "summary": "只看最终答案会误判，需同时评估执行轨迹与任务结果。",
+          "evidence": "把整条轨迹一次性丢给一个模型去找错",
+          "sourceIndex": 2,
+          "sourceUrl": "https://www.zhihu.com/question/2057613603713324288/answer/2074209778021184696",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "多维度度量",
+          "summary": "评估应覆盖任务结果、执行轨迹、资源成本等基本维度。",
+          "evidence": "基本维度”包括任务结果、执行轨迹、资源成本等",
+          "sourceIndex": 2,
+          "sourceUrl": "https://www.zhihu.com/question/2057613603713324288/answer/2074209778021184696",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "先归因再修复",
+          "summary": "0 分不等于能力不足，需区分预算、环境与真实能力问题。",
+          "evidence": "0 分不等于「不会」",
+          "sourceIndex": 3,
+          "sourceUrl": "https://www.zhihu.com/question/2057613603713324288/answer/2099506337906418087",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "minority",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "系统化建设",
+          "summary": "评估是涵盖标准、环境、判分、定位与失败回流的完整系统。",
+          "evidence": "搭一套从衡量标准、测试环境、判分、定位错误到失败回流的完整系统",
+          "sourceIndex": 5,
+          "sourceUrl": "https://www.zhihu.com/question/2057613603713324288/answer/2077377125733098616",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        }
+      ],
+      "benchmark": "考察能否把 Agent 评估从单点答案打分升级为覆盖结果、过程与成本的系统化方法。",
+      "pitfalls": [
+        "只给最终答案打分",
+        "0分直接当失败",
+        "忽略执行轨迹",
+        "混同环境与能力"
+      ],
+      "createdAt": "2026-11-18T08:54:33.865Z",
+      "cardsMeta": {
+        "attempts": 2,
+        "verified": 4,
+        "total": 4
+      }
     },
     {
       "id": "q_67",
@@ -5257,10 +6170,64 @@
           "snippet": "llm 的两个训练阶段确实像知识压缩和检索。但这两个阶段并不是专门为了压缩和检索而设计的。只能说是在处理原任务 predict next token 时，两个训练阶段正好和人类认知里的知识压缩和检索对应上了。 看起来，预训练以及指令微调可以用外挂知识库的方式来做。但其实二者还是有很大差别的。 首先外挂知识库检索的是文档 或段落级别的 top k。而 llm 是在连续向量空间里对上下文和内部记忆做 token 级检索，颗粒度更细。 另外，外挂…"
         }
       ],
-      "viewAngleCards": [],
-      "benchmark": "",
-      "pitfalls": [],
-      "createdAt": "2026-11-18T08:54:54.235Z"
+      "viewAngleCards": [
+        {
+          "stance": "非压缩非检索",
+          "summary": "LLM核心是学习数据规律并生成，而非压缩存储或查找已有条目。",
+          "evidence": "这个模型的核心能力也不是“查找”，而是“生成”。",
+          "sourceIndex": 1,
+          "sourceUrl": "https://www.zhihu.com/question/15764658704/answer/1971887715575379866",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "本质是压缩表征",
+          "summary": "LLM训练即表征学习，通过压缩丢弃冗余提取低维本质表示。",
+          "evidence": "LLM是对知识的压缩没有问题，或者有科学家称为“表征”",
+          "sourceIndex": 3,
+          "sourceUrl": "https://www.zhihu.com/question/15764658704/answer/2024079885115688735",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "隐式概率分布",
+          "summary": "LLM学的是语料概率分布而非背诵条目，与显式知识库不可直接比较。",
+          "evidence": "llm和知识库没法放在一起比，前者是隐式的后者是显式的",
+          "sourceIndex": 2,
+          "sourceUrl": "https://www.zhihu.com/question/15764658704/answer/1973317780431470703",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "minority",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "颗粒度更细",
+          "summary": "知识库检索文档级top k，LLM在向量空间做token级检索更细。",
+          "evidence": "而 llm 是在连续向量空间里对上下文和内部记忆做 token 级检索，颗粒度更细。",
+          "sourceIndex": 5,
+          "sourceUrl": "https://www.zhihu.com/question/15764658704/answer/1973438252787704678",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "minority",
+          "evidenceVerified": true
+        }
+      ],
+      "benchmark": "考察能否区分LLM与检索式知识库的本质差异及各自能力边界。",
+      "pitfalls": [
+        "把压缩等同于zip",
+        "认为LLM纯死记硬背",
+        "忽视幻觉风险"
+      ],
+      "createdAt": "2026-11-18T08:54:54.235Z",
+      "cardsMeta": {
+        "attempts": 1,
+        "verified": 4,
+        "total": 4
+      }
     },
     {
       "id": "q_68",
@@ -5889,6 +6856,2154 @@
       "benchmark": "",
       "pitfalls": [],
       "createdAt": "2026-11-18T09:03:01.377Z"
+    },
+    {
+      "id": "q_81",
+      "title": "检索增强生成（RAG）有什么好的优化方案？",
+      "questionUrl": "https://www.zhihu.com/question/628651389",
+      "track": "interview",
+      "topic": "检索增强生成 RAG 优化方案",
+      "domain": "rag",
+      "kind": "tech",
+      "heat": 5,
+      "sources": [
+        {
+          "url": "https://www.zhihu.com/question/628651389/answer/26519004176",
+          "token": "26519004176",
+          "author": "",
+          "votes": null,
+          "snippet": "最近看到复旦大学的一篇探索RAG最佳实践的 文章 ，很有意义。于是结合这篇论文和我常被人问到的问题，聊聊RAG最佳实践。RAG之前先做query分类 不是每个query需要召回增强，有些可以直接用大模型回答，例如摘要、续写、翻译等。query分类的目的是过滤和分流，把需要RAG的query送入RAG，把不需要RAG的query直接送入大模型。query分类不仅能提升RAG效果，还能降低平均延迟，几乎是立竿见影的效果。 分类器可以选BERT，也可以是更简单…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/628651389/answer/3390210257",
+          "token": "3390210257",
+          "author": "",
+          "votes": null,
+          "snippet": "本期讨论会参与者： 陈将老师，Zilliz AI云平台负责人 彭昊若博士，FileChat创始人，基于RAG能力的垂直领域应用创业 卢向东老师，TorchV创始人，RAG Solution创业，公众号土猛的员外 RandyZhao博士/王睿博士，OnWish创始人，基金经理/分析师的Copilot 徐嘉浩老师（主持人），Neumann Capital投资人 1RAG进步很快，但有很多正在解决的难点 RAG主要分为四块，每个环节都有正在解决的难点RAG流程主要分为内容抽取、索引创建、检索召…虽然每一个环节现在都有急需解决的难点，但拆来看每个环节都有提升空间，也或多或少知道该如何改善，仍然处于技术爬坡的早期。"
+        },
+        {
+          "url": "https://www.zhihu.com/question/628651389/answer/3286347865",
+          "token": "3286347865",
+          "author": "",
+          "votes": null,
+          "snippet": "# 文章推荐 # 文章名称：SELF-RAG: LEARNING TO RETRIEVE, GENERATE, AND CRITIQUE THROUGH SELF-REFLECTION 文章链接： https://arxiv.org/pdf/2310.11511.pdf github链接： https://github.com/AkariAsai/self-rag https://selfrag.github.io/ 目前先进的大型语言模型（LLMs）在生成回答时仍然存在事实错误的问题，尽管它们的模型规模和数据规模已经增加（引用了一些相关研究）。为了减少这种问题，引入了一种叫做Retrieval-Augmented Generation（RAG）的方法，它通过引…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/628651389/answer/32883231156",
+          "token": "32883231156",
+          "author": "",
+          "votes": null,
+          "snippet": "最近参加了CCF BDCI的比赛，获得了A榜第一，B榜第二的成绩。该赛题要求使用运营商相关的文档构建知识库，根据用户问题检索知识库并返回答案所在的文本块。这个赛题对检索要求很高，在检索到正确文本块的情况下还需要精确地找到答案对应的句子。在比赛过程中，我们开发了一系列文本压缩策略，从简单到复杂逐步优化。下面详细介绍每个版本的实现思路： V1: 基础Reranker压缩在开发文本压缩策略的初期，我们首先想到了使用reranker…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/628651389/answer/3321989558",
+          "token": "3321989558",
+          "author": "",
+          "votes": null,
+          "snippet": "RAG优化分为两个方向：RAG基础功能优化、RAG架构优化。我们分别展开讨论。 一、RAG基础功能优化对RAG的基础功能优化，我们要从RAG的流程入手[1]，可以在每个阶段做相应的场景优化。 [图片] 从RAG的工作流程看，能优化的模块有：文档块切分、文本嵌入模型、提示工程优化、大模型迭代。下面针对每个模块分别做说明（备注：以下内容部分参考了 @雪飘雨飞 @旺知识 先前的回答）。文档块切分：设置适当的块间重叠、多粒度文档块切分、基于语…"
+        }
+      ],
+      "viewAngleCards": [],
+      "benchmark": "",
+      "pitfalls": [],
+      "createdAt": "2026-11-18T09:08:05.174Z"
+    },
+    {
+      "id": "q_82",
+      "title": "如何利用大模型搭建本地知识库？",
+      "questionUrl": "https://www.zhihu.com/question/650032076",
+      "track": "interview",
+      "topic": "知识库 建设 文档 检索 企业",
+      "domain": "rag",
+      "kind": "tech",
+      "heat": 5,
+      "sources": [
+        {
+          "url": "https://www.zhihu.com/question/650032076/answer/2023757075717660994",
+          "token": "2023757075717660994",
+          "author": "",
+          "votes": null,
+          "snippet": "知识库这方向2026年说是不那么热了但我从2024年开始在国网内网搞到现在踩了一堆坑觉得还是值得说说，毕竟你做智能体做什么的总绕不开知识库这个组件的，模型是通用的你得让它有你自己领域的东西要么微调要么加RAG也就是知识库嘛，RAG是最容易上手的一种我就把这两年踩的一些坑整理一下给还在摸索的人看看能不能少走点弯路吧。 rag搞了一年多到现在还在调呢，一开始天真得很觉得装个Ollama配个LangChain demo跑通就完事了，结果第…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/650032076/answer/2045250987997365169",
+          "token": "2045250987997365169",
+          "author": "",
+          "votes": null,
+          "snippet": "大家好，我是人月聊IT。今天继续结合Karpathy的LLM Wiki来聊下AI大模型知识库方面的话题。在讲我今天内容前，我们还是先看下Graphify的一个开源实现，即对于一个Raw的原始资料目录进行Ingest的知识萃取，最终提取核心的文章摘要和主题信息，然后建立知识点之间的关联构建可视化知识图谱。 当然我同意是讲我个人公众号的Markdown格式文章作为输入。对于不同的AI工具，Github上给出了不同的一键安装方法，比如我使用Codex，具体执…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/650032076/answer/2040581648492778835",
+          "token": "2040581648492778835",
+          "author": "",
+          "votes": null,
+          "snippet": "前阵子我做了一个决定： 狠心停掉了所有云端笔记软件的年费订阅。这倒不是心疼那几百块钱，而是我逐渐意识到一个问题：我平时最核心的工作复盘、深度学习体系和灵感碎片，凭什么要存在别人的服务器上？万一平台跑路或者关停服务，或者数据被泄漏，那就game over了。 而且传统云笔记的体验极其消耗精力。每次看完干货想记点东西，都要痛苦地纠结“这篇该放在哪个层级的文件夹里”，最后Notion里囤了几百篇笔记，全变成了互不相干…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/650032076/answer/114045331490",
+          "token": "114045331490",
+          "author": "",
+          "votes": null,
+          "snippet": "昨天晚上，我的社群里有朋友问Dify如何更新： [图片] [图片] 我到github官方仓库一看，原来Dify更新版本了，并且是大版本更新，且仓库刚更新不久，还是热乎的： [图片] 查看更新公告： [图片] 可以看到，本次更新，最大的内容就是新增了插件系统。我意识到这是一个重大更新，这对个人开发者可是一个非常好的消息。于是，立即下载部署，开始试玩： 到Dify官方仓库： https://github.com/langgenius/dify 新版本更新说明： https://github.com/langgenius/dify/releases 一、旧版本Dify升级v1.0.0开…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/650032076/answer/94865049334",
+          "token": "94865049334",
+          "author": "",
+          "votes": null,
+          "snippet": "1 写在前面DeepSeek-R1 自从1-20号开源/发布十天以来，鲶鱼效应应接不暇，OpenAI o3-mini 也在几天前向免费用户推送。 [图片] 官方开源的版本除了满血的 671b 外，还有 1.5b，7b，8b，14b，32b，70b 六个蒸馏后的尺寸，笔者使用 Ollama 在电脑本地部署了 7b 的模型，在终端中测试了虽然回答没有满血版的那么惊艳，但凑活能用。 [图片] 作为一款高阶模型开源，确实要 salute 一下。不过进一步的问题是，我们面对这样的强思维链模型，除了在官网…"
+        }
+      ],
+      "viewAngleCards": [],
+      "benchmark": "",
+      "pitfalls": [],
+      "createdAt": "2026-11-18T09:08:06.741Z"
+    },
+    {
+      "id": "q_83",
+      "title": "大模型Agent的核心还是prompt？",
+      "questionUrl": "https://www.zhihu.com/question/628670548",
+      "track": "interview",
+      "topic": "Prompt 工程 面试题",
+      "domain": "ai-agent",
+      "kind": "tech",
+      "heat": 5,
+      "sources": [
+        {
+          "url": "https://www.zhihu.com/question/628670548/answer/1979655429819746027",
+          "token": "1979655429819746027",
+          "author": "",
+          "votes": null,
+          "snippet": "如果这个问题是2023年上半年问的，我会毫不犹豫地告诉你，是的，Prompt就是咒语，就是魔法，谁掌握了Prompt谁就是大法师。那时候我们还在为了怎么让GPT-3.5不胡说八道，在那儿绞尽脑汁地试“Let's think step by step”。 但在现在，马上都要2026年了，如果你还觉得Agent的核心竞争力是Prompt，那你这两年在AI落地的一线战场上，大概率是没怎么把自己弄脏过。 先说结论： 在2025年的今天，Prompt在Agent开发中的权重，已经从原来…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/628670548/answer/1999575175772016853",
+          "token": "1999575175772016853",
+          "author": "",
+          "votes": null,
+          "snippet": "到了现在这个节点，如果你还觉得大模型Agent的核心是Prompt，那你大概率还在做Demo，或者你的业务场景非常边缘。 早在一两年前，大家还在吹捧提示词工程是未来的金饭碗，甚至有人喊出自然语言就是新的编程语言。现在回头看，这话对了一半，但也误导了一大批人。Prompt确实是人机交互的入口，但对于Agent——这种具备自主规划、调用工具、记忆能力的智能体来说，Prompt只是那层皮。 真正的核心是什么？是工程化的架构设计，是工作…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/628670548/answer/1979200936699257305",
+          "token": "1979200936699257305",
+          "author": "",
+          "votes": null,
+          "snippet": "最近在做导购Agent，工程侧已经开发完毕，但调Prompt、做测评，每一个都令我痛苦万分，因为到处都是“翻车现场”：要么“思维太发散”，绕着用户的问题走；要么“工具乱点”，命中一个tool就一条道走到黑；要么“跑不完”，说着说着卡住了，再没了下文... 因此搜了一些Agent相关的论文、文章、视频，企图从技术底层抱抱佛脚...正巧看到了Anthropic 8月1日在YouTube上发布了一个视频《Prompting for Agents | Code w/ Claude》…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/628670548/answer/1921609343368958300",
+          "token": "1921609343368958300",
+          "author": "",
+          "votes": null,
+          "snippet": "不得不说99%想做ai agent的公司，全走错路了。 那agent怎样才能成功？ 就讲在国外车管所（DMV）部署了最新的AI助手，并承诺能够处理驾照更新的简单任务。 但当一位用户询问\"我需要更新驾照\"时，系统陷入了无限循环，不断重复询问相同的问题，最终因内存溢出而崩溃。 为什么这个AI Agent项目是失败的？ 因为： Token预算：限制在500个，无法完成多轮对话记忆设计：没有会话状态管理评估缺失：没人知道它在生产环境的表现架构选择…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/628670548/answer/3563803799",
+          "token": "3563803799",
+          "author": "",
+          "votes": null,
+          "snippet": "先说结论，大模型Agent的核心不仅仅是prompt，但prompt确实是目前实现Agent的重要手段之一。要理解这一点，我们先得澄清什么是AI Agent。 作为一个智能体，AI Agent应当具备 理解周围环境、做出决策和采取行动的能力。与传统AI依赖用户输入的Prompt与大模型交互不同，AI Agent融合了规划、记忆和工具使用等关键功能，在操作时不需要逐步的提示，我们只需设定一个目标，它就能够自主地进行思考和利用各种工具来分步实现。听起来很…"
+        }
+      ],
+      "viewAngleCards": [],
+      "benchmark": "",
+      "pitfalls": [],
+      "createdAt": "2026-11-18T09:08:08.148Z"
+    },
+    {
+      "id": "q_84",
+      "title": "怎么成为一个 ai agent 工程师？",
+      "questionUrl": "https://www.zhihu.com/question/1936375725931361485",
+      "track": "interview",
+      "topic": "Agent 工具调用 权限 设计 面试",
+      "domain": "ai-agent",
+      "kind": "tech",
+      "heat": 5,
+      "sources": [
+        {
+          "url": "https://www.zhihu.com/question/1936375725931361485/answer/2011230268539805801",
+          "token": "2011230268539805801",
+          "author": "",
+          "votes": null,
+          "snippet": "如果没基础的话可以先看微软的《AI Agents for Beginners》 - GitHub 5万+星，12课时左右就能很快入手，而且有完整的中文教程 https://github.com/microsoft/ai-agents-for-beginners 把Agent基础概念、工具调用、记忆系统、多Agent协作这些基本都覆盖完了，不需要网上找那些卖课的，来付费学习课程。 Hugging Face也有免费的《Agents Course》，但是更偏实践性。 https://huggingface.co/learn/agents-course 生产部署，smolagents、LangGraph这些，如果要在自己的简历上添加做agent的项…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/1936375725931361485/answer/1958927612178048839",
+          "token": "1958927612178048839",
+          "author": "",
+          "votes": null,
+          "snippet": "一天一小时需要一个月，刷完 https://anthropic.skilljar.com/claude-with-the-anthropic-api 这个 Claude 的官方教程，你就算是入门了。这是我目前看到的最好的基础教程，整个流程和各个知识点都会讲到，了解整个 ai agent 的工作原理。之后就可以有针对性的进行深入学习了。"
+        },
+        {
+          "url": "https://www.zhihu.com/question/1936375725931361485/answer/1951235004484030764",
+          "token": "1951235004484030764",
+          "author": "",
+          "votes": null,
+          "snippet": "首先，你要明白，对于社招来说，AI Agent 工程师岗位的基本要求是：你完成过一个类似的作品，并且上线达到了指定的服务水准。 说 agent 其实并不算很准确，说 agentic system 更加准确一些。我们现在更多看你的系统中有多少地方通过 llm 完成了相较于传统系统的操作简化或者成本降低。agentic 是一个过程，agent 是最终的结果。我举一个具体的例子吧，比如说客户要求你完成一个能够进行法律文书条款搜索的 agent，那么你就必须在…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/1936375725931361485/answer/1948826620803657995",
+          "token": "1948826620803657995",
+          "author": "",
+          "votes": null,
+          "snippet": "你这情况，绝对不是个例。现在整个后端圈子，尤其是干了五六年往上的，基本都你这心态：往前一步是 P7/架构师，感觉自己火候差点意思，项目里也没那么多复杂场景给你练手；原地踏步吧，又看着一波波新人卷生卷死，心里发慌。想转 AI，发现水又深又混，网上的教程十个有九个是“从入门到放弃”，还有一个是“从入门到调包”。 我是搞算法和数据出身的，跟 AI 这摊子事儿打了快十年交道了。你这个问题，我掰开揉碎了跟你聊聊，不整…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/1936375725931361485/answer/1982833664812413939",
+          "token": "1982833664812413939",
+          "author": "",
+          "votes": null,
+          "snippet": "说实话，从后端转AI Agent这条路，我踩了半年坑才摸清门道写在前面：别被B站那些速成教程骗了先说我自己的情况吧。6年后端，主要做Java那一套，Spring全家桶玩得还算溜。去年年底开始焦虑，感觉后端这块真的卷不动了，身边比我年轻的人技术栈比我新，比我老的人title比我高。 然后公司内部有个AI Agent的岗位在招人，我动心了。但问题是，我不想背刺现在的老板（他对我确实挺好的），所以就想着自己先学学，等学得差不多了再说。…"
+        }
+      ],
+      "viewAngleCards": [],
+      "benchmark": "",
+      "pitfalls": [],
+      "createdAt": "2026-11-18T09:08:09.636Z"
+    },
+    {
+      "id": "q_85",
+      "title": "关于agent工具系统的5个问题？",
+      "questionUrl": "https://www.zhihu.com/question/2094769651817492826",
+      "track": "interview",
+      "topic": "Agent 工具调用 权限 设计 面试",
+      "domain": "ai-agent",
+      "kind": "tech",
+      "heat": 2,
+      "sources": [
+        {
+          "url": "https://www.zhihu.com/question/2094769651817492826/answer/2096621843448911104",
+          "token": "2096621843448911104",
+          "author": "",
+          "votes": null,
+          "snippet": "摘要Agent 能否完成复杂任务，取决于它能调用哪些工具、工具如何被发现、参数如何校验以及执行结果如何返回。把所有工具硬编码在一个 Service 中，只适合早期 Demo；进入生产环境后，需要支持按租户、角色、应用和任务动态加载工具，同时保证权限、超时、审批和审计。 本文继续企业智能客服与知识库助手项目，设计一套 Agent 工具注册与动态调用机制，重点介绍： 工具目录、工具定义和工具执行器的职责；如何从静态注册演进到动…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/2094769651817492826/answer/2094830193013683059",
+          "token": "2094830193013683059",
+          "author": "",
+          "votes": null,
+          "snippet": "1.mcp属于工具系统的一部分，拿claude code举例，像read/write/bash都是内置工具，而你如果想外接工具，比如查询数据库，那需要接对应的mcp, mcp将有点像一个工具包，里面包含了一系列相关的工具，然后agent可以列出所有的工具并根据模型意图调用对应工具，你也可以简单理解为mcp就是用来扩展agent的工具列表的，用于扩展智能体的能力 2.什么时候需要工具？一般来说需要工具的场景都是一些需要消除幻觉的场景，比如说：查询天气/…"
+        }
+      ],
+      "viewAngleCards": [],
+      "benchmark": "",
+      "pitfalls": [],
+      "createdAt": "2026-11-18T09:08:11.059Z"
+    },
+    {
+      "id": "q_86",
+      "title": "大模型 Agent 是不是就是各种 Prompt 的堆叠？",
+      "questionUrl": "https://www.zhihu.com/question/1894891236617332066",
+      "track": "interview",
+      "topic": "Prompt 工程 面试题",
+      "domain": "ai-agent",
+      "kind": "tech",
+      "heat": 5,
+      "sources": [
+        {
+          "url": "https://www.zhihu.com/question/1894891236617332066/answer/1897665876154622135",
+          "token": "1897665876154622135",
+          "author": "",
+          "votes": null,
+          "snippet": "现在常见的Agent，包括Manus、Deep Research大部分都是LLM+Wrapper(Prompt、Function Call，MCP etc)，不过未来未必。下面是现在最流行的 5 种Agent 设计模式。 [图片] 让我们在下面了解它们！ 1） 反射模式（Reflection pattern） [图片] AI 会审查其工作以发现错误并迭代，直到产生最终响应。 2） 工具使用模式（Tool use pattern） [图片] 工具允许 LLM 通过以下方式收集更多信息： 查询矢量数据库执行 Python 脚本调用 API 等这很有帮助，因为 LLM …"
+        },
+        {
+          "url": "https://www.zhihu.com/question/1894891236617332066/answer/1898148855989642581",
+          "token": "1898148855989642581",
+          "author": "",
+          "votes": null,
+          "snippet": "前言用过Cursor的人应该都知道，它有两个模式，一个是ask模式，另一个是Agent模式。后者就是把大模型当成一个Agent去调用各种Tool，给用户完成各种需求。 [图片] 所以很多人觉得，Agent不就是设计好System Prompt之后，然后通过调用能力强的模型，就能工作了。错啦， 光有System Prompt 可不够，还需要对Tools的构造以及设计非常的有想法才行，以及完善的Agent流程编排、非常细节的产品交互、及时的Badcase修复等等。接下来，我将对 Cur…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/1894891236617332066/answer/1914813693750903525",
+          "token": "1914813693750903525",
+          "author": "",
+          "votes": null,
+          "snippet": "不同公司做的方向不一样，楼上也有楼主很好的解释了不同做法的差异。 我可以针对我们公司在之前一年一直主推的方向来进行一个拓展。我司Convergence一直认为，agent的核心应该是multi agent orchestrator 而不是单纯的依靠tool call和model能力，这一点我在很多其他访谈里也有聊过。 一个成熟的orchestor会包含许多不同的agent，每一个agent会有一个specific的type，agent只需要熟练的掌握自己需要掌握的tool和功能。 而orchestr…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/1894891236617332066/answer/1895183770316957068",
+          "token": "1895183770316957068",
+          "author": "",
+          "votes": null,
+          "snippet": "你说的是对的，最重要的规划部分确实就是通过prompt engine实现的。但是不够严谨和完整，我梳理一个逻辑，完整介绍下Agent。 做AI Agent的初衷其实就是为了AGI。在LLM 初期，对其能力边界还没有清晰认知，以为 LLM 是通向 AGI 的路径，即：LLM to AGI。但是，大语言模型（LLM）只能响应用户的查询指令，实现一些生成任务，比如写故事、生成代码等。从这个逻辑看，借助一个/多个 Agent 可以有望实现通往 AGI 的道路：将最重要的“…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/1894891236617332066/answer/1948362476564489209",
+          "token": "1948362476564489209",
+          "author": "",
+          "votes": null,
+          "snippet": "agent不是prompt也不是算法，而是更复杂的存在。 来一个Agent项目就知道了，从原理到项目完成。 本文是记录，所以比较长。 早两年跟一个团队大佬做了个多智能体交易系统，我第一反应就是那种。 一个听起来很牛逼，实际做起来想砸电脑的项目。 是个私募（切记人称投资中的战斗机）的项目，要求做一套\"AI驱动的量化交易系统\"。 说好两个月！ 结果整整搞了半年，期间踩的坑能写一本《量化交易灾难大全》。 不过话说回来，最终系统跑…"
+        }
+      ],
+      "viewAngleCards": [],
+      "benchmark": "",
+      "pitfalls": [],
+      "createdAt": "2026-11-18T09:08:12.484Z"
+    },
+    {
+      "id": "q_87",
+      "title": "Agent Skill 和 mcp 和 prompt区别是什么？",
+      "questionUrl": "https://www.zhihu.com/question/1994878790988494539",
+      "track": "interview",
+      "topic": "Agent 工具调用 权限 设计 面试",
+      "domain": "ai-agent",
+      "kind": "tech",
+      "heat": 5,
+      "sources": [
+        {
+          "url": "https://www.zhihu.com/question/1994878790988494539/answer/2001406523839095793",
+          "token": "2001406523839095793",
+          "author": "",
+          "votes": null,
+          "snippet": "最近 Skills 很火，但其实很多人对 Skills、MCP 和 Prompts 的区别还不是很清楚。 Claude 官方最近发布了一篇详细教程，系统地解释了这几者的定位和使用场景： https://claude.com/blog/skills-explained 。这里分享给大家。 Skills Skills 是包含指令、脚本和资源的文件夹，Claude 会在任务相关时动态发现并加载它们。可以把它们理解为“专项训练手册”，为 Claude 提供某一特定领域的专业能力：从处理 Excel 表格，到遵循你所在组织的品牌规范。 [图片] Ski…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/1994878790988494539/answer/2088539281388213517",
+          "token": "2088539281388213517",
+          "author": "",
+          "votes": null,
+          "snippet": "先说结论：Skill、MCP、Prompt 是大模型 Agent 体系中强相关的三个概念，但是它们的定位完全不同，严格来说谈不上“有什么区别”。 下面我们来依次看看它们都是些什么（ Tool也是一个绕不开的底层基础概念，下面会一并列出）。Prompt（提示词）简单来说，Prompt 是人类写给大模型的“文字规则与任务指令”，也是大模型唯一能够 直接理解的输入形式。它的核心作用是定义模型的角色身份、思维逻辑、任务目标、输出格式以及行为约束…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/1994878790988494539/answer/1995564905504469348",
+          "token": "1995564905504469348",
+          "author": "",
+          "votes": null,
+          "snippet": "这几天在研究 Agent Skills，前面解读了官方的 Agent Skills 开放标准 ，然后分析了下 Agent Skills 会替代 MCP 吗？ ，这次继续深入，从历史的角度分析 Agent-ReAct-Skills-MCP-Tool 的关系，然后再谈谈 Skills 的落地。发展历史当概念太多理不清的时候，我们可以从 历史的角度去分析，会发现技术演进是有迹可循的，每个技术的出现都有它的时代背景：2022-10-06(学术突破)：姚顺雨在论文 Synergizing Reasoning and Acting in Lan…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/1994878790988494539/answer/1999365792169493813",
+          "token": "1999365792169493813",
+          "author": "",
+          "votes": null,
+          "snippet": "提示语是人与大模型沟通必备，所以是skills和MCP的子集，而skills和MCP是互补的关系。 [图片] skills是提示语统一规范的docker，MCP是提示语的工具包。 cli能搞定的场景用skills，远程服务和企业认证用MCP，提示语都要用。 根本不需要拼个你死我活… 提示语简单，复杂的是sm(睡眠)：skills和mcp。 学习要讲切入点，才能学得快⋯⋯ 射人先射马，擒贼先擒王。 知人不知心，学习不学坑。 mcp工具多，然后上下文就乱，模型就越笨⋯⋯ mcp…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/1994878790988494539/answer/2009373988397261768",
+          "token": "2009373988397261768",
+          "author": "",
+          "votes": null,
+          "snippet": "Skill和MCP看起来都是扩展AI大模型能力的方式，那么，二者有什么区别？应该如何选择？ 一句话区分（Anthropic官方说法）MCP connects Claude to external services and data sources. Skills provide procedural knowledge—instructions for how to complete specific tasks or workflows.MCP 解决\"连接\"问题：让 AI 能访问外部世界 。Skill 解决\"方法论\"问题：教 AI 怎么做某类任务。MCPMCP是什么MCP是Anthropic 在 2024 年 11…"
+        }
+      ],
+      "viewAngleCards": [],
+      "benchmark": "",
+      "pitfalls": [],
+      "createdAt": "2026-11-18T09:08:13.906Z"
+    },
+    {
+      "id": "q_88",
+      "title": "大模型的上下文工程，都说很重要，但相关的研究那么少，对Agent开发有什么影响，有大佬能解释一下吗？",
+      "questionUrl": "https://www.zhihu.com/question/1975867034127599388",
+      "track": "interview",
+      "topic": "多轮工具调用 编排 稳定性",
+      "domain": "ai-agent",
+      "kind": "tech",
+      "heat": 5,
+      "sources": [
+        {
+          "url": "https://www.zhihu.com/question/1975867034127599388/answer/1977380893665539779",
+          "token": "1977380893665539779",
+          "author": "",
+          "votes": null,
+          "snippet": "这个问题问得好，好就好在它直接戳破了当下大模型圈子里的一个怪象。 咱们手里的模型上下文窗口动不动就是几百万甚至上千万token，依然有人觉得上下文工程是个伪命题，或者困惑为什么学术界好像对这块热情不高，其实不是研究少，而是真正的研究都已经变成了大厂闭门造车的核心机密，变成了不再对外发表的工程壁垒。 这事儿得从大模型发展的底层逻辑说起，你感觉相关的研究少，那是因为你盯着的地方不对，你还在看arXiv上的论文，…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/1975867034127599388/answer/1975938783053649738",
+          "token": "1975938783053649738",
+          "author": "",
+          "votes": null,
+          "snippet": "搞Agent开发，就别再瞎调Prompt了!Context Engineering才是优化AI Agent的正确姿势 最近在搞AI Agent开发的时候,我真的被Token消耗给折磨疯了。 明明就是个简单的多轮对话,Token哗哗地往上涨,200K的窗口说满就满,成本直线飙升不说,Agent的表现还越来越拉胯。 后来研究了LangChain团队的实践、多位大佬的项目、Anthropic的论文,我才发现——原来大家都在玩Prompt Engineering的时候,真正的高手早就转向Context Engineering了。 毫…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/1975867034127599388/answer/2079752484533319083",
+          "token": "2079752484533319083",
+          "author": "",
+          "votes": null,
+          "snippet": "直接说结论：学术界很少有人正儿八经研究上下文工程，是因为这套东西在计算机科学的论文标准里太脏、太工程化、太缺乏形式化的数学美感。 很多在高校实验室发顶会的人，习惯处理的是模型权重、损失函数、注意力算子的微创新，或者搞一套静态的基准测试集。而上下文工程不是理论科学，它是纯粹的系统工程和运行时状态管理。 但到了工业界落地这一侧，如果一个做Agent的团队还不懂上下文工程，那么他们做出来的东西基本只能停留在…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/1975867034127599388/answer/2081484838763246433",
+          "token": "2081484838763246433",
+          "author": "",
+          "votes": null,
+          "snippet": "决定一个Agent能不能从实验室Demo走向商业化交付的，根本不是模型参数量，也不是那些花哨的提示词技巧，而是极其枯燥、繁琐且反直觉的上下文工程。 很多人到现在还以为上下文工程就是写Prompt，或者觉得随着各大基座模型把窗口拉大到几百万甚至上千万Token，上下文就不需要管理了。这种想法在实际工程落地里，基本一踩一个准。 学术界和工业界在这个问题上存在巨大的脱节。去翻翻顶会或者ArXiv上的论文，关于模型架构、对齐算法…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/1975867034127599388/answer/1985253624671122157",
+          "token": "1985253624671122157",
+          "author": "",
+          "votes": null,
+          "snippet": "Kevin 学习笔记 摘要大语言模型（LLMs）的性能从根本上由推理过程中提供的上下文信息决定。本综述提出 “上下文工程” 这一正式学科，它超越简单的提示设计，涵盖对大语言模型信息负载的系统化优化。我们构建了一个全面的分类体系，将上下文工程拆解为两大核心部分：基础组件与复杂的系统实现 —— 前者是构成该学科的核心技术模块，后者是将这些模块整合为智能系统的具体架构。 首先，我们详细分析基础组件：（1）上下文检索与…"
+        }
+      ],
+      "viewAngleCards": [],
+      "benchmark": "",
+      "pitfalls": [],
+      "createdAt": "2026-11-18T09:08:15.305Z"
+    },
+    {
+      "id": "q_89",
+      "title": "如何系统性的学习RAG、Agent、MCP?",
+      "questionUrl": "https://www.zhihu.com/question/1892824874994623025",
+      "track": "interview",
+      "topic": "Agent 工具调用 权限 设计 面试",
+      "domain": "ai-agent",
+      "kind": "tech",
+      "heat": 5,
+      "sources": [
+        {
+          "url": "https://www.zhihu.com/question/1892824874994623025/answer/1951741674851121152",
+          "token": "1951741674851121152",
+          "author": "",
+          "votes": null,
+          "snippet": "谢邀。 这问题问到点子上了。我在这个圈子混了小十年，从捣鼓Hadoop、Spark那会儿，到后来玩CV、NLP，再到如今一头扎进大模型这摊浑水里，看着技术栈跟翻书一样，眼都快花了。 我在大语言模型这一波浪潮里算是第一批下水的人，从2020年GPT-3刚放出来那会儿，就在做内部的PoC，后来踩过纯Prompt工程的坑，折腾过RAG，写过Agent框架，最近一年还在帮一家大厂搭MCP（Model Context Protocol）体系。踩过坑、翻过车、推倒重来三次，…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/1892824874994623025/answer/1978139300622271150",
+          "token": "1978139300622271150",
+          "author": "",
+          "votes": null,
+          "snippet": "市面上讲RAG、Agent、MCP的教程太多了，但大部分要么是官方文档的翻译，要么是\"Hello World\"级别的demo。 我自己学这些东西的时候，踩了无数坑才明白—— 技术文档告诉你\"怎么做\"，但从来不告诉你\"为什么这样做\"和\"哪里会出问题\"。所以这篇文章，我想把自己的理解、踩过的坑、以及一些可能不太成熟的想法都写出来。 技术细节我会尽量保持准确，但表达方式就随意一点，毕竟这本来就是给自己看的笔记。 想成为能打的AI工程师，三样…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/1892824874994623025/answer/1893064474421876015",
+          "token": "1893064474421876015",
+          "author": "",
+          "votes": null,
+          "snippet": "「大语言模型落地应用目前有三种方式」这个提法是不太恰当的。RAG 和 Agent 某种程度上勉强可以算是一个层面的，是典型的应用范式（但也不互斥）。而 MCP 是另一个层面的事物，它解决的是工具/资源定义的规范问题，并不是一种应用范式。不过这个题目问的主要是「如何系统学习」，我们不过多去讨论这个点。 至于如何系统学习，分享一个我个人的习惯，或许不够普适，聊作参考。 一般我会找这个领域比较新的「综述」文章去看，比如…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/1892824874994623025/answer/1980976732786931310",
+          "token": "1980976732786931310",
+          "author": "",
+          "votes": null,
+          "snippet": "我是做搜索出身，现在大部分精力投入到大模型了。以前也很喜欢思考怎么系统性学习，后来发现这是一种比较低效的学习方式。 用模型、训模型、做模型应用才是快速入门最好的方式，解决里面的难点问题过程你就会系统学会了很多东西。 就RAG、Agent和MCP这三项技术而言，我们举个例子来说明。 首先定义一个问题，这个问题应该要有难度，法律、医疗、教育都是很好的切入点。 以医疗为例，假设你有一份质量很高的私有数据集数据集以及…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/1892824874994623025/answer/1953907086892184584",
+          "token": "1953907086892184584",
+          "author": "",
+          "votes": null,
+          "snippet": "一、RAG（检索增强生成）学习路径 1. 核心学习目标掌握RAG技术原理、组件实现及优化策略，能够独立构建企业级知识检索与生成系统。 2. 推荐书籍《大模型应用开发：RAG实战课》 [图片] 内容亮点：从零搭建RAG系统，解析十大核心组件，基于DeepSeek、LangChain等框架实现知识库构建。 适用人群：程序员及RAG实战开发者。 在大模型逐渐成为智能系统核心引擎的今天，检索增强生成（RAG）技术为解决模型的知识盲区以及提升响应准确性提供了关…"
+        }
+      ],
+      "viewAngleCards": [],
+      "benchmark": "",
+      "pitfalls": [],
+      "createdAt": "2026-11-18T09:08:16.776Z"
+    },
+    {
+      "id": "q_90",
+      "title": "如何设计一个高并发系统?",
+      "questionUrl": "https://www.zhihu.com/question/593921820",
+      "track": "interview",
+      "topic": "高并发 系统设计 面试",
+      "domain": "backend",
+      "kind": "tech",
+      "heat": 5,
+      "sources": [
+        {
+          "url": "https://www.zhihu.com/question/593921820/answer/3475827666",
+          "token": "3475827666",
+          "author": "",
+          "votes": null,
+          "snippet": "说实话，高并发项目涉及的技术点挺多的，最典型的高并发系统是秒杀系统，如果能掌握秒杀系统中相关技术，应对一般的高并发业务场景是绰绰有余的。本文通过秒杀系统，介绍了高并发场景下，我们所需要使用的9个技术关键点。 高并发下如何设计秒杀系统？这是一个高频面试题。这个问题看似简单，但是里面的水很深，它考查的是高并发场景下，从前端到后端多方面的知识。 秒杀一般出现在商城的促销活动中，指定了一定数量（比如：10个…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/593921820/answer/2980314808",
+          "token": "2980314808",
+          "author": "",
+          "votes": null,
+          "snippet": "所谓设计 高并发系统，就是设计一个系统，保证它整体可用的同时，能够处理很高的并发用户请求，能够承受很大的流量冲击。高并发设计原则 [图片] 1、无状态（ 分而治之，横向扩展）如果设计的应用是无状态的，那么应用比较容易进行水平扩展。 如果只部署一个应用，只部署一台服务器，那抗住的流量请求是非常有限的。并且，单体的应用，有单点的风险，如果它挂了，那服务就不可用了。 因此，设计一个高并发系统，我们可以分而治之，横向…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/593921820/answer/45970020684",
+          "token": "45970020684",
+          "author": "",
+          "votes": null,
+          "snippet": "在大流量时代，如何设计出一个能抗住很大并发量的系统是每一个达到架构的技术水平的程序员需要考虑的问题！ [图片] 但是设计一个高并发系统并非易事，如果不站在巨人的肩膀上来开展工作的话，这条路是很难保持一路畅通的！所以，本着好东西就是要拿出来分享的原则，LZ就把前段时间从阿里的一位老哥手上捞到的百亿级系统架构设计实录分享给大家，希望能对想接触架构的朋友或者已经是架构师的朋友们得到一点启发！ 不多bb，来看主要内容由…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/593921820/answer/51265473418",
+          "token": "51265473418",
+          "author": "",
+          "votes": null,
+          "snippet": "现在基本工作年限超过5年的Java开发岗以及各大厂招聘岗位，对于高并发，缓存，大流量，大数据量是必定会考察的。这也就意味着，你想要在今年这个大环境下，找到一份薪水高且发展前景好的岗位，不关基础知识还要有良好的编码习惯和能力、排查问题、解决问题的能力以及整体系统的设计能力和架构能力。 这时候可能有些就会说了：LZ你说那么多，我公司也没有好的项目，平时根本接触不到高并发，简历也根本不敢写上有高并发经验，这怎…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/593921820/answer/3138499093",
+          "token": "3138499093",
+          "author": "",
+          "votes": null,
+          "snippet": "面试被问到如何处理突发成倍数增长的流量？答案是进行优雅且有效的服务扩展(Service Scaling)！ 太长不看：在美国不同公司、不同岗位、不同级别的的招聘中，如何处理突发流量并高效且准确地进行服务扩展是及其容易遇到的问题！悄悄告诉你。。这个问题也是我经常用来评估 微软面试者的系统设计经验和解决实际问题能力的有效指标！我目前在微软担任主力面试官，也是目前我们部门的算法面试出题人，同时也向技术社区输出了不少改编…"
+        }
+      ],
+      "viewAngleCards": [],
+      "benchmark": "",
+      "pitfalls": [],
+      "createdAt": "2026-11-18T09:08:18.212Z"
+    },
+    {
+      "id": "q_91",
+      "title": "大厂是如何进行redis缓存一致性设计的?",
+      "questionUrl": "https://www.zhihu.com/question/475100954",
+      "track": "interview",
+      "topic": "缓存 一致性 击穿",
+      "domain": "backend",
+      "kind": "tech",
+      "heat": 5,
+      "sources": [
+        {
+          "url": "https://www.zhihu.com/question/475100954/answer/2100417148",
+          "token": "2100417148",
+          "author": "",
+          "votes": null,
+          "snippet": "我说下思路（我遇到过的，非大厂）： Redis缓存一致性在我理解下指的是：数据库变更了数据，Redis的数据也需要变更（达到数据库与Redis的数据是一致的。我们一般只会保障最终一致性）以MySQL数据库为例，数据变更会有binlogbinlog会被程序收集，可能会将binlog的消息进行格式化清洗写到消息队列上程序消费消息队列（实际上就是消费binlog），得知表的数据存在变更，进而更新Redis的数据（消费语义一般会实现至少一次+幂等的方式…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/475100954/answer/2948099867",
+          "token": "2948099867",
+          "author": "",
+          "votes": null,
+          "snippet": "我们都知道，想要提高应用系统的性能，可以引入「缓存」来解决。 但是引入缓存后，需要考虑缓存和数据库一致性问题，可选的方案有：「更新数据库 + 更新缓存」、「更新数据库 + 删除缓存」… 今天有时间就给大家总结一下那么我们这里列出来所有策略，并且讨论他们优劣性。 先更新数据库，后更新缓存先更新数据库，后删除缓存先更新缓存，后更新数据库先删除缓存，后更新数据库mq的方式，使用消息队列：当有新增、修改或删除商…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/475100954/answer/3016786619",
+          "token": "3016786619",
+          "author": "",
+          "votes": null,
+          "snippet": "前言数据库和缓存（比如：redis）双写数据一致性问题，是一个跟开发语言无关的公共问题。尤其在高并发的场景下，这个问题变得更加严重。 我很负责的告诉大家，该问题无论在面试，还是工作中遇到的概率非常大，所以非常有必要跟大家一起探讨一下。 今天这篇文章我会从浅入深，跟大家一起聊聊，数据库和缓存双写数据一致性问题常见的解决方案，这些方案中可能存在的坑，以及最优方案是什么。 1. 常见方案通常情况下，我们使用缓存…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/475100954/answer/3593560448",
+          "token": "3593560448",
+          "author": "",
+          "votes": null,
+          "snippet": "哎呀，说到这个大厂的Redis缓存一致性设计啊，啧啧，这事儿吧，说难不难，说简单也绝对不简单。你想啊，大厂那帮子人，每天的流量那是小意思？想想，每秒上万的请求，那种场面，心里没点儿数，光靠直觉和感觉，那不直接给你搞个大炸锅嘛！ 先别急，咱一点点来，慢慢地扒这块硬骨头。 一、啥是缓存一致性，为什么要操这份心？你先别管啥技术术语，咱先掰扯掰扯生活中的事儿哈。假设你家楼下有个便利店，天天有人买饮料。你是老板…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/475100954/answer/3234645165",
+          "token": "3234645165",
+          "author": "",
+          "votes": null,
+          "snippet": "这又是一个高频的场景面试题，同时，它也是一个没有标准答案的、可以跟面试官讨论很久的面试题。 对于这个面试题，我的观点是：” 没有完美的方案，只有最适合某场景的方案。“这个问题表面上看是数据一致性的问题，其实根本上，又是数据一致性、系统性能和系统复杂度的选择与取舍。 下面我们先历数一下各种技术方案，环肥燕瘦两相宜，总有一款适合你。 1、先更新MySQL，再更新Redis [图片] 这个方案存在如下问题： （1）如果先更新MySQL…"
+        }
+      ],
+      "viewAngleCards": [],
+      "benchmark": "",
+      "pitfalls": [],
+      "createdAt": "2026-11-18T09:08:19.833Z"
+    },
+    {
+      "id": "q_92",
+      "title": "为什么Mysql数据库表加了索引还是查询慢？",
+      "questionUrl": "https://www.zhihu.com/question/536974445",
+      "track": "interview",
+      "topic": "数据库 索引 慢查询",
+      "domain": "backend",
+      "kind": "tech",
+      "heat": 5,
+      "sources": [
+        {
+          "url": "https://www.zhihu.com/question/536974445/answer/2035646098493192131",
+          "token": "2035646098493192131",
+          "author": "",
+          "votes": null,
+          "snippet": "一个查询跑了 8 秒，加了索引之后变成了 12 秒。 这不是数据库 bug，是优化器做了一个看起来合理但实际上错误的选择。 查询优化器的工作方式MySQL 优化器的工作是选择执行计划——用全表扫描还是走某个索引，以哪个表为驱动表，JOIN 的顺序怎么排。优化器依赖的是统计信息： information_schema.statistics 里记录了每个索引的基数（cardinality，不重复值的数量），优化器根据这个估算走索引能过滤掉多少行。统计信息是定期采样…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/536974445/answer/2070936612393980958",
+          "token": "2070936612393980958",
+          "author": "",
+          "votes": null,
+          "snippet": "加了索引不代表查询就会用这个索引。跑一下 EXPLAIN 看 key 列，如果显示 NULL 说明索引根本没走上。 索引没走上最常见的原因就几个 在索引列上套了函数， WHERE DATE(create_time) = '2026-08-12' 这种写法直接废掉索引，改成范围查询 WHERE create_time >= '2026-08-12' AND create_time < '2026-08-13' 就能走上。字段类型不匹配也是高频问题，varchar 类型的字段查询时传了个数字不加引号，MySQL 做隐式类型转换，索引失效。…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/536974445/answer/3249201035",
+          "token": "3249201035",
+          "author": "",
+          "votes": null,
+          "snippet": "sql优化是一个大家都比较关注的热门话题，无论你在面试，还是工作中，都很有可能会遇到。 如果某天你负责的某个线上接口，出现了性能问题，需要做优化。那么你首先想到的很有可能是优化sql语句，因为它的改造成本相对于代码来说也要小得多。 最近无意间获得一份BAT大厂大佬写的刷题笔记，一下子打通了我的任督二脉，越来越觉得算法没有想象中那么难了。 [BAT大佬写的刷题笔记，让我offer拿到手软]( 这位BAT大佬写的Leetcode刷题…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/536974445/answer/3230951561",
+          "token": "3230951561",
+          "author": "",
+          "votes": null,
+          "snippet": "一、sql执行慢分类讨论一条 SQL 语句执行的很慢，那是每次执行都很慢呢？还是大多数情况下是正常的，偶尔出现很慢呢？所以我觉得，我们还得分以下两种情况来讨论。 1、大多数情况是正常的，只是偶尔会出现很慢的情况。 2、在数据量不变的情况下，这条 SQL语句 一直以来都执行的很慢。针对这两种情况，我们来分析下可能是哪些原因导致的。 二、针对偶尔很慢的情况一条 SQL 大多数情况正常，偶尔才能出现很慢的情况，针对这种情况，…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/536974445/answer/3543234686",
+          "token": "3543234686",
+          "author": "",
+          "votes": null,
+          "snippet": "索引是必须掌握的数据库知识，下面我们一起来研究下数据库索引吧。 [图片] 一、索引的几个概念 单列索引：索引节点中的关键字是一个列的内容，也叫普通索引，比如：用身份证号做索引，用手机号做索引。 联合索引：索引节点中的关键字是多个列的内容，经常在需要用多个字段查询的时候用到。比如：用手机号+时间做索引，或者手机号+时间+状态做索引；也就是说单列索引是特殊的联合索引。 唯一索引：索引列的值必须唯一，但允许有空值；如…"
+        }
+      ],
+      "viewAngleCards": [],
+      "benchmark": "",
+      "pitfalls": [],
+      "createdAt": "2026-11-18T09:08:22.737Z"
+    },
+    {
+      "id": "q_93",
+      "title": "推荐算法中常见的评估指标有哪些？",
+      "questionUrl": "https://www.zhihu.com/question/637930584",
+      "track": "interview",
+      "topic": "Agent 评测 面试",
+      "domain": "algo-data",
+      "kind": "tech",
+      "heat": 4,
+      "sources": [
+        {
+          "url": "https://www.zhihu.com/question/637930584/answer/3353049065",
+          "token": "3353049065",
+          "author": "",
+          "votes": null,
+          "snippet": "推荐算法评估指标比较复杂，可以分为离线和在线两部分。召回、粗排、精排和重排由于定位区别，其评估指标也会有一定区别，下面详细讲解。1 召回评价体系召回结果并不是最终推荐结果，其本质是为后续排序层服务的，故核心在于覆盖率，而不需要追求绝对的准确率。因此精排中常用的AUC等指标，不能用来衡量召回效果。常用的召回评价指标有 Hit Rate、差异率、Top-K召回率和平均点击位置等。1.1 Hit RateHit Rate在召回中使用十分广…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/637930584/answer/1980395826661594740",
+          "token": "1980395826661594740",
+          "author": "",
+          "votes": null,
+          "snippet": "本内容计划写两篇，一片是准确性指标及排序性指标，另一篇是覆盖性、新颖性、多样性、偏倚和公平性指标。这是第一篇内容 〇.概述推荐系统作为现代互联网应用的核心组件之一，其主要任务是连接用户与信息，在海量内容中发现用户可能感兴趣的项目（如商品、新闻、音乐等），从而提升用户体验、增加用户粘性并创造商业价值。一个推荐算法的优劣，不仅取决于其底层模型的复杂度和先进性，更关键的是它能否在一个或多个业务目标上取得…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/637930584/answer/1913634507317310801",
+          "token": "1913634507317310801",
+          "author": "",
+          "votes": null,
+          "snippet": "交并比（IoU） [图片] def iou(dr_box,gt_box): union_height = min(dr_box[2], gt_box[2]) - max(dr_box[0], gt_box[0]) union_width = min(dr_box[3], gt_box[3]) - max(dr_box[1], gt_box[1]) inter = 0 if union_height<0 or union_width<0 else union_height*union_width union = (dr_box[2] - dr_box[0]) * (dr_box[3] - dr_box[1]) + \\\\ (gt_box[2] - gt_box[0]) * (gt_box[3] - gt_box[1]) - inter iou = inter / union return…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/637930584/answer/1895106209914282132",
+          "token": "1895106209914282132",
+          "author": "",
+          "votes": null,
+          "snippet": "系列文章Ranking算法评价指标（一）：NDCG 前言之前写过NDCG，该指标对于排列位次在不同位置的样本给予了不同的权重，排名越靠前的样本的位置预估准确性对于NDCG的影响更大。而本文要介绍的正逆序比PNR（Positive Negative Rate），则均衡地关注全量样本的排列。 PNR介绍在介绍PNR的计算前，先定义一下正序对和逆序对： 正序对：对于任意两条样本，若其预测值的大小关系与label的大小关系相同，则称这组样本为一个正序对 逆序对：…"
+        }
+      ],
+      "viewAngleCards": [],
+      "benchmark": "",
+      "pitfalls": [],
+      "createdAt": "2026-11-18T09:08:24.156Z"
+    },
+    {
+      "id": "q_94",
+      "title": "推荐系统的正负样本比例悬殊：600(负):1(正),如何处理？",
+      "questionUrl": "https://www.zhihu.com/question/450688180",
+      "track": "interview",
+      "topic": "推荐系统 效果 评估",
+      "domain": "algo-data",
+      "kind": "tech",
+      "heat": 5,
+      "sources": [
+        {
+          "url": "https://www.zhihu.com/question/450688180/answer/1820931429",
+          "token": "1820931429",
+          "author": "",
+          "votes": null,
+          "snippet": "这是典型的样本不均衡问题，之前分享过一篇实际工作中从数据和模型两方面来解决样本不均衡的总结性文章，感兴趣的小伙伴可以看下，下面是文章地址： [文章: 广告行业中那些趣事系列24：从理论到实践解决文本分类中的样本不均衡问题] 以下是正文： 导读：本文是“数据拾光者”专栏的第二十四篇文章，这个系列将介绍在广告行业中自然语言处理和推荐系统实践。本篇主要从理论到实践解决文本分类中的样本不均…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/450688180/answer/1852221870",
+          "token": "1852221870",
+          "author": "",
+          "votes": null,
+          "snippet": "样本不均的问题大家已经很常见了，我们总是能看到某一个类目的数量远高于其他类目。 举个例子，曝光转化数远低于曝光未转化数。样本不均严重影响了模型的效果，甚至影响到我们对模型好坏的判断，因为模型对占比比较高的类目准确率非常高，对占比很低的类目预估的偏差特别大，但是由于占比较高的类目对loss/metric影响较大，我们会认为得到了一个较优的模型。比如像是异常检测问题，我们直接返回没有异常，也能得到一个很高的准确…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/450688180/answer/2299284434",
+          "token": "2299284434",
+          "author": "",
+          "votes": null,
+          "snippet": "1 召回中的负样本优化展示未点击数据。常用的方式，但是会导致Sample Selection Bias，可以通过和其他负样本选择方法来缓解全局随机选择负例。从全局候选物料里面随机抽取item做为召回或者粗排的负例。例如 Youtube DNN双塔模型。虽然保证了输入数据的分布一致性，但这么选择的负例和正例差异太大，导致模型太好区分，可能学到的知识不够充分。batch 内随机负例。输入数据只有正例，在训练的时候，在batch内随机采样一定比例的负…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/450688180/answer/1795843883",
+          "token": "1795843883",
+          "author": "",
+          "votes": null,
+          "snippet": "工业界常规做法是随机降采样＋校准，具体来说 1. 保留全部正样本，负样本按一定比例随机降采样，随机采样主要避免因为采样引入selection bias 2. 用以上样本训练的ctr，打分均值会偏离样本均值。所以上线前要做calibration，常用的方法是保序回归"
+        },
+        {
+          "url": "https://www.zhihu.com/question/450688180/answer/3353825224",
+          "token": "3353825224",
+          "author": "",
+          "votes": null,
+          "snippet": "典型的样本不均衡问题，可能也掺杂了样本不置信问题。其他关于推荐算法样本的问题，也一并总结了。1 样本整体架构深度学习的数据样本决定了算法的上限，模型只是去不断逼近这个上限，可见数据样本对于深度学习的重要意义。与CV和NLP不同，推荐系统可以获取大量用户的浏览和点击等行为，很容易构造正负样本。例如，在精排点击率（Click-Through Rate，CTR）预估任务中，通常将用户点击物品作为正样本，将用户曝光未点击作为负样本…"
+        }
+      ],
+      "viewAngleCards": [],
+      "benchmark": "",
+      "pitfalls": [],
+      "createdAt": "2026-11-18T09:08:25.560Z"
+    },
+    {
+      "id": "q_95",
+      "title": "pairwise 的排序算法用于推荐系统的排序任务中为什么效果差于pointwise的ctr？",
+      "questionUrl": "https://www.zhihu.com/question/338044033",
+      "track": "interview",
+      "topic": "推荐系统 效果 评估",
+      "domain": "algo-data",
+      "kind": "tech",
+      "heat": 5,
+      "sources": [
+        {
+          "url": "https://www.zhihu.com/question/338044033/answer/815202813",
+          "token": "815202813",
+          "author": "",
+          "votes": null,
+          "snippet": "欢迎关注我们关于重排的最新工作，恳请斧正，欢迎社招校招实习~ [文章: 序列检索系统在淘宝首页信息流重排中的实践] 做过一些的实验，作一些实际经验上的回答： 目前来看，pairwise 训练对搜索是有用的，对推荐的作用较小。 （1）搜索是带 query 的、有意识的被动推荐，对于搜索而言，相关性是及其重要的事情。query 限制了你召回商品相关性，比如 “ONLY 连衣裙”，召回回来一批 相似性极高的连衣裙，同时用户心智也决定了他将…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/338044033/answer/2796931129",
+          "token": "2796931129",
+          "author": "",
+          "votes": null,
+          "snippet": "这个很好理解。。 先定一个范围，在隐式反馈问题上，我认同这个观点。CTR就是最典型的隐式反馈。 pairwise是在搜索排序中提出的，他们的Ground Truth是基于相关性标注的，正负例之间是有明显界限的，基于它产生的score function能输出明确的相关性。后来的一些拓展里，也是到显示反馈，如rating，它有足够的确定性和解释性。 而推荐的Ground Truth是用户行为，用户行为具有随机性，你放两个一模一样的物品，和用户兴趣非常match…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/338044033/answer/1771516642",
+          "token": "1771516642",
+          "author": "",
+          "votes": null,
+          "snippet": "在主搜上目前看CVR任务经过设计的pairwise loss效果要好于pointwise loss，CTR任务打个平手，这里持续优化应该可以得到更好的结论。 ranking loss优于 ce loss的paper，可以参考KDD20' Airbnb search以及Google Drive的两篇工作。现在灌水paper太多了，这两篇还比较可信。 FYI :) References [1] Haldar et al, Improving Deep Learning For Airbnb Search , KDD 20'[2] Chen et al, Improving Recommendation Quality in Google …"
+        },
+        {
+          "url": "https://www.zhihu.com/question/338044033/answer/1825537440",
+          "token": "1825537440",
+          "author": "",
+          "votes": null,
+          "snippet": "20211009更新： 有些小伙伴关心，如何实现pairwise，listwise。我也曾经想过这个问题，很少有人给出listwise样本的构造方式。所以在这里给出一个我曾经在工程上使用的，个人感觉比较实用listwise的小技巧。其实listwise在工业界还是比较难通过标注来获得样本的，所以我们退而求其次，不构造严格的listwise样本，转而求list里 top1 概率，经典的DSSM论文就是这个思想。 top1 概率的参考文献《Learning to Rank: From Pairwise App…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/338044033/answer/771686642",
+          "token": "771686642",
+          "author": "",
+          "votes": null,
+          "snippet": "个人感觉pointwise学的是全局性，因为正样本就增加相似，负样本就降低相似度。但pairwise学的是局部性，一般而言，假设max margin=0，对某个用户只需要其正样本相似大于负样本即可。比如负样本相似为-0.99（相似度值域-1，1），那正样本相似为-0.9模型也无需跟新参数了。但如果随机采一个样本平均相似假设为0，其实模型判定时，随便一个样本也比正样本好。这就导致模型效果极差。 pairwise包括pointwise都需要及其合适的负样本，…"
+        }
+      ],
+      "viewAngleCards": [],
+      "benchmark": "",
+      "pitfalls": [],
+      "createdAt": "2026-11-18T09:08:26.986Z"
+    },
+    {
+      "id": "q_96",
+      "title": "机器学习如何在小样本高维特征问题下获得良好表现？",
+      "questionUrl": "https://www.zhihu.com/question/264240892",
+      "track": "interview",
+      "topic": "机器学习 特征工程 样本 训练 数据",
+      "domain": "algo-data",
+      "kind": "tech",
+      "heat": 3,
+      "sources": [
+        {
+          "url": "https://www.zhihu.com/question/264240892/answer/280746046",
+          "token": "280746046",
+          "author": "",
+          "votes": null,
+          "snippet": "我所接触的医疗影像、生物信息类的数据，能采集到的样品数据，相对于商业数据动则几万上亿来说，基本上都少的可怜。 研究生项目其一，与某种特定手术有关的脑影像，数据质量过关的就22例。项目其二与生物信号有关，受到目前数据采集设备的限制，同一批次最多不过300多样本。实验室其他疾病相关脑影像，少的14、36、72，多的顶天400、1500，全部都在用机器学习尝试解决问题。生物信息、生物医学邻域现状如此，大量的样本难收集不…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/264240892/answer/280810503",
+          "token": "280810503",
+          "author": "",
+          "votes": null,
+          "snippet": "小样本学习很多年来一直都是统计机器学习研究的重要问题。 看到已经有人提到了贝叶斯方法以及一些针对小数据量设计的模型（比如SVM）。一般来说还可以适当加入更多的先验知识（比如假设参数符合某些分布等等）来减少对数据量的需求。比如语音识别里做说话人自适应（把用大量数据训练好的模型用很少的数据调整到更适合某个说话人的特点）的MAP方法。类似的广为接受的说话人自适应方法还有把模型分组，进行分组线性变换的MLLR，以…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/264240892/answer/2154110016",
+          "token": "2154110016",
+          "author": "",
+          "votes": null,
+          "snippet": "一句话介绍小样本图像/表格数据学习可以考虑使用基于Genetic Programming的AutoML算法提取图像/表格特征，并使用简单的模型（线性模型/决策树）实现学习。 基本思想关于基于GP-AutoML的小样本图像学习，我想介绍一下新西兰维多利亚大学毕莹博士和张孟杰教授在2021年TEVC上发表的文章《Dual-Tree Genetic Programming for Few-Shot Image Classification》。至于表格类数据的特征提取，有兴趣的同学可以看一下我的另一篇知乎文章 …"
+        }
+      ],
+      "viewAngleCards": [],
+      "benchmark": "",
+      "pitfalls": [],
+      "createdAt": "2026-11-18T09:08:28.539Z"
+    },
+    {
+      "id": "q_97",
+      "title": "如何对大模型进行评测？",
+      "questionUrl": "https://www.zhihu.com/question/12516122224",
+      "track": "interview",
+      "topic": "Agent 评测 面试",
+      "domain": "algo-data",
+      "kind": "tech",
+      "heat": 5,
+      "sources": [
+        {
+          "url": "https://www.zhihu.com/question/12516122224/answer/118317137012",
+          "token": "118317137012",
+          "author": "",
+          "votes": null,
+          "snippet": "论文地址： https://arxiv.org/pdf/2307.03109 测评大模型的意义，有三点： 1、【了解模型的优劣势】对 LLM 进行评估有助于我们更好地了解 LLM 的优势和劣势。如PromptBench 评估基准表明，当前的 LLM 对对抗性提示敏感，因此需要仔细设计提示以提高性能。 2、【指导用好模型的优势】更好的评估可以为人类与 LLM 之间的交互提供更好的指导，这可能会激发未来的交互设计和实现。 3、【规避模型的劣势】LMM 的广泛应用强调了其重要性，确保其安…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/12516122224/answer/2049857070585877053",
+          "token": "2049857070585877053",
+          "author": "",
+          "votes": null,
+          "snippet": "我这两天拿 OpenCompass 给 Qwen3.6-35B 跑了六个维度。数学推理 93%，中文综合 84.8%，看着挺能打。 但 Agent 任务不开 thinking 只有 0.4。 同一个模型，不同维度的分差能到五十个百分点。你只跑一个 MMLU 交差，跟没测有什么区别。 我做 AI 应用开发，模型选型评测是日常活。给客户选模型不能信厂商的技术报告，得自己本地跑一遍。最近把 35B 从数学到 Agent 到 RAG 全测了，踩了一堆坑，把这些体会讲讲。 ⭐ ▎ 先分维度，…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/12516122224/answer/1962204046829024375",
+          "token": "1962204046829024375",
+          "author": "",
+          "votes": null,
+          "snippet": "一、人的一生不断被测评 AI立足市场也要被测评可能很多人有一个疑问，一个模型的水平高低是如何测评的？现在，媒体种类多，信息获取渠道广，对同一个模型的评价也有很大出入。到底该信服谁？ 其实关于这个问题，我们可以从科举考试、学生升级考试、公务员晋级、专业技术人员晋级考核体系中获得启发。 我国自从有了科举制度，贯穿至今的系列测评序幕就彻底拉开了，科举从院试-乡试-会试-殿试共四个等级，入围后便对应成了秀才-举…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/12516122224/answer/1987621966392342301",
+          "token": "1987621966392342301",
+          "author": "",
+          "votes": null,
+          "snippet": "本文视频： https://www.bilibili.com/video/BV1HnB7BjEAN/ 年底的 AI 圈子很热闹，可以说是神仙打架： Gemini 3.0、Claude Opus 4.5、GPT 5.2 ...这三大全球最顶级的模型， 几乎在同一时间甩出了自己的“王炸”。今天这家说自己代码能力“碾压”对手，明天那家说自己逻辑推理“遥遥领先”。大家都在发布会上晒出一堆复杂的图表，异口同声地喊着自己是世界第一。 [图片] 但作为围观群众或者开发者，我们最困惑的问题来了： 你们到底是怎…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/12516122224/answer/1949430794276828131",
+          "token": "1949430794276828131",
+          "author": "",
+          "votes": null,
+          "snippet": "简介 本文系统介绍大模型评估的三大核心维度（能力、效率、安全）、常见评估方法（人工评测、自动评测、LLM-as-a-Judge和混合评测）、常见误区及完整评估流程。文章强调评估是确保大模型在实际业务中安全稳定应用的关键环节，需持续进行而非一次性工作，以平衡成本与效果，降低技术、业务和安全风险。 正文 过去几年，大语言模型（LLM）像火箭一样发展，从几亿参数到千亿参数，从只能写几句短文到能写论文、写代码、画插图、做科…"
+        }
+      ],
+      "viewAngleCards": [],
+      "benchmark": "",
+      "pitfalls": [],
+      "createdAt": "2026-11-18T09:08:29.959Z"
+    },
+    {
+      "id": "q_98",
+      "title": "是加大量类badcase做sft，还是加大量的样本对做dpo？",
+      "questionUrl": "https://www.zhihu.com/question/9246153349",
+      "track": "interview",
+      "topic": "机器学习 特征工程 样本 训练 数据",
+      "domain": "algo-data",
+      "kind": "tech",
+      "heat": 5,
+      "sources": [
+        {
+          "url": "https://www.zhihu.com/question/9246153349/answer/90565674993",
+          "token": "90565674993",
+          "author": "",
+          "votes": null,
+          "snippet": "如果答主说的badcase是指大模型生成的不良回复的话，应该用DPO。 首先，目前阶段用梯度上升等手段进行machine unlearning有很多挑战，不是首选方案。简单的梯度上升不会收敛，需要同时用正样本和KL散度的目标维持输出分布不会偏离基线模型。方案复杂效果差。 Large Language Model Unlearning 其次，SFT只能学正样本，并不能直接让大模型纠正错误。如果对于每个问题不良回复，都额外对原问题人工编写正确回复再用SFT学习，那么原…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/9246153349/answer/77663994454",
+          "token": "77663994454",
+          "author": "",
+          "votes": null,
+          "snippet": "有三种方法来解决这个问题: 1. 遇到bad case就删，针对其构建正确样本。 2. 在1的基础上再做DPO。 3. 设计一个RM，让RM去捕获该类问题，然后基于Online RL来做。 从泛化性上来说，3 > 2 > 1 第三种方法可以称之为the bitter lesson中提到的的元方法概念，通过设计一个好的元方法，来全面提升模型的泛化性能。"
+        },
+        {
+          "url": "https://www.zhihu.com/question/9246153349/answer/1958297365950735225",
+          "token": "1958297365950735225",
+          "author": "",
+          "votes": null,
+          "snippet": "谢邀。 刚写完神人技术报告，刷点知乎。 我们首先要明确SFT，或者说Instruction Fine-Tuning这个阶段的目标是什么。这个阶段的核心不是让模型学新知识，它的知识在Pre-training阶段已经基本固定了。SFT的本质是一个分布对齐的过程。 什么意思？ 假设存在一个人类理想的、高质量回答的神谕分布 [公式] ，对于任何给定的指令 [公式] ，这个分布会给出最完美的回答 [公式] 。但这个分布我们是无法直接得到的。我们能做的是，收集一批高质量的 (…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/9246153349/answer/2069133286245454359",
+          "token": "2069133286245454359",
+          "author": "",
+          "votes": null,
+          "snippet": "dpo 显然更加温和 如果 sft 的话，可以学 rl，加一个熵去约束 但怎么都要面对一个问题： 正样本会不会训坏模型 你可能需要熵约束，学习率调小，用 lora... 有条件还是用强化学习把这样的轨迹给个负向奖励，不过看起来门槛更高了 当然现在的模型，只要你别太过分，也不至于训坏掉，除非特别难的领域"
+        },
+        {
+          "url": "https://www.zhihu.com/question/9246153349/answer/1944061010664194140",
+          "token": "1944061010664194140",
+          "author": "",
+          "votes": null,
+          "snippet": "第一步 改提示词。比如模型不理解“语气自然”，你就告诉他“断句 变换句式 变换字词”。你可以把badcase给模型 让模型给出提示词的优化建议 第二步 训练 没咋做过 感觉其他人说的有道理。 我有一个新办法 把你的改错过程给模型。比如模型说“白菜比生菜更适合用蚝油炒”，你可以根据这个badcase构造几个改错，比如“问：请分析白菜生菜哪个更适合蚝油？ 答：生菜更吸蚝油，白菜不吸油”之类的，或者让模型去识别/分析/改正badca…"
+        }
+      ],
+      "viewAngleCards": [],
+      "benchmark": "",
+      "pitfalls": [],
+      "createdAt": "2026-11-18T09:08:31.400Z"
+    },
+    {
+      "id": "q_99",
+      "title": "如何评估LLM？",
+      "questionUrl": "https://www.zhihu.com/question/629846408",
+      "track": "interview",
+      "topic": "Agent 评测 面试",
+      "domain": "algo-data",
+      "kind": "tech",
+      "heat": 5,
+      "sources": [
+        {
+          "url": "https://www.zhihu.com/question/629846408/answer/3389012169",
+          "token": "3389012169",
+          "author": "",
+          "votes": null,
+          "snippet": "这里介绍一下我们 UC Berkeley LMSYS 团队维护的 Chatbot Arena ，是一个对社区开放的大模型评测平台。OpenAI和Google会直接拿Chatbot Arena的结果为自家的LLM背书，因此在国外相对有名气，比如： [图片] [图片] Chatbot Arena 的原理是用3种不同的方法对模型进行评测： 标准测试，比如MMLU。这类测试是最客观，最容易评测的；但是缺点很明显：如果一个模型“不小心”或者“故意”地把测试集或者相似的数据加入到模型训练中，标准测试的评分就会…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/629846408/answer/3387626659",
+          "token": "3387626659",
+          "author": "",
+          "votes": null,
+          "snippet": "GPT-4出来之后，人们提出了很多理论，来尝试解释LLMs的成功。其中「压缩即智能」算是比较主流，且我觉得是比较有意思的理论。 例如，OpenAI的Jack Rae认为无损压缩是通往AGI的可行路径 [1]，甚至是人们最接近的一种路径。Ilya Sutskever(不知道还在不在OpenAI) 认为，language modeling之类的无监督学习方法之所以有效，可以用无损压缩的观点提供解释[2]。之前我自己研究时也发现，LLMs可以从压缩的prompt里恢复出(几乎)全部的语…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/629846408/answer/3522549529",
+          "token": "3522549529",
+          "author": "",
+          "votes": null,
+          "snippet": "[图片] [图片] 我们推出MixEval，目前最好的大模型评测。MixEval与Chatbot Arena 0.96相关度，开销减少5000倍（0.6美刀），速度提升2000倍（5分钟）。主页: https://mixeval.github.io 论文: https://github.com/Psycoy/MixEval/blob/main/resources/paper/mixeval.pdf 官方评测代码&数据: https://github.com/Psycoy/MixEval/ 排行榜: https://mixeval.github.io/#leaderboard Huggingface 数据集: https://huggingface.co/datasets/MixEval…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/629846408/answer/3422245323",
+          "token": "3422245323",
+          "author": "",
+          "votes": null,
+          "snippet": "如何评价大语言模型，已经成为了当下的研究热点，大语言模型的基准评测数据集和指标已经非常多了，但是对于大模型的已有问题也需要一定的方法进行评估，例如，大模型需要解决幻觉伦理道德偏差问题，需要进行模型蒸馏，同时，也需要对其可信度，解释性等方面进行评价。大模型的以下几个方面仍然需要改进，需要科研人员的不断研究和努力： 幻觉、伦理道德关于大模型的幻觉问题已经有非常多的论文和实验，下面列举几篇： 《Understa…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/629846408/answer/3388166021",
+          "token": "3388166021",
+          "author": "",
+          "votes": null,
+          "snippet": "任何一种考试吧，只有擅长考试与不擅长考试的，没有完全靠谱的考试。所以榜单只能做个参考，毕竟实际应用 LLM 的场景是千差万别的，别想 成绩差它还行。但是成绩不错的，总还是能用的嘛。 基础标准不过还是给大家介绍一下现有的 LLM 的各种榜单与对应的大概内容吧。 Open LLM Leaderboard 是目前最流行的通用 LLM 评测榜单。它由 Hugging Face 发布，评估 LLM 这几个基准数据集：小学科学、常识推理、多任务准确性、语言理解。CLUE…"
+        }
+      ],
+      "viewAngleCards": [],
+      "benchmark": "",
+      "pitfalls": [],
+      "createdAt": "2026-11-18T09:08:32.806Z"
+    },
+    {
+      "id": "q_100",
+      "title": "小白，请教一下如何对大模型进行基准测试？",
+      "questionUrl": "https://www.zhihu.com/question/650396034",
+      "track": "interview",
+      "topic": "Agent 评测 面试",
+      "domain": "algo-data",
+      "kind": "tech",
+      "heat": 5,
+      "sources": [
+        {
+          "url": "https://www.zhihu.com/question/650396034/answer/2028581232238142598",
+          "token": "2028581232238142598",
+          "author": "",
+          "votes": null,
+          "snippet": "Kevin 每一次大大模型发布，都会发布一些表格或者图表，展示该模型在某一个评测上的得分，例如最近发布的Opus4.7的基准测试，那么这些基准测试到底测试的是什么？反映了模型的哪些方面的能力呢？这个系列我们介绍30多项基准测试。 [图片] 摘要大语言模型（LLM）的快速发展使得模型评估成为 AI 领域的关键议题。本报告系统性地介绍当前主流的大模型基准测试，涵盖基础认知、推理能力、数学推理、编程能力、Agent 交互、多模态理解及专业…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/650396034/answer/3464969012",
+          "token": "3464969012",
+          "author": "",
+          "votes": null,
+          "snippet": "在当前的人工智能领域，大模型基准测试是一个至关重要的环节，它不仅能够评估模型的性能，更能够在某种程度上反映模型的实用性和安全性。针对您的问题，我们需要从基准测试的必要性、第三方与自我测试的选择、开源基准数据集的保密性，以及数据泄露后的应对策略等多个角度进行详细探讨。 1. 基准测试的必要性 基准测试，特别是在机器学习和深度学习领域，是指使用标准化的测试数据集来评估模型的性能，包括其速度、准确性、稳定…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/650396034/answer/1956332820831114379",
+          "token": "1956332820831114379",
+          "author": "",
+          "votes": null,
+          "snippet": "麻省理工揭秘：你看到的大模型排行榜，可能错得离谱！ 当前，生成式人工智能（AI）的发展速度令人瞩目，但我们用以衡量其“能力”的标尺——基准测试（Benchmark），正面临一场深刻的信任危机。行业普遍依赖的排行榜分数，如同一座建立在流沙之上的宏伟建筑，看似精确，实则脆弱不堪。一个微不足道的提示词改动，就可能导致模型性能的剧烈波动，使得排行榜上的名次瞬息万变。这种现象不仅误导了公众和科学界的认知，更给AI产品的…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/650396034/answer/4533341496",
+          "token": "4533341496",
+          "author": "",
+          "votes": null,
+          "snippet": "参考这篇文章： https://medium.com/@sanjaygu/evaluation-of-llm-models-and-generative-ai-systems-09dc93318ef3 主要探讨了大型语言模型（LLM）及生成式人工智能系统的评估方法，强调了从实验阶段到生产环境部署的模型性能监测的重要性。 [图片] 摘要随着生成式 AI 系统及大型语言模型（LLM）如 RAG 或聊天系统的普及，有效评估和选择模型变得至关重要。与传统 AI 不同，生成式 AI 通常依赖预训练模型，这就要求我们能够评估这些模型在实际应用中的表现。本文为技术领导者、架构师和 CTO 提供了评估和监控 AI 系…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/650396034/answer/3445768695",
+          "token": "3445768695",
+          "author": "",
+          "votes": null,
+          "snippet": "大模型基准测试 大模型基准测试是评估大模型性能的重要手段，可以帮助我们了解模型的优缺点，以及在特定任务上的表现。如何进行大模型基准测试？ 选择基准测试任务首先，需要选择合适的基准测试任务。常见的基准测试任务包括： 自然语言处理：文本分类、机器翻译、问答等计算机视觉：图像分类、目标检测、语义分割等机器学习：回归、预测、推荐等 选择基准测试数据集选择合适的基准测试数据集也很重要。数据集应该具有代表性，并…"
+        }
+      ],
+      "viewAngleCards": [],
+      "benchmark": "",
+      "pitfalls": [],
+      "createdAt": "2026-11-18T09:08:34.584Z"
+    },
+    {
+      "id": "q_101",
+      "title": "大模型评测怎么做？",
+      "questionUrl": "https://www.zhihu.com/question/7088801674",
+      "track": "interview",
+      "topic": "Agent 评测 面试",
+      "domain": "algo-data",
+      "kind": "tech",
+      "heat": 2,
+      "sources": [
+        {
+          "url": "https://www.zhihu.com/question/7088801674/answer/2074771947100098865",
+          "token": "2074771947100098865",
+          "author": "",
+          "votes": null,
+          "snippet": "一、前言 做本地大模型部署调试这段时间，直观感受真的是一山更比一山高。最开始落地医疗场景AI项目，我一直用的是ChatGLM3-6B，日常的语义对话、简单信息解读都很流畅，当时觉得这个小模型的语义理解能力，完全能满足本地业务需求了。 直到后续部署适配4090 24G显卡的Qwen3-32B 4bit量化模型，我才明显感受到大小参数量模型的垂直业务能力鸿沟。尤其在高血压风险筛查这种严谨、重规则、靠权威指南支撑的医疗场景下，两款模型的…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/7088801674/answer/58052968526",
+          "token": "58052968526",
+          "author": "",
+          "votes": null,
+          "snippet": "通用评测方法 客观评测指标：准确率：计算模型正确预测的比例，适用于分类等任务，但在数据不平衡时可能不准确。精确率：衡量模型预测为正例的样本中真正为正例的比例，在假阳性成本高的任务中很重要。召回率：表示实际为正例的样本中被模型正确预测为正例的比例，在漏报成本高的情况下关键。F1 分数：综合了精确率和召回率，平衡了两者的重要性，在不平衡数据集上更能反映模型性能。 主观评测：人工评估：由人类评估者对模型的…"
+        }
+      ],
+      "viewAngleCards": [],
+      "benchmark": "",
+      "pitfalls": [],
+      "createdAt": "2026-11-18T09:08:35.958Z"
+    },
+    {
+      "id": "q_102",
+      "title": "大模型如何在指令微调过程中构造或筛选高质量数据？",
+      "questionUrl": "https://www.zhihu.com/question/623570103",
+      "track": "interview",
+      "topic": "数据指标 埋点 数据分析 业务 增长",
+      "domain": "algo-data",
+      "kind": "tech",
+      "heat": 5,
+      "sources": [
+        {
+          "url": "https://www.zhihu.com/question/623570103/answer/3224726082",
+          "token": "3224726082",
+          "author": "",
+          "votes": null,
+          "snippet": "update2024-01-03 [文章: DEITA-大模型指令微调的数据高效筛选方法] update2023-12-09 [文章: 大模型微调技巧 | 高质量指令数据筛选方法-MoDS] 大家好，我叫刘聪NLP。 大模型时代，指令微调已经成了算法工程师们必不可少的技能。而在指令微调过程中，我们往往会从数据数量和数据质量两个维度来对模型进行优化。LIMA模型的研究发现数量有限的人工整理的高质量数据也可以提高模型的指令遵循能力。那么是否可以通过自动的方式来发现…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/623570103/answer/127416056815",
+          "token": "127416056815",
+          "author": "",
+          "votes": null,
+          "snippet": "大家好，我是 ConardLi。 今天跟大家来正式介绍一下我的开源项目： Easy Dataset。 [图片] https://github.com/ConardLi/easy-dataset 3.13 号，我对外发布了第一个版本，到 3.16 Star 数破千，截止目前，已经 1.7K Star。 [图片] 为啥这个工具一发布就受到广泛的关注和喜爱呢，下面我来具体介绍一下。 目前各行各业都在积极探索微调自己行业的大模型，其实微调的过程不是难事，最难的是数据集准备的环节，高质量领域数据集的构建始终面临多重挑战，所以我之前大模型微…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/623570103/answer/3322346910",
+          "token": "3322346910",
+          "author": "",
+          "votes": null,
+          "snippet": "本文首发于 \"包包算法笔记\" 大模型场景微调里面，最关键地的一个是问题是：选择什么样的数据微调？大的方向上大家都能把握，大概无非是要注意数据的多样性，要注意数据的质量，那在实践中有哪些技巧呢？ 比如我们会经常遇到下面几种情况： 1.数据要不要都去标注，标的比较慢咋办？ 2.我已经有一批标好的数据了，再去选哪些数据送标注比较好？ 3.能不能总结出一套数据构造方面自动化的方法？ 其实在大模型之前，就有很多人研究过…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/623570103/answer/1976222246474362920",
+          "token": "1976222246474362920",
+          "author": "",
+          "votes": null,
+          "snippet": "在算法圈子里摸爬滚打十来年，从最早的搜广推到现在的LLM，算是见证了几个时代的起落。现在是2025年底，马上就要跨进2026年了，看着市面上大模型遍地开花，其实大家心里都清楚，基座模型的架构在Transformer被彻底颠覆之前，大家的起跑线其实差不太多。你用MoE，我也用MoE，你搞长上下文，我也搞。 那为什么有的模型聪明得像个博士，有的模型一开口就是人工智障？ 核心就在数据。尤其是SFT（Supervised Fine-Tuning，有监督微调…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/623570103/answer/3522356196",
+          "token": "3522356196",
+          "author": "",
+          "votes": null,
+          "snippet": "文章标题：SELF-INSTRUCT: Aligning Language Model with Self Generated Instructions Self Instruct：通过自生成指令对齐语言模型 文章链接：https://arxiv.org/pdf/2212.10560.pdf 作者：Yizhong Wang等 单位：华盛顿大学 发表时间：ACL 2023 [图片] 一、背景最近在优化大模型的推理能力，包括逻辑推理和数学推理。但是好的数据集很少，答案不准确可以通过GPT-4抓取，但是指令不好，就只能依靠人工标注，而人工标注费时费力。 表1：开源的数学推理数…"
+        }
+      ],
+      "viewAngleCards": [],
+      "benchmark": "",
+      "pitfalls": [],
+      "createdAt": "2026-11-18T09:08:37.426Z"
+    },
+    {
+      "id": "q_103",
+      "title": "生成式大模型怎么评估效果（相对简单可落地）？",
+      "questionUrl": "https://www.zhihu.com/question/617977596",
+      "track": "interview",
+      "topic": "Agent 评测 面试",
+      "domain": "algo-data",
+      "kind": "tech",
+      "heat": 5,
+      "sources": [
+        {
+          "url": "https://www.zhihu.com/question/617977596/answer/1958655963818079209",
+          "token": "1958655963818079209",
+          "author": "",
+          "votes": null,
+          "snippet": "AI大模型跨越从“能写”到“会创造”的鸿沟的三板斧：知识增强、人机协同与价值评估走向未来 ( kdd.wang @gmail.com)大语言模型（LLMs）的崛起无疑是人工智能领域的一场范式革命。它们展现了惊人的语言生成能力，能够撰写文章、编写代码、进行对话，在许多方面达到了与人类相当的流畅度。然而，在这种表面的繁荣之下，一个深刻的悖论日益凸显：尽管LLMs能够处理海量的文本数据并模仿人类的语言模式，但它们在真正的“创造力”——…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/617977596/answer/4733884179",
+          "token": "4733884179",
+          "author": "",
+          "votes": null,
+          "snippet": "参考这篇文章： https://medium.com/@sanjaygu/evaluation-of-llm-models-and-generative-ai-systems-09dc93318ef3 主要探讨了大型语言模型（LLM）及生成式人工智能系统的评估方法，强调了从实验阶段到生产环境部署的模型性能监测的重要性。 [图片] 摘要随着生成式 AI 系统及大型语言模型（LLM）如 RAG 或聊天系统的普及，有效评估和选择模型变得至关重要。与传统 AI 不同，生成式 AI 通常依赖预训练模型，这就要求我们能够评估这些模型在实际应用中的表现。本文为技术领导者、架构师和 CTO 提供了评估和监控 AI 系…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/617977596/answer/43139159343",
+          "token": "43139159343",
+          "author": "",
+          "votes": null,
+          "snippet": "进行评测之前，首先要明确评测对象：是评测大模型生成文本的质量，还是评测大模型应用（例如RAG）的性能？两者之间存在一定关联性，但又不尽相同。本文介绍评测大模型生成能力的指标和方法。 传统统计指标理论上，所有传统的文本生成评价指标都能用于评测大模型，如BLEU、ROUGE等。但是，这些统计指标既没有融合语义信息，也不能反映推理能力。 以BLEU为例，通过计算生成文本和金标准之间的重合的n-gram占生成文本的比例，衡量生…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/617977596/answer/3514643065",
+          "token": "3514643065",
+          "author": "",
+          "votes": null,
+          "snippet": "LLM 大模型学习必知必会系列(十一)：大模型自动评估理论和实战以及大模型评估框架详解0.前言大语言模型（LLM）评测是LLM开发和应用中的关键环节。目前评测方法可以分为人工评测和自动评测，其中，自动评测技术相比人工评测来讲，具有效率高、一致性好、可复现、鲁棒性好等特点，逐渐成为业界研究的重点。 模型的自动评测技术可以分为rule-based和model-based两大类： rule-based方法： benchmark以客观题为主，例如多选题，被…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/617977596/answer/1889459160116098483",
+          "token": "1889459160116098483",
+          "author": "",
+          "votes": null,
+          "snippet": "一、语言建模能力评估 1. 基础建模能力困惑度（PPL）优化：采用滑动窗口PPL（支持64k上下文窗口），以HellaSwag基准进行优化。 长文本建模： 指标：利用PassKey检索（10k+位置准确率）及长程依赖解析（基于GovReport数据集）。 工具：LongBench和Landmark Attention测试套件辅助评估长文本理解能力。 2. 代码建模能力测试基准：使用HumanEval-X覆盖多语言代码生成（Python、Java、Go）。 实时编译验证：集成CodeQL检测运行时错…"
+        }
+      ],
+      "viewAngleCards": [],
+      "benchmark": "",
+      "pitfalls": [],
+      "createdAt": "2026-11-18T09:08:38.941Z"
+    },
+    {
+      "id": "q_104",
+      "title": "在用户增长遭遇瓶颈时，如何通过精细化运营提升核心用户留存率？",
+      "questionUrl": "https://www.zhihu.com/question/1973708861807546515",
+      "track": "interview",
+      "topic": "增长 留存 面试",
+      "domain": "product",
+      "kind": "tech",
+      "heat": 4,
+      "sources": [
+        {
+          "url": "https://www.zhihu.com/question/1973708861807546515/answer/2045904649669062709",
+          "token": "2045904649669062709",
+          "author": "",
+          "votes": null,
+          "snippet": "内容型App次月留存率低的核心问题在于 未能针对核心用户建立深度价值联结与情感归属，而非单纯的功能或通知优化。常规手段失效的根本原因是忽略了“核心用户对特定内容和社区互动的高依赖”这一关键特征，导致运营策略未精准匹配其需求。以下从用户分层、内容匹配、社区互动三个维度进行策略分析，重点聚焦预算有限条件下对核心用户的深度运营： 一、用户分层：精准识别核心用户，避免资源浪费核心用户（如高频互动、内容贡献者…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/1973708861807546515/answer/1997231944602240794",
+          "token": "1997231944602240794",
+          "author": "",
+          "votes": null,
+          "snippet": "在用户增长遭遇瓶颈时，精细化运营的核心不是“多做活动”，而是“稳住核心用户”。下面从核心用户、NPS、用户旅程、客户之声几个维度，给你一套可落地的思路。 一、谁才是“值得重点留存的核心用户”？ 很多团队一上来就做“全量留存”，这是效率最低的做法。 建议从 NPS 入手重新定义核心用户：推荐者（NPS 9–10）：真正有长期价值的人高频但中立（7–8）：最有潜力转化为忠诚用户低分用户（0–6）：先止损，不是留存优先级精…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/1973708861807546515/answer/1975505683534341239",
+          "token": "1975505683534341239",
+          "author": "",
+          "votes": null,
+          "snippet": "用户增长遇瓶颈时，精细化运营的核心是“精准识别核心用户+针对性满足需求+持续深化情感绑定”，通过拆解用户生命周期、聚焦关键触点，用“精准化、个性化、场景化”策略提升留存，具体可落地为以下3点： 一、先给核心用户“画准像”：从“泛用户”到“精准人群” 核心用户是留存的基石，先通过数据筛选高价值人群，避免运营资源浪费： - 核心用户标签体系：用“RFM模型”（最近消费/使用频率/消费金额）+ 行为标签（核心功能使…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/1973708861807546515/answer/1974086772758701463",
+          "token": "1974086772758701463",
+          "author": "",
+          "votes": null,
+          "snippet": "非常理解你现在的压力！百万用户做到15%留存其实已经超过很多产品了，这说明你们的内容基本盘是稳的。但想突破瓶颈，靠Push通知这种“表面刺激”确实不够——就像总用咖啡提神，不如真正改善睡眠质量。说点我们团队实战中的思路： 一、把核心用户从“消费者”变成“参与者”核心用户依赖内容互动？那就让他们从看客变成主角！我们帮一个知识社区做过这类改造： 轻量级共创：让高活跃用户给内容“打标签”（比如“干货”“避坑”…"
+        }
+      ],
+      "viewAngleCards": [],
+      "benchmark": "",
+      "pitfalls": [],
+      "createdAt": "2026-11-18T09:08:40.572Z"
+    },
+    {
+      "id": "q_105",
+      "title": "数据产品经理，面试一般会问什么问题？怎么答？",
+      "questionUrl": "https://www.zhihu.com/question/523986974",
+      "track": "interview",
+      "topic": "数据指标 埋点 数据分析 业务 增长",
+      "domain": "product",
+      "kind": "tech",
+      "heat": 3,
+      "sources": [
+        {
+          "url": "https://www.zhihu.com/question/523986974/answer/2508200725",
+          "token": "2508200725",
+          "author": "",
+          "votes": null,
+          "snippet": "问题一：什么是用户行为数据，怎么采集用户行为数据？用户无论在哪个客户端（iOS端、安卓端、小程序端、H5端）操作，用户产生的行为数据都分为两种：一种是浏览，一种是点击。这些隐性的行为数据，一般不会存储在业务线的数据库中，而是通过异步传输的方式传输并存储到数据采集服务器中。 为什么要花那么多的资源采集这些行为数据呢？因为这些数据对后期数据的挖掘应用是十分有用的。 举个例子，对于电商产品，如果没有行为数据…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/523986974/answer/2507916902",
+          "token": "2507916902",
+          "author": "",
+          "votes": null,
+          "snippet": "大数据平台产品经理:你负责大数据平台的哪个部分（模块）？ 你们使用了什么开源的技术组件？在开源基础上做了哪些改动？ 你所负责的模块功能和其他模块是如何交互的？ 数据治理工具产品经理：说说你对数据治理产品的理解? 你调研过市场上哪些数据治理平台，或者哪些产品的数据治理功能模块，他们有什么优缺点？ 数据埋点产品经理：前端埋点和后端埋点主要区别在哪？你怎么判断是前端埋点还是后端埋点？ 你们的数据埋点需求输入来…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/523986974/answer/2066173923964753180",
+          "token": "2066173923964753180",
+          "author": "",
+          "votes": null,
+          "snippet": "从决定转岗到拿到offer，我花了将近四个月。 前两个月基本在踩坑——简历投出去石沉大海，偶尔捞到一两场面试，聊完要么是”你技术背景不错，但我们想要有产品思维的”，要么是”你做过数据治理，那你搭建过指标体系吗”，每一场都像是照镜子，照完发现自己的短板明晃晃地摆在桌上。 后来我停下来，没再急着投简历，把之前所有面试录音翻出来反复听，把被问到卡壳的问题一个一个拆开重新想。今天想把这些复盘写出来，希望能帮到…"
+        }
+      ],
+      "viewAngleCards": [],
+      "benchmark": "",
+      "pitfalls": [],
+      "createdAt": "2026-11-18T09:08:41.945Z"
+    },
+    {
+      "id": "q_106",
+      "title": "如何理解张小龙说的「好的产品是用完即走」？",
+      "questionUrl": "https://www.zhihu.com/question/39377177",
+      "track": "interview",
+      "topic": "产品经理 面试 需求 优先级",
+      "domain": "product",
+      "kind": "tech",
+      "heat": 4,
+      "sources": [
+        {
+          "url": "https://www.zhihu.com/question/39377177/answer/81167214",
+          "token": "81167214",
+          "author": "",
+          "votes": null,
+          "snippet": "我们先来看原文。 第三个，我想跟大家分享微信的一个基本价值观，我们认为一个好的产品是一个用完即走的，就是用完了我就走了，可能大家不是第一次听到这个词。一个好的产品不是黏住用户，而是尽量让这个用户离开你的产品，大家同意吗？说同意的都是没有认真思考的，因为我相信每个人做的工作都是围绕一点，怎么样黏住用户，怎么样让用户尽可能待在我的产品里头，不要离开产品。 我们认为任何产品都只是一个工具，对工具来说，好…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/39377177/answer/81157043",
+          "token": "81157043",
+          "author": "",
+          "votes": null,
+          "snippet": "一定不要忽视背景条件： 1. 一个穷人要吃肉是为了干活更有劲； 2. 一个富人要吃素是因为已经一身富贵病； 3. 老板告诉你不要在乎现在的薪水是因为他一天就赚这么多； 4. 张小龙说这句话是因为产品是「微信」； 5. 我觉得更本质的，好的产品能「解决产品Owner想解决的问题」，即可。 ——— 2019年更新 ——— 我对于做产品最新的思考，和极客时间合作了一门产品创新课程，欢迎来试听 极客时间 ：）"
+        },
+        {
+          "url": "https://www.zhihu.com/question/39377177/answer/81055134",
+          "token": "81055134",
+          "author": "",
+          "votes": null,
+          "snippet": "你的产品，客户用完就走。你却毫不担心会被客户抛弃，赚不到钱。你也根本不设法让客户单次停留时间更长。原因是什么？ 无它，产品复用率高，并且很难替代呗。 张小龙说的其实是一句彻底的废话，也是彻底的真理：【好的产品，客户复用率高，且很难被替代】 就是这样。微信，google，乃至老干妈都是如此。不仅不设法让用户多停留，可能还要防着被用户过于关注或沉溺。以免以后突然产生逆反心理。比如如果我做老干妈，有留学生流泪…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/39377177/answer/140968127",
+          "token": "140968127",
+          "author": "",
+          "votes": null,
+          "snippet": "[图片] 好的产品，真的是用完即走的吗？按我看来： 张小龙说的没错。但他只说出一半的真相。 有意思的是，站在过去做产品的角度想，这句话不仅不对，而且简直是自寻死路。 为什么？想想，在过去PC时代，用户是怎么使用电脑的？因为电脑携带不方便，没办法随时随地用。所以用户往往在较长时间，连续地上网。 那当年做PC互联网产品的策略是什么呢？简单讲只有八个字： 占据时长，抢占上游。 首先，占据时长是指，让用户尽量用产品的时间…"
+        }
+      ],
+      "viewAngleCards": [],
+      "benchmark": "",
+      "pitfalls": [],
+      "createdAt": "2026-11-18T09:08:43.367Z"
+    },
+    {
+      "id": "q_107",
+      "title": "如何冷启动一个新产品？",
+      "questionUrl": "https://www.zhihu.com/question/23281795",
+      "track": "interview",
+      "topic": "产品经理 面试 需求 优先级",
+      "domain": "product",
+      "kind": "tech",
+      "heat": 5,
+      "sources": [
+        {
+          "url": "https://www.zhihu.com/question/23281795/answer/77280372",
+          "token": "77280372",
+          "author": "",
+          "votes": null,
+          "snippet": "门前大桥下，游过一群 站在风口飞起来的猪 退潮后裸泳的屁股 快来快来数一数 二四六七八 又小又杂 这一手烂牌 鬼才能打好啊！ [图片] 呵呵， 要【冷启动】【新产品】？ 若非多重人格、精神分裂的鬼才操盘，根本没戏—— 要像上帝一样看行业与未来要像大将一样边指挥边冲锋（多重人格）还要像赌徒一样押创意与资源（多重人格、精神分裂）…要像暖男一样磨用户与伙伴（多重人格） 还要像暴徒一样推过程与结果（多重人格、精神分裂） …"
+        },
+        {
+          "url": "https://www.zhihu.com/question/23281795/answer/121246385",
+          "token": "121246385",
+          "author": "",
+          "votes": null,
+          "snippet": "初创团队，没预算，没用户，甚至没产品！如何快速实现低成本冷启动，积累第一个百万用户？ 这是很多互联网初创团队最头疼的问题。 很多团队在产品冷启动阶段，急于看到增长效果，把绝大部分精力放在宣传和渠道上，却忽略了构建MVP、寻找种子用户、验证运营模式这些更重要的问题。 我从2015年开始运营一个时间管理方向的小众产品——朝夕日历。也曾困惑迷茫，后来摸索出一套主题社群 + 公众号 + 活动运营的冷启动方法，一年内实现…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/23281795/answer/79739051",
+          "token": "79739051",
+          "author": "",
+          "votes": null,
+          "snippet": "用户类产品，最重要的是内容贡献和消费的闭环，也就是有进有出的流动运转，产品本身是一个供他们进进出出的平台。这两者是相互作用的关系，缺谁都玩不转，是个双边模式。 因此，冷启动是个难题。难点在于，产品刚上线的时候什么都没有，却要把相互依赖的双边建起来。 解决办法：Step1：搞定双边模式中的关键一方 Step2：把产品建成你期望的样子 Step3：引导关键一方融入产品 Step4：撬动另外一方参与 Step5：把控双边节奏，提升…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/23281795/answer/24122112",
+          "token": "24122112",
+          "author": "",
+          "votes": null,
+          "snippet": "建议关注这个网站，收录了当前互联网最火的产品是如何获得第一批用户的。 http://www.useronboard.com 另外建议阅读PG的这篇essay, DO THINGS THAT DON'T SCALE http://www.paulgraham.com/ds.html 每一个startup获取第一批用户的方法都不一样，有少数公司从一开始就做对了某一件事情，因此可以得到病毒般增长，但是大多数公司需要一开始做相当多的dirty work，用户达到一个tipping point以后才可以自我增长。 有兴趣的朋友还可以看Alexis Ohanian的…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/23281795/answer/141277385",
+          "token": "141277385",
+          "author": "",
+          "votes": null,
+          "snippet": "我是如何冷启动引爆的花椒直播 前言2015年年底，王思聪发微博挺17直播的当天晚上，我和微拍的核心团队一夜没睡，因为我从朋友圈看到，微拍的美女网红们纷纷模仿王思聪的微博，截图个人的17首页在朋友圈，求粉丝关注。可以说我的朋友圈被17直播刷屏了，当晚我意识到直播已经到了爆发点，再不追赶来不及了。当时两个关键指标，4g的普及率已经到了70%，大屏手机的普及率已经到了40%，大屏手机的用户最大的需求就是看视频，同时大屏…"
+        }
+      ],
+      "viewAngleCards": [],
+      "benchmark": "",
+      "pitfalls": [],
+      "createdAt": "2026-11-18T09:08:44.746Z"
+    },
+    {
+      "id": "q_108",
+      "title": "用户需求如何调研？",
+      "questionUrl": "https://www.zhihu.com/question/26002121",
+      "track": "interview",
+      "topic": "产品经理 面试 需求 优先级",
+      "domain": "product",
+      "kind": "tech",
+      "heat": 5,
+      "sources": [
+        {
+          "url": "https://www.zhihu.com/question/26002121/answer/2011703784",
+          "token": "2011703784",
+          "author": "",
+          "votes": null,
+          "snippet": "用户需求如何调研？4个步骤帮助你了解 一、明确调研目的想了解要进入的目标用户市场、当你不清楚用户是怎样的、不清楚用户痛点、拿不准产品方案的时候，通常可以选择做用户需求调研，或者小成本尝试。比如：需求调研是为了大致明确版本迭代的内容；B端产品更主要的是为了了解业务，深入业务的调研往往事半功倍。 二、确定调研人群从调研目的出发，筛选出合适的调研人群推送调研问题。 比如：为了调研用户的转介绍意愿，产品经理…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/26002121/answer/2392323104",
+          "token": "2392323104",
+          "author": "",
+          "votes": null,
+          "snippet": "需求调研是需求实现的前提。 需求调研主要内容有：了解需求背景、明确需求目标、过滤不当需求、确定大致方案。 需求的用户是谁？需求解决的核心问题是什么？使用场景有哪些？哪些是主要和次要场景？业务的流程是什么？除了主要业务还有哪些流程可能使用这个功能？除了本系统还有哪些系统会关联到这个功能… 这就是需求调研的“十万个为什么“。 一、过滤需求的方法 做后端系统，要学会的第一个技能就是砍需求。也就是过滤需求…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/26002121/answer/339159123",
+          "token": "339159123",
+          "author": "",
+          "votes": null,
+          "snippet": "在产品设计中，深入了解用户需求一直是设计师考虑最多的问题。在产品设计过程中， 了解用户的需求以及分析用户行为习惯是设计的核心重点，而想要深入了解用户需求光靠资料统计难以作为主要的参考标准，此时在设计前期进行大量的用户调研十分有必要。下面康石石介绍几个基本的用户调研方法： 一、问卷调查（Questionnaire）首先就是问卷调查，这一步是为了收集大量的数据支持，问卷调查的对象范围较广，且较倾向于设计师给出选项…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/26002121/answer/1948433814201307839",
+          "token": "1948433814201307839",
+          "author": "",
+          "votes": null,
+          "snippet": "用户需求调研如何调研？在用户需求调研阶段，需向业务方了解优惠券的完整业务流程。业务方会说明优惠券的制作与发放方式，包括系统自动发放、后台手动发放或C端用户自行领取等形式。 [图片] 在企业实际工作中，我们经常会接到领导或业务方的一句话需求。假设我们运营一个自营B2C电商平台，拥有自己的小程序和线下门店，销售全品类商品。此时，运营人员提出要开发 优惠券功能，需求往往就是这样简单的一句话。面对这样的需求， 产品经理…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/26002121/answer/2081324927148352310",
+          "token": "2081324927148352310",
+          "author": "",
+          "votes": null,
+          "snippet": "要想分析用户需求，最关键的是： 1.别光听用户说，要看他们实际怎么做。 2.要把零散的反馈进行分类整理，把混乱的需求标签化，这样才不会出现重复问题或漏掉共性问题。 3.用户可能会“骗人”， 但数据不会。 有很多现成的需求获取方法，比如“需求访谈的三驾马车”需求访谈的三驾马车是指，在需求访谈时，定义三个角色进行需求访谈： 主问者：推荐需求工程师担当，事先准备了需求访谈问题单，负责现场对照问题单提问 ，并根据客…"
+        }
+      ],
+      "viewAngleCards": [],
+      "benchmark": "",
+      "pitfalls": [],
+      "createdAt": "2026-11-18T09:08:47.637Z"
+    },
+    {
+      "id": "q_109",
+      "title": "作为产品经理，如何通过 A/B 测试优化产品或服务性能？",
+      "questionUrl": "https://www.zhihu.com/question/656454164",
+      "track": "interview",
+      "topic": "模型效果 评测 实验 A/B",
+      "domain": "algo-data",
+      "kind": "tech",
+      "heat": 2,
+      "sources": [
+        {
+          "url": "https://www.zhihu.com/question/656454164/answer/3535073585",
+          "token": "3535073585",
+          "author": "",
+          "votes": null,
+          "snippet": "1. 确定测试目标 明确目标：业务目标：明确需要优化的具体业务指标，例如点击率、转化率、用户留存率等。用户行为：了解需要测试的用户行为，例如页面停留时间、按钮点击次数、购买频次等。2. 生成假设 提出假设：假设形式：根据用户反馈和数据分析，提出改进假设。例如，“改变按钮颜色会提高点击率”。基于数据：确保假设有数据支撑，不是凭空想象。3. 设计测试方案 选择变量：单一变量：确保每次测试只改变一个变量（例如，按…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/656454164/answer/3558608931",
+          "token": "3558608931",
+          "author": "",
+          "votes": null,
+          "snippet": "[图片] A/B 测试是一种高效的实验方法，用于评估产品或服务在不同变量下的表现，并找出最佳方案。作为产品经理，以下是通过 A/B 测试优化产品或服务性能的步骤： 明确目标：首先，你需要确定优化的目标是什么。这可能是提高用户参与度、增加转化率、减少用户流失率等。 定义假设：基于你的业务目标，提出关于产品或服务可能的改进点。例如，你可能假设改变按钮的颜色可以提高点击率。 设计测试：设计两种或多种版本的产品或服务，每种版…"
+        }
+      ],
+      "viewAngleCards": [],
+      "benchmark": "",
+      "pitfalls": [],
+      "createdAt": "2026-11-18T09:08:49.091Z"
+    },
+    {
+      "id": "q_110",
+      "title": "开题答辩要讲什么？",
+      "questionUrl": "https://www.zhihu.com/question/35660817",
+      "track": "defense",
+      "topic": "论文答辩 评委 提问",
+      "domain": "defense",
+      "kind": "tech",
+      "heat": 5,
+      "sources": [
+        {
+          "url": "https://www.zhihu.com/question/35660817/answer/2749635088",
+          "token": "2749635088",
+          "author": "",
+          "votes": null,
+          "snippet": "开题答辩开题答辩是老师想给你指名写作思路，而不是提出批评，不要老说明白了，多问问老师该怎么解决 1.开题答辩流程 （1）答辩学生打开PPT进行概述，包括论文题目、研究背景、研究意义、研究现状、研究方法、研究内容、进度安排。 （★答辩PPT 最佳10-15页，不要大段大段的文字，文与图结合。★最后一页写上 恳请各位老师批评指正！★千万不要照着PPT上读！！！）（2）答辩的评委老师进行提问及点评。 （态度一定要好，切记不要…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/35660817/answer/418533780",
+          "token": "418533780",
+          "author": "",
+          "votes": null,
+          "snippet": "开题答辩一般分两部分： 开题报告内容展示（这一部分大概是10-15min，每一部分侧重点不同。introduction简单说下研究背景，意义，研究问题要讲；文献综述部分提及2-3人研究即可，不用细讲，PPT上可以写；理论框架如果有框架图要细讲；研究方法细讲，语料分析讲一个例子即可，分析怎么回答研究问题的；如果有多个结论，每个结论尽量一句话总结。）导师提问环节导师常问的问题总结在另一个回答里，可查看 知乎用户：研究生（写作学…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/35660817/answer/1643765463",
+          "token": "1643765463",
+          "author": "",
+          "votes": null,
+          "snippet": "开题最重要的目的是让自己和老师清楚自己的研究是可行的 1.从文献调研上:对这个领域的文献进行全面的筛选，与主题相关的文献；分为几类，一是综述类可以很直接的提供N篇文章的研究结果；还能找到几个大咖。二是研究相关的论文，可以提供现有的研究证据以及研究方法，三是相关的研究生学术论文，可以理清格式和标准的表达。 2.从PPT的制作上，分为：背景、综述、问题提出、假设、实验设计、数据统计、预期结果、时间安排 其中最重…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/35660817/answer/2374558905",
+          "token": "2374558905",
+          "author": "",
+          "votes": null,
+          "snippet": "开题报告与开题答辩技巧分享。 1.选题一共有种：1热门选题、2你导师给你的选题、3你自己从生命经验里生发出来的选题。其中只有第三种才可能会开开心心写好。原因很简单，第一种是大众女神，第二种是包办婚姻，第三种是你真正愿意共度时光的身边人。 2.有些选题碰都不要碰。你可能会说：“这个选题没人做耶，我找到了学术空白!”一定要明白，大家都不吃屎，是有原因的。 3.还有些选题也不要碰。你可能会说：“这是个热门选题，具…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/35660817/answer/3245699544",
+          "token": "3245699544",
+          "author": "",
+          "votes": null,
+          "snippet": "要讲什么，嘶，我一时间不知道你具体要什么回答，而且几年过去了，倒也没必要纠结这个了。 在你这提问下给大家讲讲开题答辩怎么讲吧： 开场白： 尊敬的各位老师：上午/下午好!我叫XXX,是XXX学院XXX专业的学生。我的论文题目是XXX,论文是在XXX老师的悉心指导下完成的。本文基于XXX理论，通过XXX方法，研究了XXX的问题。 研究背景及意义： 我之所以选择这个课题，是因为在通过文献的阅读和实际的调研之后，我发现由于XXX的机制不够…"
+        }
+      ],
+      "viewAngleCards": [],
+      "benchmark": "",
+      "pitfalls": [],
+      "createdAt": "2026-11-18T09:08:50.516Z"
+    },
+    {
+      "id": "q_111",
+      "title": "大学本科论文答辩，老师都会问些什么呢？",
+      "questionUrl": "https://www.zhihu.com/question/321117978",
+      "track": "defense",
+      "topic": "论文答辩 评委 提问",
+      "domain": "defense",
+      "kind": "tech",
+      "heat": 5,
+      "sources": [
+        {
+          "url": "https://www.zhihu.com/question/321117978/answer/1881608134",
+          "token": "1881608134",
+          "author": "",
+          "votes": null,
+          "snippet": "首先，给大家明确一个点，本科期间的毕业论文答辩，大家只要是没有太大的问题或者是态度非常不好，老师一般都不会为难的，都会让过的，所以大家不必要为此感到特别焦虑，正常发挥就好。 其次我结合实际说一下我答辩时的具体情况。答辩的时候加上答辩秘书一共是4个老师。首先，会让自己对自己的论文进行一个陈述，具体介绍的就是自己的写作经历，论文的核心思想，以及具体的框架；在你陈述的整个过程中，老师一般都不会抬头看你，…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/321117978/answer/1194283465",
+          "token": "1194283465",
+          "author": "",
+          "votes": null,
+          "snippet": "本科论文答辩不必想的太难，只要你不是属于那种特别过分的，自己想想都看不顺眼的那种，老师都会放你一马的！ 答辩老师都会问些什么，一般学生都给评多少分，能不能顺利通过。还请大家知无不言，在此感谢。 我毕业论文答辩的时候是这样的场景：在一间教室里面，学生在讲台上进行答辩，台下第一排坐着四五个老师，这四五个老师肯定是你们学院的老师，但不一定是教你们这个专业的老师，台下的老师，每个人手中都有一份你的论文。 …"
+        },
+        {
+          "url": "https://www.zhihu.com/question/321117978/answer/908455154",
+          "token": "908455154",
+          "author": "",
+          "votes": null,
+          "snippet": "[图片] 首先介绍一下我自己，985博士，目前在校带的在职研究生，毕业季也会参与本科学生的答辩。 副教授和教授们肯定只是纯粹参与一下答辩，像答辩流程的安排，时间的确定和通知，肯定是由我们这些年轻的青椒们负责咯...SO，我有100分的理由来回答这个问题啊。。 [图片] 一、首先，自己先陈述清楚的问题如下： 1、主要内容包括论文标题； 2、课题背景、课题的研究目的，及课题现阶段的发展情况； 3、课题的相关内容，课题的研究过程、实验数据…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/321117978/answer/1194959097",
+          "token": "1194959097",
+          "author": "",
+          "votes": null,
+          "snippet": "不请自来！正好之前一段时间为了答辩，也算是翻遍全网，结果都是大同小异！知乎上说到位的也不太多，找到想要的干货太难！这次就说说我自己真正实战经历过答辩下来的一些经验～ 一、个人情况说明上海某一本，大四应届毕业生，商务英语专业，逃不掉的英语答辩！因疫情原因，改为线上答辩～论文从去年11月左右一直到2月左右基本定稿，4月刚刚答辩，论文太久远，真的到答辩前很多都不太记得了！所以掌握套路和事前熟悉很重要！ PS：…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/321117978/answer/1245031141",
+          "token": "1245031141",
+          "author": "",
+          "votes": null,
+          "snippet": "一、毕业论文的主题是什么？这个问题是答辩老师最常问的问题，这个问题说难也不难，说简单也不简单，主要就是要用自己的语言总结概括自己的论文的核心，尽可能精简但是准确的表达出来，不少于3句，不超过5句。 二、选择论文题材的原因是什么？通常这个问题需要结合自己的实际情况以及论文写作的两个方面来进行表述，这一部分如果回答的好容易加分，如果回答的不好也容易减分，所以为了表现出自己论文的特点和优势，我们陈述时需…"
+        }
+      ],
+      "viewAngleCards": [],
+      "benchmark": "",
+      "pitfalls": [],
+      "createdAt": "2026-11-18T09:08:52.020Z"
+    },
+    {
+      "id": "q_112",
+      "title": "开题答辩会问什么问题?",
+      "questionUrl": "https://www.zhihu.com/question/634759260",
+      "track": "defense",
+      "topic": "论文答辩 评委 提问",
+      "domain": "defense",
+      "kind": "tech",
+      "heat": 5,
+      "sources": [
+        {
+          "url": "https://www.zhihu.com/question/634759260/answer/3325277181",
+          "token": "3325277181",
+          "author": "",
+          "votes": null,
+          "snippet": "谢邀~ 只有当答辩组老师觉得你这个题开得不行，才会问指导老师什么看法的。导师一般就在现场，他问你导师，潜台词就是：你这个学生开题报告太烂了，问题很多，我不好当着大家面公开喷，你怎么看？ 正常的问题就是这个题的背景和需求，研究现状里别人是怎么做的，你打算怎么做才能比已有的研究有改进、有创新、有意义。如果你开题报告写得都是些老生常谈的老问题，那就会被说的。"
+        },
+        {
+          "url": "https://www.zhihu.com/question/634759260/answer/3325853517",
+          "token": "3325853517",
+          "author": "",
+          "votes": null,
+          "snippet": "想要在开题答辩时候，承受住老师的灵魂拷问，那就一定要做好充足的准备！ 下面我就分享5个开题答辩高频提问及回答策略，速速收下！1、你为什么选择这个论文题目？千万不要很中二的说这个题目是导师给我的，或者什么这个题目好些之类的。正确的回答应该从论文的意义出发，说明写这个论文的重要性。 2、你这篇文章的创新点在哪里？创新点是老师很喜欢问的问题之一。主要就是你的这篇论文和其他类似研究方向相比，有什么不一样/改进…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/634759260/answer/3364741984",
+          "token": "3364741984",
+          "author": "",
+          "votes": null,
+          "snippet": "论文开题报告答辩须知为了保证学生的培养质量，提高论文质量，就必须对论文开题报告进行评价。 论文开题报告会由3~5位相关学科的专家对论文开题报告进行评议，与企业合作的重大科研项目可以聘请1~2位相应企业的具有高级职称的专家参加， 不同学科的论文开题报告的侧重点不同。论文开题报告会上学生应对课题进行详细汇报，并对专家提问做出必要的解释和说明。 论文开题报告的成绩考核以合格、不合格记。评审小组成员最后签名并给…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/634759260/answer/3408555006",
+          "token": "3408555006",
+          "author": "",
+          "votes": null,
+          "snippet": "1.你为什么选择这个题目 可从主观与客观两个方面来回答。示例：（主观原因）该选题是一直很感兴趣的话题，所以对该选题在之前就很关注，而且现在XXX研究也是紧扣社会主旋律，具有很强的现实意义。（客观原因）同时我在总结国內外研究现状时发现，该选题的研究在XXX上还存在XXX不足。所以基于此，我选择了这个论文选题。 A:选题问题可能涉及到你的研究兴趣以及以后的研究方向如果你已经有了明确的研究方向,之前已经认真暸解过,可…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/634759260/answer/3330606782",
+          "token": "3330606782",
+          "author": "",
+          "votes": null,
+          "snippet": "嗯，正经回答如下：如果你没有得罪老教授，那么大概率人家也不会问太难的问题，前提是开题报告确实是你自己认真写的。最不济，起码那些基础得不能再基础的问题自己得做到心中有数吧。 那么就开始（不正经回答）说说我自己答辩的经历吧。 2023年5月31日，我上台答辩。答辩负责人当着我的面，宣读了学校要求我答辩的决定。我是第一个上台答辩的，当时我接到通知要到学校答辩，我刚进答辩教室门时，我的答辩演讲稿即被留在门外。我…"
+        }
+      ],
+      "viewAngleCards": [],
+      "benchmark": "",
+      "pitfalls": [],
+      "createdAt": "2026-11-18T09:08:53.460Z"
+    },
+    {
+      "id": "q_113",
+      "title": "大创项目结题答辩时该注意些什么？",
+      "questionUrl": "https://www.zhihu.com/question/278002011",
+      "track": "defense",
+      "topic": "论文答辩 评委 提问",
+      "domain": "defense",
+      "kind": "tech",
+      "heat": 3,
+      "sources": [
+        {
+          "url": "https://www.zhihu.com/question/278002011/answer/2281978096",
+          "token": "2281978096",
+          "author": "",
+          "votes": null,
+          "snippet": "(小白必看）大创（国创）国家级最新模板资料分享大学生创新创业训练项目怎么准备模板参考学习立项结题报告中期检查报告申报书的创新点和项目特色流程表结项任务书阶段性报告验收表实施心得怎么写，保研额外加分必备，大学期间，大创一定要去做一做， 含金量很高。大创（国创）国家级省部级资料 获取链 接 [图片] 一个项目立项后，需要 持续一年的时间才能结题，在这一年里，我们可以学习到很多东西，我讲讲我们从立项到结题的大概过程。…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/278002011/answer/2921073003",
+          "token": "2921073003",
+          "author": "",
+          "votes": null,
+          "snippet": "简单的介绍一下 大创的项目结题答辩需要准备的材料以及答辩注意事项。 [图片] 一、需要准备的材料需要准备的材料有： 结题申请书+完成材料结题申请书是必备的，完成材料主要包括发表的学术论文、专利、著作、参加的学术会议、比赛荣誉。完成材料并不要求你完全按照上述所列举的材料所提供，只需要有响应的证明大创项目完成的材料即可。 结题申请书，一般包括项目实施情况、项目创新点和特色、项目成果、项目研究体会和心得、项目经费使用…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/278002011/answer/2183235079",
+          "token": "2183235079",
+          "author": "",
+          "votes": null,
+          "snippet": "大创结题验收 一，各内项目须在规定时间内完成各项研究任务，进行结项验收。项目负责人应撰写结题验收报告，并附上研究记录等相关材料和研究成果、实物等。学校组织专家对结题项目采取答辩、成果鉴定、汇报总结、材料审阅等多种方式进行结题验收。验收注重项目的实施过程，经费使用效益和执行率，强调项目实施过程中学生在创新思维方法、创新能力方面的收获。 二，院级、校级项目验收按项目立项预期目标进行结项验收，由项目主持…"
+        }
+      ],
+      "viewAngleCards": [],
+      "benchmark": "",
+      "pitfalls": [],
+      "createdAt": "2026-11-18T09:08:54.895Z"
+    },
+    {
+      "id": "q_114",
+      "title": "论文答辩流程和常见问题是什么？",
+      "questionUrl": "https://www.zhihu.com/question/635937260",
+      "track": "defense",
+      "topic": "论文答辩 评委 提问",
+      "domain": "defense",
+      "kind": "tech",
+      "heat": 5,
+      "sources": [
+        {
+          "url": "https://www.zhihu.com/question/635937260/answer/55666849922",
+          "token": "55666849922",
+          "author": "",
+          "votes": null,
+          "snippet": "毕业论文答辩是每位大学生迈向毕业的关键一步，它不仅决定了论文的最终成绩，也关乎能否顺利毕业。为了更好地准备答辩，提前了解可能被问到的问题非常重要。下面，我们将为你总结一些在答辩中常见的问题，并提供应对策略，帮助你顺利通过这一重要环节。 1. 为何选择这个课题？ 在答辩中，导师通常会问你为什么选择这个课题。你需要明确表述课题的研究背景、选择的动因以及它的重要性。思考一下这个课题在学术领域或实践中的意义…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/635937260/answer/3341642835",
+          "token": "3341642835",
+          "author": "",
+          "votes": null,
+          "snippet": "论文答辩是研究生毕业阶段的最后一道关，它是对你所进行研究成果的展示和阐述。以下是一般的论文答辩流程和常见问题： 1. 开场白和自我介绍：答辩开始前，你需要进行简短的开场白，并向评委会和观众介绍自己和你的研究课题。 2. 研究背景和目的：介绍你的研究课题的背景和目的。解释为什么你选择这个课题进行研究，以及研究课题在学术或实践上的重要性。 3. 研究方法：讲解你采用的研究方法和数据收集方式。详细介绍你的研究设计…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/635937260/answer/3349367688",
+          "token": "3349367688",
+          "author": "",
+          "votes": null,
+          "snippet": "论文答辩是毕业论文阶段非常重要的环节，适用于专本硕阶段答辩，通常包括以下流程和常见问题。 论文答辩流程：开场白：首先进行简短的开场白，介绍自己的研究背景、研究问题、研究目的和方法。论文概述： 对论文的整体结构、主题和核心内容进行简要概述，以引起评委的兴趣。研究背景： 阐述研究的背景，说明为什么选择这个研究主题，研究的重要性及前人研究存在的不足。研究方法： 详细阐述研究方法，包括实验设计、数据采集、分…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/635937260/answer/3349471915",
+          "token": "3349471915",
+          "author": "",
+          "votes": null,
+          "snippet": "论文答辩 5个回答模板 评审老师不可怕，5个模板全拿下！ 很多同学还是不知道怎样回复评审老师的批评性问题。记住这5个回答模板， 1.当老师说你的研究不够透彻时: 感谢老师的指导，您所说的内容我都记下了，答辩结束后我会深入了解这方面内容，持续修正并补充完善。 2.当老师说你考虑不周时: 确实是我没有考虑全面,我会继续查阅相关资料，把这部分延伸内容也补充完整。 3.当老师提出问题批评你时: 感谢老师的批评，我接受您的批评…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/635937260/answer/3337821259",
+          "token": "3337821259",
+          "author": "",
+          "votes": null,
+          "snippet": "流程：按答辩名单顺序在讲台电脑录入自己的答辩PPT，按顺序答辩 问题：根据论文中的内容出问题，理科毕设：例如基于Solidworks的打孔机设计，1.论文主要用了什么研究方法，2.打孔机主要解决了使用中的什么问题，和普通的打孔机有什么区别，3.打孔机的结构是怎么样的，工作原理是什么，4.打孔冲头是否能够替换等等 文科论文：例如基于低碳环境下S公司物流运输的优化策略研究，1.S公司物流运输的现状是什么，2.S公司物流运输现状是…"
+        }
+      ],
+      "viewAngleCards": [],
+      "benchmark": "",
+      "pitfalls": [],
+      "createdAt": "2026-11-18T09:08:56.300Z"
+    },
+    {
+      "id": "q_115",
+      "title": "论文的写作方法和实验设计思路有哪些？",
+      "questionUrl": "https://www.zhihu.com/question/616626181",
+      "track": "interview",
+      "topic": "模型效果 评测 实验 A/B",
+      "domain": "defense",
+      "kind": "tech",
+      "heat": 5,
+      "sources": [
+        {
+          "url": "https://www.zhihu.com/question/616626181/answer/3453561836",
+          "token": "3453561836",
+          "author": "",
+          "votes": null,
+          "snippet": "近来大规模的农村劳动力涌向城市，在贡献GDP、带动城市建设的同时，也对城市的劳动力市场产生冲击。国内的学者开始在就业率、工资及价格水平角度来评价影响的大小，但大多停留在定性分析，定量检验还很缺乏。本文的研究目的就是，通过实证分析，检验农村劳动力涌向城市对城市物价与工资的影响。本文借鉴国外劳动力移民相关的理论框架和研究成果，来研究中国劳动力市场的影响。取与当今中国农村劳动力流动最相似的美国-墨西哥国际…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/616626181/answer/3186604449",
+          "token": "3186604449",
+          "author": "",
+          "votes": null,
+          "snippet": "EA-ISET协会 给大家谈谈SCI论文写作文章各个部分应注意的问题及一些固定模式和套路。 Abstract整体要求简练，言简意赅，因为绝大部分journal对Abstract都有字数限制，一般150～250words. 先简单描述一下自己工作的前沿背景，几句话，然后引出自己的实验（“In this paper….”; “Herein..” or “Here, we…”），主要陈述实验结果，可稍带提一下所用到的重要方法的名称，然后说明你的结果的意义“There data suggest….”；最后…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/616626181/answer/3176182172",
+          "token": "3176182172",
+          "author": "",
+          "votes": null,
+          "snippet": "对于研究生、研0生和准备做科研的本科生而言，我们都是第一次做科研，更是第一次写论文。 一篇糟糕的初稿将会是最宝贵的东西 为了写论文，为了拿出一份糟糕的初稿，我们也需要阅读大量文献。那么作为科研新人，应该如何高效阅读文献、管理文献呢？ 本人沪上985研究生在读，科研上遇到挺多问题，英语也不怎么好，读文献、写论文更是找不到头绪，为了发表SCI，花了七个月的时间开发了一款 Web文献阅读工具，免费开放给大家使用，希…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/616626181/answer/3186548056",
+          "token": "3186548056",
+          "author": "",
+          "votes": null,
+          "snippet": "感谢题主邀请～ 我来说说论文的写作方法，这个是我的专长。 我的方法相对简单，总结起来可以用一句话概括：前期把握好题目的选定和大纲的规划。很简单吧，其实写论文本身并不复杂，只是按照你的思路在上面添加文字内容。复杂的是你的思路，思路不对或者逻辑混乱，写出来的论文质量就会急剧下滑。 所以我无数次强调论文最重要的两点∶ 题目和大纲。1.论文选题题目就是你所做所有工作的中心，开题报告、文献综述、绪论、正文章节等…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/616626181/answer/3191058724",
+          "token": "3191058724",
+          "author": "",
+          "votes": null,
+          "snippet": "一、选定论题（一）论题在文中的地位与作用严格地讲，论文写作是从选定论题开始的。选题是论文写作的第一步，也是最重要的一步，因为它关系到论文写作的进程是否顺利，论文写作最终是成功还是失败。 如何一次写出高质量文献综述（内含文献综述写作模板） 只有选定了一个比较合适的论题，其后的撰写工作才有可能顺利展开。“题好文一半”，就是这个道理。爱因斯坦曾说过，“提出一个问题，往往比解决一个问题更重要”。因此，成功…"
+        }
+      ],
+      "viewAngleCards": [],
+      "benchmark": "",
+      "pitfalls": [],
+      "createdAt": "2026-11-18T09:08:57.763Z"
+    },
+    {
+      "id": "q_116",
+      "title": "论文中的创新点是怎么想出来的？",
+      "questionUrl": "https://www.zhihu.com/question/355733089",
+      "track": "defense",
+      "topic": "论文答辩 评委 提问",
+      "domain": "defense",
+      "kind": "tech",
+      "heat": 5,
+      "sources": [
+        {
+          "url": "https://www.zhihu.com/question/355733089/answer/3291004159",
+          "token": "3291004159",
+          "author": "",
+          "votes": null,
+          "snippet": "一 引言学术论文论点的形成一般要经历感受、理解、解释的过程。写作者在提炼论点时,必须根据论点形成的特点,运用适当的方法提炼论点。论点创新的方法包括细化、分化、质疑、深化。 学术论文论点的表述实际上是认识、思维由内在到外化的过程,必须借助语言文字才能实现,选择恰当的概念和明确论点存在的条件对论点的表述很重要。[1] 而且不同阶段的论文对创新点的要求也不一致，需要具体分析： 二 不同阶段论文的创新点要求不一样本…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/355733089/answer/2963321562",
+          "token": "2963321562",
+          "author": "",
+          "votes": null,
+          "snippet": "不知道你是什么方向的。 硕士毕业论文创新点要几个？ 上面讲了如何写创新点。 通常的套路是视角、方法、内容三个方面来吹水。 创新点寻找方法主要如下 系统回顾文献并归纳总结在开始一项研究之前，必须首先了解和掌握该领域的所有研究成果。通过系统回顾文献，我们可以了解到先前的研究中存在的缺陷和不足，从而提出自己的观点和思路。此外，通过对文献的归纳和总结，我们能够清晰地了解到该领域中的研究现状和该方向发展的未来趋…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/355733089/answer/3271317358",
+          "token": "3271317358",
+          "author": "",
+          "votes": null,
+          "snippet": "论文创新点应该是论文写作中最难的部分之一了。今天详细的给大家讲解下什么是论文创新点？如何写论文创新点？ 研究对象创新通常前人针对某课题进行分析。我们可以将两个课题结合起来进行分析，或者从某课题中提取突出的点作为对象进行分析。 范例: 本课题全面采集相关研究资料，整理归纳课题研究结论，从某个点着手，深入探讨课题存在的问题，提出有效的解决对策。因为该点的研究内容较少，本文具有一定的创新性。 研究角度创新…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/355733089/answer/3281367784",
+          "token": "3281367784",
+          "author": "",
+          "votes": null,
+          "snippet": "对于文章发表，决定论文能否接受最重要的决定因素之一便是创新性。具有创新性的论文必然弥补了某研究领域某一具体问题的空白，或研发了新的材料，或提出了新的技术、方法。那么，论文中的创新性是如何想出来的呢？下面就以医学领域作介绍： 主动follow顶尖实验室和大佬团队的创造和开拓性成果对于前沿研究领域，全球的重点实验室屈指可数。一般，大佬的研究团队的研究思路具有延续性和开创性，创新点往往是基于多年的研究实践和…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/355733089/answer/3372208525",
+          "token": "3372208525",
+          "author": "",
+          "votes": null,
+          "snippet": "非双一流院校硕论就不要纠结什么创新点了，你唯一能创新不翻车的就是参考点新文献。分给你们导师的课题都是挑剩下的。稳抓稳打格式规范和工作量足这两点足以让你顺利毕业，不要主动挑战难度。 毕业论文最大的阻碍是拖延症！导师放养，没东西写，不会写这些都不是问题。只要开始，就不难！ 首先论文选题务必参考导师意见，多看几篇同类以便借鉴成熟框架。一定要格式规范条理清晰，工作量一定要多多益善。薅羊毛不要逮着一只羊薅，…"
+        }
+      ],
+      "viewAngleCards": [],
+      "benchmark": "",
+      "pitfalls": [],
+      "createdAt": "2026-11-18T09:08:59.184Z"
+    },
+    {
+      "id": "q_117",
+      "title": "本科论文答辩难吗？",
+      "questionUrl": "https://www.zhihu.com/question/392229198",
+      "track": "defense",
+      "topic": "论文答辩 评委 提问",
+      "domain": "defense",
+      "kind": "tech",
+      "heat": 5,
+      "sources": [
+        {
+          "url": "https://www.zhihu.com/question/392229198/answer/1871550819",
+          "token": "1871550819",
+          "author": "",
+          "votes": null,
+          "snippet": "答辩之前 学生内心：啊，好紧张啊，要好好回答啊，态度谦逊啊，今天当孙子，明天就能当社畜了啊！ 教授内心：中午吃啥呢，食堂的饭菜真垃圾，要不出去吃吧。 答辩过程中 学生：各位答辩教授好（各种高大上的研究意义） 教授内心：难为这孩子了，这么个垃圾还能吹成这样，听的好想睡觉啊。（瞄瞄其他教授）老李是真牛逼，这股票又看上了，我也看看吧，知乎应该涨的还行。 提问环节： 教授内心：我也没仔细听啊，问啥呢？瞎问吧 教…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/392229198/answer/1207555727",
+          "token": "1207555727",
+          "author": "",
+          "votes": null,
+          "snippet": "总而言之，谨记十六字箴言「答辩答辩，只答不辩，疯狂道歉，考虑不全」，你要答辩，二辩再见。！！！！注意道歉不是只说“我写错了”，要换个说法，比如：嗯，我本来是想按照老师的建议这样写的，但是由于时间不够文献阅读太少，积累不够，语言功底差，没写出来，我之后纠正。或者，我本来感觉是…，但是经过老师刚才的建议，我感觉之前的想法…，之后修改 不难，但是要有准备，答辩分为两个部分，首先是三到五分钟的自述部…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/392229198/answer/2299609915",
+          "token": "2299609915",
+          "author": "",
+          "votes": null,
+          "snippet": "我以前问过我导师，答辩那些论文，你们这么快，可以看明白吗 导师说：那些论文，2分钟就可以看明白写了什么东西 水平都是差不多，就是走一个流程的东西 然后就知道怎么样了 1、格式 2、错别字 3、在看一下是不是糊弄人的 4、答辩态度(最重要的) 答辩的主要内容，一部分是论文怎么样，本科的水平，大家都差不多，答辩态度，老师问的问题，你不会，这个问题没有考虑的，这个没有想到，就好了，导师看你态度没有问题论文就可以通过 …"
+        },
+        {
+          "url": "https://www.zhihu.com/question/392229198/answer/1808189547",
+          "token": "1808189547",
+          "author": "",
+          "votes": null,
+          "snippet": "一、答辩流程 1. 论文阐述 在进行答辩时，答辩老师首先会让你对论文内容进行基本阐述。叙述中一定要表述清楚你写这篇论文的写作思路，逻辑框架、观点、选题意义等，时间控制在5分钟左右。答辩老师会根据你的叙述，了解你对写作论文的整个思考过程，考察你的分析和综合归纳能力。 2. 自由答辩 这是毕业答辩中的重头戏，有问有答，是答辩中相对灵活的环节。一般会由答辩老师对你提出3-5个问题， 由答辩人当场作答。所以就需要答辩…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/392229198/answer/1841194318",
+          "token": "1841194318",
+          "author": "",
+          "votes": null,
+          "snippet": "去年我答辩的时候，因为是网上视频答辩，就拿了个本子，穿了身西装，镜头打理了一下，全程“”对，这点没考虑好，谢谢老师”，“奥，原来还有这种思路，谢谢老师”，“这点还可以这样优化，谢谢老师”，“是，当时确实没有做这一部分，学生受教了”，“这个错误我马上修改，多谢老师提醒”，“这个框架原来还有这种妙用啊，学到了”，然后点头沉思外加记笔记，最后还“多谢老师给我上的最后一课”，总之谦虚就完事了，本科你还指…"
+        }
+      ],
+      "viewAngleCards": [],
+      "benchmark": "",
+      "pitfalls": [],
+      "createdAt": "2026-11-18T09:09:00.582Z"
+    },
+    {
+      "id": "q_118",
+      "title": "redis缓存雪崩，击穿，穿透，到底是什么?",
+      "questionUrl": "https://www.zhihu.com/question/421946305",
+      "track": "interview",
+      "topic": "缓存 一致性 击穿",
+      "domain": "backend",
+      "kind": "tech",
+      "heat": 5,
+      "sources": [
+        {
+          "url": "https://www.zhihu.com/question/421946305/answer/3563299765",
+          "token": "3563299765",
+          "author": "",
+          "votes": null,
+          "snippet": "开局先看一波结论图！ [图片] 下面等一一给大家图解，到底什么是缓存雪崩、穿透、击穿？面对这些问题，又该如何应对？ 用户的数据一般都是存储于数据库，数据库的数据是落在磁盘上的，磁盘的读写速度可以说是计算机里最慢的硬件了。当用户的请求，都访问数据库的话，请求数量一上来，数据库很容易就奔溃的了，所以为了避免用户直接访问数据库，会用 Redis 作为缓存层。 因为 Redis 是内存数据库，我们可以将数据库的数据缓存在 Redis 里…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/421946305/answer/2000573913084753080",
+          "token": "2000573913084753080",
+          "author": "",
+          "votes": null,
+          "snippet": "面试必问三件套：缓存穿透、缓存雪崩、缓存击穿。 但实际生产中踩过坑才知道，这三个问题不只是面试题，是真的会让服务挂掉的。 先搞清楚概念问题原因后果缓存穿透查询不存在的数据请求全打到数据库缓存雪崩大量缓存同时失效瞬间压垮数据库缓存击穿热点key突然过期并发请求打穿数据库一张图理解： 正常情况： 请求 → Redis命中 → 返回 缓存穿透： 请求(不存在的key) → Redis未命中 → DB未命中 → 每次都查DB 缓存雪崩： 大量…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/421946305/answer/2382355868",
+          "token": "2382355868",
+          "author": "",
+          "votes": null,
+          "snippet": "说到Redis，往往更多的场景是被用作系统的缓存，说到缓存，尤其是分布式缓存系统，在实际高并发场景下，稍有不慎，就会造成缓存穿透、缓存击穿和缓存雪崩的问题。那什么是缓存穿透？什么是缓存击穿，又什么是缓存雪崩呢？它们是如何造成的？又该如何解决呢？今天，我们就一起来探讨这些问题。 缓存穿透首先，我们来说说缓存穿透。什么是缓存穿透呢？缓存穿透问题在一定程度上与缓存命中率有关。如果我们的缓存设计的不合理，缓存…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/421946305/answer/2278960712",
+          "token": "2278960712",
+          "author": "",
+          "votes": null,
+          "snippet": "Redis经常用于系统中的缓存，这样可以解决目前IO设备无法满足互联网应用海量的读写请求的问题。 一、缓存穿透缓存穿透是指缓存和数据库中都没有的数据，而用户不断发起请求，如发起id为-1的数据或者特别大的不存在的数据。有可能是黑客利用漏洞攻击从而去压垮应用的数据库。 1. 常见解决方案对于缓存穿透问题，常见的解决方案有以下三种： 验证拦截：接口层进行校验，如鉴定用户权限，对ID之类的字段做基础的校验，如id<=0的字…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/421946305/answer/2245821181",
+          "token": "2245821181",
+          "author": "",
+          "votes": null,
+          "snippet": "缓存击穿、缓存穿透、缓存雪崩，绝对给你讲清楚，往下看！ 在了解这三大问题之前，我们要理解，常用的分布式缓存Redis单机并发量能达到万级，常用的关系型数据库MySQL一般并发量是千级，他们支持的并发量可能差十倍，所以要尽可能把流量拦截在缓存层。 为什么呢？就像是大湖里多排点水，就可能把小河道冲垮，不知道你听过没——长江之水天上来，白洋淀里把不住。 缓存击穿什么是缓存击穿先从缓存击穿开始。 缓存击穿： 一个并发…"
+        }
+      ],
+      "viewAngleCards": [],
+      "benchmark": "",
+      "pitfalls": [],
+      "createdAt": "2026-11-18T09:10:20.198Z"
+    },
+    {
+      "id": "q_119",
+      "title": "生成式推荐会成为下一代推荐系统的范式吗？",
+      "questionUrl": "https://www.zhihu.com/question/1916207872066430537",
+      "track": "interview",
+      "topic": "推荐系统 效果 评估",
+      "domain": "algo-data",
+      "kind": "tech",
+      "heat": 5,
+      "sources": [
+        {
+          "url": "https://www.zhihu.com/question/1916207872066430537/answer/1931712161224320583",
+          "token": "1931712161224320583",
+          "author": "",
+          "votes": null,
+          "snippet": "自从Meta的GR推出以来，生成式推荐就是推荐系统领域最火的话题，没有之一。最近快手的OneRec更是业界最值得讨论的推荐系统框架。但围绕着生成式推荐，很多同行也有很多质疑，主要来自效果和成本两个方向： Meta的GR的上线号称实现了生产环境主业务端12.4%的效果提升。这个数字堪称惊人，它是真实的业务指标提升？还是为了发文章筛选出的学术指标？它是可复制的吗？生成式推荐是否会造成模型训练和推理成本的大幅提升？业务指标上…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/1916207872066430537/answer/1917137204104377875",
+          "token": "1917137204104377875",
+          "author": "",
+          "votes": null,
+          "snippet": "传统推荐系统的问题： 目前主流的深度学习推荐模型（DLRMs）依赖大量手工设计的特征（如用户 ID、物品类别、点击次数等），但随着数据规模爆炸式增长，这些模型面临计算效率低下的问题 —— 比如处理数十亿用户行为时，计算成本会呈指数级上升，难以扩展。三个关键挑战：特征复杂性：特征类型多（如离散的用户 ID 和连续的点击率），缺乏统一的结构，传统模型难以高效处理。动态词汇表：推荐系统需要处理不断变化的海量物品（如…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/1916207872066430537/answer/1950697161030365562",
+          "token": "1950697161030365562",
+          "author": "",
+          "votes": null,
+          "snippet": "事实上，在 ChatGPT 时刻之初，头部搜广推团队已普遍意识到，基于DLRM的传统范式正面临收益边际递减的严峻挑战。 此前的主流优化路径，无外乎在DLRM框架内持续扩展用户和物品特征维度、引入更细粒度的行为表征，以及不断延长用户历史行为序列，以期突破模型表达能力的上限。这种依赖于“记忆”而非“推理”的模式逐渐触及天花板。 业界的探索历程也印证了这一判断：从早期DIN实现用户兴趣的动态捕捉，到SIM攻克长序列建模的难题…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/1916207872066430537/answer/1931932407738639245",
+          "token": "1931932407738639245",
+          "author": "",
+          "votes": null,
+          "snippet": "因为看见这个问题，把之前的阅读笔记整理出来了。这个应该是近一两年对我启发最大的推荐系统论文了： [文章: 时隔一年，贴一下当时的生成式推荐精读笔记] 但是如果说是范式，现在看还不是，就某个高赞回答里某公司的生成式，我在内部反正是没有感觉它成为普遍的基线，或者是被争相follow的工作。未来呢，我觉得也未必是，但是因为这个工作被讨论，下一代系统的范式特征变得越来越清晰，我觉得可以大胆预言下。 基于超长的序列入图，推荐系…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/1916207872066430537/answer/1937667613783234193",
+          "token": "1937667613783234193",
+          "author": "",
+          "votes": null,
+          "snippet": "谢邀。又一个“下一代范式”的问题，哈哈。我在这个行业里，每隔两三年就能听到一次“下一代XX”的提法，从深度学习革了协同过滤的命，到后面双塔模型、序列模型轮番上阵，现在轮到生成式了。 你问我会不会成为新范式？我的观点可能有点“泼冷水”： 会，但不是你想的那种“推倒重来”的会。它更像是一种能力强大的“新插件”或者“高配组件”，会被整合进现有的推荐系统全家桶里，而不是直接把旧的都扔了。为啥这么说？聊聊我这…"
+        }
+      ],
+      "viewAngleCards": [],
+      "benchmark": "",
+      "pitfalls": [],
+      "createdAt": "2026-11-18T09:10:21.670Z"
+    },
+    {
+      "id": "q_120",
+      "title": "模型在不同测试集的效果相差很大，请问该怎么解决呢？",
+      "questionUrl": "https://www.zhihu.com/question/485424287",
+      "track": "interview",
+      "topic": "模型效果 评测 实验 A/B",
+      "domain": "algo-data",
+      "kind": "tech",
+      "heat": 4,
+      "sources": [
+        {
+          "url": "https://www.zhihu.com/question/485424287/answer/2114595374",
+          "token": "2114595374",
+          "author": "",
+          "votes": null,
+          "snippet": "这个问题的简单回答是“过拟合”，但是细想一下就会发现可能并没有这么简单 [1]。关于过拟合有很多定义，各自有对应的数学表达和意义 [2]，也对应不同的关于“过拟合”的严格性。很多关于过拟合的定义都是基于一个测试集的，只要这个测试集上的表现跟训练集的表现差距不大，就可以认为不是过拟合[3]。但是这个定义本身是存在一定的问题，也就是怎么定义“测试集”。如果说我们把拿到的训练数据随机的拆分成训练集和测试集，那这…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/485424287/answer/2114044561",
+          "token": "2114044561",
+          "author": "",
+          "votes": null,
+          "snippet": "尤其是神经网络模型的有效有一个前提假设是独立同分布。我觉得你遇到的问题可能是数据集间并不是独立同分布导致泛化误差比较大，可以在训练的时候将算法改成一些ood泛化的算法来减小误差的算法。 推荐一些paper Towards a Theoretical Framework of Out-of-Distribution Generalization Can Subnetwork Structure be the Key to Out-of-Distribution Generalization?"
+        },
+        {
+          "url": "https://www.zhihu.com/question/485424287/answer/2114755812",
+          "token": "2114755812",
+          "author": "",
+          "votes": null,
+          "snippet": "现象：在A训练集训练的模型，在A测试集上表现好，在B测试集上表现不好 原因：A训练集和A测试集分布接近，所以效果较好，A训练集和B测试集分布存在差距，效果不佳 解决方法： 1.数据层面 进行数据增强，A训练集中增加符合B测试集分布的数据，从而增强模型在B测试集上的泛化性 2.训练过程层面 A训练集和B测试集分布存在一定重合，增强模型对重合部分数据的学习，降低非重合部分的学习(reweight/product of expert/confidence regul…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/485424287/answer/2108924094",
+          "token": "2108924094",
+          "author": "",
+          "votes": null,
+          "snippet": "有可能是你A和B两个数据集差异性有点大，而你模型训练的泛化性不是太好，导致送到另外一个去测试达不到预期效果 ①可以试着对B数据集按你A数据集的权重继续迁移学习再测测 ②在训练你A数据集的时候加入更多的数据或合适的数据增强，比如可以用数据增强相对模拟B数据集中的噪声，背景及其它，用以增大你模型本身的泛化性能"
+        }
+      ],
+      "viewAngleCards": [],
+      "benchmark": "",
+      "pitfalls": [],
+      "createdAt": "2026-11-18T09:10:23.152Z"
+    },
+    {
+      "id": "q_121",
+      "title": "如何看待阿里开源的Qwen3-VL-Embedding 和 Qwen3-VL-Reranker 模型？",
+      "questionUrl": "https://www.zhihu.com/question/1992740266336093682",
+      "track": "interview",
+      "topic": "向量检索 召回 切分",
+      "domain": "rag",
+      "kind": "tech",
+      "heat": 5,
+      "sources": [
+        {
+          "url": "https://www.zhihu.com/question/1992740266336093682/answer/1993001581206082661",
+          "token": "1993001581206082661",
+          "author": "",
+          "votes": null,
+          "snippet": "Qwen全家桶又多了一位成员， Qwen课代表依旧不能落下。。。 我们都知道做RAG的时候，知识库中会有一些图片、视频数据， 如果是纯文本向量模型，这些数据无法直接使用， 一般的解法是，将图片或者视频，利用VLM生产摘要或者描述文本，对文本进行向量操作， 当然可以直接使用图-文匹配的模型，Qwen3-VL-Embedding就是这种模型， 直观上来说，VL-Embedding的信息损失会更少，毕竟属于原生， 但是训练成本会比较高， 所以各种取舍，…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/1992740266336093682/answer/1993041887083386625",
+          "token": "1993041887083386625",
+          "author": "",
+          "votes": null,
+          "snippet": "他们居然把多模态RAG这块最关键的拼图给补上了，出手就是开源、Apache 2.0协议、完全免费商用。不过这也很像阿里的风格，起码在开源这件事上，阿里确实是国内大厂里最舍得下本的之一。 这俩模型到底解决了什么问题RAG现在大部分的检索增强方案本质上还是在玩” 文本游戏“。你的知识库是PDF的话需要先OCR提取文字。你的文档有图表的话不好意思，要么跳过，要么寄希望于VLM帮你描述一下。可 很多时候，信息就藏在图里、藏在视频里…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/1992740266336093682/answer/1993676937709762179",
+          "token": "1993676937709762179",
+          "author": "",
+          "votes": null,
+          "snippet": "原文： https://www.arxiv.org/pdf/2601.04720 Qwen3-VL-Embedding模型地址： 通义千问3-VL-Embedding-8B Qwen3-VL-Rerank模型地址：通义千问3-VL-Reranker-8B 1. 核心问题与挑战在当前多模态内容爆炸性增长的背景下，传统的单模态（尤其是纯文本）检索系统已无法满足用户需求。核心挑战在于： 如何构建一个统一、高精度的表示空间，使得来自不同模态（文本、图像、视频、文档图像）的数据能够被映射到同一语义平面上，从而实现跨模态的精准语义匹…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/1992740266336093682/answer/1992740536952578053",
+          "token": "1992740536952578053",
+          "author": "",
+          "votes": null,
+          "snippet": "本文原文来自DataLearnerAI官方博客：重磅！阿里开源2个多模态向量大模型和重排序大模型：Qwen3-VL-Embedding和Qwen3-VL-Reranker，图片和视频也可以用来做RAG了！ | DataLearnerAI RAG（Retrieval-Augmented Generation，检索增强生成） 一直被认为是大模型突破上下文长度限制、融合外部最新知识的最佳实践路径之一。然而，现有 RAG 方案在绝大多数场景下仍然以文本检索为核心，对于图片、视频等多模态数据，业界长期缺乏成熟、…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/1992740266336093682/answer/2049931439504990504",
+          "token": "2049931439504990504",
+          "author": "",
+          "votes": null,
+          "snippet": "一篇花了我两天时间、走了五条弯路、最后被一行 text.replace 解决的 bug 复盘。 关键词：VLM2Vec / Qwen3-VL / GradCache / contrastive embedding / token-feature mismatchTL;DR把 VLM2Vec 框架的 backbone 从 Qwen2-VL 切到 Qwen3-VL 后，8 卡训练每次跑到 step 384 必报：ValueError: Image features and image tokens do not match: tokens: 100, features 99更诡异的是： 同样的代码在 Qwen2-VL 上训练了几个月没出过这个…"
+        }
+      ],
+      "viewAngleCards": [],
+      "benchmark": "",
+      "pitfalls": [],
+      "createdAt": "2026-11-18T09:10:24.660Z"
+    },
+    {
+      "id": "q_122",
+      "title": "分布式限流的主流方案有哪些？",
+      "questionUrl": "https://www.zhihu.com/question/483788010",
+      "track": "interview",
+      "topic": "分布式 事务 一致性",
+      "domain": "backend",
+      "kind": "tech",
+      "heat": 5,
+      "sources": [
+        {
+          "url": "https://www.zhihu.com/question/483788010/answer/1933983467407904993",
+          "token": "1933983467407904993",
+          "author": "",
+          "votes": null,
+          "snippet": "熔断、降级、限流，作为保障系统稳定性的三驾马车，想必大家已不陌生。但说实话，跟熔断、降级比起来，限流这东西，要复杂得多。在面试中，多数时候对限流的考察停留在算法层面，偶尔会深入到像BBR这样的动态算法。但有一个问题，堪称“照妖镜”，能立刻区分出候选人的深度，那就是：“ 你们系统限流的阈值是怎么定的？”这个问题，光懂算法是绝对不够的。它真正考验的是你从理论到实践的落地能力，以及对系统全貌的把控。今天，…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/483788010/answer/1893056966663857322",
+          "token": "1893056966663857322",
+          "author": "",
+          "votes": null,
+          "snippet": "前言去年夏天某个凌晨，我接到某金融平台报警：支付接口错误率飙升至35%。 赶到机房时，发现数据库连接池耗尽，大量请求堆积成山——这就是典型的 未做限流防护的灾难现场。就像高速公路不设收费站，高峰期必然堵成停车场。 限流的本质不是拒绝服务，而是用可控的牺牲保护核心链路。某电商大促时，他们用令牌桶算法将秒杀接口QPS限制在5万，虽然流失了20%的突发流量，但保住了99%的核心交易成功率。 我的技术网站： susan.net.cn …"
+        },
+        {
+          "url": "https://www.zhihu.com/question/483788010/answer/3113114566",
+          "token": "3113114566",
+          "author": "",
+          "votes": null,
+          "snippet": "大家好，我是老三，最近公司在搞年终大促，随着各种营销活动“组合拳”打出，进站流量时不时会有一个小波峰，一般情况下，当然是流量越多越好，前提是系统能杠地住。大家都知道，一个分布式系统，有两个“弃车保帅”的策略： 限流和熔断，这期，我们就来讨论一下分布式系统的限流。探探限流带着问题走近限流 为什么要限流呢？ 就像我上面说的，流量多，的确是一件好事，但是如果过载，把系统打挂了，那大家都要吃席了。 [图片] 所以，在…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/483788010/answer/2100627076",
+          "token": "2100627076",
+          "author": "",
+          "votes": null,
+          "snippet": "我提供一个分布式的解决方案，但肯定不是主流 参考 [文章: 简单介绍4种限流算法！（固定窗口计数器算法、滑动窗口计数器算法、漏桶算法、令牌桶算法）] 里面的漏桶算法和令牌桶算法 然后采用BunnyRedis（兼容Redis命令） [文章: BunnyRedis是什么？] 对于漏桶算法。 设置一个key，假设桶值最大为10000，表示同时并发限流为10K，然后先初始化为0。 对于请求的到来，先读这个key（get key），如果发现它不到10K，增加其值++key（…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/483788010/answer/2671464488",
+          "token": "2671464488",
+          "author": "",
+          "votes": null,
+          "snippet": "作者介绍 段然，甜橙金融创新中心开发工程师，目前负责公司平台化建设及媒介能力聚合。 一、限流的作用 由于API接口无法控制调用方的行为，因此当遇到瞬时请求量激增时，会导致接口占用过多服务器资源，使得其他请求响应速度降低或是超时，更有甚者可能导致服务器宕机。 限流(Rate limiting)指对应用服务的请求进行限制，例如某一接口的请求限制为100个每秒,对超过限制的请求则进行快速失败或丢弃。 限流可以应对： 热点业务带来…"
+        }
+      ],
+      "viewAngleCards": [],
+      "benchmark": "",
+      "pitfalls": [],
+      "createdAt": "2026-11-18T09:10:26.177Z"
+    },
+    {
+      "id": "q_123",
+      "title": "在微服务架构中，如何有效处理分布式事务的一致性难题？",
+      "questionUrl": "https://www.zhihu.com/question/1967549210141384929",
+      "track": "interview",
+      "topic": "高并发 系统设计 面试",
+      "domain": "backend",
+      "kind": "tech",
+      "heat": 3,
+      "sources": [
+        {
+          "url": "https://www.zhihu.com/question/1967549210141384929/answer/1969122540954847220",
+          "token": "1969122540954847220",
+          "author": "",
+          "votes": null,
+          "snippet": "在微服务架构下，我们最容易遇到的一个问题就是分布式事务处理问题，当你微服务模块拆分越细，那么遇到分布式事务处理的场景就越多。即使是同一个微服务模块，对应一个业务数据库，但是你某个业务逻辑的实现是调用两个Service接口服务来完成的，同样也是分布式事务问题。 因此有必要对分布式事务整体解决思路进行下总结。 分布式事务概述 [图片] 分布式事务就是指事务的参与者、支持事务的服务器、资源服务器以及事务管理器分别位于不同…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/1967549210141384929/answer/2074833002547377298",
+          "token": "2074833002547377298",
+          "author": "",
+          "votes": null,
+          "snippet": "如果想直接使用微服务中间件可以考虑ShardingSphere或者Seata。 如果想自己处理的话可以考虑用读写异构的事件溯源+Raft的方案。 在当前这个时间点，读写性能的优化方案都非常明确。在读方面就是各种各样的缓存，在写方面就是lsm树（Log-Structured Merge Tree）。事件溯源系统和LSM树很像，不直接修改最终状态，只是追加操作记录。读的时候回放所有操作记录，从而保证最终一致性；再在读侧增加快照缓存，以保障读性能。和LSM树不…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/1967549210141384929/answer/2095994883387479432",
+          "token": "2095994883387479432",
+          "author": "",
+          "votes": null,
+          "snippet": "其实 TCC 和 2PC 在真实场景里面由于性能和复杂度的原因用的反而比较少。我们来上一个真实案例吧。 在微服务面试中，经常会遇到这样一道题： 一个电商系统有订单服务、库存服务、积分服务，三个服务分别使用自己的数据库。用户下单时，如何保证数据一致性？哪些操作需要同步完成，哪些可以异步处理？ 这道题真正考查的不是你会不会使用 Kafka，而是你能不能区分业务的核心与非核心环节，以及在服务超时、消息重复、部分成功等情…"
+        }
+      ],
+      "viewAngleCards": [],
+      "benchmark": "",
+      "pitfalls": [],
+      "createdAt": "2026-11-18T09:10:27.776Z"
+    },
+    {
+      "id": "q_124",
+      "title": "检索增强RAG中有哪些好用的Chunk切分方法？",
+      "questionUrl": "https://www.zhihu.com/question/650635197",
+      "track": "interview",
+      "topic": "检索增强生成 RAG 优化方案",
+      "domain": "rag",
+      "kind": "tech",
+      "heat": 5,
+      "sources": [
+        {
+          "url": "https://www.zhihu.com/question/650635197/answer/3500669065",
+          "token": "3500669065",
+          "author": "",
+          "votes": null,
+          "snippet": "在RAG（Retrieval Augmented Generation）准确率优化问题中，有通过炼丹的、有通过设计复杂流水线的、有通过预处理的、有通过后处理的。但，有一项工作的重要性容易被忽视，那就是 切！文！档！ 我通过文档结构（AST）的方式，设计了一组切文档的规则，应用这些规则，使得参数相同的情况下，RAG的准确率从75%提升到了95%！正文中将详细介绍这些启发式规则。背景：RAG优化方法炼丹和设计复杂流水线，这个是水论文的重灾区，需要毕…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/650635197/answer/1912831267495449105",
+          "token": "1912831267495449105",
+          "author": "",
+          "votes": null,
+          "snippet": "一、固定大小切分（Fixed-size chunking） [图片] 优势顾名思义且容易实现。由于直接分割可能会破坏语义流程，建议在两个连续的片段之间保持一些重叠。 劣势破坏语义结构：固定大小切分可能在句子或段落中间进行切分，导致语义信息被割裂，影响模型对文本的理解。上下文信息丢失：由于切分不考虑文本的语义边界，相关信息可能被分散到不同的块中，导致模型在处理时缺乏必要的上下文支持。缺乏灵活性：固定大小切分无法适应不同文本结构的…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/650635197/answer/1936355841944037008",
+          "token": "1936355841944037008",
+          "author": "",
+          "votes": null,
+          "snippet": "前情回顾到目前为止，我们构建的RAG系统，其检索流程本质上是“一锤子买卖”：用户提问 -> 系统检索 -> 返回结果。如果第一次检索返回的都是不相关的垃圾信息，整个流程就宣告失败。 这就像一个经验不足的侦探，跟丢了第一条线索后，就直接放弃了整个案件。而一个经验丰富的老侦探，则会重新审视案情，分析失败原因，然后从一个新的、更巧妙的角度再次切入。 我们能让我们的RAG系统也成为一名“老侦探”吗？答案是肯定的。核心思…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/650635197/answer/3457305336",
+          "token": "3457305336",
+          "author": "",
+          "votes": null,
+          "snippet": "可以参考：一个比较意识流的指引： https://www.pinecone.io/learn/chunking-strategies/ 怎么确定一个合适的分块大小： Evaluating the Ideal Chunk Size for a RAG System using LlamaIndex 多种分块方法实践： RetrievalTutorials/tutorials/LevelsOfTextSplitting/5_Levels_Of_Text_Splitting.ipynb at main · FullStackRetrieval-com/RetrievalTutorials How to Chunk Text Data — A Comparative Analysis"
+        },
+        {
+          "url": "https://www.zhihu.com/question/650635197/answer/1937849265817891874",
+          "token": "1937849265817891874",
+          "author": "",
+          "votes": null,
+          "snippet": "好不好用，你也得变成洁西循环个几十次。 上年呆的团队经常争论chunk size该设多大，搞了整整两个小时。 说起来挺逗的，当时我们花了好几个月踩坑，最后发现很多所谓的\"最佳实践\"其实都得看具体场景。 这篇文章就聊聊我这两年折腾RAG系统的一些心得，特别是Chunk切分这块——真的是看着简单，做起来再简单，但最爽的就是你不知道要重复多少次，你就跟那个《恐怖邮轮》的洁西一样，无限循环~ [图片] 去年我们团队接了个知识库项目，爸爸…"
+        }
+      ],
+      "viewAngleCards": [],
+      "benchmark": "",
+      "pitfalls": [],
+      "createdAt": "2026-11-18T09:10:53.250Z"
+    },
+    {
+      "id": "q_125",
+      "title": "Product/Market Fit (PMF) 是什么？",
+      "questionUrl": "https://www.zhihu.com/question/19658333",
+      "track": "interview",
+      "topic": "产品经理 面试 需求 优先级",
+      "domain": "product",
+      "kind": "tech",
+      "heat": 5,
+      "sources": [
+        {
+          "url": "https://www.zhihu.com/question/19658333/answer/92652026",
+          "token": "92652026",
+          "author": "",
+          "votes": null,
+          "snippet": "中译大约是产品市场匹配度，参考 Andrew Chen的数据标准， 用户级产品标准：每周使用天数超过3天（FB定义是每周活跃6天） 初始日新增用户DNU超过10030%新用户次日留存达到10万用户量 Saas产品标准：5%付费转化率LTV/CAC>3，即用户终生价值/获取成本>3月流失率<2%月销售流水达到10万补充：Months to recover CAC<12月此为通用参考值，考虑不同产品市场体量和用户使用频次差异可自行再定义。 附参考： http://1g1uem2nc4jy1gzhn943ro0gz50.wpengine.netdna-cdn.com/wp-content/uploads/2013/10/andrewchen_zerototraction.pdf"
+        },
+        {
+          "url": "https://www.zhihu.com/question/19658333/answer/660468530",
+          "token": "660468530",
+          "author": "",
+          "votes": null,
+          "snippet": "对于初创企业来说，问题渴望解决方案，需求要很长时间才能被满足，市场问题亟待处理。这样的现实情况要求初创企业和老牌公司推出能够刺激市场并且给客户带来满足感的产品。他们提供的产品（以及给出的售价）是否满足市场需求是Product/Market FIt（的一部分）。 知道自己的产品是否不与市场相契合的方法非常简单—— 如果没有人想购买你的产品，那你的产品就没有市场。如果你的产品不被顾客喜爱和重视，那你的产品就没有达到产品…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/19658333/answer/109388889",
+          "token": "109388889",
+          "author": "",
+          "votes": null,
+          "snippet": "product/market fit，简称PMF，意思是产品符合市场需求（如此精髓的概念直译过来为何如此苍白-_-!!!），这是大名鼎鼎的Marc Andreesen提出来的概念，他认为： 世上的创业公司只有两种，一种是找到PMF的，一种是没找到的 PMF是一种理想情况，实际上，由于产品在迭代，市场在瞬息万变，两个动态变量是始终无法实现完美fit的，因此实际情况中，企业始终处于以下两种状态中的一种 product/market underfitting：产品脱离了市场produc…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/19658333/answer/374177809",
+          "token": "374177809",
+          "author": "",
+          "votes": null,
+          "snippet": "PMF是Product Market Fit的简写，是指产品和市场达到最佳的契合点，你所提供的产品正好满足市场的需求，令客户满意，这是创业成功的第一步。关于PMF的分析，是让创业者思考： 你的产品是否是客户真正需求的产品你的产品是否真正找到它的市场你的产品是否未来有有一个大的市场空间你的产品是否客户愿意买单，你能获得收益还是，你的产品刚刚一上市就宣告失败你的创业一开始，就在产品的选择上遇到了一个坑MPF最早是由Marc Andrees…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/19658333/answer/1045101901",
+          "token": "1045101901",
+          "author": "",
+          "votes": null,
+          "snippet": "什么是PMF？ PMF：产品市场契合状态，即有用户愿意使用并且长期重复使用你的产品。说白了，就是通过MVP等小项目来验证你产品的可行性。在开始大规模增长之前，如果产品没有达到PMF，投入大量精力和金钱去拉新可能效果会大打折扣。 但有几种产品是例外， 需要一定用户量才能跑起来的产品，比如微信；平台类产品，需要一定供给量和需求量，才能跑起来，比如滴滴不差钱的产品怎样判断自己产品达到PMF状态？ 直观表现： 不用付费或是…"
+        }
+      ],
+      "viewAngleCards": [],
+      "benchmark": "",
+      "pitfalls": [],
+      "createdAt": "2026-11-18T09:10:54.772Z"
     }
   ]
 }

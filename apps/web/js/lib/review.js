@@ -19,6 +19,10 @@ export async function runReview({
   followupFocus = '',
   interviewerStyle = 'tough',
   followupDepth = 2,
+  /** 题目类型：tech（技术题）/ soft（软素质题）—— 决定后端用哪套评分维度 */
+  questionKind = 'tech',
+  /** 阶段文案回调（流式时前端用它播报"现在在做什么"） */
+  onStage = null,
 }) {
   const qaPairs = parseTranscriptToQA(raw, question.title);
   const targetAnswer = qaPairs.map((p) => p.answer).join('\n\n');
@@ -39,9 +43,6 @@ export async function runReview({
   let followups = null;
   let degraded = false;
   let degradedReason = '';
-
-  /** 阶段文案回调（流式时前端用它播报"现在在做什么"） */
-  const onStage = typeof options?.onStage === 'function' ? options.onStage : null;
 
   // 简历题 / 要点题 / 答辩预演题：都没有题库 id，一律走「问题 + 来源」模式
   const isResumeLike =

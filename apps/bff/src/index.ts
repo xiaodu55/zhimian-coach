@@ -13,8 +13,23 @@ import { asrRoutes } from './routes/asr.js';
 import { resumeRoutes } from './routes/resume.js';
 import { reviewRoutes } from './routes/review.js';
 import { resumeBulletRoutes } from './routes/resumeBullets.js';
+import { usageSummary } from './lib/llm.js';
 
 const app = new Hono();
+
+/**
+ * 分享口令（可选）：配置了 PUBLIC_SHARE_TOKEN 后，除健康检查外的 /api 都要带
+ * `x-share-token` 头或 `?k=` 参数 —— 公网演示时避免陌生链接白烧额度。
+ */
+app.use('/api/*', async (c, next) => {
+  const token = config.publicShareToken;
+  if (!token) return next();
+  if (c.req.path === '/api/health') return next();
+  const header = c.req.header('x-share-token') || '';
+  const query = c.req.query('k') || '';
+  if (header === token || query === token) return next();
+  return c.json({ error: { code: 'UNAUTHORIZED', message: '缺少或错误的分享口令（请用带 ?k= 的链接打开）' } }, 401);
+});
 
 // 健康检查
 app.get('/api/health', (c) => {
@@ -24,6 +39,9 @@ app.get('/api/health', (c) => {
     zhihuConfigured: hasZhihuSecret(),
     llmConfigured: hasLlmKey(),
     bankSize: bank.length,
+    // 前端据此决定要不要弹口令输入框
+    requiresToken: Boolean(config.publicShareToken),
+    usage: usageSummary(),
     // 前端据此识别"跑的是旧实例"（例如旧实例没有简历出题接口）
     capabilities: {
       resume: true,
@@ -33,6 +51,9 @@ app.get('/api/health', (c) => {
     }
   });
 });
+
+// 用量看板：今天烧了多少模型额度
+app.get('/api/usage', (c) => c.json(usageSummary()));
 
 // 题库查询
 app.get('/api/bank', (c) => {

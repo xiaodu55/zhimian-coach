@@ -21,6 +21,8 @@ export const config = {
   llmApiKey: (process.env.LLM_API_KEY || '').trim(),
   llmModel: (process.env.LLM_MODEL || 'MiniMax-Text-01').trim(),
   cacheTtlMs: Number(process.env.CACHE_TTL_HOURS || 24) * 3600 * 1000,
+  // 公网分享口令：配了之后所有 /api 都要带 x-share-token（?k= 也行），防止演示链接被刷额度
+  publicShareToken: (process.env.PUBLIC_SHARE_TOKEN || '').trim(),
   oauthAppId: (process.env.OAUTH_APP_ID || '').trim(),
   oauthAppKey: (process.env.OAUTH_APP_KEY || '').trim(),
   oauthRedirectUri: (process.env.OAUTH_REDIRECT_URI || '').trim(),

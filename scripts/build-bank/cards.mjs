@@ -5,6 +5,8 @@
  * 实测约束：
  *  - 直答（zhida-fast-1p5）有 QPS 限流：间隔 < 3s 会 429 → 默认 7s + 429 退避 20s + 连续 3 次熔断
  *  - 每张卡的 evidence 必须逐字来自来源摘要，否则重试一次后标 evidenceVerified=false
+ *  - 知乎开发者 API 只返回 {ContentType,ContentToken,Url,Summary}：没有作者、没有赞同数。
+ *    所以不要写「高赞回答」，也不要在文案里暗示热度；author 留空、votes 为 null。
  */
 import fs from 'node:fs';
 import path from 'node:path';
@@ -68,7 +70,7 @@ function buildPrompt(q) {
 
 【题目】${q.title}
 
-【知乎高赞回答（编号即来源）】
+【知乎来源回答（编号即来源）】
 ${src}
 
 输出**严格 JSON**（不要 markdown 代码块、不要解释）：
@@ -105,7 +107,7 @@ function verifyCard(q, c) {
     sourceIndex: idx + 1,
     sourceUrl: src?.url || '',
     sourceAuthor: src?.author || '',
-    sourceVotes: src?.votes ?? null,
+    sourceVotes: src?.votes ?? null, // API 没有该字段时就是 null，不编造
     popularity: c.popularity === 'minority' ? 'minority' : 'mainstream',
     evidenceVerified: ok,
   };
