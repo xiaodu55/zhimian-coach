@@ -1,6 +1,6 @@
 {
   "version": 3,
-  "updatedAt": "2026-11-18T09:27:37.586Z",
+  "updatedAt": "2026-11-18T09:57:25.016Z",
   "items": [
     {
       "id": "q_1",
@@ -2058,10 +2058,53 @@
           "snippet": "先讲个真实的案例，再回答问题。 25年，公司外服转定岗。 大客户事业部，分配了一个名额。要求年销售额≥1000W，可以免笔试。 一共有4个人入围。其他报名的人员笔试都没过。 面试人员包括所有高层和中层，外加一名省部的人力主任。 当时省部的主任问了一个问题： “一年中，你需要接触很多的客户，如何保证该客户能够确定签单？”A讲产品、讲话术、讲坚持，但没有入选。因这些都是标准答案，是公司日常工作中传授的方式方法。 在…"
         }
       ],
-      "viewAngleCards": [],
-      "benchmark": "",
-      "pitfalls": [],
-      "createdAt": "2026-11-16T13:38:14.827Z"
+      "viewAngleCards": [
+        {
+          "stance": "溯源解决",
+          "summary": "直接找放糖的人确认，或追问需求本质，不被标准答案框住",
+          "evidence": "问一下那个放糖的人，不就知道了。",
+          "sourceIndex": 1,
+          "sourceUrl": "https://www.zhihu.com/question/2005279929667956946/answer/2076310591107604603",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "minority",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "整体最优",
+          "summary": "挨个尝最经济，决策要看从思考到拿到结果的总耗时而非局部最优",
+          "evidence": "最经济的方法，挨个尝。要算整体时间，决策不能看局部最优而是要看整体最优。",
+          "sourceIndex": 2,
+          "sourceUrl": "https://www.zhihu.com/question/2005279929667956946/answer/2005359202504315742",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "问真问题",
+          "summary": "面试官借问客户签单问题，标准话术和坚持不入选，要回到真实解决",
+          "evidence": "因这些都是标准答案，是公司日常工作中传授的方式方法。",
+          "sourceIndex": 3,
+          "sourceUrl": "https://www.zhihu.com/question/2005279929667956946/answer/2015349386645873110",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        }
+      ],
+      "benchmark": "考的是在资源、成本和整体耗时约束下快速解决真实需求，而非只秀理论方法",
+      "pitfalls": [
+        "只秀二分法理论",
+        "忽略准备成本",
+        "背标准答案"
+      ],
+      "createdAt": "2026-11-16T13:38:14.827Z",
+      "cardsMeta": {
+        "attempts": 1,
+        "verified": 3,
+        "total": 3
+      }
     },
     {
       "id": "q_22",
@@ -2972,10 +3015,52 @@
           "snippet": "10.20 14.30 SOXL，95的时候 买了；后续这笔在当日23点左右100出掉了； 10.22 11.50 觉得 SOXL又到95了，又尝试买了一点，但是后续看到纳姐在群还是在乎上提了一嘴 只做95-100区间，当时在94.7出掉了 10.23 23.30 左右觉得黄金是个潜在机会 买了，预计到周一或者周二上午就出掉了 总体后续的一段时间都是多看少动"
         }
       ],
-      "viewAngleCards": [],
-      "benchmark": "",
-      "pitfalls": [],
-      "createdAt": "2026-11-16T13:38:27.261Z"
+      "viewAngleCards": [
+        {
+          "stance": "操作复盘派",
+          "summary": "以具体点位记录黄金分批买卖过程，承认成本可控但体验差",
+          "evidence": "4120接了25%，4095接了25%，4066买了25%，然后4080立马出了",
+          "sourceIndex": 1,
+          "sourceUrl": "https://www.zhihu.com/question/2097362456666432271/answer/2097395234539942770",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "质疑造谣方",
+          "summary": "要求对方正面回应造谣指控并用证据实锤",
+          "evidence": "正面回答一下，到底造谣没有？我下面的截图有哪儿说的不对，来用证据实锤我好不好？",
+          "sourceIndex": 2,
+          "sourceUrl": "https://www.zhihu.com/question/2097362456666432271/answer/2100349054911771897",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "minority",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "区间跟随派",
+          "summary": "按纳姐提示的95-100区间操作SOXL，总体多看少动",
+          "evidence": "只做95-100区间，当时在94.7出掉了",
+          "sourceIndex": 3,
+          "sourceUrl": "https://www.zhihu.com/question/2097362456666432271/answer/2097426051810988604",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        }
+      ],
+      "benchmark": "考察能否基于有限复盘材料提炼真实分歧而非编造观点",
+      "pitfalls": [
+        "把点位当结论",
+        "混淆操作与人品"
+      ],
+      "createdAt": "2026-11-16T13:38:27.261Z",
+      "cardsMeta": {
+        "attempts": 1,
+        "verified": 3,
+        "total": 3
+      }
     },
     {
       "id": "q_32",
@@ -4268,10 +4353,52 @@
           "snippet": "有没有上上一家的离职证明，有的话，就隐去这一个月经历，最后一份经历截止到上上一家单位，神不知鬼不觉。 如果没有上上家离职证明，可以编造个可信的理由，不用提供离职证明，然后把这一个月工作经历隐去。 一个月工作经历，如果理由不是特别客观和充分，怎么都是个减分项。"
         }
       ],
-      "viewAngleCards": [],
-      "benchmark": "",
-      "pitfalls": [],
-      "createdAt": "2026-11-16T14:34:52.718Z"
+      "viewAngleCards": [
+        {
+          "stance": "分变量再决定",
+          "summary": "说不说取决于岗位类型、经历关联度和背调严格程度，应先搞清背调查什么再决定。",
+          "evidence": "这个问题没有标准答案，取决于三个变量：你应聘的岗位类型、这一个月经历跟岗位有没有关联，以及这家公司背调严不严。",
+          "sourceIndex": 1,
+          "sourceUrl": "https://www.zhihu.com/question/2070127437493572267/answer/2071292434311542575",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "主动向HR说明",
+          "summary": "小公司入职要离职证明会暴露，可主动说明；校招场景也应跟HR坦诚交流。",
+          "evidence": "这种情况下，可以主动和对方说明，比如真",
+          "sourceIndex": 2,
+          "sourceUrl": "https://www.zhihu.com/question/2070127437493572267/answer/2070539082174829102",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "隐去不主动提",
+          "summary": "若有上上家离职证明，可隐去这一个月经历，让最后一段截止到上上家单位。",
+          "evidence": "有没有上上一家的离职证明，有的话，就隐去这一个月经历，最后一份经历截止到上上一家单位，神不知鬼不觉。",
+          "sourceIndex": 4,
+          "sourceUrl": "https://www.zhihu.com/question/2070127437493572267/answer/2103468245034520660",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "minority",
+          "evidenceVerified": true
+        }
+      ],
+      "benchmark": "考察候选人面对简历信息瑕疵时，能否权衡背调风险、岗位性质与坦白时机，做出可执行的沟通决策。",
+      "pitfalls": [
+        "未查背调就坦白",
+        "编造理由补离职证明"
+      ],
+      "createdAt": "2026-11-16T14:34:52.718Z",
+      "cardsMeta": {
+        "attempts": 1,
+        "verified": 3,
+        "total": 3
+      }
     },
     {
       "id": "q_46",
@@ -5966,10 +6093,53 @@
           "snippet": "我看X上面有人吐槽Qwen应该改名Qwhen。 [图片] 主要原因是其实一个多月前在云栖大会上就说coming soon [图片] 上个月底，也有人提到，可能十一月初发布 [图片] 但是等了一个多月了，才发布。 放在大模型行业，一个月多月，来说确实有一点久了，尤其是熟悉qwen模型发布节奏的朋友来说，这算是挺慢的，可能在解决一些技术上的难题。 而且只发布了模型，还没发布Benchmark，可能是还没来得及跑。 架构上，根据我对Qwen的理解，每一次大版本号更新前，其实…"
         }
       ],
-      "viewAngleCards": [],
-      "benchmark": "",
-      "pitfalls": [],
-      "createdAt": "2026-11-18T08:54:27.857Z"
+      "viewAngleCards": [
+        {
+          "stance": "偏负面批评",
+          "summary": "知识面广但自检严谨性差，长链推理易一步错步步错，幻觉明显",
+          "evidence": "自检、严谨性差太远，并且长链推理一步错步步错的情况很多",
+          "sourceIndex": 1,
+          "sourceUrl": "https://www.zhihu.com/question/2103792519561717733/answer/2103815735088890919",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "肯定输出提升",
+          "summary": "最大输出预算从128K上调至384K，是本次最直观的提升",
+          "evidence": "最大输出预算上调到 384K ，上一代 Qwen3.8-Max 的最大输出是 128K",
+          "sourceIndex": 2,
+          "sourceUrl": "https://www.zhihu.com/question/2103792519561717733/answer/2103804518127367148",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "预期过高论",
+          "summary": "整体还可以，觉得差主要是预期太高，多数人天花板有限",
+          "evidence": "老实说还可以，觉得差的主要问题是预期太高了。",
+          "sourceIndex": 3,
+          "sourceUrl": "https://www.zhihu.com/question/2103792519561717733/answer/2104104844017529418",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "minority",
+          "evidenceVerified": true
+        }
+      ],
+      "benchmark": "考察能否客观区分模型能力短板与市场预期落差并给出有据评价",
+      "pitfalls": [
+        "只凭宣传判优劣",
+        "混淆预期与实测",
+        "以偏概全下结论"
+      ],
+      "createdAt": "2026-11-18T08:54:27.857Z",
+      "cardsMeta": {
+        "attempts": 2,
+        "verified": 3,
+        "total": 3
+      }
     },
     {
       "id": "q_64",
@@ -6504,10 +6674,64 @@
           "snippet": "如果你不知道有没有必要的话，那大概没有必要。 要针对实际硬件配置、实际业务负载运行性能测试、系统测试，才能验证 SSD 缓存改善了多少性能。然后才可以讨论有没有必要。 在这里空泛的讨论有没有必要，完全没有任何意义。"
         }
       ],
-      "viewAngleCards": [],
-      "benchmark": "",
-      "pitfalls": [],
-      "createdAt": "2026-11-18T08:55:31.021Z"
+      "viewAngleCards": [
+        {
+          "stance": "看场景而定",
+          "summary": "SSD缓存提升热数据随机读写，用得着才有必要，用不着基本是智商税。",
+          "evidence": "在用得着的时候，NAS 的 SSD 缓存很有必要；在用不着的时候，它基本上就是智商税",
+          "sourceIndex": 3,
+          "sourceUrl": "https://www.zhihu.com/question/2073529288519840817/answer/2081044409286661290",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "写缓存应远离",
+          "summary": "写缓存可靠性和寿命有限，SSD缓存损坏可能危及整个阵列数据。",
+          "evidence": "写缓存SSD 缓存的可靠性和寿命都非常有限，会炸阵列",
+          "sourceIndex": 2,
+          "sourceUrl": "https://www.zhihu.com/question/2073529288519840817/answer/2075570019019265313",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "minority",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "家庭用户不必",
+          "summary": "多数家庭场景无需特意为M.2缓存盘位买单，那不是需求关键。",
+          "evidence": "在大多数家庭用户的使用场景下，不需要考虑 NAS 的 SSD 缓存",
+          "sourceIndex": 3,
+          "sourceUrl": "https://www.zhihu.com/question/2073529288519840817/answer/2081044409286661290",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "需实测再定",
+          "summary": "是否有必要应基于实际负载的专项测试，空泛讨论没有意义。",
+          "evidence": "在这里空泛的讨论有没有必要，完全没有任何意义。",
+          "sourceIndex": 4,
+          "sourceUrl": "https://www.zhihu.com/question/2073529288519840817/answer/2074079723844650711",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "minority",
+          "evidenceVerified": true
+        }
+      ],
+      "benchmark": "考察能否按场景区分SSD缓存的收益与风险，而非一概而论。",
+      "pitfalls": [
+        "写缓存致阵列损毁",
+        "为缓存位多花钱",
+        "忽视降级难"
+      ],
+      "createdAt": "2026-11-18T08:55:31.021Z",
+      "cardsMeta": {
+        "attempts": 2,
+        "verified": 4,
+        "total": 4
+      }
     },
     {
       "id": "q_70",
@@ -6548,10 +6772,64 @@
           "snippet": "现代化gpu里不都有l0么？甚至还有operand cache这种低于l0的，再往上还有infinity cache/slc这类。有些l1看着是l1，其实它已经是千年老二了，笑死 。"
         }
       ],
-      "viewAngleCards": [],
-      "benchmark": "",
-      "pitfalls": [],
-      "createdAt": "2026-11-18T08:55:32.610Z"
+      "viewAngleCards": [
+        {
+          "stance": "延迟容量权衡",
+          "summary": "CPU靠多级缓存兼顾低延迟与大容量，级数与容量随需求演进",
+          "evidence": "因为容量大了延迟会高，追求延迟的话抽点容量做一级小的",
+          "sourceIndex": 1,
+          "sourceUrl": "https://www.zhihu.com/question/1901008279548727378/answer/1904810297551754669",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "任务定位差异",
+          "summary": "CPU重低延迟复杂逻辑，GPU重高吞吐并行，对单线程延迟不敏感",
+          "evidence": "CPU处理的任务更多样化更注重低延迟和复杂的逻辑处理，而GPU处理的是高度并行的数据",
+          "sourceIndex": 2,
+          "sourceUrl": "https://www.zhihu.com/question/1901008279548727378/answer/1901629643292902614",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "分级目标不同",
+          "summary": "每级缓存针对不同设计目标，在速度、容量与功耗间分层权衡",
+          "evidence": "每一级缓存针对不同的设计目标进行优化，形成了速度、容量和功耗之间的权衡",
+          "sourceIndex": 3,
+          "sourceUrl": "https://www.zhihu.com/question/1901008279548727378/answer/1962091346107016590",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "前提本身可疑",
+          "summary": "GPU实际已有L0、操作数缓存等更多层级，两级说法不准确",
+          "evidence": "现代化gpu里不都有l0么？甚至还有operand cache这种低于l0的",
+          "sourceIndex": 4,
+          "sourceUrl": "https://www.zhihu.com/question/1901008279548727378/answer/1925889154694254866",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "minority",
+          "evidenceVerified": true
+        }
+      ],
+      "benchmark": "考察是否理解缓存层级是延迟、容量与并行度权衡的工程结果，而非架构教条",
+      "pitfalls": [
+        "默认GPU只有两级",
+        "把级数当固定教条",
+        "只谈容量不谈延迟"
+      ],
+      "createdAt": "2026-11-18T08:55:32.610Z",
+      "cardsMeta": {
+        "attempts": 1,
+        "verified": 4,
+        "total": 4
+      }
     },
     {
       "id": "q_71",
@@ -6585,10 +6863,53 @@
           "snippet": "一、前言 在 AI 智能体落地生产的过程中，多轮对话交互、高频用户咨询、批量业务请求并发涌入已是常态。原生大模型智能体依赖LLM实时完成语义理解、意图识别、上下文推理生成回复，单实例推理速度慢、算力消耗高、队列积压严重。一旦线上访问量突增，极易出现接口响应超时、服务阻塞崩溃、用户体验断崖式下跌等问题。 单纯优化模型推理参数难以根治瓶颈，行业成熟落地方案普遍采用双层架构兜底：依托 Redis 内存缓存拦截高频标准…"
         }
       ],
-      "viewAngleCards": [],
-      "benchmark": "",
-      "pitfalls": [],
-      "createdAt": "2026-11-18T08:55:34.048Z"
+      "viewAngleCards": [
+        {
+          "stance": "定价本质论",
+          "summary": "合不合理不是关键，计价方式最终都由供应方利润率目标决定，透明收费反而对消费者有利。",
+          "evidence": "不管什么计价方式，最终是什么价格都看供应方定的利润率目标。",
+          "sourceIndex": 1,
+          "sourceUrl": "https://www.zhihu.com/question/2043447252761499435/answer/2043622068059640778",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "账单证伪论",
+          "summary": "实际账单显示 cache read 占比高但收费极低，真正贵的是 cache write 的反复触发。",
+          "evidence": "cache read 这一栏 token 数占输入总量 65%，收费只占 7%。",
+          "sourceIndex": 2,
+          "sourceUrl": "https://www.zhihu.com/question/2043447252761499435/answer/2044168840829989090",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "技术降本论",
+          "summary": "缓存是拦截高频请求、缓解算力与队列瓶颈的工程手段，属技术优化而非转嫁用户成本。",
+          "evidence": "依托 Redis 内存缓存拦截高频标准",
+          "sourceIndex": 3,
+          "sourceUrl": "https://www.zhihu.com/question/2043447252761499435/answer/2049417960603772753",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "minority",
+          "evidenceVerified": true
+        }
+      ],
+      "benchmark": "考察能否区分缓存计价的技术成本逻辑与商业定价逻辑，并对厂商取消计费做有据可依的预判。",
+      "pitfalls": [
+        "混淆读写计价",
+        "把技术成本当定价依据",
+        "无依据预测取消时点"
+      ],
+      "createdAt": "2026-11-18T08:55:34.048Z",
+      "cardsMeta": {
+        "attempts": 1,
+        "verified": 3,
+        "total": 3
+      }
     },
     {
       "id": "q_72",
@@ -6923,10 +7244,63 @@
           "snippet": "结论先行：不可信。 AI 的回答是实时动态生成的，没有任何服务商能\"保证\"你的品牌出现在某条回答里。敢这么承诺的，要么不懂技术，要么在虚假宣传。 一、据报道：GEO 虚假宣传已有 3 起处罚 据《21世纪经济报道》报道，GEO 行业已出现 3 起监管处罚：深圳虚构 AI 平台排名罚 5 万元，广州虚构律所服务案例罚 12 万元，北京虚构平台评分数据罚 5 万元。 三起处罚的逻辑一致：GEO 是营销服务，不是发榜考试，把\"效果\"说成确定性结…"
         }
       ],
-      "viewAngleCards": [],
-      "benchmark": "",
-      "pitfalls": [],
-      "createdAt": "2026-11-18T09:02:06.407Z"
+      "viewAngleCards": [
+        {
+          "stance": "有条件可行",
+          "summary": "产品靠谱且信息经交叉验证属实时，AI会向匹配用户推荐",
+          "evidence": "让AI 平台能在全网抓到你家的信息，且经过交叉验证属实，那么它就会推荐给匹配的用户",
+          "sourceIndex": 1,
+          "sourceUrl": "https://www.zhihu.com/question/2015104110349808719/answer/2058984641961449269",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "靠结构化知识",
+          "summary": "品牌缺少结构化一致性知识供给，AI无素材支撑推荐，GEO可补足",
+          "evidence": "缺少足够结构化、一致性高的品牌知识供给，AI 没有可信素材支撑品牌推荐",
+          "sourceIndex": 2,
+          "sourceUrl": "https://www.zhihu.com/question/2015104110349808719/answer/2105397332162496008",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "白帽重理解",
+          "summary": "成熟GEO追求被准确理解与可信解释，而非夸张包装操纵推荐",
+          "evidence": "追求的不只是被提及，而是被准确理解、被可信解释",
+          "sourceIndex": 3,
+          "sourceUrl": "https://www.zhihu.com/question/2015104110349808719/answer/2099133311591380273",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "不可信",
+          "summary": "AI回答实时动态生成，无人能保证品牌出现在某条回答里，承诺即虚假宣传",
+          "evidence": "没有任何服务商能\"保证\"你的品牌出现在某条回答里",
+          "sourceIndex": 4,
+          "sourceUrl": "https://www.zhihu.com/question/2015104110349808719/answer/2096241183865443816",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "minority",
+          "evidenceVerified": true
+        }
+      ],
+      "benchmark": "考察对GEO能否让AI主动推荐客户的判断力，需区分合理期望与虚假承诺",
+      "pitfalls": [
+        "轻信保排名承诺",
+        "忽视产品本身"
+      ],
+      "createdAt": "2026-11-18T09:02:06.407Z",
+      "cardsMeta": {
+        "attempts": 2,
+        "verified": 4,
+        "total": 4
+      }
     },
     {
       "id": "q_76",
@@ -7025,104 +7399,11 @@
     },
     {
       "id": "q_77",
-      "title": "大学选择化学专业，需要经常做实验吗？",
-      "questionUrl": "https://www.zhihu.com/question/1917962295495070276",
-      "track": "interview",
-      "topic": "模型效果 评测 实验 A/B",
-      "domain": "algo-data",
-      "kind": "tech",
-      "heat": 5,
-      "sources": [
-        {
-          "url": "https://www.zhihu.com/question/1917962295495070276/answer/2082005636330566173",
-          "token": "2082005636330566173",
-          "author": "",
-          "votes": null,
-          "snippet": "对啊，理工科专业都需要做实验吧，化学是其中实验课比较多的。 我本科拿的是化学文凭，但念的是化学物理系，属于物理课比较多的那种，于是物理实验做的也不少，实验课总量就更多了。 大物实验和物理系的一样，做了四个学期，最后一个学期的探究实验也得做。 化学类的，无机化学、有机化学、物理化学、分析化学（滴定）这四大化学对应的四门实验课都上了。时间太久了，具体学时忘了，印象里有机好像比化学系少做了半学期。 这其中…"
-        },
-        {
-          "url": "https://www.zhihu.com/question/1917962295495070276/answer/1982971086586024721",
-          "token": "1982971086586024721",
-          "author": "",
-          "votes": null,
-          "snippet": "别来，就我学化学的感受来说，写实验报告写到吐，写的想死。 一个实验，做之前要写一篇预习报告，做完再从头写一篇正式的实验报告（预习报告本和实验报告本都要交给老师改）。 我从大一下学期到现在，整整两年，平均每学期24个实验，差不多每个周2~3次实验（大二的时候一般是一个有机实验，一个物化实验，有的时候会安排别的实验），每个周写四到六篇实验报告（一半是预习报告，另一半是正式的实验报告）。 一、实验目的，二、实…"
-        },
-        {
-          "url": "https://www.zhihu.com/question/1917962295495070276/answer/1919367926424802094",
-          "token": "1919367926424802094",
-          "author": "",
-          "votes": null,
-          "snippet": "说句实在的，如果讨厌实验，甚至厌恶，还是别选化学了。 我印象中，本科不会经常做。还是以理论课为主，但是化学作为一门现代科学，实验肯定重要。化学本科专业的实验大概占了专业课的三分一之一。四大化学基本都有自己专门的实验课，单独占学分。但是实验课没有挂科的。"
-        },
-        {
-          "url": "https://www.zhihu.com/question/1917962295495070276/answer/1942260688740410949",
-          "token": "1942260688740410949",
-          "author": "",
-          "votes": null,
-          "snippet": "欢迎来到“只关于化学”专栏，分享化学知识，讲好化学故事，我们一起努力！ 先分享一些实验的图片 有些换了手机没找到了。大家伙可以猜一下是什么东西。 [图片] [图片] [图片] [图片] [图片] [图片] 首先，这个问题的回答毋庸置疑，选择化学专业，就基本要泡在实验室里。但也不是一开始，一开始实验课频次大概也就一周一节，时间也不长，到了后面的有机实验会很久，经常是早上做到晚上，如果后期有保研要求，进项目组做实验的话，那在实验室的时间就会更久。 那我就借…"
-        },
-        {
-          "url": "https://www.zhihu.com/question/1917962295495070276/answer/1921573306785562745",
-          "token": "1921573306785562745",
-          "author": "",
-          "votes": null,
-          "snippet": "本科化学做实验不是很多，就是偶尔有一些实验课，但是到了大二结束以后，如果想继续搞科研，可以提前联系老师进入实验室，提前接触科研氛围以及做部分实验，发展的好的话说不定本科就能发SCI论文。如果不做科研那就是最后大四毕设会进实验室做实验。其他的没啥"
-        }
-      ],
-      "viewAngleCards": [
-        {
-          "stance": "实验很多",
-          "summary": "化学专业基本泡在实验室，实验课频次高、耗时长，后期进组时间更久",
-          "evidence": "选择化学专业，就基本要泡在实验室里。",
-          "sourceIndex": 4,
-          "sourceUrl": "https://www.zhihu.com/question/1917962295495070276/answer/1942260688740410949",
-          "sourceAuthor": "",
-          "sourceVotes": null,
-          "popularity": "mainstream",
-          "evidenceVerified": true
-        },
-        {
-          "stance": "实验报告负担重",
-          "summary": "每学期约24个实验，每周2~3次实验，需写预习和正式两套报告",
-          "evidence": "平均每学期24个实验，差不多每个周2~3次实验",
-          "sourceIndex": 2,
-          "sourceUrl": "https://www.zhihu.com/question/1917962295495070276/answer/1982971086586024721",
-          "sourceAuthor": "",
-          "sourceVotes": null,
-          "popularity": "mainstream",
-          "evidenceVerified": true
-        },
-        {
-          "stance": "本科以理论为主",
-          "summary": "本科不经常做实验，以理论课为主，实验约占专业课三分之一",
-          "evidence": "本科不会经常做。还是以理论课为主",
-          "sourceIndex": 3,
-          "sourceUrl": "https://www.zhihu.com/question/1917962295495070276/answer/1919367926424802094",
-          "sourceAuthor": "",
-          "sourceVotes": null,
-          "popularity": "minority",
-          "evidenceVerified": true
-        }
-      ],
-      "benchmark": "考察能否基于真实就读体验，区分化学本科实验课的频次、强度与个体差异",
-      "pitfalls": [
-        "把实验多等同于天天做",
-        "忽视个体与院校差异"
-      ],
-      "createdAt": "2026-11-18T09:02:10.972Z",
-      "cardsMeta": {
-        "attempts": 1,
-        "verified": 3,
-        "total": 3
-      }
-    },
-    {
-      "id": "q_78",
       "title": "GEO优化到底应该怎么做？有哪些比较靠谱的服务商推荐？",
       "questionUrl": "https://www.zhihu.com/question/2013303498356319148",
       "track": "interview",
-      "topic": "推荐系统 效果 评估",
-      "domain": "algo-data",
+      "topic": "商业化 变现 面试",
+      "domain": "product",
       "kind": "tech",
       "heat": 5,
       "sources": [
@@ -7212,7 +7493,7 @@
       }
     },
     {
-      "id": "q_79",
+      "id": "q_78",
       "title": "未来AI搜索出来的内容，会不会充满了商业广告？",
       "questionUrl": "https://www.zhihu.com/question/1921756953312493886",
       "track": "interview",
@@ -7257,13 +7538,67 @@
           "snippet": "伴随着AI成为数亿用户生活与工作的一部分，AI也在逐渐改变品牌如何在消费者搜索路径中出现的方式，越来越多AI厂商思考如何将AI从工具转化为帮助品牌实现有效曝光。 以OpenAI为例，OpenAI拥有庞大的用户体量，目前每周活跃用户超5亿，付费订阅者不足4%。剩下96%的“免费流量”拥有巨大的变现潜力。目前OpenAI正在考虑将广告自然植入到AI应用中，实现自身收入的进一步扩张。 AI产品广告变现的优势 广告主层面AI驱动的交互式广告不…"
         }
       ],
-      "viewAngleCards": [],
-      "benchmark": "",
-      "pitfalls": [],
-      "createdAt": "2026-11-18T09:02:59.991Z"
+      "viewAngleCards": [
+        {
+          "stance": "必然充满广告",
+          "summary": "算力成本高昂迫使AI厂商变现，广告将变为隐性心智植入，比传统搜索更隐蔽",
+          "evidence": "算力是极其昂贵的。",
+          "sourceIndex": 4,
+          "sourceUrl": "https://www.zhihu.com/question/1921756953312493886/answer/2040393685553125254",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "国内必然国外未必",
+          "summary": "国内AI必然商业化植入广告，OpenAI已如此，谷歌因记忆隔离技术暂未加广告",
+          "evidence": "国内的AI绝对是会的。 open AI已经是的了",
+          "sourceIndex": 2,
+          "sourceUrl": "https://www.zhihu.com/question/1921756953312493886/answer/2031819289221664962",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "minority",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "比SEO更精准可控",
+          "summary": "AI时代商品推荐依赖外部函数调用，广告投放比传统SEO更精准、更中心化",
+          "evidence": "这是必然的，而且会比以前搞搜索引擎优化那些手段更精准可控",
+          "sourceIndex": 3,
+          "sourceUrl": "https://www.zhihu.com/question/1921756953312493886/answer/1922282443005726865",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "更该担心虚假信息",
+          "summary": "未来最严重的问题不是广告而是虚假信息泛滥，认真输出者减少而缺乏判别力者增多",
+          "evidence": "未来最严重的问题不是广告太多，而是虚假信息太多",
+          "sourceIndex": 1,
+          "sourceUrl": "https://www.zhihu.com/question/1921756953312493886/answer/1938586132855128932",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "minority",
+          "evidenceVerified": true
+        }
+      ],
+      "benchmark": "考察对AI搜索商业化趋势的立场归纳与证据提取能力",
+      "pitfalls": [
+        "只谈广告忽视虚假信息",
+        "忽略成本驱动的商业逻辑",
+        "把隐性植入当硬广"
+      ],
+      "createdAt": "2026-11-18T09:02:59.991Z",
+      "cardsMeta": {
+        "attempts": 2,
+        "verified": 4,
+        "total": 4
+      }
     },
     {
-      "id": "q_80",
+      "id": "q_79",
       "title": "企业想做GEO优化，如何找到靠谱的服务商？优化效果应该如何进行评估？",
       "questionUrl": "https://www.zhihu.com/question/1992994229258064882",
       "track": "interview",
@@ -7357,7 +7692,7 @@
       }
     },
     {
-      "id": "q_81",
+      "id": "q_80",
       "title": "检索增强生成（RAG）有什么好的优化方案？",
       "questionUrl": "https://www.zhihu.com/question/628651389",
       "track": "interview",
@@ -7402,13 +7737,67 @@
           "snippet": "RAG优化分为两个方向：RAG基础功能优化、RAG架构优化。我们分别展开讨论。 一、RAG基础功能优化对RAG的基础功能优化，我们要从RAG的流程入手[1]，可以在每个阶段做相应的场景优化。 [图片] 从RAG的工作流程看，能优化的模块有：文档块切分、文本嵌入模型、提示工程优化、大模型迭代。下面针对每个模块分别做说明（备注：以下内容部分参考了 @雪飘雨飞 @旺知识 先前的回答）。文档块切分：设置适当的块间重叠、多粒度文档块切分、基于语…"
         }
       ],
-      "viewAngleCards": [],
-      "benchmark": "",
-      "pitfalls": [],
-      "createdAt": "2026-11-18T09:08:05.174Z"
+      "viewAngleCards": [
+        {
+          "stance": "流程分模块优化",
+          "summary": "从RAG工作流程入手，在文档切分、嵌入模型、提示工程、大模型迭代等每个阶段做场景化优化",
+          "evidence": "从RAG的工作流程看，能优化的模块有：文档块切分、文本嵌入模型、提示工程优化、大模型迭代。",
+          "sourceIndex": 5,
+          "sourceUrl": "https://www.zhihu.com/question/628651389/answer/3321989558",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "先做query分类",
+          "summary": "并非每个query都需要召回增强，先分类过滤分流，既提升效果又降低平均延迟",
+          "evidence": "query分类的目的是过滤和分流，把需要RAG的query送入RAG，把不需要RAG的query直接送入大模型。",
+          "sourceIndex": 1,
+          "sourceUrl": "https://www.zhihu.com/question/628651389/answer/26519004176",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "文本压缩精检索",
+          "summary": "针对检索精度要求高的场景，用reranker等文本压缩策略逐步优化命中答案句",
+          "evidence": "在开发文本压缩策略的初期，我们首先想到了使用reranker",
+          "sourceIndex": 4,
+          "sourceUrl": "https://www.zhihu.com/question/628651389/answer/32883231156",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "minority",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "分环节爬坡",
+          "summary": "RAG分内容抽取、索引创建、检索召回等多块，每环节都有难点和提升空间，整体处于技术爬坡早期",
+          "evidence": "虽然每一个环节现在都有急需解决的难点，但拆来看每个环节都有提升空间",
+          "sourceIndex": 2,
+          "sourceUrl": "https://www.zhihu.com/question/628651389/answer/3390210257",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "minority",
+          "evidenceVerified": true
+        }
+      ],
+      "benchmark": "考察能否系统拆解 RAG 流程各环节并给出可落地的分层优化方案",
+      "pitfalls": [
+        "不分场景全量上RAG",
+        "只调模型不改流程",
+        "忽视检索精度"
+      ],
+      "createdAt": "2026-11-18T09:08:05.174Z",
+      "cardsMeta": {
+        "attempts": 2,
+        "verified": 4,
+        "total": 4
+      }
     },
     {
-      "id": "q_82",
+      "id": "q_81",
       "title": "如何利用大模型搭建本地知识库？",
       "questionUrl": "https://www.zhihu.com/question/650032076",
       "track": "interview",
@@ -7502,7 +7891,7 @@
       }
     },
     {
-      "id": "q_83",
+      "id": "q_82",
       "title": "大模型Agent的核心还是prompt？",
       "questionUrl": "https://www.zhihu.com/question/628670548",
       "track": "interview",
@@ -7547,13 +7936,67 @@
           "snippet": "先说结论，大模型Agent的核心不仅仅是prompt，但prompt确实是目前实现Agent的重要手段之一。要理解这一点，我们先得澄清什么是AI Agent。 作为一个智能体，AI Agent应当具备 理解周围环境、做出决策和采取行动的能力。与传统AI依赖用户输入的Prompt与大模型交互不同，AI Agent融合了规划、记忆和工具使用等关键功能，在操作时不需要逐步的提示，我们只需设定一个目标，它就能够自主地进行思考和利用各种工具来分步实现。听起来很…"
         }
       ],
-      "viewAngleCards": [],
-      "benchmark": "",
-      "pitfalls": [],
-      "createdAt": "2026-11-18T09:08:08.148Z"
+      "viewAngleCards": [
+        {
+          "stance": "Prompt已非核心",
+          "summary": "认为2025年后Prompt权重下降，Agent核心竞争力在于工程化架构设计",
+          "evidence": "真正的核心是什么？是工程化的架构设计，是工作",
+          "sourceIndex": 2,
+          "sourceUrl": "https://www.zhihu.com/question/628670548/answer/1999575175772016853",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "Prompt只是皮",
+          "summary": "承认Prompt是人机交互入口，但对Agent而言仅是表层，非核心",
+          "evidence": "Prompt只是那层皮",
+          "sourceIndex": 2,
+          "sourceUrl": "https://www.zhihu.com/question/628670548/answer/1999575175772016853",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "核心不止Prompt",
+          "summary": "Agent核心不止prompt，但prompt仍是当前实现Agent的重要手段之一",
+          "evidence": "大模型Agent的核心不仅仅是prompt，但prompt确实是目前实现Agent的重要手段之一",
+          "sourceIndex": 5,
+          "sourceUrl": "https://www.zhihu.com/question/628670548/answer/3563803799",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "minority",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "Prompt实践痛点",
+          "summary": "工程开发完毕后调Prompt与测评仍是主要痛苦来源，翻车频发",
+          "evidence": "工程侧已经开发完毕，但调Prompt、做测评，每一个都令我痛苦万分",
+          "sourceIndex": 3,
+          "sourceUrl": "https://www.zhihu.com/question/628670548/answer/1979200936699257305",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "minority",
+          "evidenceVerified": true
+        }
+      ],
+      "benchmark": "考察能否区分Demo级Prompt技巧与工程化Agent核心能力",
+      "pitfalls": [
+        "只停留在Demo层面",
+        "忽视工程化架构",
+        "把Prompt当全部"
+      ],
+      "createdAt": "2026-11-18T09:08:08.148Z",
+      "cardsMeta": {
+        "attempts": 1,
+        "verified": 4,
+        "total": 4
+      }
     },
     {
-      "id": "q_84",
+      "id": "q_83",
       "title": "怎么成为一个 ai agent 工程师？",
       "questionUrl": "https://www.zhihu.com/question/1936375725931361485",
       "track": "interview",
@@ -7658,7 +8101,7 @@
       }
     },
     {
-      "id": "q_85",
+      "id": "q_84",
       "title": "关于agent工具系统的5个问题？",
       "questionUrl": "https://www.zhihu.com/question/2094769651817492826",
       "track": "interview",
@@ -7682,13 +8125,56 @@
           "snippet": "1.mcp属于工具系统的一部分，拿claude code举例，像read/write/bash都是内置工具，而你如果想外接工具，比如查询数据库，那需要接对应的mcp, mcp将有点像一个工具包，里面包含了一系列相关的工具，然后agent可以列出所有的工具并根据模型意图调用对应工具，你也可以简单理解为mcp就是用来扩展agent的工具列表的，用于扩展智能体的能力 2.什么时候需要工具？一般来说需要工具的场景都是一些需要消除幻觉的场景，比如说：查询天气/…"
         }
       ],
-      "viewAngleCards": [],
-      "benchmark": "",
-      "pitfalls": [],
-      "createdAt": "2026-11-18T09:08:11.059Z"
+      "viewAngleCards": [
+        {
+          "stance": "工具需治理",
+          "summary": "生产级 Agent 工具系统要支持动态加载，并保证权限、超时、审批和审计",
+          "evidence": "同时保证权限、超时、审批和审计",
+          "sourceIndex": 1,
+          "sourceUrl": "https://www.zhihu.com/question/2094769651817492826/answer/2096621843448911104",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "MCP即工具包",
+          "summary": "MCP 用于扩展 Agent 的外部工具列表，使智能体能力得到延伸",
+          "evidence": "mcp将有点像一个工具包，里面包含了一系列相关的工具",
+          "sourceIndex": 2,
+          "sourceUrl": "https://www.zhihu.com/question/2094769651817492826/answer/2094830193013683059",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "工具消除幻觉",
+          "summary": "需要工具的场景主要是用来消除幻觉，如查询天气等实时信息",
+          "evidence": "一般来说需要工具的场景都是一些需要消除幻觉的场景",
+          "sourceIndex": 2,
+          "sourceUrl": "https://www.zhihu.com/question/2094769651817492826/answer/2094830193013683059",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "minority",
+          "evidenceVerified": true
+        }
+      ],
+      "benchmark": "考察对 Agent 工具系统的构成、发现、调用与治理机制的系统理解",
+      "pitfalls": [
+        "把工具硬编码",
+        "混淆内置与外部工具",
+        "只注册不校验"
+      ],
+      "createdAt": "2026-11-18T09:08:11.059Z",
+      "cardsMeta": {
+        "attempts": 1,
+        "verified": 3,
+        "total": 3
+      }
     },
     {
-      "id": "q_86",
+      "id": "q_85",
       "title": "大模型 Agent 是不是就是各种 Prompt 的堆叠？",
       "questionUrl": "https://www.zhihu.com/question/1894891236617332066",
       "track": "interview",
@@ -7781,7 +8267,7 @@
       }
     },
     {
-      "id": "q_87",
+      "id": "q_86",
       "title": "Agent Skill 和 mcp 和 prompt区别是什么？",
       "questionUrl": "https://www.zhihu.com/question/1994878790988494539",
       "track": "interview",
@@ -7826,13 +8312,66 @@
           "snippet": "Skill和MCP看起来都是扩展AI大模型能力的方式，那么，二者有什么区别？应该如何选择？ 一句话区分（Anthropic官方说法）MCP connects Claude to external services and data sources. Skills provide procedural knowledge—instructions for how to complete specific tasks or workflows.MCP 解决\"连接\"问题：让 AI 能访问外部世界 。Skill 解决\"方法论\"问题：教 AI 怎么做某类任务。MCPMCP是什么MCP是Anthropic 在 2024 年 11…"
         }
       ],
-      "viewAngleCards": [],
-      "benchmark": "",
-      "pitfalls": [],
-      "createdAt": "2026-11-18T09:08:13.906Z"
+      "viewAngleCards": [
+        {
+          "stance": "三者定位不同",
+          "summary": "Prompt 是模型直接理解的指令输入，MCP 解决外部连接，Skill 提供任务方法论，定位各异、强相关。",
+          "evidence": "严格来说谈不上“有什么区别”",
+          "sourceIndex": 2,
+          "sourceUrl": "https://www.zhihu.com/question/1994878790988494539/answer/2088539281388213517",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "Skill 与 MCP ",
+          "summary": "Skill 是提示语规范化的封装，MCP 是工具包，二者互补，Prompt 仍是共同基础。",
+          "evidence": "skills和MCP是互补的关系",
+          "sourceIndex": 4,
+          "sourceUrl": "https://www.zhihu.com/question/1994878790988494539/answer/1999365792169493813",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "连接与方法论之分",
+          "summary": "MCP 让 AI 访问外部世界，Skill 教 AI 完成特定任务的流程，二者分工明确。",
+          "evidence": "MCP 解决\"连接\"问题：让 AI 能访问外部世界",
+          "sourceIndex": 5,
+          "sourceUrl": "https://www.zhihu.com/question/1994878790988494539/answer/2009373988397261768",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "Prompt 是子集",
+          "summary": "提示语是人机沟通必备，属于 skills 与 MCP 的子集，三者并非并列替代关系。",
+          "evidence": "提示语是人与大模型沟通必备，所以是skills和MCP的子集",
+          "sourceIndex": 4,
+          "sourceUrl": "https://www.zhihu.com/question/1994878790988494539/answer/1999365792169493813",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "minority",
+          "evidenceVerified": true
+        }
+      ],
+      "benchmark": "考察能否厘清 Agent 体系中 Prompt、MCP、Skill 三者的定位差异与互补关系。",
+      "pitfalls": [
+        "把三者当成替代关系",
+        "混淆连接与能力封装"
+      ],
+      "createdAt": "2026-11-18T09:08:13.906Z",
+      "cardsMeta": {
+        "attempts": 1,
+        "verified": 4,
+        "total": 4
+      }
     },
     {
-      "id": "q_88",
+      "id": "q_87",
       "title": "大模型的上下文工程，都说很重要，但相关的研究那么少，对Agent开发有什么影响，有大佬能解释一下吗？",
       "questionUrl": "https://www.zhihu.com/question/1975867034127599388",
       "track": "interview",
@@ -7937,7 +8476,7 @@
       }
     },
     {
-      "id": "q_89",
+      "id": "q_88",
       "title": "如何系统性的学习RAG、Agent、MCP?",
       "questionUrl": "https://www.zhihu.com/question/1892824874994623025",
       "track": "interview",
@@ -8043,7 +8582,7 @@
       }
     },
     {
-      "id": "q_90",
+      "id": "q_89",
       "title": "如何设计一个高并发系统?",
       "questionUrl": "https://www.zhihu.com/question/593921820",
       "track": "interview",
@@ -8137,7 +8676,7 @@
       }
     },
     {
-      "id": "q_91",
+      "id": "q_90",
       "title": "大厂是如何进行redis缓存一致性设计的?",
       "questionUrl": "https://www.zhihu.com/question/475100954",
       "track": "interview",
@@ -8231,7 +8770,7 @@
       }
     },
     {
-      "id": "q_92",
+      "id": "q_91",
       "title": "为什么Mysql数据库表加了索引还是查询慢？",
       "questionUrl": "https://www.zhihu.com/question/536974445",
       "track": "interview",
@@ -8326,7 +8865,7 @@
       }
     },
     {
-      "id": "q_93",
+      "id": "q_92",
       "title": "推荐算法中常见的评估指标有哪些？",
       "questionUrl": "https://www.zhihu.com/question/637930584",
       "track": "interview",
@@ -8364,13 +8903,56 @@
           "snippet": "系列文章Ranking算法评价指标（一）：NDCG 前言之前写过NDCG，该指标对于排列位次在不同位置的样本给予了不同的权重，排名越靠前的样本的位置预估准确性对于NDCG的影响更大。而本文要介绍的正逆序比PNR（Positive Negative Rate），则均衡地关注全量样本的排列。 PNR介绍在介绍PNR的计算前，先定义一下正序对和逆序对： 正序对：对于任意两条样本，若其预测值的大小关系与label的大小关系相同，则称这组样本为一个正序对 逆序对：…"
         }
       ],
-      "viewAngleCards": [],
-      "benchmark": "",
-      "pitfalls": [],
-      "createdAt": "2026-11-18T09:08:24.156Z"
+      "viewAngleCards": [
+        {
+          "stance": "分层评估",
+          "summary": "推荐评估应区分离线与在线，召回、粗排、精排、重排定位不同，指标也应有区别。",
+          "evidence": "推荐算法评估指标比较复杂，可以分为离线和在线两部分。",
+          "sourceIndex": 1,
+          "sourceUrl": "https://www.zhihu.com/question/637930584/answer/3353049065",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "召回重覆盖",
+          "summary": "召回为排序服务，核心是覆盖率而非准确率，AUC不宜衡量召回效果。",
+          "evidence": "故核心在于覆盖率，而不需要追求绝对的准确率。",
+          "sourceIndex": 1,
+          "sourceUrl": "https://www.zhihu.com/question/637930584/answer/3353049065",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "minority",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "准确与排序并重",
+          "summary": "评估应兼顾准确性指标和排序性指标，并延伸到覆盖、新颖、多样性等维度。",
+          "evidence": "一片是准确性指标及排序性指标",
+          "sourceIndex": 2,
+          "sourceUrl": "https://www.zhihu.com/question/637930584/answer/1980395826661594740",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        }
+      ],
+      "benchmark": "考察候选人能否按召回、排序、覆盖与多样性等层次系统梳理推荐算法的评估指标体系。",
+      "pitfalls": [
+        "指标不分层混用",
+        "用AUC衡量召回",
+        "只谈准确率"
+      ],
+      "createdAt": "2026-11-18T09:08:24.156Z",
+      "cardsMeta": {
+        "attempts": 2,
+        "verified": 3,
+        "total": 3
+      }
     },
     {
-      "id": "q_94",
+      "id": "q_93",
       "title": "推荐系统的正负样本比例悬殊：600(负):1(正),如何处理？",
       "questionUrl": "https://www.zhihu.com/question/450688180",
       "track": "interview",
@@ -8415,13 +8997,56 @@
           "snippet": "典型的样本不均衡问题，可能也掺杂了样本不置信问题。其他关于推荐算法样本的问题，也一并总结了。1 样本整体架构深度学习的数据样本决定了算法的上限，模型只是去不断逼近这个上限，可见数据样本对于深度学习的重要意义。与CV和NLP不同，推荐系统可以获取大量用户的浏览和点击等行为，很容易构造正负样本。例如，在精排点击率（Click-Through Rate，CTR）预估任务中，通常将用户点击物品作为正样本，将用户曝光未点击作为负样本…"
         }
       ],
-      "viewAngleCards": [],
-      "benchmark": "",
-      "pitfalls": [],
-      "createdAt": "2026-11-18T09:08:25.560Z"
+      "viewAngleCards": [
+        {
+          "stance": "降采样加校准",
+          "summary": "保留全部正样本，负样本随机降采样，上线前做概率校准",
+          "evidence": "工业界常规做法是随机降采样＋校准，具体来说 1. 保留全部正样本，负样本按一定比例随机降采样",
+          "sourceIndex": 4,
+          "sourceUrl": "https://www.zhihu.com/question/450688180/answer/1795843883",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "负样本优化",
+          "summary": "从负样本构造入手，如展示未点击、全局随机、batch 内随机负例",
+          "evidence": "1 召回中的负样本优化展示未点击数据。常用的方式，但是会导致Sample Selection Bias",
+          "sourceIndex": 3,
+          "sourceUrl": "https://www.zhihu.com/question/450688180/answer/2299284434",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "数据模型并重",
+          "summary": "从数据和模型两方面系统性解决样本不均衡问题",
+          "evidence": "之前分享过一篇实际工作中从数据和模型两方面来解决样本不均衡的总结性文章",
+          "sourceIndex": 1,
+          "sourceUrl": "https://www.zhihu.com/question/450688180/answer/1820931429",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "minority",
+          "evidenceVerified": true
+        }
+      ],
+      "benchmark": "考察对推荐系统极端样本不均衡的处理方案及上线校准意识",
+      "pitfalls": [
+        "只降采样不校准",
+        "忽视选择偏差",
+        "误判模型效果"
+      ],
+      "createdAt": "2026-11-18T09:08:25.560Z",
+      "cardsMeta": {
+        "attempts": 1,
+        "verified": 3,
+        "total": 3
+      }
     },
     {
-      "id": "q_95",
+      "id": "q_94",
       "title": "pairwise 的排序算法用于推荐系统的排序任务中为什么效果差于pointwise的ctr？",
       "questionUrl": "https://www.zhihu.com/question/338044033",
       "track": "interview",
@@ -8466,13 +9091,67 @@
           "snippet": "个人感觉pointwise学的是全局性，因为正样本就增加相似，负样本就降低相似度。但pairwise学的是局部性，一般而言，假设max margin=0，对某个用户只需要其正样本相似大于负样本即可。比如负样本相似为-0.99（相似度值域-1，1），那正样本相似为-0.9模型也无需跟新参数了。但如果随机采一个样本平均相似假设为0，其实模型判定时，随便一个样本也比正样本好。这就导致模型效果极差。 pairwise包括pointwise都需要及其合适的负样本，…"
         }
       ],
-      "viewAngleCards": [],
-      "benchmark": "",
-      "pitfalls": [],
-      "createdAt": "2026-11-18T09:08:26.986Z"
+      "viewAngleCards": [
+        {
+          "stance": "推荐侧失效",
+          "summary": "推荐用隐式反馈，用户行为随机、标签界限模糊，pairwise难学出明确排序。",
+          "evidence": "而推荐的Ground Truth是用户行为，用户行为具有随机性",
+          "sourceIndex": 2,
+          "sourceUrl": "https://www.zhihu.com/question/338044033/answer/2796931129",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "搜索侧有效",
+          "summary": "pairwise源于搜索排序，基于相关性标注，正负例界限明显，故有效。",
+          "evidence": "pairwise是在搜索排序中提出的，他们的Ground Truth是基于相关性标注的，正负例之间是有明显界限的",
+          "sourceIndex": 2,
+          "sourceUrl": "https://www.zhihu.com/question/338044033/answer/2796931129",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "局部全局论",
+          "summary": "pointwise学全局相似，pairwise只要求正样本局部超过负样本，易致全局错判。",
+          "evidence": "但pairwise学的是局部性，一般而言，假设max margin=0，对某个用户只需要其正样本相似大于负样本即可",
+          "sourceIndex": 5,
+          "sourceUrl": "https://www.zhihu.com/question/338044033/answer/771686642",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "minority",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "效果存疑",
+          "summary": "主搜实验中CTR任务pairwise与pointwise打平，并非普遍劣于pointwise。",
+          "evidence": "CTR任务打个平手，这里持续优化应该可以得到更好的结论",
+          "sourceIndex": 3,
+          "sourceUrl": "https://www.zhihu.com/question/338044033/answer/1771516642",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "minority",
+          "evidenceVerified": true
+        }
+      ],
+      "benchmark": "考察能否区分搜索与推荐中pairwise与pointwise失效的根因：标签确定性。",
+      "pitfalls": [
+        "把推荐当搜索套用",
+        "忽略标签确定性差异",
+        "以偏概全称普遍劣"
+      ],
+      "createdAt": "2026-11-18T09:08:26.986Z",
+      "cardsMeta": {
+        "attempts": 2,
+        "verified": 4,
+        "total": 4
+      }
     },
     {
-      "id": "q_96",
+      "id": "q_95",
       "title": "机器学习如何在小样本高维特征问题下获得良好表现？",
       "questionUrl": "https://www.zhihu.com/question/264240892",
       "track": "interview",
@@ -8503,13 +9182,56 @@
           "snippet": "一句话介绍小样本图像/表格数据学习可以考虑使用基于Genetic Programming的AutoML算法提取图像/表格特征，并使用简单的模型（线性模型/决策树）实现学习。 基本思想关于基于GP-AutoML的小样本图像学习，我想介绍一下新西兰维多利亚大学毕莹博士和张孟杰教授在2021年TEVC上发表的文章《Dual-Tree Genetic Programming for Few-Shot Image Classification》。至于表格类数据的特征提取，有兴趣的同学可以看一下我的另一篇知乎文章 …"
         }
       ],
-      "viewAngleCards": [],
-      "benchmark": "",
-      "pitfalls": [],
-      "createdAt": "2026-11-18T09:08:28.539Z"
+      "viewAngleCards": [
+        {
+          "stance": "融入先验知识",
+          "summary": "通过贝叶斯方法和参数分布假设等先验知识，降低模型对数据量的需求",
+          "evidence": "一般来说还可以适当加入更多的先验知识（比如假设参数符合某些分布等等）来减少对数据量的需求。",
+          "sourceIndex": 2,
+          "sourceUrl": "https://www.zhihu.com/question/264240892/answer/280810503",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "迁移与自适应",
+          "summary": "用大量数据预训练模型，再用少量数据做说话人等场景的自适应微调",
+          "evidence": "把用大量数据训练好的模型用很少的数据调整到更适合某个说话人的特点）的MAP方法。",
+          "sourceIndex": 2,
+          "sourceUrl": "https://www.zhihu.com/question/264240892/answer/280810503",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "特征提取优先",
+          "summary": "用GP-AutoML提取图像或表格特征，再配合线性模型、决策树等简单模型学习",
+          "evidence": "可以考虑使用基于Genetic Programming的AutoML算法提取图像/表格特征，并使用简单的模型（线性模型/决策树）实现学习。",
+          "sourceIndex": 3,
+          "sourceUrl": "https://www.zhihu.com/question/264240892/answer/2154110016",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "minority",
+          "evidenceVerified": true
+        }
+      ],
+      "benchmark": "考察在小样本高维数据约束下，用先验知识、特征提取与简单模型提升泛化能力的思路",
+      "pitfalls": [
+        "直接上复杂模型",
+        "忽视先验假设",
+        "混淆样本与特征维度"
+      ],
+      "createdAt": "2026-11-18T09:08:28.539Z",
+      "cardsMeta": {
+        "attempts": 1,
+        "verified": 3,
+        "total": 3
+      }
     },
     {
-      "id": "q_97",
+      "id": "q_96",
       "title": "如何对大模型进行评测？",
       "questionUrl": "https://www.zhihu.com/question/12516122224",
       "track": "interview",
@@ -8554,13 +9276,68 @@
           "snippet": "简介 本文系统介绍大模型评估的三大核心维度（能力、效率、安全）、常见评估方法（人工评测、自动评测、LLM-as-a-Judge和混合评测）、常见误区及完整评估流程。文章强调评估是确保大模型在实际业务中安全稳定应用的关键环节，需持续进行而非一次性工作，以平衡成本与效果，降低技术、业务和安全风险。 正文 过去几年，大语言模型（LLM）像火箭一样发展，从几亿参数到千亿参数，从只能写几句短文到能写论文、写代码、画插图、做科…"
         }
       ],
-      "viewAngleCards": [],
-      "benchmark": "",
-      "pitfalls": [],
-      "createdAt": "2026-11-18T09:08:29.959Z"
+      "viewAngleCards": [
+        {
+          "stance": "三维度系统评测",
+          "summary": "评测应覆盖能力、效率、安全三大维度，并贯穿人工、自动与混合评测的完整流程。",
+          "evidence": "本文系统介绍大模型评估的三大核心维度（能力、效率、安全）、常见评估方法",
+          "sourceIndex": 5,
+          "sourceUrl": "https://www.zhihu.com/question/12516122224/answer/1949430794276828131",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "分维度本地实测",
+          "summary": "不能轻信厂商报告，应按数学、Agent、RAG 等维度自行评测，单一基准无法反映真实水平。",
+          "evidence": "同一个模型，不同维度的分差能到五十个百分点。你只跑一个 MMLU 交差，跟没测有什么区别。",
+          "sourceIndex": 2,
+          "sourceUrl": "https://www.zhihu.com/question/12516122224/answer/2049857070585877053",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "评测指导改进",
+          "summary": "评测的价值在于了解模型优劣势、指导人机交互并规避模型劣势。",
+          "evidence": "对 LLM 进行评估有助于我们更好地了解 LLM 的优势和劣势。",
+          "sourceIndex": 1,
+          "sourceUrl": "https://www.zhihu.com/question/12516122224/answer/118317137012",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "类比科举测评",
+          "summary": "可借鉴科举分级考试体系理解模型分级评测，但该类比较为小众。",
+          "evidence": "科举从院试-乡试-会试-殿试共四个等级",
+          "sourceIndex": 3,
+          "sourceUrl": "https://www.zhihu.com/question/12516122224/answer/1962204046829024375",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "minority",
+          "evidenceVerified": true
+        }
+      ],
+      "benchmark": "考察能否系统说明大模型评测的目的、维度、方法与流程，而非只报单一分数。",
+      "pitfalls": [
+        "只跑单一基准",
+        "轻信厂商报告",
+        "混淆维度分数",
+        "把评测当一次性"
+      ],
+      "createdAt": "2026-11-18T09:08:29.959Z",
+      "cardsMeta": {
+        "attempts": 1,
+        "verified": 4,
+        "total": 4
+      }
     },
     {
-      "id": "q_98",
+      "id": "q_97",
       "title": "是加大量类badcase做sft，还是加大量的样本对做dpo？",
       "questionUrl": "https://www.zhihu.com/question/9246153349",
       "track": "interview",
@@ -8605,13 +9382,56 @@
           "snippet": "第一步 改提示词。比如模型不理解“语气自然”，你就告诉他“断句 变换句式 变换字词”。你可以把badcase给模型 让模型给出提示词的优化建议 第二步 训练 没咋做过 感觉其他人说的有道理。 我有一个新办法 把你的改错过程给模型。比如模型说“白菜比生菜更适合用蚝油炒”，你可以根据这个badcase构造几个改错，比如“问：请分析白菜生菜哪个更适合蚝油？ 答：生菜更吸蚝油，白菜不吸油”之类的，或者让模型去识别/分析/改正badca…"
         }
       ],
-      "viewAngleCards": [],
-      "benchmark": "",
-      "pitfalls": [],
-      "createdAt": "2026-11-18T09:08:31.400Z"
+      "viewAngleCards": [
+        {
+          "stance": "倾向DPO",
+          "summary": "badcase指不良回复时应选DPO，SFT只能学正样本无法直接纠错",
+          "evidence": "SFT只能学正样本，并不能直接让大模型纠正错误。",
+          "sourceIndex": 1,
+          "sourceUrl": "https://www.zhihu.com/question/9246153349/answer/90565674993",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "分层递进",
+          "summary": "先构建正确样本，再做DPO，进一步用RM加Online RL，泛化性递增",
+          "evidence": "从泛化性上来说，3 > 2 > 1",
+          "sourceIndex": 2,
+          "sourceUrl": "https://www.zhihu.com/question/9246153349/answer/77663994454",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "minority",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "DPO更温和",
+          "summary": "DPO较温和，SFT需熵约束防训坏，条件允许可用RL给负向奖励",
+          "evidence": "dpo 显然更加温和",
+          "sourceIndex": 4,
+          "sourceUrl": "https://www.zhihu.com/question/9246153349/answer/2069133286245454359",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        }
+      ],
+      "benchmark": "考察对SFT正样本学习与DPO偏好优化在纠错泛化上差异的理解",
+      "pitfalls": [
+        "把SFT当纠错手段",
+        "忽视正样本训坏风险",
+        "混淆badcase定义"
+      ],
+      "createdAt": "2026-11-18T09:08:31.400Z",
+      "cardsMeta": {
+        "attempts": 1,
+        "verified": 3,
+        "total": 3
+      }
     },
     {
-      "id": "q_99",
+      "id": "q_98",
       "title": "如何评估LLM？",
       "questionUrl": "https://www.zhihu.com/question/629846408",
       "track": "interview",
@@ -8656,13 +9476,56 @@
           "snippet": "任何一种考试吧，只有擅长考试与不擅长考试的，没有完全靠谱的考试。所以榜单只能做个参考，毕竟实际应用 LLM 的场景是千差万别的，别想 成绩差它还行。但是成绩不错的，总还是能用的嘛。 基础标准不过还是给大家介绍一下现有的 LLM 的各种榜单与对应的大概内容吧。 Open LLM Leaderboard 是目前最流行的通用 LLM 评测榜单。它由 Hugging Face 发布，评估 LLM 这几个基准数据集：小学科学、常识推理、多任务准确性、语言理解。CLUE…"
         }
       ],
-      "viewAngleCards": [],
-      "benchmark": "",
-      "pitfalls": [],
-      "createdAt": "2026-11-18T09:08:32.806Z"
+      "viewAngleCards": [
+        {
+          "stance": "平台实测派",
+          "summary": "以Chatbot Arena等开放平台的人类偏好对战为主要评测方式，其结论被头部厂商引用",
+          "evidence": "OpenAI和Google会直接拿Chatbot Arena的结果为自家的LLM背书",
+          "sourceIndex": 1,
+          "sourceUrl": "https://www.zhihu.com/question/629846408/answer/3389012169",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "高效基准派",
+          "summary": "主张用与Arena高相关、低成本的混合基准替代高开销评测",
+          "evidence": "MixEval与Chatbot Arena 0.96相关度，开销减少5000倍（0.6美刀），速度提升2000倍（5分钟）",
+          "sourceIndex": 3,
+          "sourceUrl": "https://www.zhihu.com/question/629846408/answer/3522549529",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "minority",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "榜单审慎派",
+          "summary": "认为任何考试都不完全可靠，榜单只能参考，需结合千差万别的实际应用场景",
+          "evidence": "所以榜单只能做个参考，毕竟实际应用 LLM 的场景是千差万别的",
+          "sourceIndex": 5,
+          "sourceUrl": "https://www.zhihu.com/question/629846408/answer/3388166021",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        }
+      ],
+      "benchmark": "考察能否从评测方法、可靠性边界与榜单使用等角度系统评估LLM",
+      "pitfalls": [
+        "只看单一榜单",
+        "忽视数据污染",
+        "混淆评测与理论"
+      ],
+      "createdAt": "2026-11-18T09:08:32.806Z",
+      "cardsMeta": {
+        "attempts": 2,
+        "verified": 3,
+        "total": 3
+      }
     },
     {
-      "id": "q_100",
+      "id": "q_99",
       "title": "小白，请教一下如何对大模型进行基准测试？",
       "questionUrl": "https://www.zhihu.com/question/650396034",
       "track": "interview",
@@ -8707,13 +9570,56 @@
           "snippet": "大模型基准测试 大模型基准测试是评估大模型性能的重要手段，可以帮助我们了解模型的优缺点，以及在特定任务上的表现。如何进行大模型基准测试？ 选择基准测试任务首先，需要选择合适的基准测试任务。常见的基准测试任务包括： 自然语言处理：文本分类、机器翻译、问答等计算机视觉：图像分类、目标检测、语义分割等机器学习：回归、预测、推荐等 选择基准测试数据集选择合适的基准测试数据集也很重要。数据集应该具有代表性，并…"
         }
       ],
-      "viewAngleCards": [],
-      "benchmark": "",
-      "pitfalls": [],
-      "createdAt": "2026-11-18T09:08:34.584Z"
+      "viewAngleCards": [
+        {
+          "stance": "系统评估视角",
+          "summary": "基准测试用标准化数据集评估模型性能、实用性与安全性，需覆盖多维度任务",
+          "evidence": "基准测试，特别是在机器学习和深度学习领域，是指使用标准化的测试数据集来评估模型的性能，包括其速度、准确性、稳定",
+          "sourceIndex": 2,
+          "sourceUrl": "https://www.zhihu.com/question/650396034/answer/3464969012",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "质疑榜单视角",
+          "summary": "排行榜分数脆弱，提示词微调即可致性能剧烈波动，名次不可轻信",
+          "evidence": "一个微不足道的提示词改动，就可能导致模型性能的剧烈波动，使得排行榜上的名次瞬息万变。",
+          "sourceIndex": 3,
+          "sourceUrl": "https://www.zhihu.com/question/650396034/answer/1956332820831114379",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "minority",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "实操流程视角",
+          "summary": "先选任务再选有代表性的数据集，按任务类型分别设计测试",
+          "evidence": "首先，需要选择合适的基准测试任务。",
+          "sourceIndex": 5,
+          "sourceUrl": "https://www.zhihu.com/question/650396034/answer/3445768695",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        }
+      ],
+      "benchmark": "考察能否把基准测试讲清目的、方法与局限，而非罗列榜单分数",
+      "pitfalls": [
+        "只背榜单分数",
+        "忽视提示词敏感",
+        "任务数据集不匹配"
+      ],
+      "createdAt": "2026-11-18T09:08:34.584Z",
+      "cardsMeta": {
+        "attempts": 1,
+        "verified": 3,
+        "total": 3
+      }
     },
     {
-      "id": "q_101",
+      "id": "q_100",
       "title": "大模型评测怎么做？",
       "questionUrl": "https://www.zhihu.com/question/7088801674",
       "track": "interview",
@@ -8737,13 +9643,57 @@
           "snippet": "通用评测方法 客观评测指标：准确率：计算模型正确预测的比例，适用于分类等任务，但在数据不平衡时可能不准确。精确率：衡量模型预测为正例的样本中真正为正例的比例，在假阳性成本高的任务中很重要。召回率：表示实际为正例的样本中被模型正确预测为正例的比例，在漏报成本高的情况下关键。F1 分数：综合了精确率和召回率，平衡了两者的重要性，在不平衡数据集上更能反映模型性能。 主观评测：人工评估：由人类评估者对模型的…"
         }
       ],
-      "viewAngleCards": [],
-      "benchmark": "",
-      "pitfalls": [],
-      "createdAt": "2026-11-18T09:08:35.958Z"
+      "viewAngleCards": [
+        {
+          "stance": "重客观指标",
+          "summary": "主张用准确率、精确率、召回率、F1等量化指标衡量模型表现",
+          "evidence": "客观评测指标：准确率：计算模型正确预测的比例，适用于分类等任务，但在数据不平衡时可能不准确。",
+          "sourceIndex": 2,
+          "sourceUrl": "https://www.zhihu.com/question/7088801674/answer/58052968526",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "补充主观评测",
+          "summary": "认为客观指标之外还需人工评估等主观手段作为补充",
+          "evidence": "主观评测：人工评估：由人类评估者对模型的…",
+          "sourceIndex": 2,
+          "sourceUrl": "https://www.zhihu.com/question/7088801674/answer/58052968526",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "场景化对比",
+          "summary": "主张在具体垂直业务场景中实测对比不同模型的真实能力差距",
+          "evidence": "通用评测方法 客观评测指标：准确率：计算模型正确预测的比例，适用于分类等任务，但",
+          "sourceIndex": 2,
+          "sourceUrl": "https://www.zhihu.com/question/7088801674/answer/58052968526",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "minority",
+          "evidenceVerified": false
+        }
+      ],
+      "benchmark": "考察是否掌握大模型评测的完整方法论与指标适用边界",
+      "pitfalls": [
+        "只用准确率",
+        "忽视数据不平衡",
+        "缺少人工评估",
+        "脱离业务场景"
+      ],
+      "createdAt": "2026-11-18T09:08:35.958Z",
+      "cardsMeta": {
+        "attempts": 1,
+        "verified": 2,
+        "total": 3
+      }
     },
     {
-      "id": "q_102",
+      "id": "q_101",
       "title": "大模型如何在指令微调过程中构造或筛选高质量数据？",
       "questionUrl": "https://www.zhihu.com/question/623570103",
       "track": "interview",
@@ -8788,13 +9738,56 @@
           "snippet": "文章标题：SELF-INSTRUCT: Aligning Language Model with Self Generated Instructions Self Instruct：通过自生成指令对齐语言模型 文章链接：https://arxiv.org/pdf/2212.10560.pdf 作者：Yizhong Wang等 单位：华盛顿大学 发表时间：ACL 2023 [图片] 一、背景最近在优化大模型的推理能力，包括逻辑推理和数学推理。但是好的数据集很少，答案不准确可以通过GPT-4抓取，但是指令不好，就只能依靠人工标注，而人工标注费时费力。 表1：开源的数学推理数…"
         }
       ],
-      "viewAngleCards": [],
-      "benchmark": "",
-      "pitfalls": [],
-      "createdAt": "2026-11-18T09:08:37.426Z"
+      "viewAngleCards": [
+        {
+          "stance": "自动筛选",
+          "summary": "主张在指令微调中以数据质量为先，通过自动化方法发现并筛选高效用数据。",
+          "evidence": "大模型时代，指令微调已经成了算法工程师们必不可少的技能。",
+          "sourceIndex": 1,
+          "sourceUrl": "https://www.zhihu.com/question/623570103/answer/3224726082",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "自生成指令",
+          "summary": "主张用模型自生成指令扩充数据，减少人工标注对指令构造的依赖。",
+          "evidence": "但是指令不好，就只能依靠人工标注，而人工标注费时费力。",
+          "sourceIndex": 5,
+          "sourceUrl": "https://www.zhihu.com/question/623570103/answer/3522356196",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "领域构建",
+          "summary": "主张高质量领域数据集构建是微调中最难环节，需专门工具应对多重挑战。",
+          "evidence": "高质量领域数据集的构建始终面临多重挑战",
+          "sourceIndex": 2,
+          "sourceUrl": "https://www.zhihu.com/question/623570103/answer/127416056815",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "minority",
+          "evidenceVerified": true
+        }
+      ],
+      "benchmark": "考察对大模型指令微调数据构造与筛选方法的系统掌握，而非单一技巧罗列。",
+      "pitfalls": [
+        "只重数量轻质量",
+        "忽视数据多样性",
+        "全部依赖人工标注"
+      ],
+      "createdAt": "2026-11-18T09:08:37.426Z",
+      "cardsMeta": {
+        "attempts": 2,
+        "verified": 3,
+        "total": 3
+      }
     },
     {
-      "id": "q_103",
+      "id": "q_102",
       "title": "生成式大模型怎么评估效果（相对简单可落地）？",
       "questionUrl": "https://www.zhihu.com/question/617977596",
       "track": "interview",
@@ -8839,13 +9832,55 @@
           "snippet": "一、语言建模能力评估 1. 基础建模能力困惑度（PPL）优化：采用滑动窗口PPL（支持64k上下文窗口），以HellaSwag基准进行优化。 长文本建模： 指标：利用PassKey检索（10k+位置准确率）及长程依赖解析（基于GovReport数据集）。 工具：LongBench和Landmark Attention测试套件辅助评估长文本理解能力。 2. 代码建模能力测试基准：使用HumanEval-X覆盖多语言代码生成（Python、Java、Go）。 实时编译验证：集成CodeQL检测运行时错…"
         }
       ],
-      "viewAngleCards": [],
-      "benchmark": "",
-      "pitfalls": [],
-      "createdAt": "2026-11-18T09:08:38.941Z"
+      "viewAngleCards": [
+        {
+          "stance": "先明确对象",
+          "summary": "评测前先区分生成文本质量与应用性能，再选择对应指标方法",
+          "evidence": "进行评测之前，首先要明确评测对象：是评测大模型生成文本的质量，还是评测大模型应用（例如RAG）的性能？",
+          "sourceIndex": 3,
+          "sourceUrl": "https://www.zhihu.com/question/617977596/answer/43139159343",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "自动评测优先",
+          "summary": "评测分人工与自动，自动评测效率高、可复现，分规则与模型两类",
+          "evidence": "目前评测方法可以分为人工评测和自动评测，其中，自动评测技术相比人工评测来讲，具有效率高、一致性好、可复现、鲁棒性好等特点",
+          "sourceIndex": 4,
+          "sourceUrl": "https://www.zhihu.com/question/617977596/answer/3514643065",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "传统指标局限",
+          "summary": "BLEU、ROUGE等统计指标缺语义与推理信息，不宜单独衡量大模型",
+          "evidence": "但是，这些统计指标既没有融合语义信息，也不能反映推理能力。",
+          "sourceIndex": 3,
+          "sourceUrl": "https://www.zhihu.com/question/617977596/answer/43139159343",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "minority",
+          "evidenceVerified": true
+        }
+      ],
+      "benchmark": "考察能否区分评测对象并给出可落地的分层评估方案",
+      "pitfalls": [
+        "混淆评测对象",
+        "迷信单一指标"
+      ],
+      "createdAt": "2026-11-18T09:08:38.941Z",
+      "cardsMeta": {
+        "attempts": 2,
+        "verified": 3,
+        "total": 3
+      }
     },
     {
-      "id": "q_104",
+      "id": "q_103",
       "title": "在用户增长遭遇瓶颈时，如何通过精细化运营提升核心用户留存率？",
       "questionUrl": "https://www.zhihu.com/question/1973708861807546515",
       "track": "interview",
@@ -8883,13 +9918,67 @@
           "snippet": "非常理解你现在的压力！百万用户做到15%留存其实已经超过很多产品了，这说明你们的内容基本盘是稳的。但想突破瓶颈，靠Push通知这种“表面刺激”确实不够——就像总用咖啡提神，不如真正改善睡眠质量。说点我们团队实战中的思路： 一、把核心用户从“消费者”变成“参与者”核心用户依赖内容互动？那就让他们从看客变成主角！我们帮一个知识社区做过这类改造： 轻量级共创：让高活跃用户给内容“打标签”（比如“干货”“避坑”…"
         }
       ],
-      "viewAngleCards": [],
-      "benchmark": "",
-      "pitfalls": [],
-      "createdAt": "2026-11-18T09:08:40.572Z"
+      "viewAngleCards": [
+        {
+          "stance": "分层稳核心",
+          "summary": "先精准识别核心用户，按NPS等维度分层，把资源集中到高价值人群而非全量留存",
+          "evidence": "很多团队一上来就做“全量留存”，这是效率最低的做法。",
+          "sourceIndex": 2,
+          "sourceUrl": "https://www.zhihu.com/question/1973708861807546515/answer/1997231944602240794",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "画像配需求",
+          "summary": "用RFM模型加行为标签给核心用户画像，针对性满足需求，实现精准化个性化场景化运营",
+          "evidence": "核心用户是留存的基石，先通过数据筛选高价值人群，避免运营资源浪费",
+          "sourceIndex": 3,
+          "sourceUrl": "https://www.zhihu.com/question/1973708861807546515/answer/1975505683534341239",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "情感深联结",
+          "summary": "留存低根源是未与核心用户建立深度价值联结与情感归属，需从内容匹配和社区互动入手",
+          "evidence": "未能针对核心用户建立深度价值联结与情感归属，而非单纯的功能或通知优化",
+          "sourceIndex": 1,
+          "sourceUrl": "https://www.zhihu.com/question/1973708861807546515/answer/2045904649669062709",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "minority",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "用户变共创",
+          "summary": "让核心用户从消费者转为参与者，通过轻量级共创增强归属感，替代Push式表面刺激",
+          "evidence": "把核心用户从“消费者”变成“参与者”",
+          "sourceIndex": 4,
+          "sourceUrl": "https://www.zhihu.com/question/1973708861807546515/answer/1974086772758701463",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "minority",
+          "evidenceVerified": true
+        }
+      ],
+      "benchmark": "考察能否精准识别核心用户并用分层运营深化价值联结而非撒网式做活动",
+      "pitfalls": [
+        "全量留存撒网",
+        "只靠Push刺激",
+        "忽视情感归属"
+      ],
+      "createdAt": "2026-11-18T09:08:40.572Z",
+      "cardsMeta": {
+        "attempts": 1,
+        "verified": 4,
+        "total": 4
+      }
     },
     {
-      "id": "q_105",
+      "id": "q_104",
       "title": "数据产品经理，面试一般会问什么问题？怎么答？",
       "questionUrl": "https://www.zhihu.com/question/523986974",
       "track": "interview",
@@ -8920,13 +10009,57 @@
           "snippet": "从决定转岗到拿到offer，我花了将近四个月。 前两个月基本在踩坑——简历投出去石沉大海，偶尔捞到一两场面试，聊完要么是”你技术背景不错，但我们想要有产品思维的”，要么是”你做过数据治理，那你搭建过指标体系吗”，每一场都像是照镜子，照完发现自己的短板明晃晃地摆在桌上。 后来我停下来，没再急着投简历，把之前所有面试录音翻出来反复听，把被问到卡壳的问题一个一个拆开重新想。今天想把这些复盘写出来，希望能帮到…"
         }
       ],
-      "viewAngleCards": [],
-      "benchmark": "",
-      "pitfalls": [],
-      "createdAt": "2026-11-18T09:08:41.945Z"
+      "viewAngleCards": [
+        {
+          "stance": "先讲清数据链路",
+          "summary": "回答应先说明用户行为数据分浏览和点击两类，并讲清异步采集存储到数据采集服务器的链路。",
+          "evidence": "用户产生的行为数据都分为两种：一种是浏览，一种是点击。",
+          "sourceIndex": 1,
+          "sourceUrl": "https://www.zhihu.com/question/523986974/answer/2508200725",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "按岗位分模块答",
+          "summary": "数据产品经理面试会按平台、治理、埋点等方向细分追问，应按应聘模块准备技术组件与模块交互。",
+          "evidence": "大数据平台产品经理:你负责大数据平台的哪个部分（模块）？",
+          "sourceIndex": 2,
+          "sourceUrl": "https://www.zhihu.com/question/523986974/answer/2507916902",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "用复盘补短板",
+          "summary": "面试受挫后应录音复盘，把卡壳问题逐个拆开重想，再针对性补足产品思维与指标体系短板。",
+          "evidence": "把之前所有面试录音翻出来反复听，把被问到卡壳的问题一个一个拆开重新想。",
+          "sourceIndex": 3,
+          "sourceUrl": "https://www.zhihu.com/question/523986974/answer/2066173923964753180",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "minority",
+          "evidenceVerified": true
+        }
+      ],
+      "benchmark": "考察是否具备用户行为数据的采集认知、埋点技术判断力与面试复盘迭代能力。",
+      "pitfalls": [
+        "只背题不拆链路",
+        "埋点前后端不分",
+        "答完不复盘",
+        "混淆岗位模块"
+      ],
+      "createdAt": "2026-11-18T09:08:41.945Z",
+      "cardsMeta": {
+        "attempts": 1,
+        "verified": 3,
+        "total": 3
+      }
     },
     {
-      "id": "q_106",
+      "id": "q_105",
       "title": "如何理解张小龙说的「好的产品是用完即走」？",
       "questionUrl": "https://www.zhihu.com/question/39377177",
       "track": "interview",
@@ -8964,13 +10097,67 @@
           "snippet": "[图片] 好的产品，真的是用完即走的吗？按我看来： 张小龙说的没错。但他只说出一半的真相。 有意思的是，站在过去做产品的角度想，这句话不仅不对，而且简直是自寻死路。 为什么？想想，在过去PC时代，用户是怎么使用电脑的？因为电脑携带不方便，没办法随时随地用。所以用户往往在较长时间，连续地上网。 那当年做PC互联网产品的策略是什么呢？简单讲只有八个字： 占据时长，抢占上游。 首先，占据时长是指，让用户尽量用产品的时间…"
         }
       ],
-      "viewAngleCards": [],
-      "benchmark": "",
-      "pitfalls": [],
-      "createdAt": "2026-11-18T09:08:43.367Z"
+      "viewAngleCards": [
+        {
+          "stance": "工具价值观",
+          "summary": "好产品是工具，价值在于高效完成任务，不靠黏住用户，而让用户尽快离开。",
+          "evidence": "我们认为任何产品都只是一个工具，对工具来说，好…",
+          "sourceIndex": 1,
+          "sourceUrl": "https://www.zhihu.com/question/39377177/answer/81167214",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "背景决定论",
+          "summary": "这句话成立有前提：产品是微信这类高频刚需，不能脱离背景照搬。",
+          "evidence": "张小龙说这句话是因为产品是「微信」；",
+          "sourceIndex": 2,
+          "sourceUrl": "https://www.zhihu.com/question/39377177/answer/81157043",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "minority",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "复用率本质",
+          "summary": "「用完即走」实质是客户复用率高且难以替代，并非不关心留存。",
+          "evidence": "【好的产品，客户复用率高，且很难被替代】",
+          "sourceIndex": 3,
+          "sourceUrl": "https://www.zhihu.com/question/39377177/answer/81055134",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "只说一半",
+          "summary": "说法没错但只说一半真相：PC 时代逻辑恰是占据时长、抢占上游。",
+          "evidence": "张小龙说的没错。但他只说出一半的真相。",
+          "sourceIndex": 4,
+          "sourceUrl": "https://www.zhihu.com/question/39377177/answer/140968127",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "minority",
+          "evidenceVerified": true
+        }
+      ],
+      "benchmark": "考的是能否结合微信语境辩证理解「用完即走」而非当作教条。",
+      "pitfalls": [
+        "脱离微信语境照搬",
+        "误读为不管留存",
+        "忽略时代与场景差异"
+      ],
+      "createdAt": "2026-11-18T09:08:43.367Z",
+      "cardsMeta": {
+        "attempts": 1,
+        "verified": 4,
+        "total": 4
+      }
     },
     {
-      "id": "q_107",
+      "id": "q_106",
       "title": "如何冷启动一个新产品？",
       "questionUrl": "https://www.zhihu.com/question/23281795",
       "track": "interview",
@@ -9015,13 +10202,57 @@
           "snippet": "我是如何冷启动引爆的花椒直播 前言2015年年底，王思聪发微博挺17直播的当天晚上，我和微拍的核心团队一夜没睡，因为我从朋友圈看到，微拍的美女网红们纷纷模仿王思聪的微博，截图个人的17首页在朋友圈，求粉丝关注。可以说我的朋友圈被17直播刷屏了，当晚我意识到直播已经到了爆发点，再不追赶来不及了。当时两个关键指标，4g的普及率已经到了70%，大屏手机的普及率已经到了40%，大屏手机的用户最大的需求就是看视频，同时大屏…"
         }
       ],
-      "viewAngleCards": [],
-      "benchmark": "",
-      "pitfalls": [],
-      "createdAt": "2026-11-18T09:08:44.746Z"
+      "viewAngleCards": [
+        {
+          "stance": "先闭环后扩张",
+          "summary": "双边产品冷启动应先搞定关键一方，再撬动另一方，把控节奏完成闭环。",
+          "evidence": "Step1：搞定双边模式中的关键一方",
+          "sourceIndex": 3,
+          "sourceUrl": "https://www.zhihu.com/question/23281795/answer/79739051",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "重内功轻渠道",
+          "summary": "冷启动别把精力全押宣传渠道，应先做MVP、找种子用户、验证运营模式。",
+          "evidence": "却忽略了构建MVP、寻找种子用户、验证运营模式这些更重要的问题",
+          "sourceIndex": 2,
+          "sourceUrl": "https://www.zhihu.com/question/23281795/answer/121246385",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "脏活累活起步",
+          "summary": "多数创业公司需先做大量不规模化的脏活，用户过临界点后才自增长。",
+          "evidence": "大多数公司需要一开始做相当多的dirty work，用户达到一个tipping point以后才可以自我增长",
+          "sourceIndex": 4,
+          "sourceUrl": "https://www.zhihu.com/question/23281795/answer/24122112",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "minority",
+          "evidenceVerified": true
+        }
+      ],
+      "benchmark": "考察冷启动时如何在资源匮乏下取舍，先建立最小闭环与种子用户，而非急于铺渠道。",
+      "pitfalls": [
+        "只押渠道宣传",
+        "忽视种子用户",
+        "双边同时硬推",
+        "跳过模式验证"
+      ],
+      "createdAt": "2026-11-18T09:08:44.746Z",
+      "cardsMeta": {
+        "attempts": 2,
+        "verified": 3,
+        "total": 3
+      }
     },
     {
-      "id": "q_108",
+      "id": "q_107",
       "title": "用户需求如何调研？",
       "questionUrl": "https://www.zhihu.com/question/26002121",
       "track": "interview",
@@ -9066,13 +10297,68 @@
           "snippet": "要想分析用户需求，最关键的是： 1.别光听用户说，要看他们实际怎么做。 2.要把零散的反馈进行分类整理，把混乱的需求标签化，这样才不会出现重复问题或漏掉共性问题。 3.用户可能会“骗人”， 但数据不会。 有很多现成的需求获取方法，比如“需求访谈的三驾马车”需求访谈的三驾马车是指，在需求访谈时，定义三个角色进行需求访谈： 主问者：推荐需求工程师担当，事先准备了需求访谈问题单，负责现场对照问题单提问 ，并根据客…"
         }
       ],
-      "viewAngleCards": [],
-      "benchmark": "",
-      "pitfalls": [],
-      "createdAt": "2026-11-18T09:08:47.637Z"
+      "viewAngleCards": [
+        {
+          "stance": "目的先行",
+          "summary": "先明确调研目的与目标用户，再确定调研人群并推送问题，避免为调研而调研",
+          "evidence": "想了解要进入的目标用户市场、当你不清楚用户是怎样的、不清楚用户痛点、拿不准产品方案的时候，通常可以选择做用户需求调研",
+          "sourceIndex": 1,
+          "sourceUrl": "https://www.zhihu.com/question/26002121/answer/2011703784",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "业务穿透",
+          "summary": "调研要围绕需求背景、目标、场景与流程追问，并学会过滤不当需求",
+          "evidence": "需求调研主要内容有：了解需求背景、明确需求目标、过滤不当需求、确定大致方案。",
+          "sourceIndex": 2,
+          "sourceUrl": "https://www.zhihu.com/question/26002121/answer/2392323104",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "行为优先",
+          "summary": "不能只听用户说，要看实际行为，并用数据交叉验证零散反馈",
+          "evidence": "别光听用户说，要看他们实际怎么做。",
+          "sourceIndex": 5,
+          "sourceUrl": "https://www.zhihu.com/question/26002121/answer/2081324927148352310",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "minority",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "方法组合",
+          "summary": "设计前期应组合使用问卷等调研方法，以大量数据支撑对用户需求的判断",
+          "evidence": "此时在设计前期进行大量的用户调研十分有必要。",
+          "sourceIndex": 3,
+          "sourceUrl": "https://www.zhihu.com/question/26002121/answer/339159123",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "minority",
+          "evidenceVerified": true
+        }
+      ],
+      "benchmark": "考察能否围绕调研目的、人群、方法与需求过滤形成可执行的需求调研闭环",
+      "pitfalls": [
+        "只问不察",
+        "目的不清",
+        "需求不过滤",
+        "样本偏差"
+      ],
+      "createdAt": "2026-11-18T09:08:47.637Z",
+      "cardsMeta": {
+        "attempts": 1,
+        "verified": 4,
+        "total": 4
+      }
     },
     {
-      "id": "q_109",
+      "id": "q_108",
       "title": "作为产品经理，如何通过 A/B 测试优化产品或服务性能？",
       "questionUrl": "https://www.zhihu.com/question/656454164",
       "track": "interview",
@@ -9096,13 +10382,56 @@
           "snippet": "[图片] A/B 测试是一种高效的实验方法，用于评估产品或服务在不同变量下的表现，并找出最佳方案。作为产品经理，以下是通过 A/B 测试优化产品或服务性能的步骤： 明确目标：首先，你需要确定优化的目标是什么。这可能是提高用户参与度、增加转化率、减少用户流失率等。 定义假设：基于你的业务目标，提出关于产品或服务可能的改进点。例如，你可能假设改变按钮的颜色可以提高点击率。 设计测试：设计两种或多种版本的产品或服务，每种版…"
         }
       ],
-      "viewAngleCards": [],
-      "benchmark": "",
-      "pitfalls": [],
-      "createdAt": "2026-11-18T09:08:49.091Z"
+      "viewAngleCards": [
+        {
+          "stance": "目标先行派",
+          "summary": "先明确业务与用户行为指标，再生成有数据支撑的假设，避免凭空测试。",
+          "evidence": "明确目标：业务目标：明确需要优化的具体业务指标，例如点击率、转化率、用户留存率等。",
+          "sourceIndex": 1,
+          "sourceUrl": "https://www.zhihu.com/question/656454164/answer/3535073585",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "假设驱动派",
+          "summary": "基于业务目标提出改进假设，再设计多版本测试验证效果。",
+          "evidence": "基于你的业务目标，提出关于产品或服务可能的改进点。",
+          "sourceIndex": 2,
+          "sourceUrl": "https://www.zhihu.com/question/656454164/answer/3558608931",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "单一变量派",
+          "summary": "每次测试只改变一个变量，以保证结果可归因。",
+          "evidence": "单一变量：确保每次测试只改变一个变量（例如，按…",
+          "sourceIndex": 1,
+          "sourceUrl": "https://www.zhihu.com/question/656454164/answer/3535073585",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "minority",
+          "evidenceVerified": true
+        }
+      ],
+      "benchmark": "考察产品经理是否能以假设驱动、单变量设计、数据决策完成 A/B 测试闭环。",
+      "pitfalls": [
+        "目标不明确",
+        "假设无数据支撑",
+        "多变量同时改动"
+      ],
+      "createdAt": "2026-11-18T09:08:49.091Z",
+      "cardsMeta": {
+        "attempts": 2,
+        "verified": 3,
+        "total": 3
+      }
     },
     {
-      "id": "q_110",
+      "id": "q_109",
       "title": "开题答辩要讲什么？",
       "questionUrl": "https://www.zhihu.com/question/35660817",
       "track": "defense",
@@ -9147,13 +10476,57 @@
           "snippet": "要讲什么，嘶，我一时间不知道你具体要什么回答，而且几年过去了，倒也没必要纠结这个了。 在你这提问下给大家讲讲开题答辩怎么讲吧： 开场白： 尊敬的各位老师：上午/下午好!我叫XXX,是XXX学院XXX专业的学生。我的论文题目是XXX,论文是在XXX老师的悉心指导下完成的。本文基于XXX理论，通过XXX方法，研究了XXX的问题。 研究背景及意义： 我之所以选择这个课题，是因为在通过文献的阅读和实际的调研之后，我发现由于XXX的机制不够…"
         }
       ],
-      "viewAngleCards": [],
-      "benchmark": "",
-      "pitfalls": [],
-      "createdAt": "2026-11-18T09:08:50.516Z"
+      "viewAngleCards": [
+        {
+          "stance": "流程清单式",
+          "summary": "开题答辩应覆盖题目、背景、意义、现状、方法、内容与进度安排，PPT 图文结合、忌照读。",
+          "evidence": "包括论文题目、研究背景、研究意义、研究现状、研究方法、研究内容、进度安排",
+          "sourceIndex": 1,
+          "sourceUrl": "https://www.zhihu.com/question/35660817/answer/2749635088",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "分段侧重式",
+          "summary": "答辩分展示与提问两部分，展示时各环节按不同侧重点讲，研究方法要细讲。",
+          "evidence": "开题报告内容展示（这一部分大概是10-15min，每一部分侧重点不同",
+          "sourceIndex": 2,
+          "sourceUrl": "https://www.zhihu.com/question/35660817/answer/418533780",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "可行性导向",
+          "summary": "开题最重要目的是让师生都清楚研究可行，PPT 应含背景、综述、问题提出、假设、实验设计、数据统计、预期结果、时间安排。",
+          "evidence": "开题最重要的目的是让自己和老师清楚自己的研究是可行的",
+          "sourceIndex": 3,
+          "sourceUrl": "https://www.zhihu.com/question/35660817/answer/1643765463",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "minority",
+          "evidenceVerified": true
+        }
+      ],
+      "benchmark": "考察能否围绕开题答辩的内容与目的，梳理出可对照、有出处的不同主张。",
+      "pitfalls": [
+        "照着PPT读",
+        "大段堆文字",
+        "只讲背景不讲方法",
+        "回避老师提问"
+      ],
+      "createdAt": "2026-11-18T09:08:50.516Z",
+      "cardsMeta": {
+        "attempts": 2,
+        "verified": 3,
+        "total": 3
+      }
     },
     {
-      "id": "q_111",
+      "id": "q_110",
       "title": "大学本科论文答辩，老师都会问些什么呢？",
       "questionUrl": "https://www.zhihu.com/question/321117978",
       "track": "defense",
@@ -9198,13 +10571,67 @@
           "snippet": "一、毕业论文的主题是什么？这个问题是答辩老师最常问的问题，这个问题说难也不难，说简单也不简单，主要就是要用自己的语言总结概括自己的论文的核心，尽可能精简但是准确的表达出来，不少于3句，不超过5句。 二、选择论文题材的原因是什么？通常这个问题需要结合自己的实际情况以及论文写作的两个方面来进行表述，这一部分如果回答的好容易加分，如果回答的不好也容易减分，所以为了表现出自己论文的特点和优势，我们陈述时需…"
         }
       ],
-      "viewAngleCards": [],
-      "benchmark": "",
-      "pitfalls": [],
-      "createdAt": "2026-11-18T09:08:52.020Z"
+      "viewAngleCards": [
+        {
+          "stance": "常规不刁难",
+          "summary": "老师一般不为难，态度正常即可通过，不必过度焦虑。",
+          "evidence": "老师一般都不会为难的，都会让过的，所以大家不必要为此感到特别焦虑，正常发挥就好。",
+          "sourceIndex": 1,
+          "sourceUrl": "https://www.zhihu.com/question/321117978/answer/1881608134",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "先做自我陈述",
+          "summary": "答辩开场先陈述写作经历、核心思想与框架，再接受提问。",
+          "evidence": "首先，会让自己对自己的论文进行一个陈述，具体介绍的就是自己的写作经历，论文的核心思想，以及具体的框架",
+          "sourceIndex": 1,
+          "sourceUrl": "https://www.zhihu.com/question/321117978/answer/1881608134",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "高频问题清单",
+          "summary": "最常被问论文主题，其次是选题原因，需精简准确作答。",
+          "evidence": "一、毕业论文的主题是什么？这个问题是答辩老师最常问的问题",
+          "sourceIndex": 5,
+          "sourceUrl": "https://www.zhihu.com/question/321117978/answer/1245031141",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "熟悉论文细节",
+          "summary": "答辩前论文细节易忘，掌握套路和事前熟悉比硬背更重要。",
+          "evidence": "所以掌握套路和事前熟悉很重要！",
+          "sourceIndex": 4,
+          "sourceUrl": "https://www.zhihu.com/question/321117978/answer/1194959097",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "minority",
+          "evidenceVerified": true
+        }
+      ],
+      "benchmark": "考察能否从过来人经验中提炼答辩常见问题与应对态度。",
+      "pitfalls": [
+        "只背答案不熟论文",
+        "陈述冗长无重点",
+        "过度焦虑失常"
+      ],
+      "createdAt": "2026-11-18T09:08:52.020Z",
+      "cardsMeta": {
+        "attempts": 1,
+        "verified": 4,
+        "total": 4
+      }
     },
     {
-      "id": "q_112",
+      "id": "q_111",
       "title": "开题答辩会问什么问题?",
       "questionUrl": "https://www.zhihu.com/question/634759260",
       "track": "defense",
@@ -9249,13 +10676,67 @@
           "snippet": "嗯，正经回答如下：如果你没有得罪老教授，那么大概率人家也不会问太难的问题，前提是开题报告确实是你自己认真写的。最不济，起码那些基础得不能再基础的问题自己得做到心中有数吧。 那么就开始（不正经回答）说说我自己答辩的经历吧。 2023年5月31日，我上台答辩。答辩负责人当着我的面，宣读了学校要求我答辩的决定。我是第一个上台答辩的，当时我接到通知要到学校答辩，我刚进答辩教室门时，我的答辩演讲稿即被留在门外。我…"
         }
       ],
-      "viewAngleCards": [],
-      "benchmark": "",
-      "pitfalls": [],
-      "createdAt": "2026-11-18T09:08:53.460Z"
+      "viewAngleCards": [
+        {
+          "stance": "从选题意义切入",
+          "summary": "高频题为何选此题，应从论文意义与重要性回答，而非推给导师或敷衍",
+          "evidence": "正确的回答应该从论文的意义出发，说明写这个论文的重要性。",
+          "sourceIndex": 2,
+          "sourceUrl": "https://www.zhihu.com/question/634759260/answer/3325853517",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "追问创新点",
+          "summary": "老师常问论文创新点，需说明与同类研究相比的不同或改进之处",
+          "evidence": "创新点是老师很喜欢问的问题之一。",
+          "sourceIndex": 2,
+          "sourceUrl": "https://www.zhihu.com/question/634759260/answer/3325853517",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "主客观双线作答",
+          "summary": "选题原因可分主观兴趣与客观研究不足两方面来回答",
+          "evidence": "可从主观与客观两个方面来回答。",
+          "sourceIndex": 4,
+          "sourceUrl": "https://www.zhihu.com/question/634759260/answer/3408555006",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "反推导师态度",
+          "summary": "被问导师看法往往是答辩组委婉表达开题报告问题较多",
+          "evidence": "只有当答辩组老师觉得你这个题开得不行，才会问指导老师什么看法的。",
+          "sourceIndex": 1,
+          "sourceUrl": "https://www.zhihu.com/question/634759260/answer/3325277181",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "minority",
+          "evidenceVerified": true
+        }
+      ],
+      "benchmark": "考察是否能识别开题答辩的真实提问场景与应对重点",
+      "pitfalls": [
+        "把选题推给导师",
+        "只答题目好些了",
+        "创新点说不清"
+      ],
+      "createdAt": "2026-11-18T09:08:53.460Z",
+      "cardsMeta": {
+        "attempts": 2,
+        "verified": 4,
+        "total": 4
+      }
     },
     {
-      "id": "q_113",
+      "id": "q_112",
       "title": "大创项目结题答辩时该注意些什么？",
       "questionUrl": "https://www.zhihu.com/question/278002011",
       "track": "defense",
@@ -9286,13 +10767,57 @@
           "snippet": "大创结题验收 一，各内项目须在规定时间内完成各项研究任务，进行结项验收。项目负责人应撰写结题验收报告，并附上研究记录等相关材料和研究成果、实物等。学校组织专家对结题项目采取答辩、成果鉴定、汇报总结、材料审阅等多种方式进行结题验收。验收注重项目的实施过程，经费使用效益和执行率，强调项目实施过程中学生在创新思维方法、创新能力方面的收获。 二，院级、校级项目验收按项目立项预期目标进行结项验收，由项目主持…"
         }
       ],
-      "viewAngleCards": [],
-      "benchmark": "",
-      "pitfalls": [],
-      "createdAt": "2026-11-18T09:08:54.895Z"
+      "viewAngleCards": [
+        {
+          "stance": "重心在后期核验",
+          "summary": "答辩应弱化背景意义，重点汇报研究过程、成果及与申请书的对照差异。",
+          "evidence": "大创结题验收 一，各内项目须在规定时间内完成各项研究任务，进行结项验收。项目负责",
+          "sourceIndex": 3,
+          "sourceUrl": "https://www.zhihu.com/question/278002011/answer/2183235079",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": false
+        },
+        {
+          "stance": "材料齐备为先",
+          "summary": "需备齐结题申请书及论文、专利、实物等成果证明，供评委现场审阅。",
+          "evidence": "",
+          "sourceIndex": 9,
+          "sourceUrl": "",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": false
+        },
+        {
+          "stance": "严格守时流程",
+          "summary": "须按规定时长与流程答辩，迟到或超时可能影响结题资格。",
+          "evidence": "(小白必看）大创（国创）国家级最新模板资料分享大学生创新创业训练项目怎么准备模板",
+          "sourceIndex": 1,
+          "sourceUrl": "https://www.zhihu.com/question/278002011/answer/2281978096",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "minority",
+          "evidenceVerified": false
+        }
+      ],
+      "benchmark": "考察结题答辩中材料、陈述重点与时间流程等实操准备要点。",
+      "pitfalls": [
+        "背景讲太多",
+        "材料不齐",
+        "超时或迟到",
+        "成果无佐证"
+      ],
+      "createdAt": "2026-11-18T09:08:54.895Z",
+      "cardsMeta": {
+        "attempts": 1,
+        "verified": 0,
+        "total": 3
+      }
     },
     {
-      "id": "q_114",
+      "id": "q_113",
       "title": "论文答辩流程和常见问题是什么？",
       "questionUrl": "https://www.zhihu.com/question/635937260",
       "track": "defense",
@@ -9337,13 +10862,56 @@
           "snippet": "流程：按答辩名单顺序在讲台电脑录入自己的答辩PPT，按顺序答辩 问题：根据论文中的内容出问题，理科毕设：例如基于Solidworks的打孔机设计，1.论文主要用了什么研究方法，2.打孔机主要解决了使用中的什么问题，和普通的打孔机有什么区别，3.打孔机的结构是怎么样的，工作原理是什么，4.打孔冲头是否能够替换等等 文科论文：例如基于低碳环境下S公司物流运输的优化策略研究，1.S公司物流运输的现状是什么，2.S公司物流运输现状是…"
         }
       ],
-      "viewAngleCards": [],
-      "benchmark": "",
-      "pitfalls": [],
-      "createdAt": "2026-11-18T09:08:56.300Z"
+      "viewAngleCards": [
+        {
+          "stance": "流程标准化",
+          "summary": "答辩按开场、背景目的、方法等固定环节展开，核心是完整展示研究",
+          "evidence": "以下是一般的论文答辩流程和常见问题： 1. 开场白和自我介绍：答辩开始前，你需要进行简短的开场白",
+          "sourceIndex": 2,
+          "sourceUrl": "https://www.zhihu.com/question/635937260/answer/3341642835",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "结构讲述派",
+          "summary": "从开场白到研究背景、方法逐段讲述，突出论文整体结构与核心内容",
+          "evidence": "论文答辩流程：开场白：首先进行简短的开场白，介绍自己的研究背景、研究问题、研究目的和方法。",
+          "sourceIndex": 3,
+          "sourceUrl": "https://www.zhihu.com/question/635937260/answer/3349367688",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "模板应对派",
+          "summary": "面对评委批评性问题，用致谢、认领、承诺补充的模板话术回应",
+          "evidence": "当老师说你的研究不够透彻时: 感谢老师的指导，您所说的内容我都记下了，答辩结束后我会深入了解这方面内容，持续修正并补充完善。",
+          "sourceIndex": 4,
+          "sourceUrl": "https://www.zhihu.com/question/635937260/answer/3349471915",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "minority",
+          "evidenceVerified": true
+        }
+      ],
+      "benchmark": "考查能否把答辩流程与常见问题说清楚并给出可操作应对",
+      "pitfalls": [
+        "只背模板不熟论文",
+        "流程环节讲漏",
+        "回避评委批评"
+      ],
+      "createdAt": "2026-11-18T09:08:56.300Z",
+      "cardsMeta": {
+        "attempts": 1,
+        "verified": 3,
+        "total": 3
+      }
     },
     {
-      "id": "q_115",
+      "id": "q_114",
       "title": "论文的写作方法和实验设计思路有哪些？",
       "questionUrl": "https://www.zhihu.com/question/616626181",
       "track": "interview",
@@ -9388,13 +10956,56 @@
           "snippet": "一、选定论题（一）论题在文中的地位与作用严格地讲，论文写作是从选定论题开始的。选题是论文写作的第一步，也是最重要的一步，因为它关系到论文写作的进程是否顺利，论文写作最终是成功还是失败。 如何一次写出高质量文献综述（内含文献综述写作模板） 只有选定了一个比较合适的论题，其后的撰写工作才有可能顺利展开。“题好文一半”，就是这个道理。爱因斯坦曾说过，“提出一个问题，往往比解决一个问题更重要”。因此，成功…"
         }
       ],
-      "viewAngleCards": [],
-      "benchmark": "",
-      "pitfalls": [],
-      "createdAt": "2026-11-18T09:08:57.763Z"
+      "viewAngleCards": [
+        {
+          "stance": "选题大纲优先",
+          "summary": "写作方法的核心是先定题目与大纲，思路清晰则成文简单",
+          "evidence": "前期把握好题目的选定和大纲的规划。",
+          "sourceIndex": 4,
+          "sourceUrl": "https://www.zhihu.com/question/616626181/answer/3186548056",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "选题是第一步",
+          "summary": "论文写作从选定论题开始，题好文一半，选题决定成败",
+          "evidence": "选题是论文写作的第一步，也是最重要的一步",
+          "sourceIndex": 5,
+          "sourceUrl": "https://www.zhihu.com/question/616626181/answer/3191058724",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "分部分套模式",
+          "summary": "按摘要等各部分固定模式与套路逐段规范写作",
+          "evidence": "给大家谈谈SCI论文写作文章各个部分应注意的问题及一些固定模式和套路。",
+          "sourceIndex": 2,
+          "sourceUrl": "https://www.zhihu.com/question/616626181/answer/3186604449",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "minority",
+          "evidenceVerified": true
+        }
+      ],
+      "benchmark": "考察能否区分论文写作方法中选题、结构、各部分规范等不同层面的主张并有据对照",
+      "pitfalls": [
+        "混淆写作与实验设计",
+        "只谈格式不谈思路",
+        "选题大纲混为一谈"
+      ],
+      "createdAt": "2026-11-18T09:08:57.763Z",
+      "cardsMeta": {
+        "attempts": 2,
+        "verified": 3,
+        "total": 3
+      }
     },
     {
-      "id": "q_116",
+      "id": "q_115",
       "title": "论文中的创新点是怎么想出来的？",
       "questionUrl": "https://www.zhihu.com/question/355733089",
       "track": "defense",
@@ -9445,7 +11056,7 @@
       "createdAt": "2026-11-18T09:08:59.184Z"
     },
     {
-      "id": "q_117",
+      "id": "q_116",
       "title": "本科论文答辩难吗？",
       "questionUrl": "https://www.zhihu.com/question/392229198",
       "track": "defense",
@@ -9490,13 +11101,68 @@
           "snippet": "去年我答辩的时候，因为是网上视频答辩，就拿了个本子，穿了身西装，镜头打理了一下，全程“”对，这点没考虑好，谢谢老师”，“奥，原来还有这种思路，谢谢老师”，“这点还可以这样优化，谢谢老师”，“是，当时确实没有做这一部分，学生受教了”，“这个错误我马上修改，多谢老师提醒”，“这个框架原来还有这种妙用啊，学到了”，然后点头沉思外加记笔记，最后还“多谢老师给我上的最后一课”，总之谦虚就完事了，本科你还指…"
         }
       ],
-      "viewAngleCards": [],
-      "benchmark": "",
-      "pitfalls": [],
-      "createdAt": "2026-11-18T09:09:00.582Z"
+      "viewAngleCards": [
+        {
+          "stance": "流程走过场",
+          "summary": "本科论文水平相近，答辩主要是走流程，老师快速浏览把关格式与态度。",
+          "evidence": "水平都是差不多，就是走一个流程的东西",
+          "sourceIndex": 3,
+          "sourceUrl": "https://www.zhihu.com/question/392229198/answer/2299609915",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "态度决定通过",
+          "summary": "问题答不上来没关系，谦虚认错、态度端正，论文基本就能通过。",
+          "evidence": "导师看你态度没有问题论文就可以通过",
+          "sourceIndex": 3,
+          "sourceUrl": "https://www.zhihu.com/question/392229198/answer/2299609915",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "只答不辩",
+          "summary": "答辩时不要争辩，虚心接受意见并道歉，但要换说法解释而非硬认错。",
+          "evidence": "答辩答辩，只答不辩，疯狂道歉，考虑不全",
+          "sourceIndex": 2,
+          "sourceUrl": "https://www.zhihu.com/question/392229198/answer/1207555727",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "准备充分不难",
+          "summary": "整体不难，但需认真准备自述与问答两个环节，不能掉以轻心。",
+          "evidence": "不难，但是要有准备，答辩分为两个部分",
+          "sourceIndex": 2,
+          "sourceUrl": "https://www.zhihu.com/question/392229198/answer/1207555727",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "minority",
+          "evidenceVerified": true
+        }
+      ],
+      "benchmark": "考察对本科答辩性质与通过要点的理解及应对态度",
+      "pitfalls": [
+        "与老师争辩",
+        "态度傲慢",
+        "毫无准备",
+        "只硬认错不解释"
+      ],
+      "createdAt": "2026-11-18T09:09:00.582Z",
+      "cardsMeta": {
+        "attempts": 1,
+        "verified": 4,
+        "total": 4
+      }
     },
     {
-      "id": "q_118",
+      "id": "q_117",
       "title": "redis缓存雪崩，击穿，穿透，到底是什么?",
       "questionUrl": "https://www.zhihu.com/question/421946305",
       "track": "interview",
@@ -9541,13 +11207,56 @@
           "snippet": "缓存击穿、缓存穿透、缓存雪崩，绝对给你讲清楚，往下看！ 在了解这三大问题之前，我们要理解，常用的分布式缓存Redis单机并发量能达到万级，常用的关系型数据库MySQL一般并发量是千级，他们支持的并发量可能差十倍，所以要尽可能把流量拦截在缓存层。 为什么呢？就像是大湖里多排点水，就可能把小河道冲垮，不知道你听过没——长江之水天上来，白洋淀里把不住。 缓存击穿什么是缓存击穿先从缓存击穿开始。 缓存击穿： 一个并发…"
         }
       ],
-      "viewAngleCards": [],
-      "benchmark": "",
-      "pitfalls": [],
-      "createdAt": "2026-11-18T09:10:20.198Z"
+      "viewAngleCards": [
+        {
+          "stance": "概念定义派",
+          "summary": "三者本质不同：穿透是查不存在的数据，雪崩是大量缓存同时失效，击穿是热点key突然过期",
+          "evidence": "缓存穿透查询不存在的数据请求全打到数据库缓存雪崩大量缓存同时失效瞬间压垮数据库缓存击穿热点key突然过期并发请求打穿数据库",
+          "sourceIndex": 2,
+          "sourceUrl": "https://www.zhihu.com/question/421946305/answer/2000573913084753080",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "分场景拆解派",
+          "summary": "先讲清缓存穿透，再逐一说明三者的成因与解决办法",
+          "evidence": "那什么是缓存穿透？什么是缓存击穿，又什么是缓存雪崩呢？它们是如何造成的？又该如何解决呢？",
+          "sourceIndex": 3,
+          "sourceUrl": "https://www.zhihu.com/question/421946305/answer/2382355868",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "安全风险视角",
+          "summary": "缓存穿透指缓存和数据库都没有的数据被不断请求，可能被黑客利用压垮数据库",
+          "evidence": "缓存穿透是指缓存和数据库中都没有的数据，而用户不断发起请求，如发起id为-1的数据或者特别大的不存在的数据。",
+          "sourceIndex": 4,
+          "sourceUrl": "https://www.zhihu.com/question/421946305/answer/2278960712",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "minority",
+          "evidenceVerified": true
+        }
+      ],
+      "benchmark": "考察能否用一句话讲清三种缓存异常的区别、成因与后果",
+      "pitfalls": [
+        "把三种概念混为一谈",
+        "只背定义不讲成因",
+        "混淆击穿与雪崩范围"
+      ],
+      "createdAt": "2026-11-18T09:10:20.198Z",
+      "cardsMeta": {
+        "attempts": 2,
+        "verified": 3,
+        "total": 3
+      }
     },
     {
-      "id": "q_119",
+      "id": "q_118",
       "title": "生成式推荐会成为下一代推荐系统的范式吗？",
       "questionUrl": "https://www.zhihu.com/question/1916207872066430537",
       "track": "interview",
@@ -9592,13 +11301,67 @@
           "snippet": "谢邀。又一个“下一代范式”的问题，哈哈。我在这个行业里，每隔两三年就能听到一次“下一代XX”的提法，从深度学习革了协同过滤的命，到后面双塔模型、序列模型轮番上阵，现在轮到生成式了。 你问我会不会成为新范式？我的观点可能有点“泼冷水”： 会，但不是你想的那种“推倒重来”的会。它更像是一种能力强大的“新插件”或者“高配组件”，会被整合进现有的推荐系统全家桶里，而不是直接把旧的都扔了。为啥这么说？聊聊我这…"
         }
       ],
-      "viewAngleCards": [],
-      "benchmark": "",
-      "pitfalls": [],
-      "createdAt": "2026-11-18T09:10:21.670Z"
+      "viewAngleCards": [
+        {
+          "stance": "质疑待验证",
+          "summary": "效果与成本存疑，Meta的12.4%提升是否为可复制业务指标尚无共识。",
+          "evidence": "它是真实的业务指标提升？还是为了发文章筛选出的学术指标？它是可复制的吗？",
+          "sourceIndex": 1,
+          "sourceUrl": "https://www.zhihu.com/question/1916207872066430537/answer/1931712161224320583",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "能力插件论",
+          "summary": "会被整合进现有推荐系统全家桶，作为高配组件而非推倒重来。",
+          "evidence": "它更像是一种能力强大的“新插件”或者“高配组件”，会被整合进现有的推荐系统全家桶里",
+          "sourceIndex": 5,
+          "sourceUrl": "https://www.zhihu.com/question/1916207872066430537/answer/1937667613783234193",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "minority",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "尚未成范式",
+          "summary": "目前未成为普遍基线，但其讨论让下一代范式特征更清晰。",
+          "evidence": "但是如果说是范式，现在看还不是",
+          "sourceIndex": 4,
+          "sourceUrl": "https://www.zhihu.com/question/1916207872066430537/answer/1931932407738639245",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "minority",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "传统范式见顶",
+          "summary": "基于DLRM的传统范式收益边际递减，依赖记忆而非推理已触天花板。",
+          "evidence": "这种依赖于“记忆”而非“推理”的模式逐渐触及天花板",
+          "sourceIndex": 3,
+          "sourceUrl": "https://www.zhihu.com/question/1916207872066430537/answer/1950697161030365562",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        }
+      ],
+      "benchmark": "考察能否从效果、成本、落地形态三方面界定生成式推荐是否构成范式更替。",
+      "pitfalls": [
+        "把论文指标当业务提升",
+        "只谈效果不谈成本",
+        "误判为推倒重来"
+      ],
+      "createdAt": "2026-11-18T09:10:21.670Z",
+      "cardsMeta": {
+        "attempts": 1,
+        "verified": 4,
+        "total": 4
+      }
     },
     {
-      "id": "q_120",
+      "id": "q_119",
       "title": "模型在不同测试集的效果相差很大，请问该怎么解决呢？",
       "questionUrl": "https://www.zhihu.com/question/485424287",
       "track": "interview",
@@ -9636,13 +11399,67 @@
           "snippet": "有可能是你A和B两个数据集差异性有点大，而你模型训练的泛化性不是太好，导致送到另外一个去测试达不到预期效果 ①可以试着对B数据集按你A数据集的权重继续迁移学习再测测 ②在训练你A数据集的时候加入更多的数据或合适的数据增强，比如可以用数据增强相对模拟B数据集中的噪声，背景及其它，用以增大你模型本身的泛化性能"
         }
       ],
-      "viewAngleCards": [],
-      "benchmark": "",
-      "pitfalls": [],
-      "createdAt": "2026-11-18T09:10:23.152Z"
+      "viewAngleCards": [
+        {
+          "stance": "分布偏移归因派",
+          "summary": "差异源于训练集与测试集不独立同分布，应改用OOD泛化算法减小泛化误差。",
+          "evidence": "可以在训练的时候将算法改成一些ood泛化的算法来减小误差的算法。",
+          "sourceIndex": 2,
+          "sourceUrl": "https://www.zhihu.com/question/485424287/answer/2114044561",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "数据分布差距派",
+          "summary": "A、B测试集分布存在差距，需从数据增强和训练过程两方面对齐分布。",
+          "evidence": "A训练集和B测试集分布存在差距，效果不佳",
+          "sourceIndex": 3,
+          "sourceUrl": "https://www.zhihu.com/question/485424287/answer/2114755812",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "迁移与增强派",
+          "summary": "模型泛化性不足，可对B集迁移学习，并在A集训练时加入模拟B的数据增强。",
+          "evidence": "可以试着对B数据集按你A数据集的权重继续迁移学习再测测",
+          "sourceIndex": 4,
+          "sourceUrl": "https://www.zhihu.com/question/485424287/answer/2108924094",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "minority",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "过拟合质疑派",
+          "summary": "不能简单归为过拟合，过拟合定义依赖测试集如何划分，问题没那么简单。",
+          "evidence": "这个问题的简单回答是“过拟合”，但是细想一下就会发现可能并没有这么简单",
+          "sourceIndex": 1,
+          "sourceUrl": "https://www.zhihu.com/question/485424287/answer/2114595374",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "minority",
+          "evidenceVerified": true
+        }
+      ],
+      "benchmark": "考察能否把测试集效果差异归因到分布偏移而非简单过拟合，并给出可落地解法。",
+      "pitfalls": [
+        "简单归因过拟合",
+        "忽视分布偏移",
+        "只调模型不改数据"
+      ],
+      "createdAt": "2026-11-18T09:10:23.152Z",
+      "cardsMeta": {
+        "attempts": 1,
+        "verified": 4,
+        "total": 4
+      }
     },
     {
-      "id": "q_121",
+      "id": "q_120",
       "title": "如何看待阿里开源的Qwen3-VL-Embedding 和 Qwen3-VL-Reranker 模型？",
       "questionUrl": "https://www.zhihu.com/question/1992740266336093682",
       "track": "interview",
@@ -9687,13 +11504,66 @@
           "snippet": "一篇花了我两天时间、走了五条弯路、最后被一行 text.replace 解决的 bug 复盘。 关键词：VLM2Vec / Qwen3-VL / GradCache / contrastive embedding / token-feature mismatchTL;DR把 VLM2Vec 框架的 backbone 从 Qwen2-VL 切到 Qwen3-VL 后，8 卡训练每次跑到 step 384 必报：ValueError: Image features and image tokens do not match: tokens: 100, features 99更诡异的是： 同样的代码在 Qwen2-VL 上训练了几个月没出过这个…"
         }
       ],
-      "viewAngleCards": [],
-      "benchmark": "",
-      "pitfalls": [],
-      "createdAt": "2026-11-18T09:10:24.660Z"
+      "viewAngleCards": [
+        {
+          "stance": "原生多模态",
+          "summary": "VL-Embedding直接图文匹配，减少信息损失，但训练成本更高，需权衡取舍",
+          "evidence": "直观上来说，VL-Embedding的信息损失会更少，毕竟属于原生，",
+          "sourceIndex": 1,
+          "sourceUrl": "https://www.zhihu.com/question/1992740266336093682/answer/1993001581206082661",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "补全RAG拼图",
+          "summary": "两模型以Apache 2.0免费开源，补上多模态RAG关键缺口，彰显大厂投入",
+          "evidence": "他们居然把多模态RAG这块最关键的拼图给补上了，出手就是开源、Apache 2.0协议、完全免费商用。",
+          "sourceIndex": 2,
+          "sourceUrl": "https://www.zhihu.com/question/1992740266336093682/answer/1993041887083386625",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "统一语义空间",
+          "summary": "核心挑战是让文本图像视频文档映射到同一语义平面，实现跨模态精准匹配",
+          "evidence": "如何构建一个统一、高精度的表示空间，使得来自不同模态（文本、图像、视频、文档图像）的数据能够被映射到同一语义平面上",
+          "sourceIndex": 3,
+          "sourceUrl": "https://www.zhihu.com/question/1992740266336093682/answer/1993676937709762179",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "落地有坑",
+          "summary": "实际迁移训练中会遇到token特征不匹配等工程报错，落地并非开箱即用",
+          "evidence": "把 VLM2Vec 框架的 backbone 从 Qwen2-VL 切到 Qwen3-VL 后，8 卡训练每次跑到 step 384 必报",
+          "sourceIndex": 5,
+          "sourceUrl": "https://www.zhihu.com/question/1992740266336093682/answer/2049931439504990504",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "minority",
+          "evidenceVerified": true
+        }
+      ],
+      "benchmark": "考察对多模态检索模型技术价值与开源意义的辩证评价",
+      "pitfalls": [
+        "只夸开源不谈成本",
+        "忽视落地工程坑"
+      ],
+      "createdAt": "2026-11-18T09:10:24.660Z",
+      "cardsMeta": {
+        "attempts": 1,
+        "verified": 4,
+        "total": 4
+      }
     },
     {
-      "id": "q_122",
+      "id": "q_121",
       "title": "分布式限流的主流方案有哪些？",
       "questionUrl": "https://www.zhihu.com/question/483788010",
       "track": "interview",
@@ -9738,13 +11608,67 @@
           "snippet": "作者介绍 段然，甜橙金融创新中心开发工程师，目前负责公司平台化建设及媒介能力聚合。 一、限流的作用 由于API接口无法控制调用方的行为，因此当遇到瞬时请求量激增时，会导致接口占用过多服务器资源，使得其他请求响应速度降低或是超时，更有甚者可能导致服务器宕机。 限流(Rate limiting)指对应用服务的请求进行限制，例如某一接口的请求限制为100个每秒,对超过限制的请求则进行快速失败或丢弃。 限流可以应对： 热点业务带来…"
         }
       ],
-      "viewAngleCards": [],
-      "benchmark": "",
-      "pitfalls": [],
-      "createdAt": "2026-11-18T09:10:26.177Z"
+      "viewAngleCards": [
+        {
+          "stance": "算法层主流",
+          "summary": "面试考察多以固定窗口、滑动窗口、漏桶、令牌桶等限流算法为主，偶尔涉及BBR等动态算法。",
+          "evidence": "在面试中，多数时候对限流的考察停留在算法层面，偶尔会深入到像BBR这样的动态算法。",
+          "sourceIndex": 1,
+          "sourceUrl": "https://www.zhihu.com/question/483788010/answer/1933983467407904993",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "工程阈值落地",
+          "summary": "真正区分深度的是限流阈值如何确定，考验从理论到实践的落地能力和系统全貌把控。",
+          "evidence": "这个问题，光懂算法是绝对不够的。它真正考验的是你从理论到实践的落地能力，以及对系统全貌的把控。",
+          "sourceIndex": 1,
+          "sourceUrl": "https://www.zhihu.com/question/483788010/answer/1933983467407904993",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "限流保核心",
+          "summary": "限流本质是用可控牺牲保护核心链路，如令牌桶限制秒杀QPS以保住核心交易成功率。",
+          "evidence": "限流的本质不是拒绝服务，而是用可控的牺牲保护核心链路。",
+          "sourceIndex": 2,
+          "sourceUrl": "https://www.zhihu.com/question/483788010/answer/1893056966663857322",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "Redis非主流",
+          "summary": "基于BunnyRedis配合漏桶或令牌桶做分布式限流，作者自认不是主流方案。",
+          "evidence": "我提供一个分布式的解决方案，但肯定不是主流",
+          "sourceIndex": 4,
+          "sourceUrl": "https://www.zhihu.com/question/483788010/answer/2100627076",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "minority",
+          "evidenceVerified": true
+        }
+      ],
+      "benchmark": "考察候选人能否区分算法层与分布式工程落地，并说清阈值依据与选型理由",
+      "pitfalls": [
+        "只背算法不谈阈值",
+        "混淆限流与熔断",
+        "把非主流当主流"
+      ],
+      "createdAt": "2026-11-18T09:10:26.177Z",
+      "cardsMeta": {
+        "attempts": 1,
+        "verified": 4,
+        "total": 4
+      }
     },
     {
-      "id": "q_123",
+      "id": "q_122",
       "title": "在微服务架构中，如何有效处理分布式事务的一致性难题？",
       "questionUrl": "https://www.zhihu.com/question/1967549210141384929",
       "track": "interview",
@@ -9775,13 +11699,56 @@
           "snippet": "其实 TCC 和 2PC 在真实场景里面由于性能和复杂度的原因用的反而比较少。我们来上一个真实案例吧。 在微服务面试中，经常会遇到这样一道题： 一个电商系统有订单服务、库存服务、积分服务，三个服务分别使用自己的数据库。用户下单时，如何保证数据一致性？哪些操作需要同步完成，哪些可以异步处理？ 这道题真正考查的不是你会不会使用 Kafka，而是你能不能区分业务的核心与非核心环节，以及在服务超时、消息重复、部分成功等情…"
         }
       ],
-      "viewAngleCards": [],
-      "benchmark": "",
-      "pitfalls": [],
-      "createdAt": "2026-11-18T09:10:27.776Z"
+      "viewAngleCards": [
+        {
+          "stance": "中间件直接落地",
+          "summary": "优先用现成分布式事务中间件实现，避免自行设计一致性协议",
+          "evidence": "如果想直接使用微服务中间件可以考虑ShardingSphere或者Seata。",
+          "sourceIndex": 2,
+          "sourceUrl": "https://www.zhihu.com/question/1967549210141384929/answer/2074833002547377298",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "少用TCC与2PC",
+          "summary": "TCC和2PC在真实场景因性能与复杂度问题实际使用较少",
+          "evidence": "其实 TCC 和 2PC 在真实场景里面由于性能和复杂度的原因用的反而比较少。",
+          "sourceIndex": 3,
+          "sourceUrl": "https://www.zhihu.com/question/1967549210141384929/answer/2095994883387479432",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "minority",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "事件溯源+Raft",
+          "summary": "自研方案可用读写异构的事件溯源加Raft，以回放和快照保障最终一致与读性能",
+          "evidence": "如果想自己处理的话可以考虑用读写异构的事件溯源+Raft的方案。",
+          "sourceIndex": 2,
+          "sourceUrl": "https://www.zhihu.com/question/1967549210141384929/answer/2074833002547377298",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "minority",
+          "evidenceVerified": true
+        }
+      ],
+      "benchmark": "考查能否区分业务核心与非核心环节，并在超时、重复、部分成功等异常下保证一致性",
+      "pitfalls": [
+        "只答Kafka不会分核心非核心",
+        "忽视超时与消息重复",
+        "拆分越细事务场景越多的盲区"
+      ],
+      "createdAt": "2026-11-18T09:10:27.776Z",
+      "cardsMeta": {
+        "attempts": 2,
+        "verified": 3,
+        "total": 3
+      }
     },
     {
-      "id": "q_124",
+      "id": "q_123",
       "title": "检索增强RAG中有哪些好用的Chunk切分方法？",
       "questionUrl": "https://www.zhihu.com/question/650635197",
       "track": "interview",
@@ -9826,13 +11793,56 @@
           "snippet": "好不好用，你也得变成洁西循环个几十次。 上年呆的团队经常争论chunk size该设多大，搞了整整两个小时。 说起来挺逗的，当时我们花了好几个月踩坑，最后发现很多所谓的\"最佳实践\"其实都得看具体场景。 这篇文章就聊聊我这两年折腾RAG系统的一些心得，特别是Chunk切分这块——真的是看着简单，做起来再简单，但最爽的就是你不知道要重复多少次，你就跟那个《恐怖邮轮》的洁西一样，无限循环~ [图片] 去年我们团队接了个知识库项目，爸爸…"
         }
       ],
-      "viewAngleCards": [],
-      "benchmark": "",
-      "pitfalls": [],
-      "createdAt": "2026-11-18T09:10:53.250Z"
+      "viewAngleCards": [
+        {
+          "stance": "结构规则切分",
+          "summary": "主张按文档结构设计启发式切分规则，可显著提升RAG准确率。",
+          "evidence": "我通过文档结构（AST）的方式，设计了一组切文档的规则",
+          "sourceIndex": 1,
+          "sourceUrl": "https://www.zhihu.com/question/650635197/answer/3500669065",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "固定大小切分",
+          "summary": "固定大小切分易实现，但可能破坏语义结构、丢失上下文。",
+          "evidence": "固定大小切分可能在句子或段落中间进行切分，导致语义信息被割裂",
+          "sourceIndex": 2,
+          "sourceUrl": "https://www.zhihu.com/question/650635197/answer/1912831267495449105",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "场景反复试错",
+          "summary": "切分参数无通用最佳实践，需结合具体场景反复实验调整。",
+          "evidence": "最后发现很多所谓的\"最佳实践\"其实都得看具体场景",
+          "sourceIndex": 5,
+          "sourceUrl": "https://www.zhihu.com/question/650635197/answer/1937849265817891874",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "minority",
+          "evidenceVerified": true
+        }
+      ],
+      "benchmark": "考察对RAG中多种Chunk切分方法及其适用场景的掌握与权衡。",
+      "pitfalls": [
+        "切分破坏语义边界",
+        "忽视上下文重叠",
+        "照搬最佳实践"
+      ],
+      "createdAt": "2026-11-18T09:10:53.250Z",
+      "cardsMeta": {
+        "attempts": 2,
+        "verified": 3,
+        "total": 3
+      }
     },
     {
-      "id": "q_125",
+      "id": "q_124",
       "title": "Product/Market Fit (PMF) 是什么？",
       "questionUrl": "https://www.zhihu.com/question/19658333",
       "track": "interview",
@@ -9877,10 +11887,104 @@
           "snippet": "什么是PMF？ PMF：产品市场契合状态，即有用户愿意使用并且长期重复使用你的产品。说白了，就是通过MVP等小项目来验证你产品的可行性。在开始大规模增长之前，如果产品没有达到PMF，投入大量精力和金钱去拉新可能效果会大打折扣。 但有几种产品是例外， 需要一定用户量才能跑起来的产品，比如微信；平台类产品，需要一定供给量和需求量，才能跑起来，比如滴滴不差钱的产品怎样判断自己产品达到PMF状态？ 直观表现： 不用付费或是…"
         }
       ],
+      "viewAngleCards": [
+        {
+          "stance": "量化指标派",
+          "summary": "以留存、付费转化、LTV/CAC等可量化阈值作为判断产品是否达到PMF的标准。",
+          "evidence": "5%付费转化率LTV/CAC>3，即用户终生价值/获取成本>3",
+          "sourceIndex": 1,
+          "sourceUrl": "https://www.zhihu.com/question/19658333/answer/92652026",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "需求契合派",
+          "summary": "PMF即产品与市场需求相契合，客户愿意购买且产品令客户满意。",
+          "evidence": "产品和市场达到最佳的契合点，你所提供的产品正好满足市场的需求，令客户满意",
+          "sourceIndex": 4,
+          "sourceUrl": "https://www.zhihu.com/question/19658333/answer/374177809",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "动态过程派",
+          "summary": "产品与市场均为动态变量，难以完美拟合，企业始终处于欠拟合或过拟合状态。",
+          "evidence": "两个动态变量是始终无法实现完美fit的",
+          "sourceIndex": 3,
+          "sourceUrl": "https://www.zhihu.com/question/19658333/answer/109388889",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "minority",
+          "evidenceVerified": true
+        }
+      ],
+      "benchmark": "考察能否准确界定PMF概念并给出可验证的判断标准。",
+      "pitfalls": [
+        "把PMF等同于有用户",
+        "照搬通用阈值",
+        "忽视动态迭代"
+      ],
+      "createdAt": "2026-11-18T09:10:54.772Z",
+      "cardsMeta": {
+        "attempts": 2,
+        "verified": 3,
+        "total": 3
+      }
+    },
+    {
+      "id": "q_125",
+      "title": "如何在不微调的情况下提高 RAG 的准确性？",
+      "questionUrl": "https://www.zhihu.com/question/638730143",
+      "track": "interview",
+      "topic": "检索增强生成 RAG 优化方案",
+      "domain": "rag",
+      "kind": "tech",
+      "heat": 5,
+      "sources": [
+        {
+          "url": "https://www.zhihu.com/question/638730143/answer/35565847625",
+          "token": "35565847625",
+          "author": "",
+          "votes": null,
+          "snippet": "更新，最新Agentic RAG思路！ [文章: 百万文档下Agentic知识库如何做到「先准后快」] 最新agentic知识系统： https://www.hijarson.com ——— 做过RAG应用的都知道一句话叫“RAG demo5分钟，上线上一年。” 使用简单的RAG流程必然不可能有很好的检索效果，大模型的回答也一定是一塌糊涂。 放一张国外的博客的图： [图片] 绿色的部分下面我们将会深入展开，蓝色部分则是处理好的文本元素。 下面将会记录的所有RAG相关的技术都…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/638730143/answer/2041228453932963535",
+          "token": "2041228453932963535",
+          "author": "",
+          "votes": null,
+          "snippet": "做了一年多RAG落地，准确率从最初的50%提到了88%。整个过程中我们没做过任何模型微调。没GPU资源、没标注数据、没那个时间。 纯靠工程手段。这些手段花不了多少钱，大部分连代码都不用写太多，但效果实打实。 按提升幅度从大到小排列。 先说最不起眼但效果最猛的：数据预处理不花钱，花时间。效果最明显。 我们的场景是电力规程文档，大部分是PDF。甲方给过来的文档质量参差不齐，有的排版很好，有的就是扫描件。 扫描件是最坑的…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/638730143/answer/106469413623",
+          "token": "106469413623",
+          "author": "",
+          "votes": null,
+          "snippet": "别长篇大论了，简单些 Input -> Embedding(input) -> query top-K releated content from vector database. 限定条件下，你只能提高emebding model 维度，将 我去知乎看傻子长篇大论 和 我去拼多多买了个六味地黄丸 尽可能细分，其它 分块 等各种 奇淫异巧 都是 徒劳，理论上 无法完美解决精确性。 本质上，这是context长度不足的问题，再追溯 就是成本问题，只能等待 上下文推理成本 的降低。至于微调，它解决不了 绣花针掉入宇…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/638730143/answer/1892487091092427859",
+          "token": "1892487091092427859",
+          "author": "",
+          "votes": null,
+          "snippet": "检索增强生成RAG（Retrieval-Augmented Generation）的应用，有两方面原因： 1、没有跑大模型的资源：大多数人没有GPU集群搞LLM的预训练。 2、大模型缺乏知识：大模型往往缺乏某些知识，如私域或最新的知识。 RAG方法让LLM能够获取内化知识之外的信息，并允许LLM在专业知识库的基础上，以更准确的方式回答问题，并且不会特别消耗资源。 在大模型时代，是用于解决幻觉问题、知识时效问题、超长文本问题等各种大模型本身制约或不足…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/638730143/answer/119244769698",
+          "token": "119244769698",
+          "author": "",
+          "votes": null,
+          "snippet": "我不是AI从业者，出于兴趣试了下基于 DeepSeek-R1和演义群内部资料库开发《三国演义》答题机器人“罗灌水”，效果还可以，算有点经验，也不知道通不通用，记录和分享一下。 [图片] 之前孟老师 @青蝇吊客 指点过我，罗灌水的机制属于RAG。根据我今天接触到的概念，罗灌水的机制也算是DeepResearch，因为包含了多轮思考-查询。罗灌水似乎也能被称为Agent，因为它是在每一轮中自主决定调用哪些函数的，当然它更可能不配称为Agent，这不重要…"
+        }
+      ],
       "viewAngleCards": [],
       "benchmark": "",
       "pitfalls": [],
-      "createdAt": "2026-11-18T09:10:54.772Z"
+      "createdAt": "2026-11-18T09:53:30.384Z"
     }
   ]
 }

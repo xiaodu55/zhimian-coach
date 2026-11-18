@@ -120,7 +120,7 @@ function toCard(v, i, item) {
     sourceUrl: v.sourceUrl || '',
     author: v.sourceAuthor || '',
     // 知乎开发者 API 只返回 {ContentType,ContentToken,Url,Summary}，没有作者与赞同数：
-    // 这里固定为 0 / 空串，前端不得把它当成真实热度展示（也不要说「高赞」）
+    // 这里固定为 0 / 空串：前端不得把它当成真实热度展示，也不要用「热门/高票」这类文案
     upvotes: 0,
     popularity: v.popularity === 'minority' ? '少数派' : '主流',
   };
@@ -148,7 +148,9 @@ function kindOf(item, domain) {
  * 实现：先按 domain/kind 给默认档，再用标题关键词微调。
  */
 function difficultyOf(item, domain, kind) {
-  const hay = `${item.title} ${item.benchmark || ''} ${item.context || ''}`;
+  // 只看题目本身（标题）：benchmark/context 是给前端展示的考点说明，
+  // 里面常出现「评估/评测/指标」等词，topic 是粗分类，用它们判难度会让难度跟着文案漂移。
+  const hay = String(item.title || '');
   if (kind === 'soft' || domain === 'general') {
     if (ADVANCED_SOFT.test(hay)) return '进阶';
     return '基础';
@@ -159,6 +161,26 @@ function difficultyOf(item, domain, kind) {
   if (HARD_TECH.test(hay)) return '难';
   if (BASE_TECH.test(hay) || BASE_TECH_WHY.test(hay)) return '基础';
   return '进阶';
+}
+
+/**
+ * 来源快照：保留一段摘要原文，好让「观点卡 evidence 逐字来自来源」在成品文件里可核对。
+ * 摘要会裁剪到 260 字，但裁剪后仍要盖住所有引用该来源的 evidence。
+ */
+function sourcesOf(item) {
+  const cards = item.viewAngleCards || [];
+  return (item.sources || []).map((s) => {
+    const full = String(s.snippet || '');
+    let clip = full.slice(0, 260);
+    for (const c of cards) {
+      if (c.sourceUrl !== s.url) continue;
+      const ev = String(c.evidence || '').trim();
+      if (!ev) continue;
+      const at = full.indexOf(ev);
+      if (at >= 0 && at + ev.length > clip.length) clip = full.slice(0, at + ev.length);
+    }
+    return { url: s.url, author: s.author, votes: s.votes, snippet: clip };
+  });
 }
 
 /** 一键体验用的合成转写稿：故意含缺陷，保证规则层能命中 */
@@ -203,7 +225,9 @@ function main() {
   const questions = kept
     .map(({ it, domain, kind }) => {
       const enriched = { ...it, domain, kind };
-      const cards = (it.viewAngleCards || []).map((v, i) => toCard(v, i, it));
+      const cards = (it.viewAngleCards || [])
+        .filter((v) => v.evidence && v.sourceUrl)
+        .map((v, i) => toCard(v, i, it));
       return {
         id: it.id,
         track: TRACK_LABEL[it.track] || TRACK_LABEL.interview,
@@ -218,7 +242,7 @@ function main() {
         viewpointCards: cards,
         // 保真：原知乎问题链接与来源（前端不渲染也没关系，留作溯源）
         questionUrl: it.questionUrl || '',
-        sources: (it.sources || []).map((s) => ({ url: s.url, author: s.author, votes: s.votes })),
+        sources: sourcesOf(it),
       };
     })
     // 带观点卡的题排前面：首页一键体验与首屏都依赖观点卡
@@ -228,7 +252,7 @@ function main() {
   const out = {
     version: '0.2.0-real',
     generatedAt: new Date().toISOString(),
-    note: '真题来自知乎开放平台（question_recommendations + question_answers），观点卡由直答生成并逐字校验 evidence；知乎 API 不返回作者与赞同数，卡片作者留空、upvotes 固定 0',
+    note: '真题来自知乎开放平台（question_recommendations + question_answers），观点卡由直答生成并逐字校验 evidence；知乎 API 不返回作者与热度数据，卡片 author 留空、upvotes 固定 0，界面不要把它当真实热度展示',
     questions,
     demoSampleTranscript: demoQuestion ? demoTranscriptFor(demoQuestion) : null,
   };

@@ -55,14 +55,27 @@ const questions = bank.questions || [];
 const picked = [];
 for (const script of SCRIPTS) {
   if (picked.length >= COUNT) break;
-  const hit = questions.find((q) => !picked.includes(q) && script.pick(q));
-  if (hit) picked.push({ q: hit, answer: script.answer });
+  // 优先挑观点卡多、来源厚的题：模型有证据可引，才不会校验全丢
+  const candidates = questions
+    .filter((q) => !picked.includes(q) && script.pick(q))
+    .sort((a, b) => (b.viewpointCards?.length || 0) - (a.viewpointCards?.length || 0));
+  if (candidates.length) picked.push({ q: candidates[0], answer: script.answer });
 }
 
 console.log(`[demo] 选中 ${picked.length} 道题：${picked.map((p) => p.q.title.slice(0, 18)).join(' | ')}`);
 
 const out = [];
-for (const { q, answer } of picked) {
+/** 逐个候选题尝试，直到凑够 COUNT 条"有内容"的报告 */
+const queue = [];
+for (const script of SCRIPTS) {
+  const candidates = questions
+    .filter((q) => !queue.some((x) => x.q.id === q.id) && script.pick(q))
+    .sort((a, b) => (b.viewpointCards?.length || 0) - (a.viewpointCards?.length || 0));
+  for (const q of candidates.slice(0, 6)) queue.push({ q, answer: script.answer });
+}
+
+for (const { q, answer } of queue) {
+  if (out.length >= COUNT) break;
   try {
     const res = await fetch(`${BASE}/api/coach/parse`, {
       method: 'POST',
@@ -101,7 +114,14 @@ for (const { q, answer } of picked) {
         isDemo: true,
       },
     });
-    console.log(`[demo] ✓ ${q.title.slice(0, 26)} → ${(data.llmScores || []).length} 条评分 / ${(data.improvements || []).length} 条改进`);
+    const nScore = (data.llmScores || []).length;
+    const nImp = (data.improvements || []).length;
+    console.log(`[demo] ✓ ${q.title.slice(0, 26)} → ${nScore} 条评分 / ${nImp} 条改进`);
+    // 模型没给出可校验的结论 → 这条不适合做演示保底，换下一题
+    if (nScore === 0 && nImp === 0) {
+      out.pop();
+      continue;
+    }
   } catch (err) {
     console.warn(`[demo] ✗ ${q.title.slice(0, 26)}：${err.message}`);
   }

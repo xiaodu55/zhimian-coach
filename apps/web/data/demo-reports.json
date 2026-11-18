@@ -1,6 +1,875 @@
 {
   "version": 1,
-  "generatedAt": "2026-11-18T08:51:23.225Z",
+  "generatedAt": "2026-11-18T09:56:47.826Z",
   "note": "离线演示保底包：预跑的真实复盘结果，断网/模型不可用时使用",
-  "reports": []
+  "reports": [
+    {
+      "questionId": "q_66",
+      "question": {
+        "id": "q_66",
+        "track": "面试通用",
+        "domain": "ai-agent",
+        "kind": "tech",
+        "difficulty": "难",
+        "title": "Agent要如何做评估？",
+        "context": "考察能否把 Agent 评估从单点答案打分升级为覆盖结果、过程与成本的系统化方法。",
+        "keywords": [
+          "过程与结果并重",
+          "多维度度量",
+          "先归因再修复",
+          "系统化建设",
+          "Ag",
+          "ge",
+          "en",
+          "nt",
+          "t要",
+          "要如"
+        ],
+        "expectedLength": [
+          150,
+          400
+        ],
+        "skeleton": [
+          "开口先复述问题，确认你听到的是同一件事",
+          "给一个可核对数字（影响面 / 耗时 / 覆盖率）并说明口径与基线",
+          "说明你的判断与取舍：为什么这么做、还有什么选项",
+          "收尾落到结果：变化了多少，谁验收过",
+          "注意避开：只给最终答案打分",
+          "注意避开：0分直接当失败"
+        ],
+        "viewpointCards": [
+          {
+            "id": "q_66-vp-1",
+            "stance": "过程与结果并重",
+            "summary": "只看最终答案会误判，需同时评估执行轨迹与任务结果。",
+            "evidenceQuote": "把整条轨迹一次性丢给一个模型去找错",
+            "sourceUrl": "https://www.zhihu.com/question/2057613603713324288/answer/2074209778021184696",
+            "author": "",
+            "upvotes": 0,
+            "popularity": "主流"
+          },
+          {
+            "id": "q_66-vp-2",
+            "stance": "多维度度量",
+            "summary": "评估应覆盖任务结果、执行轨迹、资源成本等基本维度。",
+            "evidenceQuote": "基本维度”包括任务结果、执行轨迹、资源成本等",
+            "sourceUrl": "https://www.zhihu.com/question/2057613603713324288/answer/2074209778021184696",
+            "author": "",
+            "upvotes": 0,
+            "popularity": "主流"
+          },
+          {
+            "id": "q_66-vp-3",
+            "stance": "先归因再修复",
+            "summary": "0 分不等于能力不足，需区分预算、环境与真实能力问题。",
+            "evidenceQuote": "0 分不等于「不会」",
+            "sourceUrl": "https://www.zhihu.com/question/2057613603713324288/answer/2099506337906418087",
+            "author": "",
+            "upvotes": 0,
+            "popularity": "少数派"
+          },
+          {
+            "id": "q_66-vp-4",
+            "stance": "系统化建设",
+            "summary": "评估是涵盖标准、环境、判分、定位与失败回流的完整系统。",
+            "evidenceQuote": "搭一套从衡量标准、测试环境、判分、定位错误到失败回流的完整系统",
+            "sourceUrl": "https://www.zhihu.com/question/2057613603713324288/answer/2077377125733098616",
+            "author": "",
+            "upvotes": 0,
+            "popularity": "主流"
+          }
+        ],
+        "questionUrl": "https://www.zhihu.com/question/2057613603713324288",
+        "sources": [
+          {
+            "url": "https://www.zhihu.com/question/2057613603713324288/answer/2063918614378438902",
+            "author": "",
+            "votes": null,
+            "snippet": "Agent 评估最容易犯的错，是把它当成普通问答评测：给一道题，只看最终答案，再让 LLM Judge 打个分。 但 Agent 的结果来自一连串动作。一个研究 Agent 最后写出的报告看起来不错，不代表它真的可靠：它可能选错工具、忽略了冲突证据、反复无效调用，甚至做了未经授权的操作，只是最后碰巧得到了一个像样的答案。 反过来也一样：执行过程看起来很规范，如果最后没有完成用户目标，也不能算成功。 所以我更认可的做法是，把 Agent…"
+          },
+          {
+            "url": "https://www.zhihu.com/question/2057613603713324288/answer/2074209778021184696",
+            "author": "",
+            "votes": null,
+            "snippet": "对于评估，”基本维度”包括任务结果、执行轨迹、资源成本等。除了这些，我认为评判的策略也非常重要；在Agent Insight 平台中（ Agent Insight ，openEuler社区孵化的项目，聚焦Agent观测->评测->诊断->优化），我主要遵循这三步的策略。 [文章: 【Agent Insight】02-Agent Insight：让生产级智能体可观测、可度量、可进化] [图片] [图片] 1.把整条轨迹一次性丢给一个模型去找错最直觉的做法是：Agent 跑完一个任务，把完整执行轨迹（一棵 Span 树"
+          },
+          {
+            "url": "https://www.zhihu.com/question/2057613603713324288/answer/2099506337906418087",
+            "author": "",
+            "votes": null,
+            "snippet": "先别急着修失败题。0 分不等于「不会」。 Agent 评测最容易混在一起的，是三件事：没时间、环境坏了、真的能力不够。混在一起看，你不知道该加预算、修验证器，还是改产品。分数看起来很准，决策却会歪。 我跑过一轮公开基准，88 道题里 16 道 0 分。按老习惯该挑失败题去修。这次先没修，只把预算加大重跑，别的都不动。 2 倍预算：9 道直接转正。 4 倍预算：又多 1 道。 还有 1 道，验证器自己装依赖拿到一串 404，测试根本没…"
+          },
+          {
+            "url": "https://www.zhihu.com/question/2057613603713324288/answer/2078173076127216752",
+            "author": "",
+            "votes": null,
+            "snippet": "同一套 Agent Runtime，为什么 Web、Headless 和 Python SDK 仍然不是同一个产品 [图片] 同一个 Agent Runtime，只要换个 UI、包一层 HTTP 或 SDK，是不是就能变成多个产品？ 这句话只对了一半。共享 Agent Loop、Session、Tool Registry 与模型适配器，确实可以避免为每个入口复制一套核心；但产品差异并不会因此消失。它们会转移到组合配置、宿主生命周期、输入输出协议、凭据、工作区、持久化和版本冻结上。 DeepSeek Harness "
+          },
+          {
+            "url": "https://www.zhihu.com/question/2057613603713324288/answer/2077377125733098616",
+            "author": "",
+            "votes": null,
+            "snippet": "Agent 会自己调工具、会改数据库、会一步错之后步步错。给它做评估，不只是准备一批题跑一遍打个分，而是搭一套从衡量标准、测试环境、判分、定位错误到失败回流的完整系统。这篇把这套系统的每一块拆开讲清楚。 同一个 Agent 的成功率可以是 99% 也可以是 7.8%搭评估的第一件事不是写用例，是先想清楚 用什么方式衡量成功。Agent 有个函数没有的特性。同样的输入跑两次，结果可能不一样，模型采样有随机性。所以一条用例的成功…"
+          }
+        ]
+      },
+      "answer": "我们做了一套权限控制，主要是分了三档，高危操作会转人工。上线之后效果不错，拦截了很多问题，团队反馈也比较好。中间也遇到过误拦截的情况，我们后来加了一些规则来兜住。后续可能还要在多模态场景下再看看。",
+      "report": {
+        "id": "demo-q_66",
+        "question": {
+          "id": "q_66",
+          "track": "面试通用",
+          "domain": "ai-agent",
+          "kind": "tech",
+          "difficulty": "难",
+          "title": "Agent要如何做评估？",
+          "context": "考察能否把 Agent 评估从单点答案打分升级为覆盖结果、过程与成本的系统化方法。",
+          "keywords": [
+            "过程与结果并重",
+            "多维度度量",
+            "先归因再修复",
+            "系统化建设",
+            "Ag",
+            "ge",
+            "en",
+            "nt",
+            "t要",
+            "要如"
+          ],
+          "expectedLength": [
+            150,
+            400
+          ],
+          "skeleton": [
+            "开口先复述问题，确认你听到的是同一件事",
+            "给一个可核对数字（影响面 / 耗时 / 覆盖率）并说明口径与基线",
+            "说明你的判断与取舍：为什么这么做、还有什么选项",
+            "收尾落到结果：变化了多少，谁验收过",
+            "注意避开：只给最终答案打分",
+            "注意避开：0分直接当失败"
+          ],
+          "viewpointCards": [
+            {
+              "id": "q_66-vp-1",
+              "stance": "过程与结果并重",
+              "summary": "只看最终答案会误判，需同时评估执行轨迹与任务结果。",
+              "evidenceQuote": "把整条轨迹一次性丢给一个模型去找错",
+              "sourceUrl": "https://www.zhihu.com/question/2057613603713324288/answer/2074209778021184696",
+              "author": "",
+              "upvotes": 0,
+              "popularity": "主流"
+            },
+            {
+              "id": "q_66-vp-2",
+              "stance": "多维度度量",
+              "summary": "评估应覆盖任务结果、执行轨迹、资源成本等基本维度。",
+              "evidenceQuote": "基本维度”包括任务结果、执行轨迹、资源成本等",
+              "sourceUrl": "https://www.zhihu.com/question/2057613603713324288/answer/2074209778021184696",
+              "author": "",
+              "upvotes": 0,
+              "popularity": "主流"
+            },
+            {
+              "id": "q_66-vp-3",
+              "stance": "先归因再修复",
+              "summary": "0 分不等于能力不足，需区分预算、环境与真实能力问题。",
+              "evidenceQuote": "0 分不等于「不会」",
+              "sourceUrl": "https://www.zhihu.com/question/2057613603713324288/answer/2099506337906418087",
+              "author": "",
+              "upvotes": 0,
+              "popularity": "少数派"
+            },
+            {
+              "id": "q_66-vp-4",
+              "stance": "系统化建设",
+              "summary": "评估是涵盖标准、环境、判分、定位与失败回流的完整系统。",
+              "evidenceQuote": "搭一套从衡量标准、测试环境、判分、定位错误到失败回流的完整系统",
+              "sourceUrl": "https://www.zhihu.com/question/2057613603713324288/answer/2077377125733098616",
+              "author": "",
+              "upvotes": 0,
+              "popularity": "主流"
+            }
+          ],
+          "questionUrl": "https://www.zhihu.com/question/2057613603713324288",
+          "sources": [
+            {
+              "url": "https://www.zhihu.com/question/2057613603713324288/answer/2063918614378438902",
+              "author": "",
+              "votes": null,
+              "snippet": "Agent 评估最容易犯的错，是把它当成普通问答评测：给一道题，只看最终答案，再让 LLM Judge 打个分。 但 Agent 的结果来自一连串动作。一个研究 Agent 最后写出的报告看起来不错，不代表它真的可靠：它可能选错工具、忽略了冲突证据、反复无效调用，甚至做了未经授权的操作，只是最后碰巧得到了一个像样的答案。 反过来也一样：执行过程看起来很规范，如果最后没有完成用户目标，也不能算成功。 所以我更认可的做法是，把 Agent…"
+            },
+            {
+              "url": "https://www.zhihu.com/question/2057613603713324288/answer/2074209778021184696",
+              "author": "",
+              "votes": null,
+              "snippet": "对于评估，”基本维度”包括任务结果、执行轨迹、资源成本等。除了这些，我认为评判的策略也非常重要；在Agent Insight 平台中（ Agent Insight ，openEuler社区孵化的项目，聚焦Agent观测->评测->诊断->优化），我主要遵循这三步的策略。 [文章: 【Agent Insight】02-Agent Insight：让生产级智能体可观测、可度量、可进化] [图片] [图片] 1.把整条轨迹一次性丢给一个模型去找错最直觉的做法是：Agent 跑完一个任务，把完整执行轨迹（一棵 Span 树"
+            },
+            {
+              "url": "https://www.zhihu.com/question/2057613603713324288/answer/2099506337906418087",
+              "author": "",
+              "votes": null,
+              "snippet": "先别急着修失败题。0 分不等于「不会」。 Agent 评测最容易混在一起的，是三件事：没时间、环境坏了、真的能力不够。混在一起看，你不知道该加预算、修验证器，还是改产品。分数看起来很准，决策却会歪。 我跑过一轮公开基准，88 道题里 16 道 0 分。按老习惯该挑失败题去修。这次先没修，只把预算加大重跑，别的都不动。 2 倍预算：9 道直接转正。 4 倍预算：又多 1 道。 还有 1 道，验证器自己装依赖拿到一串 404，测试根本没…"
+            },
+            {
+              "url": "https://www.zhihu.com/question/2057613603713324288/answer/2078173076127216752",
+              "author": "",
+              "votes": null,
+              "snippet": "同一套 Agent Runtime，为什么 Web、Headless 和 Python SDK 仍然不是同一个产品 [图片] 同一个 Agent Runtime，只要换个 UI、包一层 HTTP 或 SDK，是不是就能变成多个产品？ 这句话只对了一半。共享 Agent Loop、Session、Tool Registry 与模型适配器，确实可以避免为每个入口复制一套核心；但产品差异并不会因此消失。它们会转移到组合配置、宿主生命周期、输入输出协议、凭据、工作区、持久化和版本冻结上。 DeepSeek Harness "
+            },
+            {
+              "url": "https://www.zhihu.com/question/2057613603713324288/answer/2077377125733098616",
+              "author": "",
+              "votes": null,
+              "snippet": "Agent 会自己调工具、会改数据库、会一步错之后步步错。给它做评估，不只是准备一批题跑一遍打个分，而是搭一套从衡量标准、测试环境、判分、定位错误到失败回流的完整系统。这篇把这套系统的每一块拆开讲清楚。 同一个 Agent 的成功率可以是 99% 也可以是 7.8%搭评估的第一件事不是写用例，是先想清楚 用什么方式衡量成功。Agent 有个函数没有的特性。同样的输入跑两次，结果可能不一样，模型采样有随机性。所以一条用例的成功…"
+            }
+          ]
+        },
+        "answer": "我们做了一套权限控制，主要是分了三档，高危操作会转人工。上线之后效果不错，拦截了很多问题，团队反馈也比较好。中间也遇到过误拦截的情况，我们后来加了一些规则来兜住。后续可能还要在多模态场景下再看看。",
+        "qaPairs": [
+          {
+            "question": "Agent要如何做评估？",
+            "answer": "我们做了一套权限控制，主要是分了三档，高危操作会转人工。上线之后效果不错，拦截了很多问题，团队反馈也比较好。中间也遇到过误拦截的情况，我们后来加了一些规则来兜住。后续可能还要在多模态场景下再看看。"
+          }
+        ],
+        "ruleFindings": [],
+        "llmScores": [
+          {
+            "dimension": "技术深度",
+            "score": 32,
+            "claim": "回答只描述了「三档权限 + 高危转人工 + 补规则兜误拦截」的机制动作，始终没有说清评估口径：用什么指标定义「效果不错」、是评最终结果还是评整条执行轨迹、误拦截与漏拦截如何量化。机制描述替代了评估设计，属于典型的「只讲做了什么，不讲怎么证明它对」。",
+            "basis": "外部佐证",
+            "refIds": [
+              "S1",
+              "S2"
+            ]
+          },
+          {
+            "dimension": "工程权衡",
+            "score": 45,
+            "claim": "有分级和人工兜底的动作，具备工程意识；但三档阈值怎么定、转人工的判定成本、加了规则后的副作用（规则膨胀、后续多模态场景迁移成本）全部没有交代，更未把资源成本纳入评估维度，权衡只停留在「加了规则兜住」这一层。",
+            "basis": "外部佐证",
+            "refIds": [
+              "S2"
+            ]
+          },
+          {
+            "dimension": "边界意识",
+            "score": 28,
+            "claim": "把「拦截了很多问题」当成正面证据，未区分被拦截的样本里哪些是真高危、哪些是预算耗尽或环境异常导致的假阳性，也默认了「误拦截就补规则」这一前提；没有意识到低分或拦截未必等于模型能力不足，归因链条缺失。",
+            "basis": "外部佐证",
+            "refIds": [
+              "S3"
+            ]
+          }
+        ],
+        "improvements": [
+          {
+            "claim": "把「效果不错、拦截了很多问题」替换为三维指标话术：「我们从任务结果、执行轨迹、资源成本三块看：结果侧看任务成功率和高危漏放率，轨迹侧看首错步位置分布，成本侧看单任务转人工率和平均步数」，先立维度再谈数字。",
+            "basis": "外部佐证",
+            "refIds": [
+              "S2"
+            ]
+          },
+          {
+            "claim": "补一段轨迹级评估话术：「我们抽样把整条执行轨迹一次性交给评审模型定位首个错误步，而不是只看最终答案对不对」，用来解释误拦截究竟出在规划步、工具调用步还是权限判定步。",
+            "basis": "外部佐证",
+            "refIds": [
+              "S1"
+            ]
+          },
+          {
+            "claim": "补一段归因分层话术：「被拦截的样本我们分三类回看——预算/步数耗尽、环境或工具异常、真实能力缺失，只有第三类才计入能力缺口，前两类去改预算和重试策略而不是加规则」，避免把所有拦截都当成需要补规则的信号。",
+            "basis": "外部佐证",
+            "refIds": [
+              "S3"
+            ]
+          }
+        ],
+        "followups": [
+          "你说「拦截了很多问题」——这里面有多少其实是模型自己判断错了被人工兜住、又有多少是预算或环境问题被误算成高危？如果你的高危档转人工率高，你拿什么指标证明它拦的是真高危，而不是规则堆出来的假阳性？"
+        ],
+        "degraded": false,
+        "createdAt": "2026-11-18T09:56:20.324Z",
+        "isDemo": true
+      }
+    },
+    {
+      "questionId": "q_82",
+      "question": {
+        "id": "q_82",
+        "track": "面试通用",
+        "domain": "ai-agent",
+        "kind": "tech",
+        "difficulty": "进阶",
+        "title": "大模型Agent的核心还是prompt？",
+        "context": "考察能否区分Demo级Prompt技巧与工程化Agent核心能力",
+        "keywords": [
+          "Prompt已非核心",
+          "Prompt只是皮",
+          "核心不止Prompt",
+          "Prompt实践痛点",
+          "大模",
+          "模型",
+          "型A",
+          "Ag",
+          "ge",
+          "en"
+        ],
+        "expectedLength": [
+          150,
+          400
+        ],
+        "skeleton": [
+          "开口先复述问题，确认你听到的是同一件事",
+          "给一个可核对数字（影响面 / 耗时 / 覆盖率）并说明口径与基线",
+          "说明你的判断与取舍：为什么这么做、还有什么选项",
+          "收尾落到结果：变化了多少，谁验收过",
+          "注意避开：只停留在Demo层面",
+          "注意避开：忽视工程化架构"
+        ],
+        "viewpointCards": [
+          {
+            "id": "q_82-vp-1",
+            "stance": "Prompt已非核心",
+            "summary": "认为2025年后Prompt权重下降，Agent核心竞争力在于工程化架构设计",
+            "evidenceQuote": "真正的核心是什么？是工程化的架构设计，是工作",
+            "sourceUrl": "https://www.zhihu.com/question/628670548/answer/1999575175772016853",
+            "author": "",
+            "upvotes": 0,
+            "popularity": "主流"
+          },
+          {
+            "id": "q_82-vp-2",
+            "stance": "Prompt只是皮",
+            "summary": "承认Prompt是人机交互入口，但对Agent而言仅是表层，非核心",
+            "evidenceQuote": "Prompt只是那层皮",
+            "sourceUrl": "https://www.zhihu.com/question/628670548/answer/1999575175772016853",
+            "author": "",
+            "upvotes": 0,
+            "popularity": "主流"
+          },
+          {
+            "id": "q_82-vp-3",
+            "stance": "核心不止Prompt",
+            "summary": "Agent核心不止prompt，但prompt仍是当前实现Agent的重要手段之一",
+            "evidenceQuote": "大模型Agent的核心不仅仅是prompt，但prompt确实是目前实现Agent的重要手段之一",
+            "sourceUrl": "https://www.zhihu.com/question/628670548/answer/3563803799",
+            "author": "",
+            "upvotes": 0,
+            "popularity": "少数派"
+          },
+          {
+            "id": "q_82-vp-4",
+            "stance": "Prompt实践痛点",
+            "summary": "工程开发完毕后调Prompt与测评仍是主要痛苦来源，翻车频发",
+            "evidenceQuote": "工程侧已经开发完毕，但调Prompt、做测评，每一个都令我痛苦万分",
+            "sourceUrl": "https://www.zhihu.com/question/628670548/answer/1979200936699257305",
+            "author": "",
+            "upvotes": 0,
+            "popularity": "少数派"
+          }
+        ],
+        "questionUrl": "https://www.zhihu.com/question/628670548",
+        "sources": [
+          {
+            "url": "https://www.zhihu.com/question/628670548/answer/1979655429819746027",
+            "author": "",
+            "votes": null,
+            "snippet": "如果这个问题是2023年上半年问的，我会毫不犹豫地告诉你，是的，Prompt就是咒语，就是魔法，谁掌握了Prompt谁就是大法师。那时候我们还在为了怎么让GPT-3.5不胡说八道，在那儿绞尽脑汁地试“Let's think step by step”。 但在现在，马上都要2026年了，如果你还觉得Agent的核心竞争力是Prompt，那你这两年在AI落地的一线战场上，大概率是没怎么把自己弄脏过。 先说结论： 在2025年的今天，Prompt在Agent开发中的权重，已经从原来…"
+          },
+          {
+            "url": "https://www.zhihu.com/question/628670548/answer/1999575175772016853",
+            "author": "",
+            "votes": null,
+            "snippet": "到了现在这个节点，如果你还觉得大模型Agent的核心是Prompt，那你大概率还在做Demo，或者你的业务场景非常边缘。 早在一两年前，大家还在吹捧提示词工程是未来的金饭碗，甚至有人喊出自然语言就是新的编程语言。现在回头看，这话对了一半，但也误导了一大批人。Prompt确实是人机交互的入口，但对于Agent——这种具备自主规划、调用工具、记忆能力的智能体来说，Prompt只是那层皮。 真正的核心是什么？是工程化的架构设计，是工作…"
+          },
+          {
+            "url": "https://www.zhihu.com/question/628670548/answer/1979200936699257305",
+            "author": "",
+            "votes": null,
+            "snippet": "最近在做导购Agent，工程侧已经开发完毕，但调Prompt、做测评，每一个都令我痛苦万分，因为到处都是“翻车现场”：要么“思维太发散”，绕着用户的问题走；要么“工具乱点”，命中一个tool就一条道走到黑；要么“跑不完”，说着说着卡住了，再没了下文... 因此搜了一些Agent相关的论文、文章、视频，企图从技术底层抱抱佛脚...正巧看到了Anthropic 8月1日在YouTube上发布了一个视频《Prompting for Agents | Code w/ Claude》…"
+          },
+          {
+            "url": "https://www.zhihu.com/question/628670548/answer/1921609343368958300",
+            "author": "",
+            "votes": null,
+            "snippet": "不得不说99%想做ai agent的公司，全走错路了。 那agent怎样才能成功？ 就讲在国外车管所（DMV）部署了最新的AI助手，并承诺能够处理驾照更新的简单任务。 但当一位用户询问\"我需要更新驾照\"时，系统陷入了无限循环，不断重复询问相同的问题，最终因内存溢出而崩溃。 为什么这个AI Agent项目是失败的？ 因为： Token预算：限制在500个，无法完成多轮对话记忆设计：没有会话状态管理评估缺失：没人知道它在生产环境的表现架构选择…"
+          },
+          {
+            "url": "https://www.zhihu.com/question/628670548/answer/3563803799",
+            "author": "",
+            "votes": null,
+            "snippet": "先说结论，大模型Agent的核心不仅仅是prompt，但prompt确实是目前实现Agent的重要手段之一。要理解这一点，我们先得澄清什么是AI Agent。 作为一个智能体，AI Agent应当具备 理解周围环境、做出决策和采取行动的能力。与传统AI依赖用户输入的Prompt与大模型交互不同，AI Agent融合了规划、记忆和工具使用等关键功能，在操作时不需要逐步的提示，我们只需设定一个目标，它就能够自主地进行思考和利用各种工具来分步实现。听起来很…"
+          }
+        ]
+      },
+      "answer": "我们做了一套权限控制，主要是分了三档，高危操作会转人工。上线之后效果不错，拦截了很多问题，团队反馈也比较好。中间也遇到过误拦截的情况，我们后来加了一些规则来兜住。后续可能还要在多模态场景下再看看。",
+      "report": {
+        "id": "demo-q_82",
+        "question": {
+          "id": "q_82",
+          "track": "面试通用",
+          "domain": "ai-agent",
+          "kind": "tech",
+          "difficulty": "进阶",
+          "title": "大模型Agent的核心还是prompt？",
+          "context": "考察能否区分Demo级Prompt技巧与工程化Agent核心能力",
+          "keywords": [
+            "Prompt已非核心",
+            "Prompt只是皮",
+            "核心不止Prompt",
+            "Prompt实践痛点",
+            "大模",
+            "模型",
+            "型A",
+            "Ag",
+            "ge",
+            "en"
+          ],
+          "expectedLength": [
+            150,
+            400
+          ],
+          "skeleton": [
+            "开口先复述问题，确认你听到的是同一件事",
+            "给一个可核对数字（影响面 / 耗时 / 覆盖率）并说明口径与基线",
+            "说明你的判断与取舍：为什么这么做、还有什么选项",
+            "收尾落到结果：变化了多少，谁验收过",
+            "注意避开：只停留在Demo层面",
+            "注意避开：忽视工程化架构"
+          ],
+          "viewpointCards": [
+            {
+              "id": "q_82-vp-1",
+              "stance": "Prompt已非核心",
+              "summary": "认为2025年后Prompt权重下降，Agent核心竞争力在于工程化架构设计",
+              "evidenceQuote": "真正的核心是什么？是工程化的架构设计，是工作",
+              "sourceUrl": "https://www.zhihu.com/question/628670548/answer/1999575175772016853",
+              "author": "",
+              "upvotes": 0,
+              "popularity": "主流"
+            },
+            {
+              "id": "q_82-vp-2",
+              "stance": "Prompt只是皮",
+              "summary": "承认Prompt是人机交互入口，但对Agent而言仅是表层，非核心",
+              "evidenceQuote": "Prompt只是那层皮",
+              "sourceUrl": "https://www.zhihu.com/question/628670548/answer/1999575175772016853",
+              "author": "",
+              "upvotes": 0,
+              "popularity": "主流"
+            },
+            {
+              "id": "q_82-vp-3",
+              "stance": "核心不止Prompt",
+              "summary": "Agent核心不止prompt，但prompt仍是当前实现Agent的重要手段之一",
+              "evidenceQuote": "大模型Agent的核心不仅仅是prompt，但prompt确实是目前实现Agent的重要手段之一",
+              "sourceUrl": "https://www.zhihu.com/question/628670548/answer/3563803799",
+              "author": "",
+              "upvotes": 0,
+              "popularity": "少数派"
+            },
+            {
+              "id": "q_82-vp-4",
+              "stance": "Prompt实践痛点",
+              "summary": "工程开发完毕后调Prompt与测评仍是主要痛苦来源，翻车频发",
+              "evidenceQuote": "工程侧已经开发完毕，但调Prompt、做测评，每一个都令我痛苦万分",
+              "sourceUrl": "https://www.zhihu.com/question/628670548/answer/1979200936699257305",
+              "author": "",
+              "upvotes": 0,
+              "popularity": "少数派"
+            }
+          ],
+          "questionUrl": "https://www.zhihu.com/question/628670548",
+          "sources": [
+            {
+              "url": "https://www.zhihu.com/question/628670548/answer/1979655429819746027",
+              "author": "",
+              "votes": null,
+              "snippet": "如果这个问题是2023年上半年问的，我会毫不犹豫地告诉你，是的，Prompt就是咒语，就是魔法，谁掌握了Prompt谁就是大法师。那时候我们还在为了怎么让GPT-3.5不胡说八道，在那儿绞尽脑汁地试“Let's think step by step”。 但在现在，马上都要2026年了，如果你还觉得Agent的核心竞争力是Prompt，那你这两年在AI落地的一线战场上，大概率是没怎么把自己弄脏过。 先说结论： 在2025年的今天，Prompt在Agent开发中的权重，已经从原来…"
+            },
+            {
+              "url": "https://www.zhihu.com/question/628670548/answer/1999575175772016853",
+              "author": "",
+              "votes": null,
+              "snippet": "到了现在这个节点，如果你还觉得大模型Agent的核心是Prompt，那你大概率还在做Demo，或者你的业务场景非常边缘。 早在一两年前，大家还在吹捧提示词工程是未来的金饭碗，甚至有人喊出自然语言就是新的编程语言。现在回头看，这话对了一半，但也误导了一大批人。Prompt确实是人机交互的入口，但对于Agent——这种具备自主规划、调用工具、记忆能力的智能体来说，Prompt只是那层皮。 真正的核心是什么？是工程化的架构设计，是工作…"
+            },
+            {
+              "url": "https://www.zhihu.com/question/628670548/answer/1979200936699257305",
+              "author": "",
+              "votes": null,
+              "snippet": "最近在做导购Agent，工程侧已经开发完毕，但调Prompt、做测评，每一个都令我痛苦万分，因为到处都是“翻车现场”：要么“思维太发散”，绕着用户的问题走；要么“工具乱点”，命中一个tool就一条道走到黑；要么“跑不完”，说着说着卡住了，再没了下文... 因此搜了一些Agent相关的论文、文章、视频，企图从技术底层抱抱佛脚...正巧看到了Anthropic 8月1日在YouTube上发布了一个视频《Prompting for Agents | Code w/ Claude》…"
+            },
+            {
+              "url": "https://www.zhihu.com/question/628670548/answer/1921609343368958300",
+              "author": "",
+              "votes": null,
+              "snippet": "不得不说99%想做ai agent的公司，全走错路了。 那agent怎样才能成功？ 就讲在国外车管所（DMV）部署了最新的AI助手，并承诺能够处理驾照更新的简单任务。 但当一位用户询问\"我需要更新驾照\"时，系统陷入了无限循环，不断重复询问相同的问题，最终因内存溢出而崩溃。 为什么这个AI Agent项目是失败的？ 因为： Token预算：限制在500个，无法完成多轮对话记忆设计：没有会话状态管理评估缺失：没人知道它在生产环境的表现架构选择…"
+            },
+            {
+              "url": "https://www.zhihu.com/question/628670548/answer/3563803799",
+              "author": "",
+              "votes": null,
+              "snippet": "先说结论，大模型Agent的核心不仅仅是prompt，但prompt确实是目前实现Agent的重要手段之一。要理解这一点，我们先得澄清什么是AI Agent。 作为一个智能体，AI Agent应当具备 理解周围环境、做出决策和采取行动的能力。与传统AI依赖用户输入的Prompt与大模型交互不同，AI Agent融合了规划、记忆和工具使用等关键功能，在操作时不需要逐步的提示，我们只需设定一个目标，它就能够自主地进行思考和利用各种工具来分步实现。听起来很…"
+            }
+          ]
+        },
+        "answer": "我们做了一套权限控制，主要是分了三档，高危操作会转人工。上线之后效果不错，拦截了很多问题，团队反馈也比较好。中间也遇到过误拦截的情况，我们后来加了一些规则来兜住。后续可能还要在多模态场景下再看看。",
+        "qaPairs": [
+          {
+            "question": "大模型Agent的核心还是prompt？",
+            "answer": "我们做了一套权限控制，主要是分了三档，高危操作会转人工。上线之后效果不错，拦截了很多问题，团队反馈也比较好。中间也遇到过误拦截的情况，我们后来加了一些规则来兜住。后续可能还要在多模态场景下再看看。"
+          }
+        ],
+        "ruleFindings": [],
+        "llmScores": [
+          {
+            "dimension": "技术深度",
+            "score": 28,
+            "claim": "整段回答没有触及「Agent核心是prompt还是工程架构」这一命题本身，既未给出立场，也未展开论证，而是整段切换到权限控制三档分级的实现细节。这在技术上属于答非所问：听不出候选人对Agent能力来源的任何判断，也无法判断其是否理解prompt在系统中处于哪一层。深挖一层时会暴露更明显的问题——候选人没有区分「表层交互入口」与「核心控制逻辑」，而这恰是本题的考点。",
+            "basis": "外部佐证",
+            "refIds": [
+              "S1",
+              "S2"
+            ]
+          },
+          {
+            "dimension": "工程权衡",
+            "score": 50,
+            "claim": "「分三档 + 高危转人工」本身是一种可辩护的工程权衡思路，方向上与「prompt只是实现手段之一、核心在工程化编排」的判断同源，说明候选人有把不确定性交给人工兜底的意识。但权衡没有被量化：分档阈值的依据、转人工带来的时延与人力成本、误拦截与漏拦截之间的代价不对称，全部缺失，只留下「效果不错」「拦截了很多问题」这类主观结论。",
+            "basis": "外部佐证",
+            "refIds": [
+              "S3"
+            ]
+          },
+          {
+            "dimension": "边界意识",
+            "score": 35,
+            "claim": "候选人主动提到了误拦截并「加规则兜住」，说明意识到分类器存在假阳性边界，这是加分项。但边界始终停留在描述层：没有定义「高危」的判定口径，没有说明兜底规则与主判定逻辑冲突时谁优先，也没有交代多模态场景下判定口径如何迁移。边界意识的落点是「后来加了一些规则」这种事后补丁式表述，而非可预先声明的边界条件。",
+            "basis": "推断",
+            "inferenceReason": "来源集合讨论的是prompt与工程架构的权重关系，未涉及权限分级或误拦截的具体判定口径，此处结论基于候选人回答内部的逻辑完整性推得。",
+            "refIds": []
+          }
+        ],
+        "improvements": [
+          {
+            "claim": "先正面接住命题再举例，话术可改为：「我的判断是核心不在prompt本身，而在prompt之外的那层工程编排——路由、工具调用、状态管理和权限闸门。我拿最近做的权限分级举例，它就是在prompt外面加的一层硬约束，用来兜住模型判断的不确定性。」这样举例才是论证，而不是跑题。",
+            "basis": "外部佐证",
+            "refIds": [
+              "S1",
+              "S3"
+            ]
+          },
+          {
+            "claim": "把「效果不错」换成可核对的数据口径，话术示例：「上线后高危操作转人工比例X%，其中复核为真高危的占Y%，误拦截率Z%；误拦截主要集中在A类场景，我们随后加了B规则把它压到Z'%。」没有分母和对照基线的「拦截了很多」在面试里等于零信息。",
+            "basis": "推断",
+            "inferenceReason": "来源集合未提供指标口径相关内容，此建议针对候选人回答中结论空洞、缺乏量化的问题提出。",
+            "refIds": []
+          },
+          {
+            "claim": "补上边界声明，话术示例：「这套分级的前提是操作可枚举、后果可逆性可判定；一旦进入多模态这类判定口径不稳定、且操作后果不可回滚的场景，我这套三档分级会退化为全量转人工，所以我下一步不是调prompt，而是先定义清楚该场景下的高危口径。」",
+            "basis": "外部佐证",
+            "refIds": [
+              "S2",
+              "S3"
+            ]
+          }
+        ],
+        "followups": [
+          "你说上线后「拦截了很多问题」——这个「很多」的分母是什么？在没上这套三档控制的对照基线里，被拦下来的那些操作有多少本来就是合规的？如果误拦截率和漏拦截率你都没有量化，那你怎么证明这套分级不是在用业务效率换一个好看的数字？"
+        ],
+        "degraded": false,
+        "createdAt": "2026-11-18T09:56:36.760Z",
+        "isDemo": true
+      }
+    },
+    {
+      "questionId": "q_83",
+      "question": {
+        "id": "q_83",
+        "track": "面试通用",
+        "domain": "ai-agent",
+        "kind": "tech",
+        "difficulty": "进阶",
+        "title": "怎么成为一个 ai agent 工程师？",
+        "context": "考察能否给出从入门到具备社招竞争力的 AI Agent 工程师成长路径",
+        "keywords": [
+          "课程入门派",
+          "官方教程优先",
+          "作品导向派",
+          "转行踩坑派",
+          "么成",
+          "成为",
+          "为一",
+          "一个",
+          "个a",
+          "ai"
+        ],
+        "expectedLength": [
+          150,
+          400
+        ],
+        "skeleton": [
+          "开口先复述问题，确认你听到的是同一件事",
+          "给一个可核对数字（影响面 / 耗时 / 覆盖率）并说明口径与基线",
+          "说明你的判断与取舍：为什么这么做、还有什么选项",
+          "收尾落到结果：变化了多少，谁验收过",
+          "注意避开：迷信速成教程",
+          "注意避开：只学不做出作品"
+        ],
+        "viewpointCards": [
+          {
+            "id": "q_83-vp-1",
+            "stance": "课程入门派",
+            "summary": "先刷官方免费教程打基础，如微软、Hugging Face、Anthropic 课程，不必买课",
+            "evidenceQuote": "如果没基础的话可以先看微软的《AI Agents for Beginners》",
+            "sourceUrl": "https://www.zhihu.com/question/1936375725931361485/answer/2011230268539805801",
+            "author": "",
+            "upvotes": 0,
+            "popularity": "主流"
+          },
+          {
+            "id": "q_83-vp-2",
+            "stance": "官方教程优先",
+            "summary": "一天一小时刷完 Claude 官方教程即可入门，之后再有针对性深入学习",
+            "evidenceQuote": "刷完 https://anthropic.skilljar.com/claude-with-the-anthropic-api 这个 Claude 的官方教程，你就算是入门了",
+            "sourceUrl": "https://www.zhihu.com/question/1936375725931361485/answer/1958927612178048839",
+            "author": "",
+            "upvotes": 0,
+            "popularity": "主流"
+          },
+          {
+            "id": "q_83-vp-3",
+            "stance": "作品导向派",
+            "summary": "社招核心要求是完成过类似作品并上线达到指定服务水准，强调 agentic system",
+            "evidenceQuote": "AI Agent 工程师岗位的基本要求是：你完成过一个类似的作品，并且上线达到了指定的服务水准。",
+            "sourceUrl": "https://www.zhihu.com/question/1936375725931361485/answer/1951235004484030764",
+            "author": "",
+            "upvotes": 0,
+            "popularity": "少数派"
+          },
+          {
+            "id": "q_83-vp-4",
+            "stance": "转行踩坑派",
+            "summary": "后端转 AI Agent 需警惕速成教程，实际摸索耗时不短，应理性规划",
+            "evidenceQuote": "从后端转AI Agent这条路，我踩了半年坑才摸清门道写在前面：别被B站那些速成教程骗了",
+            "sourceUrl": "https://www.zhihu.com/question/1936375725931361485/answer/1982833664812413939",
+            "author": "",
+            "upvotes": 0,
+            "popularity": "少数派"
+          }
+        ],
+        "questionUrl": "https://www.zhihu.com/question/1936375725931361485",
+        "sources": [
+          {
+            "url": "https://www.zhihu.com/question/1936375725931361485/answer/2011230268539805801",
+            "author": "",
+            "votes": null,
+            "snippet": "如果没基础的话可以先看微软的《AI Agents for Beginners》 - GitHub 5万+星，12课时左右就能很快入手，而且有完整的中文教程 https://github.com/microsoft/ai-agents-for-beginners 把Agent基础概念、工具调用、记忆系统、多Agent协作这些基本都覆盖完了，不需要网上找那些卖课的，来付费学习课程。 Hugging Face也有免费的《Agents Course》，但是更偏实践性。 https://huggingface.co/lear"
+          },
+          {
+            "url": "https://www.zhihu.com/question/1936375725931361485/answer/1958927612178048839",
+            "author": "",
+            "votes": null,
+            "snippet": "一天一小时需要一个月，刷完 https://anthropic.skilljar.com/claude-with-the-anthropic-api 这个 Claude 的官方教程，你就算是入门了。这是我目前看到的最好的基础教程，整个流程和各个知识点都会讲到，了解整个 ai agent 的工作原理。之后就可以有针对性的进行深入学习了。"
+          },
+          {
+            "url": "https://www.zhihu.com/question/1936375725931361485/answer/1951235004484030764",
+            "author": "",
+            "votes": null,
+            "snippet": "首先，你要明白，对于社招来说，AI Agent 工程师岗位的基本要求是：你完成过一个类似的作品，并且上线达到了指定的服务水准。 说 agent 其实并不算很准确，说 agentic system 更加准确一些。我们现在更多看你的系统中有多少地方通过 llm 完成了相较于传统系统的操作简化或者成本降低。agentic 是一个过程，agent 是最终的结果。我举一个具体的例子吧，比如说客户要求你完成一个能够进行法律文书条款搜索的 agent，那么你就必须在…"
+          },
+          {
+            "url": "https://www.zhihu.com/question/1936375725931361485/answer/1948826620803657995",
+            "author": "",
+            "votes": null,
+            "snippet": "你这情况，绝对不是个例。现在整个后端圈子，尤其是干了五六年往上的，基本都你这心态：往前一步是 P7/架构师，感觉自己火候差点意思，项目里也没那么多复杂场景给你练手；原地踏步吧，又看着一波波新人卷生卷死，心里发慌。想转 AI，发现水又深又混，网上的教程十个有九个是“从入门到放弃”，还有一个是“从入门到调包”。 我是搞算法和数据出身的，跟 AI 这摊子事儿打了快十年交道了。你这个问题，我掰开揉碎了跟你聊聊，不整…"
+          },
+          {
+            "url": "https://www.zhihu.com/question/1936375725931361485/answer/1982833664812413939",
+            "author": "",
+            "votes": null,
+            "snippet": "说实话，从后端转AI Agent这条路，我踩了半年坑才摸清门道写在前面：别被B站那些速成教程骗了先说我自己的情况吧。6年后端，主要做Java那一套，Spring全家桶玩得还算溜。去年年底开始焦虑，感觉后端这块真的卷不动了，身边比我年轻的人技术栈比我新，比我老的人title比我高。 然后公司内部有个AI Agent的岗位在招人，我动心了。但问题是，我不想背刺现在的老板（他对我确实挺好的），所以就想着自己先学学，等学得差不多了再说。…"
+          }
+        ]
+      },
+      "answer": "我们做了一套权限控制，主要是分了三档，高危操作会转人工。上线之后效果不错，拦截了很多问题，团队反馈也比较好。中间也遇到过误拦截的情况，我们后来加了一些规则来兜住。后续可能还要在多模态场景下再看看。",
+      "report": {
+        "id": "demo-q_83",
+        "question": {
+          "id": "q_83",
+          "track": "面试通用",
+          "domain": "ai-agent",
+          "kind": "tech",
+          "difficulty": "进阶",
+          "title": "怎么成为一个 ai agent 工程师？",
+          "context": "考察能否给出从入门到具备社招竞争力的 AI Agent 工程师成长路径",
+          "keywords": [
+            "课程入门派",
+            "官方教程优先",
+            "作品导向派",
+            "转行踩坑派",
+            "么成",
+            "成为",
+            "为一",
+            "一个",
+            "个a",
+            "ai"
+          ],
+          "expectedLength": [
+            150,
+            400
+          ],
+          "skeleton": [
+            "开口先复述问题，确认你听到的是同一件事",
+            "给一个可核对数字（影响面 / 耗时 / 覆盖率）并说明口径与基线",
+            "说明你的判断与取舍：为什么这么做、还有什么选项",
+            "收尾落到结果：变化了多少，谁验收过",
+            "注意避开：迷信速成教程",
+            "注意避开：只学不做出作品"
+          ],
+          "viewpointCards": [
+            {
+              "id": "q_83-vp-1",
+              "stance": "课程入门派",
+              "summary": "先刷官方免费教程打基础，如微软、Hugging Face、Anthropic 课程，不必买课",
+              "evidenceQuote": "如果没基础的话可以先看微软的《AI Agents for Beginners》",
+              "sourceUrl": "https://www.zhihu.com/question/1936375725931361485/answer/2011230268539805801",
+              "author": "",
+              "upvotes": 0,
+              "popularity": "主流"
+            },
+            {
+              "id": "q_83-vp-2",
+              "stance": "官方教程优先",
+              "summary": "一天一小时刷完 Claude 官方教程即可入门，之后再有针对性深入学习",
+              "evidenceQuote": "刷完 https://anthropic.skilljar.com/claude-with-the-anthropic-api 这个 Claude 的官方教程，你就算是入门了",
+              "sourceUrl": "https://www.zhihu.com/question/1936375725931361485/answer/1958927612178048839",
+              "author": "",
+              "upvotes": 0,
+              "popularity": "主流"
+            },
+            {
+              "id": "q_83-vp-3",
+              "stance": "作品导向派",
+              "summary": "社招核心要求是完成过类似作品并上线达到指定服务水准，强调 agentic system",
+              "evidenceQuote": "AI Agent 工程师岗位的基本要求是：你完成过一个类似的作品，并且上线达到了指定的服务水准。",
+              "sourceUrl": "https://www.zhihu.com/question/1936375725931361485/answer/1951235004484030764",
+              "author": "",
+              "upvotes": 0,
+              "popularity": "少数派"
+            },
+            {
+              "id": "q_83-vp-4",
+              "stance": "转行踩坑派",
+              "summary": "后端转 AI Agent 需警惕速成教程，实际摸索耗时不短，应理性规划",
+              "evidenceQuote": "从后端转AI Agent这条路，我踩了半年坑才摸清门道写在前面：别被B站那些速成教程骗了",
+              "sourceUrl": "https://www.zhihu.com/question/1936375725931361485/answer/1982833664812413939",
+              "author": "",
+              "upvotes": 0,
+              "popularity": "少数派"
+            }
+          ],
+          "questionUrl": "https://www.zhihu.com/question/1936375725931361485",
+          "sources": [
+            {
+              "url": "https://www.zhihu.com/question/1936375725931361485/answer/2011230268539805801",
+              "author": "",
+              "votes": null,
+              "snippet": "如果没基础的话可以先看微软的《AI Agents for Beginners》 - GitHub 5万+星，12课时左右就能很快入手，而且有完整的中文教程 https://github.com/microsoft/ai-agents-for-beginners 把Agent基础概念、工具调用、记忆系统、多Agent协作这些基本都覆盖完了，不需要网上找那些卖课的，来付费学习课程。 Hugging Face也有免费的《Agents Course》，但是更偏实践性。 https://huggingface.co/lear"
+            },
+            {
+              "url": "https://www.zhihu.com/question/1936375725931361485/answer/1958927612178048839",
+              "author": "",
+              "votes": null,
+              "snippet": "一天一小时需要一个月，刷完 https://anthropic.skilljar.com/claude-with-the-anthropic-api 这个 Claude 的官方教程，你就算是入门了。这是我目前看到的最好的基础教程，整个流程和各个知识点都会讲到，了解整个 ai agent 的工作原理。之后就可以有针对性的进行深入学习了。"
+            },
+            {
+              "url": "https://www.zhihu.com/question/1936375725931361485/answer/1951235004484030764",
+              "author": "",
+              "votes": null,
+              "snippet": "首先，你要明白，对于社招来说，AI Agent 工程师岗位的基本要求是：你完成过一个类似的作品，并且上线达到了指定的服务水准。 说 agent 其实并不算很准确，说 agentic system 更加准确一些。我们现在更多看你的系统中有多少地方通过 llm 完成了相较于传统系统的操作简化或者成本降低。agentic 是一个过程，agent 是最终的结果。我举一个具体的例子吧，比如说客户要求你完成一个能够进行法律文书条款搜索的 agent，那么你就必须在…"
+            },
+            {
+              "url": "https://www.zhihu.com/question/1936375725931361485/answer/1948826620803657995",
+              "author": "",
+              "votes": null,
+              "snippet": "你这情况，绝对不是个例。现在整个后端圈子，尤其是干了五六年往上的，基本都你这心态：往前一步是 P7/架构师，感觉自己火候差点意思，项目里也没那么多复杂场景给你练手；原地踏步吧，又看着一波波新人卷生卷死，心里发慌。想转 AI，发现水又深又混，网上的教程十个有九个是“从入门到放弃”，还有一个是“从入门到调包”。 我是搞算法和数据出身的，跟 AI 这摊子事儿打了快十年交道了。你这个问题，我掰开揉碎了跟你聊聊，不整…"
+            },
+            {
+              "url": "https://www.zhihu.com/question/1936375725931361485/answer/1982833664812413939",
+              "author": "",
+              "votes": null,
+              "snippet": "说实话，从后端转AI Agent这条路，我踩了半年坑才摸清门道写在前面：别被B站那些速成教程骗了先说我自己的情况吧。6年后端，主要做Java那一套，Spring全家桶玩得还算溜。去年年底开始焦虑，感觉后端这块真的卷不动了，身边比我年轻的人技术栈比我新，比我老的人title比我高。 然后公司内部有个AI Agent的岗位在招人，我动心了。但问题是，我不想背刺现在的老板（他对我确实挺好的），所以就想着自己先学学，等学得差不多了再说。…"
+            }
+          ]
+        },
+        "answer": "我们做了一套权限控制，主要是分了三档，高危操作会转人工。上线之后效果不错，拦截了很多问题，团队反馈也比较好。中间也遇到过误拦截的情况，我们后来加了一些规则来兜住。后续可能还要在多模态场景下再看看。",
+        "qaPairs": [
+          {
+            "question": "怎么成为一个 ai agent 工程师？",
+            "answer": "我们做了一套权限控制，主要是分了三档，高危操作会转人工。上线之后效果不错，拦截了很多问题，团队反馈也比较好。中间也遇到过误拦截的情况，我们后来加了一些规则来兜住。后续可能还要在多模态场景下再看看。"
+          }
+        ],
+        "ruleFindings": [],
+        "llmScores": [
+          {
+            "dimension": "技术深度",
+            "score": 42,
+            "claim": "回答通篇没有出现任何 agent 侧的技术名词——工具调用、规划/反思循环、记忆、沙箱隔离、提示注入防护都没有，只讲了权限三档 + 人工兜底这套传统后台风控话术。而这题问的是「怎么成为 AI Agent 工程师」，你用一个风控方案作答，无法证明你理解 agentic system 的构成。",
+            "basis": "外部佐证",
+            "refIds": [
+              "S3"
+            ]
+          },
+          {
+            "dimension": "工程权衡",
+            "score": 50,
+            "claim": "有「三档分级」「高危转人工」「误拦截加规则」这条权衡链，方向可以，但全是形容词：「效果不错」「拦截了很多问题」「团队反馈比较好」——没有一个数字。分档阈值怎么定、高危拦截率多少、误杀率多少、人工复核平均时延多少，全部缺失，无法判断是否达到上线服务水准。",
+            "basis": "外部佐证",
+            "refIds": [
+              "S3"
+            ]
+          },
+          {
+            "dimension": "边界意识",
+            "score": 38,
+            "claim": "结尾只用「多模态场景下再看看」一句带过，等于承认边界没想清楚。真正的边界条件——agent 通过工具链绕过权限、多轮对话中累积越权、模型被诱导把高危操作拆成多个低危调用——一个都没提。",
+            "basis": "推断",
+            "inferenceReason": "来源集合只给了入门路径与岗位基本要求，未涉及权限方案的边界讨论，此条为对回答文本自身的逻辑审查。",
+            "refIds": []
+          }
+        ],
+        "improvements": [
+          {
+            "claim": "建议补一句可验证的上线证据，例如：「这套三档权限上线覆盖 X 个工具调用、日均 Y 次高危拦截，人工复核平均 Z 分钟，误拦截率从 A% 降到 B%」。把「效果不错」换成数字，才对应得上岗位说的「上线达到指定服务水准」。",
+            "basis": "外部佐证",
+            "refIds": [
+              "S3"
+            ]
+          },
+          {
+            "claim": "开场先对齐题目再讲案例：「我的路径是先用微软《AI Agents for Beginners》和 Anthropic 官方 API 教程各刷一遍入门，然后自己搭了一个带工具调用的 agent 并上线，下面讲的就是上线过程中踩的坑」。先给路径 + 作品，再用案例做证据，而不是拿案例当答案。",
+            "basis": "外部佐证",
+            "refIds": [
+              "S1",
+              "S2"
+            ]
+          },
+          {
+            "claim": "「加了一些规则来兜住误拦截」这句要展开成机制：是加白名单、加二次确认、还是降档复核？并说明它和原三档判定是什么关系，否则听起来像打补丁而非设计。",
+            "basis": "推断",
+            "inferenceReason": "来源集合未涉及该方案细节，此建议为对回答表述模糊处的直接推演。",
+            "refIds": []
+          }
+        ],
+        "followups": [
+          "你说误拦截是靠「后来加了一些规则」兜住的——那这些新规则是挂在原来三档之外的第几档？如果一条规则能把原本判成高危的操作改判成非高危，你最初划分三档所依据的那个判定前提是不是就自相矛盾了？给我一个具体的误拦截样本，以及加规则前后的误拦截率数字。"
+        ],
+        "degraded": false,
+        "createdAt": "2026-11-18T09:56:47.825Z",
+        "isDemo": true
+      }
+    }
+  ]
 }

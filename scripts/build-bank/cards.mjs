@@ -5,8 +5,8 @@
  * 实测约束：
  *  - 直答（zhida-fast-1p5）有 QPS 限流：间隔 < 3s 会 429 → 默认 7s + 429 退避 20s + 连续 3 次熔断
  *  - 每张卡的 evidence 必须逐字来自来源摘要，否则重试一次后标 evidenceVerified=false
- *  - 知乎开发者 API 只返回 {ContentType,ContentToken,Url,Summary}：没有作者、没有赞同数。
- *    所以不要写「高赞回答」，也不要在文案里暗示热度；author 留空、votes 为 null。
+ *  - 知乎开发者 API 只返回 {ContentType,ContentToken,Url,Summary}：没有作者、没有任何热度数据。
+ *    所以提示词与文案里都不许暗示热度（不要写「热评/热门回答」这类说法）；author 留空、votes 为 null。
  */
 import fs from 'node:fs';
 import path from 'node:path';
@@ -96,8 +96,11 @@ function parseJson(text) {
 }
 
 function verifyCard(q, c) {
-  const idx = Number(c.sourceIndex) - 1;
-  const src = (q.sources || [])[idx];
+  const sources = q.sources || [];
+  let idx = Number(c.sourceIndex) - 1;
+  // 模型给的 sourceIndex 偶尔越界，回退到第一条来源，别产出空卡
+  if (!sources[idx]) idx = 0;
+  const src = sources[idx];
   const evidence = String(c.evidence || '').trim();
   const ok = Boolean(src) && evidence.length >= 6 && norm(src.snippet).includes(norm(evidence));
   return {
@@ -121,7 +124,7 @@ async function buildOne(q) {
     try {
       const content = await zhida(buildPrompt(q) + (attempt > 1 ? '\n注意：上次未通过校验，evidence 必须逐字取自来源。' : ''));
       const json = parseJson(content);
-      const cards = (json.views || []).slice(0, 4).map((c) => verifyCard(q, c));
+      const cards = (json.views || []).slice(0, 4).map((c) => verifyCard(q, c)).filter((c) => c && c.evidence);
       if (!cards.length) throw new Error('观点卡为空');
       if (!cards.some((c) => c.popularity === 'minority')) cards[cards.length - 1].popularity = 'minority';
       return {
