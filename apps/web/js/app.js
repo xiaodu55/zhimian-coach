@@ -1,5 +1,5 @@
 import { registerRoute, initRouter } from './router.js';
-import { loadQuestionBank, checkBackendHealth, refreshLocalCollections, setDegraded } from './state.js';
+import { loadQuestionBank, checkBackendHealth, refreshLocalCollections, setDegraded, loadDemoReports } from './state.js';
 import { exportAllData, importAllData, resetLocalData } from './db.js';
 import { initCitationModal } from './ui/citation.js';
 import { showToast } from './ui/toast.js';
@@ -10,7 +10,32 @@ import { renderExplainScreen } from './screens/explain.js';
 import { renderDefenseScreen } from './screens/defense.js';
 import { renderLedgerScreen } from './screens/ledger.js';
 
+/**
+ * 公网分享口令：后台配置了 PUBLIC_SHARE_TOKEN 时，所有 /api 请求都要带 x-share-token。
+ * 这里统一在 fetch 层注入，避免每个调用点都改一遍；没配置口令时完全无感。
+ */
+function installShareTokenInterceptor() {
+  const KEY = 'zhimian.share.token';
+  const nativeFetch = window.fetch.bind(window);
+  window.fetch = (input, init = {}) => {
+    const url = typeof input === 'string' ? input : input?.url || '';
+    if (!url.includes('/api/')) return nativeFetch(input, init);
+    let token = '';
+    try {
+      token = sessionStorage.getItem(KEY) || new URLSearchParams(location.search).get('k') || '';
+      if (token) sessionStorage.setItem(KEY, token);
+    } catch {
+      /* 隐私模式忽略 */
+    }
+    if (!token) return nativeFetch(input, init);
+    const headers = new Headers(init.headers || (typeof input === 'string' ? undefined : input.headers));
+    headers.set('x-share-token', token);
+    return nativeFetch(input, { ...init, headers });
+  };
+}
+
 async function bootstrap() {
+  installShareTokenInterceptor();
   initCitationModal();
 
   // 关闭降级横幅按钮
@@ -63,6 +88,7 @@ async function bootstrap() {
 
   // 先加载本地种子题库并立即渲染首屏（保证 <= 1.5s 可交互）
   await loadQuestionBank();
+  await loadDemoReports();
   await refreshLocalCollections();
   initRouter();
 

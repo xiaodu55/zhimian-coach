@@ -145,6 +145,7 @@ export function renderLedgerScreen(root) {
           <span id="flashcard-count" class="tag">0 张</span>
           <button id="btn-recite-toggle" class="btn btn-sm" type="button">🎴 考前速览 / 抽背模式</button>
           <button id="btn-add-flashcard" class="btn btn-sm" type="button">+ 手动新增闪卡</button>
+        <button id="btn-quick-quiz" class="btn btn-primary btn-sm" type="button">🎯 快问快答（抽一张练）</button>
         </div>
       </div>
       <div style="font-size:12.5px;color:var(--text-secondary);line-height:1.7;margin-bottom:12px;">
@@ -286,6 +287,18 @@ export function renderLedgerScreen(root) {
     input.blur?.();
   });
 
+  // 快问快答：优先抽生疏卡，其次随机
+  wrapper.querySelector('#btn-quick-quiz').addEventListener('click', () => {
+    if (!flashcards.length) {
+      showToast('还没有闪卡：先在复盘台点「存入我的弹药库」', 'warn');
+      return;
+    }
+    const weak = flashcards.filter((c) => cardMastery(c) === '生疏');
+    const pool = weak.length ? weak : flashcards;
+    const card = pool[Math.floor(Math.random() * pool.length)];
+    openQuickQuiz(card);
+  });
+
   wrapper.querySelector('#btn-clean-audio').addEventListener('click', async () => {
     // 先数一遍有多少条录音还带音频，让用户知道自己要删掉什么
     const pending = await listRecordingsWithAudio();
@@ -358,6 +371,76 @@ export function renderLedgerScreen(root) {
       showToast('掌握度保存失败：' + (err?.message || '本机存储不可用'), 'error');
       return false;
     }
+  };
+
+  /**
+   * 快问快答：把闪卡变成能做题的复习器。
+   * 抽一张卡 → 只看题干与"必须覆盖的要点" → 自己讲 → 翻面对照 → 自评（讲清 / 还卡壳），
+   * 自评结果直接回写掌握度：卡壳的卡留在「生疏」里，下次还会被抽到。
+   */
+  const openQuickQuiz = (card) => {
+    const modal = createModal({
+      title: '快问快答',
+      subtitle: '按抽背顺序讲一遍，再对照你的标准答案',
+      width: 620,
+    });
+    const body = document.createElement('div');
+    const points = (card.supports || []).slice(0, 3);
+
+    body.innerHTML = `
+      <div style="font-size:14px;font-weight:600;line-height:1.6;margin-bottom:8px;">${escapeHtml(card.questionTitle || '')}</div>
+      <div style="font-size:12.5px;color:var(--text-muted);margin-bottom:10px;">
+        必须覆盖 ${points.length} 个要点（先自己讲，别急着看）：</div>
+      <ul style="margin:0 0 12px;padding-left:18px;font-size:13px;line-height:1.8;color:var(--text-secondary);">
+        ${points.map((p) => `<li>${escapeHtml(String(p).slice(0, 40))}…</li>`).join('')}
+      </ul>
+      <div id="quiz-answer" hidden style="border-top:1px dashed var(--border);padding-top:10px;">
+        <div style="font-size:12.5px;font-weight:700;color:var(--primary);margin-bottom:4px;">你的标准答案</div>
+        <div style="font-size:13px;line-height:1.75;">${escapeHtml(card.coreConclusion || '')}</div>
+        ${(card.supports || []).length ? `<div style="font-size:12.5px;color:var(--text-secondary);margin-top:6px;">支撑：${card.supports.map((x) => escapeHtml(String(x).slice(0, 28))).join('；')}</div>` : ''}
+        ${card.fallback ? `<div style="font-size:12.5px;color:var(--amber);margin-top:6px;">防杠兜底：${escapeHtml(String(card.fallback).slice(0, 80))}</div>` : ''}
+      </div>
+    `;
+    modal.body.appendChild(body);
+
+    const revealBtn = modalButton('我讲完了，看标准答案', {
+      primary: true,
+      onClick: () => {
+        body.querySelector('#quiz-answer').hidden = false;
+        revealBtn.textContent = '已展开';
+        revealBtn.disabled = true;
+        selfBox.style.display = 'flex';
+      },
+    });
+    const selfBox = document.createElement('div');
+    selfBox.style.cssText = 'display:none;gap:8px;margin-top:12px;flex-wrap:wrap;align-items:center;';
+    selfBox.innerHTML = '<span style="font-size:12.5px;color:var(--text-secondary);">讲清楚了吗？</span>';
+    const good = modalButton('讲清楚了 ✓', {
+      onClick: async () => {
+        const ok = await persistMastery(card, cardMastery(card) === '生疏' ? '熟练' : '随时可讲');
+        if (!ok) return;
+        card.mastery = cardMastery(card);
+        card.practiced = true;
+        await dbPut(FLASHCARD_STORE, card);
+        modal.close();
+        renderFlashcards();
+        showToast('已记为「' + card.mastery + '」');
+      },
+    });
+    const bad = modalButton('还卡壳 ✗', {
+      onClick: async () => {
+        const ok = await persistMastery(card, '生疏');
+        if (!ok) return;
+        card.mastery = '生疏';
+        await dbPut(FLASHCARD_STORE, card);
+        modal.close();
+        renderFlashcards();
+        showToast('已留在「生疏」里，下次还会抽到这张');
+      },
+    });
+    selfBox.append(good, bad);
+    modal.body.appendChild(selfBox);
+    modal.footer.append(modalButton('关闭', { ghost: true, onClick: () => modal.close() }), revealBtn);
   };
 
   /** 突击模式下没有生疏卡时的提示 */

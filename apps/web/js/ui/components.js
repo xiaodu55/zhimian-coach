@@ -21,7 +21,7 @@ export function renderViewpointCard(card, index = 0) {
     id: `S${index + 1}`,
     type: 'zhihu',
     label: `S${index + 1} · 知乎原答`,
-    sourceTitle: card.author || '知乎高赞回答',
+    sourceTitle: card.author || '知乎答主',
     locator: card.stance,
     quote: card.evidenceQuote,
     url: card.sourceUrl

@@ -7,6 +7,7 @@ import { showToast } from '../ui/toast.js';
 import { createModal, modalButton } from '../ui/modal.js';
 import { chunkDocumentText } from '../retrieval/chunk.js';
 import { mountNextStepBar, createProgress } from '../lib/nextstep.js';
+import { DOMAINS, DOMAIN_LABEL, domainOf, kindOf, domainCounts, fuzzySuggestions } from '../lib/domains.js';
 
 export function renderBankScreen(root) {
   const tracks = ['全部赛道', ...new Set(state.bank.map((q) => q.track))];
@@ -18,22 +19,23 @@ export function renderBankScreen(root) {
     <section class="hero-banner" aria-label="产品定位与一键体验">
       <div>
         <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px;flex-wrap:wrap;">
-          <span class="tag tag-blue">知乎高赞语料驱动 · 面试与答辩 AI 陪练</span>
+          <span class="tag tag-blue">知乎真实语料驱动 · 面试与答辩 AI 陪练</span>
         </div>
         <h1 class="hero-title">别让“看懂了”变成面试时的“说不清”</h1>
         <p class="hero-desc">
-          基于<strong>知乎高赞技术与行业问答</strong>构建实战题库。先通过<strong>互动讲解</strong>吃透底层逻辑，
+          基于<strong>知乎真实技术与行业问答</strong>构建实战题库。先通过<strong>互动讲解</strong>吃透底层逻辑，
           再进入<strong>高压连环追问</strong>实战演练，把零散知识锤炼成随时可调用的面试“弹药库”。
         </p>
         <div class="hero-badges" style="display:flex;gap:16px;flex-wrap:wrap;margin:12px 0;color:var(--text-muted);font-size:12.5px;">
           <span>🔒 本地存储，录音与简历零上传</span>
-          <span>📚 知乎高赞语料溯源，不编答案</span>
+          <span>📚 每条观点可点开知乎原文核对，不编答案</span>
           <span>⚡ 无需注册，打开即练</span>
         </div>
         <div class="hero-actions">
           <button id="btn-quick-demo" class="btn btn-primary" type="button">免费开始 3 分钟实战演练</button>
           <button id="btn-go-explain" class="btn" type="button">浏览题库 / 导入我的项目文档</button>
           <button id="btn-go-defense" class="btn btn-ghost" type="button">🎓 论文答辩预测</button>
+          <button id="btn-offline-demo" class="btn btn-ghost" type="button">🧯 离线演示（预置复盘）</button>
         </div>
       </div>
     </section>
@@ -108,6 +110,9 @@ export function renderBankScreen(root) {
           </div>
         </div>
         <div id="bank-domain-note" style="font-size:11.5px;color:var(--text-muted);margin-top:8px;"></div>
+        <div style="font-size:11.5px;color:var(--text-muted);margin-top:4px;">
+          每个方向 chip 后面的数字是这个方向现有的题量；点不开的方向说明还没收录，不用试。
+        </div>
       </div>
 
       <div id="bank-tab-custom" hidden>
@@ -160,6 +165,23 @@ export function renderBankScreen(root) {
     localStorage.setItem('zhimian.onboard.done', '1');
     onboarding.style.display = 'none';
     openLogicCard(warm);
+  });
+
+  // 离线演示：用预置的真实复盘报告走一遍闭环（模型/网络不可用时的保底）
+  wrapper.querySelector('#btn-offline-demo').addEventListener('click', async () => {
+    const reports = state.demoReports || [];
+    if (!reports.length) {
+      showToast('预置报告还没加载好，稍等一下再试（或先联网跑一次生成）', 'warn', 4000);
+      return;
+    }
+    const pick = reports[Math.floor(Math.random() * reports.length)];
+    const report = { ...pick.report };
+    // 规则层是确定性、零成本的，本地补上（预置包里只存了模型层结果）
+    report.ruleFindings = runDeterministicRules(pick.answer || '', pick.question || {});
+    state.lastReviewReport = report;
+    await dbPut('sessions', report);
+    showToast('已载入预置复盘报告（离线可演）');
+    navigate('/review');
   });
 
   // 次 CTA「浏览题库 / 导入我的项目文档」：滚到题库列表
@@ -418,20 +440,8 @@ export function renderBankScreen(root) {
       categories.map((c) => `<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`).join('');
   }
 
-  // 领域维度：题库的 track 只有两档，用关键词映射出真正能筛的方向
-  const DOMAINS = [
-    { key: 'agent', label: 'AI Agent / 工具调用', match: /agent|智能体|工具调用|tool|workflow|多轮/i },
-    { key: 'rag', label: 'RAG / 检索增强', match: /rag|检索|向量|知识库|召回|rerank|embedding/i },
-    { key: 'backend', label: '后端与系统设计', match: /后端|系统设计|分布式|并发|队列|缓存|存储|数据库|微服务|架构|高可用/i },
-    { key: 'algo', label: '算法与数据', match: /算法|推荐|搜索|模型效果|评测|数据|指标|实验|特征/i },
-    { key: 'product', label: '产品与业务', match: /产品|用户|增长|运营|商业|需求|商业化/i },
-    { key: 'general', label: '通用面试素养', match: /沟通|协作|职业|规划|学习|心态|博弈|简历|自我介绍/i },
-  ];
-  const domainOf = (q) => {
-    const hay = `${q.title} ${q.context} ${(q.keywords || []).join(' ')} ${q.track}`;
-    const hit = DOMAINS.find((d) => d.match.test(hay));
-    return hit ? hit.label : '通用面试素养';
-  };
+  // 方向维度：优先用题库数据里的 domain（构建脚本产出），缺失时才按关键词兜底
+  const DOMAIN_ITEMS = DOMAINS.map((d) => ({ ...d, label: DOMAIN_LABEL[d.key] || d.label }));
 
   // 定制题单（本地生成，内存 + localStorage 留存）
   const CUSTOM_KEY = 'zhimian.bank.custom';
@@ -600,12 +610,16 @@ export function renderBankScreen(root) {
 
   const renderTracks = () => {
     trackBox.innerHTML = '';
-    const all = [{ key: '', label: '全部方向' }, ...DOMAINS.map((d) => ({ key: d.key, label: d.label }))];
+    const counts = domainCounts(state.bank);
+    const all = [{ key: '', label: '全部方向', count: state.bank.length }, ...DOMAIN_ITEMS.map((d) => ({ ...d, count: counts[d.key] || 0 }))];
     all.forEach((d) => {
       const btn = document.createElement('button');
       btn.type = 'button';
       btn.className = `btn btn-sm ${selectedDomain === d.key ? 'btn-primary' : ''}`;
-      btn.textContent = d.label;
+      btn.textContent = d.count ? `${d.label} ${d.count}` : `${d.label} 0`;
+      btn.title = d.count ? d.hint || d.label : '这个方向暂时没有题，先看看别的';
+      // 0 题的方向不给"点了空白"的体验：直接禁用并说明
+      btn.disabled = !d.count;
       btn.addEventListener('click', () => {
         selectedDomain = d.key;
         resetPage();
@@ -674,8 +688,7 @@ export function renderBankScreen(root) {
     const filtered = state.bank.filter((q) => {
       const kw = keyword.trim().toLowerCase();
       const matchKw = !kw || q.title.toLowerCase().includes(kw) || q.context.toLowerCase().includes(kw);
-      const domain = DOMAINS.find((d) => d.key === selectedDomain);
-      const matchDomain = !domain || domain.match.test(`${q.title} ${q.context} ${(q.keywords || []).join(' ')} ${q.track}`);
+      const matchDomain = !selectedDomain || domainOf(q) === selectedDomain;
       const matchDiff = !diff || q.difficulty === diff;
       const matchCategory = !category || q.track === category;
       return matchKw && matchDomain && matchDiff && matchCategory;
@@ -693,7 +706,28 @@ export function renderBankScreen(root) {
     }
 
     if (!filtered.length) {
-      listBox.innerHTML = `<div class="card" style="grid-column:1/-1;text-align:center;color:var(--text-muted);">未找到匹配的真题，请尝试清空筛选条件。</div>`;
+      // 空结果不給空白页：给几条"相关题"，并说清为什么没有
+      const suggestions = fuzzySuggestions(state.bank, { keyword, domain: selectedDomain, difficulty: diff }, 4);
+      listBox.innerHTML = `<div class="card" style="grid-column:1/-1;">
+        <div style="font-weight:600;font-size:14px;margin-bottom:4px;">这个条件下暂时没有题</div>
+        <div style="font-size:12.5px;color:var(--text-secondary);margin-bottom:10px;">
+          ${selectedDomain ? `「${DOMAIN_LABEL[selectedDomain] || selectedDomain}」方向` : '当前筛选'}还没有收录题目，先看看这些相关的：</div>
+        <div id="suggest-list" style="display:flex;flex-direction:column;gap:8px;"></div>
+      </div>`;
+      const sbox = listBox.querySelector('#suggest-list');
+      for (const sq of suggestions) {
+        const row = document.createElement('div');
+        row.style.cssText = 'display:flex;justify-content:space-between;align-items:center;gap:10px;border:1px solid var(--border);border-radius:8px;padding:8px 10px;';
+        row.innerHTML = `<div style="font-size:13px;line-height:1.5;">${escapeHtml(String(sq.title).slice(0, 46))}…</div>
+          <span class="tag">${escapeHtml(DOMAIN_LABEL[domainOf(sq)] || '')}</span>`;
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'btn btn-sm';
+        b.textContent = '看这题 →';
+        b.addEventListener('click', () => openLogicCard(sq));
+        row.appendChild(b);
+        sbox.appendChild(row);
+      }
       renderPager(0);
       return;
     }
@@ -714,7 +748,7 @@ export function renderBankScreen(root) {
       card.innerHTML = `
         <div>
           <div style="display:flex;gap:6px;align-items:center;margin-bottom:8px;flex-wrap:wrap;">
-            <span class="tag tag-blue">${escapeHtml(domainOf(q))}</span>
+            <span class="tag tag-blue">${escapeHtml(DOMAIN_LABEL[domainOf(q)] || domainOf(q))}</span>
             <span class="tag">${escapeHtml(q.track)}</span>
           </div>
           <h3 style="margin:0 0 8px;font-size:16px;line-height:1.5;">${escapeHtml(q.title)}</h3>
@@ -724,11 +758,11 @@ export function renderBankScreen(root) {
                 ? `<a class="card-quote" href="${escapeHtml(vp.sourceUrl)}" target="_blank" rel="noopener noreferrer"
                       style="display:block;font-size:12.5px;color:var(--text-secondary);line-height:1.7;padding-left:8px;border-left:2px solid var(--border);text-decoration:none;"
                       title="点击打开这条知乎原答">
-                     知乎高赞观点摘要：${escapeHtml(String(vp.summary || '').slice(0, 58))}…
+                     知乎观点摘要：${escapeHtml(String(vp.summary || '').slice(0, 58))}…
                      <span style="color:var(--primary);white-space:nowrap;">看原答 ↗</span>
                    </a>`
                 : `<div class="card-quote" style="font-size:12.5px;color:var(--text-secondary);line-height:1.7;padding-left:8px;border-left:2px solid var(--border);">
-                     知乎高赞观点摘要：${escapeHtml(String(vp.summary || '').slice(0, 58))}…
+                     知乎观点摘要：${escapeHtml(String(vp.summary || '').slice(0, 58))}…
                    </div>`
               : `<div style="font-size:12.5px;color:var(--text-muted);">观点卡待补</div>`
           }

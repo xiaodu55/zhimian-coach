@@ -818,3 +818,30 @@ a:hover {
   box-shadow: none;
   cursor: not-allowed;
 }
+
+/* ---------- 移动端专项 ---------- */
+@media (max-width: 720px) {
+  .main-container {
+    padding: 12px 10px 120px;
+  }
+  .hero-title { font-size: 20px !important; }
+  .next-step-bar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+    padding: 10px 12px;
+  }
+  .next-step-bar > div:last-child {
+    justify-content: stretch;
+  }
+  .next-step-bar .btn { flex: 1; }
+  .mode-switch { flex-wrap: wrap; gap: 6px; }
+  .modal-card { max-height: 92vh; }
+  .modal-card .modal-body { max-height: 64vh; }
+  .live-progress { bottom: 96px; font-size: 12px; }
+  .citation-chip { font-size: 11px; }
+}
+@media (max-width: 420px) {
+  .topbar-inner { padding: 8px 10px; }
+  .hero-actions .btn { width: 100%; }
+}

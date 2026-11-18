@@ -56,7 +56,7 @@ export function mountNextStepBar(host, opts) {
 
 /**
  * 阶段性微文案（aria-live 播报）：模型生成期间告诉用户"现在在做什么"。
- * 用法：const progress = createProgress('正在检索知乎高赞回答结构…'); progress.step('正在提炼 3 个核心考察点…'); progress.done();
+ * 用法：const progress = createProgress('正在检索知乎真实回答结构…'); progress.step('正在提炼 3 个核心考察点…'); progress.done();
  */
 export function createProgress(initialText = '') {
   let host = document.querySelector('#live-progress');

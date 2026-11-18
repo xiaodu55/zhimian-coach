@@ -98,6 +98,18 @@ export async function renderReviewScreen(root) {
     <!-- 复盘盲区 → 专项追问（写完会给出跳转按钮） -->
     <div id="special-questions-box" class="card" style="margin-bottom:16px;display:none;" hidden></div>
 
+    <!-- 同题两次作答对比 -->
+    <div class="card" style="margin-bottom:16px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;">
+        <div>
+          <strong style="font-size:14px;">📈 再练一次并对比上次</strong>
+          <div style="font-size:12.5px;color:var(--text-muted);margin-top:4px;">同一道题两次作答并排，看得见进步；这一题只练过一次时会告诉你"再练一次才有对比"。</div>
+        </div>
+        <button id="btn-retry-compare" class="btn btn-sm" type="button">对比上次作答 →</button>
+      </div>
+      <div id="compare-box" style="margin-top:12px;" hidden></div>
+    </div>
+
     <!-- 一键生成满分润色版：原话 ⇄ 可背版本的直观对比 -->
     <div class="card" style="margin-bottom:16px;">
       <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;">
@@ -450,6 +462,74 @@ export async function renderReviewScreen(root) {
     });
   })();
 
+  // ---- 「再练一次并对比上次」：同一题两次作答并排，最强的进步可视化 ----
+  (() => {
+    const host = wrapper.querySelector('#compare-box');
+    if (!host) return;
+    const btn = wrapper.querySelector('#btn-retry-compare');
+    btn?.addEventListener('click', async () => {
+      btn.disabled = true;
+      const origin = btn.textContent;
+      btn.textContent = '读取上次作答…';
+      try {
+        const sessions = await dbGetAll('sessions').catch(() => []);
+        const mine = sessions
+          .filter((x) => x?.question?.id === question.id && x.id !== report.id)
+          .sort((a, b) => String(b.createdAt || '').localeCompare(String(a.createdAt || '')));
+        const prev = mine[0];
+        if (!prev) {
+          host.hidden = false;
+          host.innerHTML = `<div style="font-size:13px;color:var(--text-secondary);">
+            这是你在这一题上的<b>第一次</b>作答。再练一次，这里就会并排显示两次的差别（诊断条数、评分、篇幅）。</div>`;
+          return;
+        }
+        const row = (label, value) =>
+          `<td style="padding:6px 10px;border-top:1px solid var(--border);font-size:13px;">${label}</td><td style="padding:6px 10px;border-top:1px solid var(--border);font-size:13px;">${value}</td>`;
+        const scoreOf = (r) => {
+          const sc = (r.llmScores || [])[0];
+          return sc ? `${sc.score}（${sc.dimension || ''}）` : '无模型评分';
+        };
+        host.hidden = false;
+        host.innerHTML = `
+          <div style="font-size:13px;font-weight:700;margin-bottom:8px;">同题两次作答对比</div>
+          <table style="width:100%;border-collapse:collapse;">
+            <thead><tr>
+              <th style="text-align:left;padding:6px 10px;font-size:12px;color:var(--text-muted);">项目</th>
+              <th style="text-align:left;padding:6px 10px;font-size:12px;color:var(--text-muted);">上次</th>
+              <th style="text-align:left;padding:6px 10px;font-size:12px;color:var(--text-muted);">这次</th>
+            </tr></thead>
+            <tbody>
+              <tr>${row('有效字数', `${countEffectiveChars(prev.answer || '')} 字`)}${row('', `${countEffectiveChars(report.answer || '')} 字`)}</tr>
+              <tr>${row('诊断条数', `${(prev.ruleFindings || []).length} 条`)}${row('', `${(report.ruleFindings || []).length} 条`)}</tr>
+              <tr>${row('首个维度分', scoreOf(prev))}${row('', scoreOf(report))}</tr>
+            </tbody>
+          </table>
+          <details style="margin-top:8px;">
+            <summary style="cursor:pointer;font-size:12.5px;color:var(--primary);">展开上次的原话</summary>
+            <div style="font-size:12.5px;color:var(--text-secondary);line-height:1.7;margin-top:6px;white-space:pre-wrap;">${escapeHtml(String(prev.answer || '').slice(0, 600))}</div>
+          </details>`;
+        // 跳去陪练室再练同一题
+        const again = document.createElement('button');
+        again.type = 'button';
+        again.className = 'btn btn-primary btn-sm';
+        again.style.marginTop = '10px';
+        again.textContent = '带着这道题再练一次 →';
+        again.addEventListener('click', () => {
+          state.activeQuestion = question;
+          state.questionPickedByUser = true;
+          navigate('/coach');
+        });
+        host.appendChild(again);
+      } catch (err) {
+        host.hidden = false;
+        host.innerHTML = `<div style="font-size:13px;color:var(--red);">读取历史失败：${escapeHtml(err.message)}</div>`;
+      } finally {
+        btn.disabled = false;
+        btn.textContent = origin;
+      }
+    });
+  })();
+
   // ---- 底部「下一步」主行动条：标出盲区后要么去抗压测，要么把话术存进弹药库 ----
   mountNextStepBar(root, {
     text: '下一步：把盲区变成专项追问，或把高分话术收进弹药库',
@@ -545,7 +625,7 @@ function renderLlmLayer(wrapper, report) {
         id: refId,
         type: 'zhihu',
         label: `${refId} · ${card ? '知乎原答' : '来源缺失'}`,
-        sourceTitle: card?.author || '知乎高赞回答',
+        sourceTitle: card?.author || '知乎答主',
         locator: card?.stance || '',
         quote: card?.evidenceQuote || '来源原文未随结果返回',
         url: card?.sourceUrl || '',
@@ -576,7 +656,7 @@ function renderLlmLayer(wrapper, report) {
         li.appendChild(document.createTextNode(' '));
         li.appendChild(renderCitationChip({
           id: refId, type: 'zhihu', label: refId,
-          sourceTitle: vc?.author || '知乎高赞回答', locator: vc?.stance || '',
+          sourceTitle: vc?.author || '知乎答主', locator: vc?.stance || '',
           quote: vc?.evidenceQuote || '', url: vc?.sourceUrl || '',
           myText: myStatementFor(report.answer, im.claim),
         }));

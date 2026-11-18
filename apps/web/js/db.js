@@ -130,27 +130,72 @@ export async function resetLocalData() {
 export async function exportAllData() {
   const dump = {
     app: 'zhimian-coach',
+    version: SCHEMA_VERSION,
     exportedAt: new Date().toISOString(),
     stores: {}
   };
-  for (const name of ['sessions', 'documents', 'weaknesses', 'opportunities', 'flashcards']) {
+  // 录音体积大且已单独清理过，导出时只带文字稿，避免备份文件几百 MB
+  for (const name of ['sessions', 'documents', 'weaknesses', 'opportunities', 'flashcards', 'specialQuestions']) {
     dump.stores[name] = await dbGetAll(name);
   }
+  dump.stores.recordings = (await dbGetAll('recordings')).map((r) => ({
+    ...r,
+    blob: null,
+    systemBlob: null,
+    audioStripped: true,
+  }));
   return dump;
 }
 
+/** 本地数据结构版本：备份里带上，导入时按版本做迁移 */
+export const SCHEMA_VERSION = 3;
+
 /**
- * 导入 JSON 备份恢复状态
+ * 导入 JSON 备份恢复状态。
+ * 备份可能来自旧版本（没有 version 字段），这里做兼容与校验：
+ *  - 结构不对 → 明确报错，不半导入
+ *  - 旧版本 → 按迁移规则补齐缺失字段
  */
 export async function importAllData(dump) {
   if (!dump || !dump.stores) throw new Error('无效的备份文件格式');
+  const version = Number(dump.version) || 1;
+  if (version > SCHEMA_VERSION) {
+    throw new Error(`备份来自更新版本（v${version}），当前应用只支持到 v${SCHEMA_VERSION}，请先升级应用`);
+  }
+  let imported = 0;
+  let skipped = 0;
   for (const [storeName, items] of Object.entries(dump.stores)) {
-    if (STORES.includes(storeName) && Array.isArray(items)) {
-      for (const item of items) {
-        if (item && item.id) {
-          await dbPut(storeName, item);
-        }
+    if (!STORES.includes(storeName) || !Array.isArray(items)) {
+      skipped += 1;
+      continue;
+    }
+    for (const item of items) {
+      if (!item || !item.id) {
+        skipped += 1;
+        continue;
       }
+      await dbPut(storeName, migrateItem(storeName, item, version));
+      imported += 1;
     }
   }
+  return { imported, skipped, version };
+}
+
+/**
+ * 按备份版本迁移单条数据。
+ * v1/v2 的闪卡没有 mastery 字段、观点卡没有 author —— 读的时候补齐默认值即可。
+ */
+function migrateItem(storeName, item, version) {
+  const next = { ...item };
+  if (storeName === 'flashcards') {
+    if (!next.mastery) next.mastery = '生疏';
+    if (!Array.isArray(next.supports)) next.supports = [];
+    if (!next.coreConclusion) next.coreConclusion = '';
+    if (!next.fallback) next.fallback = '';
+  }
+  if (storeName === 'opportunities' && !next.status) {
+    next.status = /已拿Offer|已挂复盘/.test(next.stage || '') ? '已复盘' : '待面试';
+  }
+  if (storeName === 'weaknesses' && !next.status) next.status = 'pending';
+  return next;
 }

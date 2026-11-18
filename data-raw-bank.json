@@ -1,6 +1,6 @@
 {
   "version": 3,
-  "updatedAt": "2026-11-16T14:46:17.074Z",
+  "updatedAt": "2026-11-18T08:56:21.481Z",
   "items": [
     {
       "id": "q_1",
@@ -4554,6 +4554,1093 @@
       "benchmark": "",
       "pitfalls": [],
       "createdAt": "2026-11-16T14:44:50.253Z"
+    },
+    {
+      "id": "q_54",
+      "title": "Agent Harness 工程实践有哪些经验？",
+      "questionUrl": "https://www.zhihu.com/question/2048423563489814242",
+      "track": "interview",
+      "topic": "AI Agent 幻觉 兜底 实践",
+      "domain": "ai-agent",
+      "kind": "tech",
+      "heat": 5,
+      "sources": [
+        {
+          "url": "https://www.zhihu.com/question/2048423563489814242/answer/2062147967314924234",
+          "token": "2062147967314924234",
+          "author": "",
+          "votes": null,
+          "snippet": "我现在发现，llm这一轮真的看出了很多人骨子里的愚昧、无知、跟风。 一开始是prompt engineering，后来就是什么mcp，再后来就是skill，然后又什么harness，后面又来了一个什么loop engineering。 我有时候在我的评论区总是看到什么“是harness追不上，不是模型不行”，什么“kimi code本身不如claude code，是工程能力落后”，什么“deepseek开始招人做harness了，会赶上claude code了”，还几十个人给这种评论点赞。 我真的是一…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/2048423563489814242/answer/2095130831320789804",
+          "token": "2095130831320789804",
+          "author": "",
+          "votes": null,
+          "snippet": "我比较认同这个说法： Agent Harness，就是在最合适的时机，给 Agent 的 LLM 喂最合适的 Context。 不过，这里面最难的其实是“时机”。第一次把需求和代码塞给模型，通常没什么技术含量。真正麻烦的是跑到第二十轮：哪些文件已经改了，哪些猜测被排除了，测试结果是不是对应最新代码，刚才那个超时的操作到底有没有成功。模型下一步该看什么，取决于这些状态。 很多看起来像“模型能力不够”的问题，值得先沿着这条线查。它反复…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/2048423563489814242/answer/2071679668789440760",
+          "token": "2071679668789440760",
+          "author": "",
+          "votes": null,
+          "snippet": "最近，我们一直在尝试优化 Better Harness 的 SKILL 自动沉淀能力：从 Agent 的真实会话中识别重复出现的工作路径，再判断其中哪些经验值得进一步沉淀成可复用的 SKILL。真正做起来以后，我们发现这件事远比“把一段 Session 分析一遍”复杂得多。对于一次软件开发任务来说，Agent 的行为并不是孤立发生的。它从一个需求或者用户故事开始，经过对需求的理解、上下文探索、代码修改和验证，最终才形成一次可以被评审的代码贡献。…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/2048423563489814242/answer/2093322620544488815",
+          "token": "2093322620544488815",
+          "author": "",
+          "votes": null,
+          "snippet": "整体： 大模型面试宝典 ：updated 2026.10.11号、Star-4k LLM & VLM & Agent 面试回答参考 ：updated 2026.1.11号 LearnLLM.AI | Learning LLM is all you need. ：updated 2026.1.24号、Star-5.4k AI Agent 开发 × 面试求职 = 一站式解决方案 ：updated 2026.1.21号、Star-1.6k Awesome-LLM-Interview-Questions-and-Answers ：updated 2025.8.22号、Star-23 2026大模型智能体(Agent)面试全攻略 ：updated 2026.1.14号、点赞-178 大…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/2048423563489814242/answer/2057972318723371413",
+          "token": "2057972318723371413",
+          "author": "",
+          "votes": null,
+          "snippet": "作者: Lilian Weng 原文: https://lilianweng.github.io/posts/2026-07-04-harness/ 发布时间: 2026年7月4日 递归自我改进（RSI）的概念可以追溯到 I. J. Good (1965) ，他在论文中将”超智能机器”定义为能够在所有智力活动上超越人类，并设计出更好的机器来改进自身的系统。Yudkowsky (2008) 使用”递归自我改进”这个短语来描述一个特定的反馈循环：AI 使用其当前的智能来改进产生其智能的认知机制。在现代 AI 中，这种反馈循环可能表现为模型直接重写自身的权重…"
+        }
+      ],
+      "viewAngleCards": [],
+      "benchmark": "",
+      "pitfalls": [],
+      "createdAt": "2026-11-18T08:51:48.247Z"
+    },
+    {
+      "id": "q_55",
+      "title": "通过 MCP 实现 AI Agent 目前有哪些最佳实践？",
+      "questionUrl": "https://www.zhihu.com/question/15117069800",
+      "track": "interview",
+      "topic": "AI Agent 幻觉 兜底 实践",
+      "domain": "ai-agent",
+      "kind": "tech",
+      "heat": 5,
+      "sources": [
+        {
+          "url": "https://www.zhihu.com/question/15117069800/answer/128138402465",
+          "token": "128138402465",
+          "author": "",
+          "votes": null,
+          "snippet": "今天测试了下Blender + Claude Desktop通过MCP联动的应用，下面视频记录了生成全过程，视频已加速。 [视频] 最后的成品并不复杂，就是一个3D模拟出来的沙滩，但要知道现在只是starting point，随着不断的迭代，最后面AI直接做3D建模是完全可行的。 [图片] 总体方法很简单，就三步： 1 软件下载安装 2 软件配置 3 连接并使用 前置软件下载和安装需要安装四个软件/应用： Blender 3.0及以上版本Python 3.10及以上版本Claude Desktopuv包前三个官…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/15117069800/answer/1891428649439302574",
+          "token": "1891428649439302574",
+          "author": "",
+          "votes": null,
+          "snippet": "推荐一个好用的mcp客户端，chatwise。 是个人认为最目前简单易用的mcp客户端（很接近原生claude）。可以帮助大家快速测试各种mcp工具。 [图片] 10M体积塞下cherry studio 100M安装包的功能。模型和mcp的配置非常简单，artificts功能做实时预览。还有实际使用下来体验很丝滑。 下面是使用chatwise简单搭建的一个深度学术搜索agent，以下是测试效果（在专业学术问题上，个人认为比google Deep Research效果更好）: [视频: 基于MCP工具的深度学术搜索] 以下是官网链接: https:…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/15117069800/answer/1906757890984902950",
+          "token": "1906757890984902950",
+          "author": "",
+          "votes": null,
+          "snippet": "在国外MCP服务器市场已有大佬都研究出来一套产业链了。 已成熟的MCP项目： Blender MCP：将文本转换为3D模型GitHub MCP：自动化代码审查等仓库任务Firecrawl MCP：简化网页抓取过程 [图片] 他们多数通过以下渠道来推广： 在Anthropic的\"Integrations\"平台上展示（这可能成为MCP服务器的应用商店）在GitHub上分享（可以查看Awesome MCP Servers仓库）在X（Twitter）上使用#MCP或#BuildInPublic标签发布在IndieHackers社区分享你的项目首先…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/15117069800/answer/2048331352781725871",
+          "token": "2048331352781725871",
+          "author": "",
+          "votes": null,
+          "snippet": "不少人跟着零散教程跑通 MCP 简易 Demo 后，一落地完整 AI Agent 就接连踩坑：架构耦合混乱、工具调用幻觉频发、接口超时无熔断、权限存在安全漏洞、本地部署资源占用极高，想要做多智能体协作、复杂长流程任务更是完全无从下手。推荐三本 MCP&Agent 系列专业教程：《MCP 开发从入门到实战》、《MCP 极简开发轻松打造高效智能体》《AI Agent 开发实战：MCP+A2A+LangGraph》，三本书各有侧重、层层递进，结合书中大量生产级落地案…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/15117069800/answer/1895760455273796450",
+          "token": "1895760455273796450",
+          "author": "",
+          "votes": null,
+          "snippet": "回答之前有必要先说说MCP是啥，它的全称是“Model Context Protocol”，是一种由Anthropic主导开发的开放标准协议，旨在实现大语言模型（LLMs）与外部数据源、工具及服务之间的标准化交互。简单来说，它就像一个“万用插座”，把大模型和外部系统连接起来。 通过MCP实现AI Agent的最佳实践，目前主要集中在开发工具集成、自动化工作流、跨领域协作以及生态扩展等方面。我们一个个来看。 典型MCP集成案例MCP包含Client和Server两…"
+        }
+      ],
+      "viewAngleCards": [],
+      "benchmark": "",
+      "pitfalls": [],
+      "createdAt": "2026-11-18T08:51:51.123Z"
+    },
+    {
+      "id": "q_56",
+      "title": "什么是Harness工程？",
+      "questionUrl": "https://www.zhihu.com/question/2021371233627845218",
+      "track": "interview",
+      "topic": "Prompt 工程 面试题",
+      "domain": "ai-agent",
+      "kind": "tech",
+      "heat": 5,
+      "sources": [
+        {
+          "url": "https://www.zhihu.com/question/2021371233627845218/answer/2038548287511328673",
+          "token": "2038548287511328673",
+          "author": "",
+          "votes": null,
+          "snippet": "Harness Engineering 讨论的事情其实很简单：决定 Agent 表现上限的，可能不是模型，而是你给模型搭的那套工作环境。 这篇文章会把 Harness Engineering 拆开讲清楚。全文接近 1w 字，主要看这几块： Harness 是什么，为什么可以把 Agent 理解成 Model + Harness为什么同一个模型换一套接口，分数能从 6.7% 变成 68.3%Harness 的六层架构分别解决什么问题从零搭 Harness 时，哪些事情应该先做，哪些可以后面再补OpenAI、Anthropi…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/2021371233627845218/answer/2025626522501887228",
+          "token": "2025626522501887228",
+          "author": "",
+          "votes": null,
+          "snippet": "Prompt engineering 在 long-run task 面前断崖式失效。不是因为 prompt 写得不好，是因为 attention decay、context rot、drift accumulation 三重物理极限。Harness engineering 是完整的答案。你让 agent 做一个大型 refactor。前 15 分钟表现优秀——精准定位问题，给出合理方案，代码写得干净。你很满意，去泡了杯咖啡。 半小时回来，发现它已经声明自己做完了。你一看，一堆边界情况没处理。或者更常见的——它开始做计划…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/2021371233627845218/answer/2073807225534137763",
+          "token": "2073807225534137763",
+          "author": "",
+          "votes": null,
+          "snippet": "我去年帮一个客户做代码审查Agent，模型从GPT-4换到Claude换到DeepSeek，效果始终不行，经常漏报，有时候还瞎报。客户一脸绝望，问我是不是模型不行。我看了他们的配置，差点没背过气。Agent没有任何项目背景信息，没有定义工具边界，没有让它先跑测试，它根本不知道从哪里开始，只能凭感觉猜。后来我们只改了一点，加了个AGENTS.md文件，再给Agent配了三个工具：读文件、跑测试、看git diff。效果立刻提升，漏报率降了一半以上…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/2021371233627845218/answer/2024814243304800368",
+          "token": "2024814243304800368",
+          "author": "",
+          "votes": null,
+          "snippet": "如果你在 2026 年只深入研究一个 Agent 框架的源码，langchain-ai/deepagents 值得排在清单最前面。更难得的是，已经有人把它从架构到工程实践写成了一本免费的中文技术书。先说结论LangChain 团队开源的 Deep Agents（langchain-ai/deepagents）是目前最完整的「batteries-included」Agent Harness 实现——19K+ Star，MIT 协议，构建在 LangGraph 之上，内置规划、文件系统、子 Agent 委派、上下文压缩、记忆注入等能力，一条…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/2021371233627845218/answer/2026079928223844236",
+          "token": "2026079928223844236",
+          "author": "",
+          "votes": null,
+          "snippet": "什么是 Harness Engineering：聊聊最近爆火的技术词2026 年春天，一个英文单词在开发者社区里忽然火起来。一个月前还很少人提，一个月后已经出现在各平台技术帖和文章里里。这个词就是 Harness Engineering。有意思的地方是，越多人讨论它，它就越难被讲清楚。有人说它是”马具工程”，有人说它是”驾驭工程”，有人说它是上下文工程的放大版，有人说它是软件工程思想在 AI 时代的回魂，还有人干脆认定这又是一次新瓶装旧酒。各…"
+        }
+      ],
+      "viewAngleCards": [],
+      "benchmark": "",
+      "pitfalls": [],
+      "createdAt": "2026-11-18T08:51:59.113Z"
+    },
+    {
+      "id": "q_57",
+      "title": "在大模型应用中，如何提升RAG（检索增强生成）的能力？",
+      "questionUrl": "https://www.zhihu.com/question/643138720",
+      "track": "interview",
+      "topic": "检索增强生成 RAG 优化方案",
+      "domain": "rag",
+      "kind": "tech",
+      "heat": 5,
+      "sources": [
+        {
+          "url": "https://www.zhihu.com/question/643138720/answer/3495870046",
+          "token": "3495870046",
+          "author": "",
+          "votes": null,
+          "snippet": "曾经参与过公司内部的RAG应用，写过一篇关于RAG的技术详情以及有哪些好用的技巧，这次专注于总结一下RAG的提升方法。 还是老样子，深入浅出希望给更多的人进行科普。 什么是RAG？RAG简单来说就是给予LLM的一些增强 引入新的信息，这些信息可能不在LLM中。使用RAG控制内容来减少幻觉（模型生成与现实不符的输出），这是RAG的一个常见用途。通常的用例是提供内容给模型，并指示它仅使用该内容来回答问题，不使用LLM自有的知识，以…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/643138720/answer/3442214608",
+          "token": "3442214608",
+          "author": "",
+          "votes": null,
+          "snippet": "来来来，上笔记！ 论文链接： https://arxiv.org/pdf/2312.10997.pdf GitHub链接： https://github.com/Tongji-KGLLM/RAG-Survey 不管看啥，看survey最能get全，今天咱们读一篇文献综述，然后我就要去写自己的研究框架了。希望这篇文章能给我力量！Power！！！YesYes，依旧还是关于RAG的内容。目前大语言模型的弊端已经人尽皆知，幻想就别提了，永远过时的知识储备，不透明没法溯源的推理过程，让人没头脑。于是呼风唤雨使出来了一堆新方案，Retrieval-Augmented Generati…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/643138720/answer/1926426114420638922",
+          "token": "1926426114420638922",
+          "author": "",
+          "votes": null,
+          "snippet": "两个月前发布的一篇介绍 IBM RAG 挑战赛冠军方案的文章，在公众号和知乎的收获了很多正反馈，后续陆续有很多来自知识星球和后台私信的复现催更。p.s. 看来这种特定场景的最佳实践我得后续多找找发出来。 [图片] [图片] 其实上周就做完了原项目复现的工作，只是为了让这篇文章不只是停留在复现的描述上，我又花了些几天时间梳理了下其中的工程化经验，也另外开发了一个简单的前端交互界面，更加可视化的对复现过程和结果进行观察。总体来说，这…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/643138720/answer/1950593714356465927",
+          "token": "1950593714356465927",
+          "author": "",
+          "votes": null,
+          "snippet": "从去年到今年陆续做了好几个B端的RAG落地项目，特点很鲜明：开局一堆非结构化文件和一个需求文档，后面的全靠自己琢磨了。这当中踩了很多坑，也学到了一些粗糙但有用的调优方法。 现在回头看RAG失败的原因可以有一堆，但成功的情况归纳下来只有一种： 它准确地返回了你需要的东西，不多也不少。使用场景和用户定位我们都知道基础的RAG正如同它的名字一样直白：通过向量相似度检索文档切片，取回对应的切片作为上下文信息增强，把…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/643138720/answer/3425882959",
+          "token": "3425882959",
+          "author": "",
+          "votes": null,
+          "snippet": "12 个 RAG 痛点和建议的解决方案-解决检索增强生成的核心挑战 原文链接： https://archive.is/bNbZo [图片] 受到 Barnett 等人的论文《 设计检索增强生成系统时的七个故障点》 的启发，让我们在本文中探讨该论文中提到的七个故障点以及开发 RAG 管道时的另外五个常见痛点。更重要的是，我们将深入研究这些 RAG 痛点的解决方案，以便我们能够更好地解决日常 RAG 开发中的这些痛点。 我用“痛点”而不是“失败点”主要是因为这些点都有相应…"
+        }
+      ],
+      "viewAngleCards": [],
+      "benchmark": "",
+      "pitfalls": [],
+      "createdAt": "2026-11-18T08:53:02.435Z"
+    },
+    {
+      "id": "q_58",
+      "title": "大模型检索增强生成（RAG）有哪些好用的技巧？",
+      "questionUrl": "https://www.zhihu.com/question/625481187",
+      "track": "interview",
+      "topic": "检索增强生成 RAG 优化方案",
+      "domain": "rag",
+      "kind": "tech",
+      "heat": 5,
+      "sources": [
+        {
+          "url": "https://www.zhihu.com/question/625481187/answer/3279041129",
+          "token": "3279041129",
+          "author": "",
+          "votes": null,
+          "snippet": "”RAG的尽头是Agent” —— 笔者 市场风向RAG（检索增强生成）是近期几个大模型应用方向上 最难下笔的一个，一方面是因为技术方案仍在快速迭代；另一方面是市场对它的认知还存在一定偏差。目前市场认为：chatBI（让大模型做数据查询和分析）很有用但是有难度；Agent（让大模型自助规划任务实现用户复杂的需求）虽然很酷炫，但是落地的应用少，不够成熟。而对于RAG，企业都很明确它的价值，并且技术实现上，一顿组合拳疯狂输出（…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/625481187/answer/3246962359",
+          "token": "3246962359",
+          "author": "",
+          "votes": null,
+          "snippet": "RAG的整体链路很长。需要对文本切分，然后向量化之后存储到向量数据库中。然后需要进行KNN检索最相似的K个文本片段，拼接成提示词去调用LLM。这几个步骤都有可能出现问题，导致带来连锁反应，使得最后结果的可信度满足不了客户效果。 从整体流程梳理，细节的问题主要集中在下面几点： 1.文本切分，切分策略需要按数据集进行适配和微调，没有低成本、高质量的方案 2.向量模型的语义表达能力问题，长文本的召回率和相关性一般 3.作…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/625481187/answer/3292724588",
+          "token": "3292724588",
+          "author": "",
+          "votes": null,
+          "snippet": "本文基于 OpenAI 最新的分享 “ A Survey of Techniques for Maximizing LLM Performance ” 整理而成。由ChatGPT完成初稿后，再人工进行check和调整。更好的阅读体验见：OpenAI 如何优化 LLM 的效果 | Breezedeus.com 分享讲述了 LLM 优化时需要考虑的两个方向： 上下文优化（Context Optimization）和 LLM优化。上下文优化： 模型需要知道什么信息才能解决问题。LLM优化： 模型需要如何行动才能解决问题。 [图片] 在对大型语言模型（LLM…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/625481187/answer/3309968693",
+          "token": "3309968693",
+          "author": "",
+          "votes": null,
+          "snippet": "最近在研究公司内部的GPT应用，采用的是H2oGPT的开源项目的基础上进行封装，可以指定公司内部文档，采用的 检索增强生成（RAG）技术，研究团队所有的技术路线以及部分技术的交流后，来谈一谈检索增强生成（RAG）及其工业级实际落地方案。本文大约6000字，详细解读 RAG技术以及落地方案，阅读时间大约15分钟，建议点赞、收藏、关注后慢慢品尝～Hi，这里是 @TopGeeky 专注于输出编程、人工智能、大数据以及科技领域优质回答的“热爱…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/625481187/answer/3313715960",
+          "token": "3313715960",
+          "author": "",
+          "votes": null,
+          "snippet": "2024年7月26日更新： 最近有个比较火的项目，叫gptpdf，直接通过GPT-4o或者Qwen-VL这种多模态大模型进行文档层面的解析。 GitHub - CosmosShadow/gptpdf: Using GPT to parse PDF 在这个方案的基础上，我也开源了一个对应的方案，使用版面分析，结合多模态大模型的能力，对文档进行切片Chunking操作，实现较好的语义切分效果。 https://github.com/lazyFrogLOL/llmdocparser ---…"
+        }
+      ],
+      "viewAngleCards": [],
+      "benchmark": "",
+      "pitfalls": [],
+      "createdAt": "2026-11-18T08:53:03.943Z"
+    },
+    {
+      "id": "q_59",
+      "title": "RAG（检索增强生成）会不会消亡呢？",
+      "questionUrl": "https://www.zhihu.com/question/637421964",
+      "track": "interview",
+      "topic": "检索增强生成 RAG 优化方案",
+      "domain": "rag",
+      "kind": "tech",
+      "heat": 5,
+      "sources": [
+        {
+          "url": "https://www.zhihu.com/question/637421964/answer/1906519426305623583",
+          "token": "1906519426305623583",
+          "author": "",
+          "votes": null,
+          "snippet": "今天在给 n8n 的 RAG 日报工作流进行信源测试的时候，注意到一条新闻提到 IBM WatsonX AI 赞助一场企业 RAG 挑战赛， 用 100 份企业年报做 RAG 问答检验不同架构在真实企业级长文档场景下的效果。 [图片] https://abdullin.com/erc/ 这个赛事的前两场已经结束，这篇以其中第二场的冠军 Ilya Rice 公开 Blog 中分享的构建 RAG 系统过程中遇到的困难、积累的经验和采用的技巧为基础，我按照实际的系统流程（解析、注入、检索、增强、生成）和各…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/637421964/answer/33309712475",
+          "token": "33309712475",
+          "author": "",
+          "votes": null,
+          "snippet": "分享CCF 第七届AIOps国际挑战赛的季军方案，从我们的比赛经历来看，并不会，相反，私域领域问答的优秀效果说明RAG真的很重要 历经4个月的时间，从初赛赛道第1，复赛赛道第2，到最后决赛获得季军，这一路我们团队收获了很多实践经验，也结识了不少业界的RAG研究者，受益匪浅。应组委会邀请，本文介绍一下我们EasyRAG方案的亮点和实验结果，欢迎感兴趣的朋友批评指正！ 开源地址： https://github.com/BUAADreamer/EasyRAG 技术报告： https://github.…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/637421964/answer/3344775790",
+          "token": "3344775790",
+          "author": "",
+          "votes": null,
+          "snippet": "update20240325： [文章: RAG与Long-Context之争—没必要争] 结论：不会。 1、RAG主要可以解决大模型幻觉问题，以及通过外挂知识，避免模型频繁进行知识更新。 2、即使模型可接受上下文长度为128k，但是我的知识库里有10w篇文档，远远超过模型的上下文长度，所以你还是需要检索。 当然模型上下文长度变长，对于检索更加有好，粒度变大，召回变高，相辅相成。 3、即使你可以接受128k的长度，但是你的设备消耗不起，更大的长度需要…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/637421964/answer/3413359755",
+          "token": "3413359755",
+          "author": "",
+          "votes": null,
+          "snippet": "我看了这个帖子就真的感觉很无力，现在聊LLM的门槛太低了，一帮纯外行在这里不负责任的分析RAG的未来，因为Long context所以不需要chunk/retrieval了。。。 给到LLM的内容，有信息，也有噪声，RAG还有一个重点是提升信噪比，提升给到LLM的信息质量。而且作为一个compound system也更可控，也能让LLM的效果更好， 这是LLM类project落地的重要保障，而不是「一周出demo，半年用不好」。 效果>成本，没有效果，成本再低也没意义。 …"
+        },
+        {
+          "url": "https://www.zhihu.com/question/637421964/answer/61089640105",
+          "token": "61089640105",
+          "author": "",
+          "votes": null,
+          "snippet": "从纯业务端的角度来说，不但不会消亡，还有可能在未来的3-5年里大行其道。 表面原因非常简单：RAG几乎是目前唯一一种兼具门槛低+可观察+控制准+见效快的路线。 今年下半年对大模型微调和RAG有了比较直观的理解。 9月份趁着智谱举办大模型微调大赛的机会薅了不少token，通过LoRA微调试水了一把大模型（用的是glm-4-flash）微调的流程。 10月份到现在在做To B的RAG应用，几乎试过了市面上大部分开源/闭源的技术框架，包括但不限于C…"
+        }
+      ],
+      "viewAngleCards": [],
+      "benchmark": "",
+      "pitfalls": [],
+      "createdAt": "2026-11-18T08:53:05.439Z"
+    },
+    {
+      "id": "q_60",
+      "title": "大家觉得做一个大模型检索增强生成（RAG）系统，最难搞定的是那部分工作？",
+      "questionUrl": "https://www.zhihu.com/question/642650878",
+      "track": "interview",
+      "topic": "检索增强生成 RAG 优化方案",
+      "domain": "rag",
+      "kind": "tech",
+      "heat": 5,
+      "sources": [
+        {
+          "url": "https://www.zhihu.com/question/642650878/answer/57968449225",
+          "token": "57968449225",
+          "author": "",
+          "votes": null,
+          "snippet": "最近两个月的业余时间参与了几个RAG应用开发，最头疼的两个问题是：数据清洗和权限区分。 目前企业的数据可能有一半以上都是半结构化数据。一个word/pdf文档里包含文字、图片、表格等信息司空见惯，一个PPT文件里全是带文字的图解也是常有的事。主流的数据清洗方式很难通吃多样的半结构化数据，很大情况下还是需要人工审核每一个文档，把一次性处理做不好的挑出来重新处理。 这里是主流的文档预处理框架： 框架名称主要功能支持…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/642650878/answer/3392651718",
+          "token": "3392651718",
+          "author": "",
+          "votes": null,
+          "snippet": "根据我的实战经验， 文档的处理、短文本的语义挖掘是最难搞定的。而向量模型部分，用哪一个，实际上影响不是很大，因为单靠向量检索根本没法很好的完成任务。文档处理我的观点是， 明确能解决的问题，有的问题，目前确实不好解决，成本太高，需要看是否划得来。另外，依赖大模型本身的能力，用好提示词工程，可以减少很多数据处理上的代码和逻辑。这里首先要明确的就是，我们需要处理的知识或者是做问答的数据大致是什么类型，根…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/642650878/answer/2035642655955269537",
+          "token": "2035642655955269537",
+          "author": "",
+          "votes": null,
+          "snippet": "BM25 + 向量检索 + Rerank，我们也用了。 搭起来不难，开源框架一堆，半天跑通demo。 然后上线第一个礼拜就被骂了。 说说踩的坑。 坑一：知识库越大，召回越差。这个最反直觉。 用户把调度规程、继电保护手册、配网运维规范、设备说明书…全扔一个知识库里。你问一个继电保护的问题，检索结果里混进来三条配网的、两条调度的。关键词都命中了，但答非所问。 一开始我们硬调，TopK从10调到20，调到30，最后调到40。40条候选里才…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/642650878/answer/3605094993",
+          "token": "3605094993",
+          "author": "",
+          "votes": null,
+          "snippet": "RAG是llm应用当中最综合的东西，最难搞定的就是长度L内的信息是否充分完备和正确，比如让你统计红楼梦到底有几种和鸡汤有关的厨师的籍贯，这已经够头疼了，结果你的资料还混合金瓶梅内容，这种分分钟召回就会打爆llm 所以不考虑成本的，就是planing rag，我每次都只召回一部分内容然后根据这个部分推理结果，当然这个结果不会对，但是会给出下一步要查询啥知识的建议，接着根据这个建议进行查询，如此反复，然后最终收敛 这过程…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/642650878/answer/40179317580",
+          "token": "40179317580",
+          "author": "",
+          "votes": null,
+          "snippet": "背景介绍最近刚刚结束 CCF 的 基于运营商文本数据的知识库检索 ，截止目前成绩还算不错，A榜和B榜排名都比较靠前。因为在比赛中实际是从 0 迭代最终的策略，因此耗时较长。最近在考虑 RAG 是否存在一些最佳实践，在不同的数据集或通用场景下都能取得不错的效果，这样就可以避免从头开始构建策略。刚好注意到近期有一些相对靠谱的行业进展， AutoRAG 就尝试基于数据集构造 QA 问答对，之后利用定义的指标，寻找最佳的 RAG 策略组合…"
+        }
+      ],
+      "viewAngleCards": [],
+      "benchmark": "",
+      "pitfalls": [],
+      "createdAt": "2026-11-18T08:53:06.886Z"
+    },
+    {
+      "id": "q_61",
+      "title": "RAG大模型增强生成能力案例有哪些？",
+      "questionUrl": "https://www.zhihu.com/question/638503601",
+      "track": "interview",
+      "topic": "检索增强生成 RAG 优化方案",
+      "domain": "rag",
+      "kind": "tech",
+      "heat": 5,
+      "sources": [
+        {
+          "url": "https://www.zhihu.com/question/638503601/answer/3384081209",
+          "token": "3384081209",
+          "author": "",
+          "votes": null,
+          "snippet": "下图是open AI开发者分享的一个RAG Success story(文末有youtube链接)。他们使用RAG为金融领域的客户将问答准确率从原始的45% 提升到98%，这之间的差值是53%，因为这是全球最佳案例，我们也没有OpenAI那么高的人才密度， 打个八折大概是40%，这就是40%的暴论来源。 [图片] 之前有人提过在AI时代，大模型的能力占到80%，意味着留给应用开发者的空间只有20%。我没有那么悲观，根据上述案例，姑且粗暴给出如下的比例，也呼应一下 之前文章中 …"
+        },
+        {
+          "url": "https://www.zhihu.com/question/638503601/answer/3413297428",
+          "token": "3413297428",
+          "author": "",
+          "votes": null,
+          "snippet": "RAG检索增强生成（Retrieval Augmented Generation），简称 RAG，已经成为当前最火热的LLM应用方案。经历今年年初那一波大模型潮，想必大家对大模型的能力有了一定的了解，但是当我们将大模型应用于实际业务场景时会发现，通用的基础大模型基本无法满足我们的实际业务需求，主要有以下几方面原因： 知识的局限性：模型自身的知识完全源于它的训练数据，而现有的主流大模型（ChatGPT、文心一言、通义千问…）的训练集基本都是构建…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/638503601/answer/3387063009",
+          "token": "3387063009",
+          "author": "",
+          "votes": null,
+          "snippet": "背景幻觉是在处理大型语言模型（LLMs）时常见的问题。LLMs生成流畅连贯的文本，但经常产生不准确或不一致的信息。防止LLMs中出现幻觉的一种方法是使用外部知识源，如提供事实信息的数据库或知识图谱。 矢量数据库和知识图谱使用不同的方法来存储和表示数据。矢量数据库适合基于相似性的操作，知识图谱旨在捕捉和分析复杂的关系和依赖关系。 对于LLM中的幻觉问题，知识图谱是一个比向量数据库更好的解决方案。知识图谱为LLM提供了…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/638503601/answer/1923754378721997185",
+          "token": "1923754378721997185",
+          "author": "",
+          "votes": null,
+          "snippet": "你在搜索框输入\"dog\"。 传统搜索只会找到包含\"dog\"这三个字母的文档，但RAG搜索却能找到\"puppies\"、“golden retrievers”、“宠物护理\"甚至\"训练技巧”。 这种从字面匹配到语义理解，正是RAG技术的优势。 [图片] RAG（Retrieval-Augmented Generation）的运作机制可以用一个简单的比喻来理解：就像一个超级聪明的图书管理员，不仅知道书在哪里，还理解你真正想要什么。当你问\"关于狗的书\"，他不仅会找出标题含\"狗\"的书，还会推荐宠物…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/638503601/answer/1917051586968027921",
+          "token": "1917051586968027921",
+          "author": "",
+          "votes": null,
+          "snippet": "上周知识星球内有个关于合同生成的提问，就是想把历史文档作为知识库在工作流中召回仿写。实际我在 4 月底就在星球中回复过合同生成的相关实现思路参考，大致就是 LLM 负责理解与初步生成，使用 Code 节点接收 LLM 提取出的结构化信息，最后使用 LM 负责最终润色。 [图片] 这部分内容我分两篇文章来介绍，这篇先聚焦于构建一个基于知识库的智能合同生成工作流。通过“离线知识预处理”与“在线并行生成”相结合的架构，实现针对不同业务…"
+        }
+      ],
+      "viewAngleCards": [],
+      "benchmark": "",
+      "pitfalls": [],
+      "createdAt": "2026-11-18T08:53:08.304Z"
+    },
+    {
+      "id": "q_62",
+      "title": "我没有高并发项目经验，但是面试的时候经常被问到高并发、性能调优方面的问题，有什么办法可以解决吗？",
+      "questionUrl": "https://www.zhihu.com/question/421237964",
+      "track": "interview",
+      "topic": "高并发 系统设计 面试",
+      "domain": "backend",
+      "kind": "tech",
+      "heat": 5,
+      "sources": [
+        {
+          "url": "https://www.zhihu.com/question/421237964/answer/1795200233",
+          "token": "1795200233",
+          "author": "",
+          "votes": null,
+          "snippet": "我是一名大厂技术总监，面试过几百人，题主的这个问题太常见了。 下面我结合我面试候选人的经验，以及我对高并发的理解，给你一个非常完整的建议。如果能认真看完，我相信一定有所收获，至少应付面试没啥问题。首先说一下，当我作为面试官问候选人 「对于高并发的理解」时，我觉得「答得不好」的情况分成以下几类： 1、对数据化的指标没有概念：不清楚选择什么样的指标来衡量高并发系统？分不清并发量和QPS，不知道自己系统的总…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/421237964/answer/2013245941809963232",
+          "token": "2013245941809963232",
+          "author": "",
+          "votes": null,
+          "snippet": "拿一个最普通的 Spring Boot 项目。后台管理系统，几张表的增删改查，日活可能三位数。默认配置启动，Tomcat 200 个线程，HikariCP 10 个数据库连接，啥也没调过。能跑，没人投诉。 现在打开 JMeter，200 个线程同时请求你的订单列表接口。 jmeter -n -t order_list_test.jmx -l result.jtl -e -o report/报告出来了：平均响应时间 4200ms，吞吐量 38 req/s，错误率 12%。四秒多才返回一个列表，一秒才处理 38 个请求，还有八分…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/421237964/answer/1810636619",
+          "token": "1810636619",
+          "author": "",
+          "votes": null,
+          "snippet": "这题我必须回答下！总结了十几条后台高并发、高性能的常见解决方式，当时面试BAT，都被面试官说答得很好，思路非常正确。 先推荐一个系统学习计算机的网站： [图片] 计算机专业大学如何自学？ 原文： 后台服务器高性能设计思想 先上本文思维导图: [图片] 另外说下，如果是BAT这种核心部门，比如微信、支付宝核销交易链路、红包这些问你的话，还可以好好回答一下，实在不会也可以给面试官说没有场景，进去后再学习。 反而是一些小公司，平时QPS就个…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/421237964/answer/116324552458",
+          "token": "116324552458",
+          "author": "",
+          "votes": null,
+          "snippet": "并发类问题是面试官最喜欢问的题目，实际上这玩意远没你想的那么神秘，一旦把这个问题的底层逻辑搞懂了，我保证你能秒杀任何类似问题。 以前一直觉得并发类问题是区分高手程序员的标志，因为普通程序员有一个很大的问题，大多呆在小公司，做些erp，管理后台，或者用户量不过10万的app项目，他们根本没有经历过高并发项目，所以不懂高并发下写代码要注意什么，到底会遇到有什么问题？ 举个例子，他们最常背的题目是，商城怎么减库…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/421237964/answer/1879309994",
+          "token": "1879309994",
+          "author": "",
+          "votes": null,
+          "snippet": "我曾经从传统的非互联网公司成功跳槽到腾讯，我来给大伙儿分享一些经验。 首先为啥面试官喜欢问高并发、性能调优相关的问题，我想有两点原因： 第一，本身互联网区别于传统软件行业的特点之一就是海量请求。传统软件公司每秒用户几个、几十个的请求很常见，但是互联网公司哪怕一个二线的 App，后端接口请求一天几个亿也很正常。业务特点导致对候选人在海量请求相关的技术上考察的会比较多。 第二、高并发性能调优等方面的问题相…"
+        }
+      ],
+      "viewAngleCards": [],
+      "benchmark": "",
+      "pitfalls": [],
+      "createdAt": "2026-11-18T08:53:16.678Z"
+    },
+    {
+      "id": "q_63",
+      "title": "如何评价 Qwen4-Max-Preview 模型？实际体验如何？",
+      "questionUrl": "https://www.zhihu.com/question/2103792519561717733",
+      "track": "interview",
+      "topic": "大模型 安全 越权 防护",
+      "domain": "ai-agent",
+      "kind": "tech",
+      "heat": 4,
+      "sources": [
+        {
+          "url": "https://www.zhihu.com/question/2103792519561717733/answer/2103815735088890919",
+          "token": "2103815735088890919",
+          "author": "",
+          "votes": null,
+          "snippet": "只能随手写写了。简单测试了几轮，暂时的结论是： 如果一个模型不是因为安全政策而晚点的话，那大概率就是真的有点糟糕。在我的几个偏科研、推理的case上，qwen4 max preview出现了和之前3.8 max preview类似的问题，能看出来他懂得确实很多，科学素养也真的很强，但是自检、严谨性差太远，并且长链推理一步错步步错的情况很多，过度自信方面的幻觉相当明显且严重，这还是在思考链明显长的情况下，整体给人一种明显欠缺后训练的…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/2103792519561717733/answer/2103804518127367148",
+          "token": "2103804518127367148",
+          "author": "",
+          "votes": null,
+          "snippet": "之前还以为 10 月就会发了，没想到现在才开始公测，估计还是有什么问题，所以选择 Preview 公测两周，而且 Token Plan 降价，目前是： 日间：最低按标准 Credits 的 20% 扣除，优惠 80%夜间：在这个基础上再优惠 80%相当于优惠 96%，同等 Credits 理论上有 25 倍额度 [图片] [图片] 这次最直观变化的就是最大输出预算上调到 384K ，上一代 Qwen3.8-Max 的最大输出是 128K，这个算是一个最明显提升，不过前面刚好有 Gemini 4 Argon 的 1M 最大输…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/2103792519561717733/answer/2104104844017529418",
+          "token": "2104104844017529418",
+          "author": "",
+          "votes": null,
+          "snippet": "老实说还可以，觉得差的主要问题是预期太高了。 我几乎常年Opus 5.5 + Astra 6，但依旧会觉得Astra 6 medium很多时候做出来的东西就是一坨。 你看我这个任务，已经前前后后让它用/goal跑了了将近 24 个小时了，但我最终效果依旧垃圾，防御属性太强了。 不过我也不想让它停下来，因为我还有好几张充值卡快要过期了，就让它那么随便跑吧 [图片] 但实际上，绝大多数人能接触到的模型的天花板就是DS v4.1 flash这个级别。 而这个级别，其实…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/2103792519561717733/answer/2103808388698203760",
+          "token": "2103808388698203760",
+          "author": "",
+          "votes": null,
+          "snippet": "我看X上面有人吐槽Qwen应该改名Qwhen。 [图片] 主要原因是其实一个多月前在云栖大会上就说coming soon [图片] 上个月底，也有人提到，可能十一月初发布 [图片] 但是等了一个多月了，才发布。 放在大模型行业，一个月多月，来说确实有一点久了，尤其是熟悉qwen模型发布节奏的朋友来说，这算是挺慢的，可能在解决一些技术上的难题。 而且只发布了模型，还没发布Benchmark，可能是还没来得及跑。 架构上，根据我对Qwen的理解，每一次大版本号更新前，其实…"
+        }
+      ],
+      "viewAngleCards": [],
+      "benchmark": "",
+      "pitfalls": [],
+      "createdAt": "2026-11-18T08:54:27.857Z"
+    },
+    {
+      "id": "q_64",
+      "title": "Claude Code强大是因为模型强还是agent实现细节？",
+      "questionUrl": "https://www.zhihu.com/question/2029815121220748785",
+      "track": "interview",
+      "topic": "大模型 安全 越权 防护",
+      "domain": "ai-agent",
+      "kind": "tech",
+      "heat": 5,
+      "sources": [
+        {
+          "url": "https://www.zhihu.com/question/2029815121220748785/answer/2048375746691855048",
+          "token": "2048375746691855048",
+          "author": "",
+          "votes": null,
+          "snippet": "如果你们自己去写过Agent 或者做过LLM模型接入的业务的话， 大概会发现一个有趣的现象： 市面上大多数模型厂商，都有一个接口是 /v1/chat/completions，他们都会告诉你和OPNEAI接口兼容，甚至于做到请求路径兼容的程度， 接入只需要改一下BaseURL 就好了，请求参数和响应完全兼容，只多不少。 大家主打的都是，能省事就省事，能无缝迁移就无缝，绝对不增加半点困难。 这差不多是前两三年的情况，然后到了这阵子我用一些新厂商的…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/2029815121220748785/answer/2057453861065979869",
+          "token": "2057453861065979869",
+          "author": "",
+          "votes": null,
+          "snippet": "Flask 作者 Armin Ronacher 两天前写了一篇博客，标题是《Better Models: Worse Tools》。他做了一个实验，结果让我重新想了一遍这个问题。 他在自己的项目 Pi 里发现：越新的 Anthropic 模型，工具调用反而越差。 Opus 4.5 正常使用 Pi 的文件编辑工具。但 Opus 4.8 和 Sonnet 5 会在工具参数里凭空编造字段：requireUnique、type、matchCase、oldText2、甚至 event.0.additionalProperties。 诡异的是，模型输出是对的：oldTex…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/2029815121220748785/answer/2042630574142124497",
+          "token": "2042630574142124497",
+          "author": "",
+          "votes": null,
+          "snippet": "Claude Code + MiniMax-M系列模型; Claude Code + Opus 4.6 模型，你对比试试呢； Agent 一样，模型不同。Agent保证模型下限，模型决定上限。框架让模型可以做事，但做的好不好取决于模型能力。"
+        },
+        {
+          "url": "https://www.zhihu.com/question/2029815121220748785/answer/2078944102566072720",
+          "token": "2078944102566072720",
+          "author": "",
+          "votes": null,
+          "snippet": "Anthropic 2026 年 4 月的一次事故复盘，刚好把这个前提戳破了——模型权重一行没动，纯粹改了三处 harness 默认值，用户体感判若两人。 事情是这样的：2026 年 3 月到 4 月，Claude Code 用户集中反馈\"变笨了\"，吐槽持续了六周。 Anthropic 后来发了官方复盘，说根本原因是三处互相叠加的产品侧改动，全都在 harness 这一层，模型本身没变：3 月 4 日，默认推理强度由 high 降为 medium——原因是 high 有时候思考太久，UI 看着…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/2029815121220748785/answer/2048850270935855747",
+          "token": "2048850270935855747",
+          "author": "",
+          "votes": null,
+          "snippet": "一开始是harness的能力，但是现在模型内化了很多harness的能力，所有慢慢的就是因为模型强。 Claude opus是那种完全不用吃harness，直接裸跑就很强的模型。其他模型基本上都有吃专门的harness的优化，有的少一点，有的多一点。 但是如果你原因花时间好好优化你的harness和工作流的话，你会发现其实主流模型区别没有那么大。"
+        }
+      ],
+      "viewAngleCards": [],
+      "benchmark": "",
+      "pitfalls": [],
+      "createdAt": "2026-11-18T08:54:29.309Z"
+    },
+    {
+      "id": "q_65",
+      "title": "如何开始搭建一个agent评测系统？",
+      "questionUrl": "https://www.zhihu.com/question/1985714937893512991",
+      "track": "interview",
+      "topic": "Agent 评测 面试",
+      "domain": "ai-agent",
+      "kind": "tech",
+      "heat": 5,
+      "sources": [
+        {
+          "url": "https://www.zhihu.com/question/1985714937893512991/answer/2003207686611805732",
+          "token": "2003207686611805732",
+          "author": "",
+          "votes": null,
+          "snippet": "首先，两个关键点： 安全要作为单独的否决门槛，不能被平均分掩盖；Trace 比总分更重要---总分只能排序/Trace 才能告诉你该改哪。 另外，在你能谈”怎么评”之前，先得把”怎么可靠地把执行数据收集上来”这件事做对，这一步比想象中容易踩坑，而且坑踩了你自己往往发现不了。分享我做 Agent Insight的一些踩坑经验（openEuler 社区孵化的开源 AgentOps平台，观测→评测→诊断→优化，已适配OpenCode、CC、DSH、jiuwen 等 12 个…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/1985714937893512991/answer/2047807946130825486",
+          "token": "2047807946130825486",
+          "author": "",
+          "votes": null,
+          "snippet": "背景如果你用过 Cursor、Claude Code、Codex、OpenCode 这类 Coding Agent 工具，可能注意到一个细节：当你下达一个稍复杂的指令—— 它并不会立刻输出代码，而是先检索文件、生成计划、分步修改、agent loop 验证、执行改动。这套行为背后，是一个常被忽略的事实： 它不是“调用了一次大模型”，而是在一条长任务链路上，对模型发起了数十次乃至上百次调用。而“每一次调用该用哪个模型、走哪条服务路径”，正是本文要讨论的核…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/1985714937893512991/answer/2069076294504130507",
+          "token": "2069076294504130507",
+          "author": "",
+          "votes": null,
+          "snippet": "如果要从零搭一个 Agent 评测系统，我不建议先挑框架，也不建议先列一堆指标。 先拿一个团队真的会反复遇到、并且能验收的任务跑通。否则最后很容易得到一个能出分数的页面，却回答不了\"这次改动到底把 Agent 弄坏了没有\"。 我把 Orca 接到 Terminal-Bench 和 Harbor 时，最先撞上的也不是模型能力，而是运行环境。任务在容器里启动，Agent 需要在里面执行，最后还要由任务自己的 verifier 判定。不同基础镜像的 glibc 兼容、静…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/1985714937893512991/answer/2013755720626107054",
+          "token": "2013755720626107054",
+          "author": "",
+          "votes": null,
+          "snippet": "anthropic 有一篇经典的评测文章《 demystifying-evals-for-ai-agents 》，结合anthropic的工程实践，回答了agent 评测架构 、为什么需要评测、怎么样做评测、如何从0搭建评测体系这几个评测领域的核心问题。里面对于从0搭建评测系统 的 road map有了很详细的讲述 [图片] 感兴趣的话可以看下这篇文章，精读了《 demystifying-evals-for-ai-agents 》 [文章: 万字长文谈 agent 评测: 如何从零搭建评测体系]"
+        },
+        {
+          "url": "https://www.zhihu.com/question/1985714937893512991/answer/2037568172061085938",
+          "token": "2037568172061085938",
+          "author": "",
+          "votes": null,
+          "snippet": "作者：Chris 来源：通明湖研究院 基于大模型的系统具有明显的非确定性：同一输入在不同运行中可能产生不同输出，因此不能只依赖单元测试或人工主观体验来判断系统是否“可用”。OpenAI 在 Evaluation best practices 中将评估定义为一类结构化测试，其作用是在真实生产环境约束下衡量模型或 agent 的准确性、可靠性和稳定性，并强调评估应围绕具体业务目标而设计，而不是仅依赖通用 benchmark 或单一总分。 对于 agent 系统，Ope…"
+        }
+      ],
+      "viewAngleCards": [],
+      "benchmark": "",
+      "pitfalls": [],
+      "createdAt": "2026-11-18T08:54:32.421Z"
+    },
+    {
+      "id": "q_66",
+      "title": "Agent要如何做评估？",
+      "questionUrl": "https://www.zhihu.com/question/2057613603713324288",
+      "track": "interview",
+      "topic": "Agent 评测 面试",
+      "domain": "ai-agent",
+      "kind": "tech",
+      "heat": 5,
+      "sources": [
+        {
+          "url": "https://www.zhihu.com/question/2057613603713324288/answer/2063918614378438902",
+          "token": "2063918614378438902",
+          "author": "",
+          "votes": null,
+          "snippet": "Agent 评估最容易犯的错，是把它当成普通问答评测：给一道题，只看最终答案，再让 LLM Judge 打个分。 但 Agent 的结果来自一连串动作。一个研究 Agent 最后写出的报告看起来不错，不代表它真的可靠：它可能选错工具、忽略了冲突证据、反复无效调用，甚至做了未经授权的操作，只是最后碰巧得到了一个像样的答案。 反过来也一样：执行过程看起来很规范，如果最后没有完成用户目标，也不能算成功。 所以我更认可的做法是，把 Agent…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/2057613603713324288/answer/2074209778021184696",
+          "token": "2074209778021184696",
+          "author": "",
+          "votes": null,
+          "snippet": "对于评估，”基本维度”包括任务结果、执行轨迹、资源成本等。除了这些，我认为评判的策略也非常重要；在Agent Insight 平台中（ Agent Insight ，openEuler社区孵化的项目，聚焦Agent观测->评测->诊断->优化），我主要遵循这三步的策略。 [文章: 【Agent Insight】02-Agent Insight：让生产级智能体可观测、可度量、可进化] [图片] [图片] 1.把整条轨迹一次性丢给一个模型去找错最直觉的做法是：Agent 跑完一个任务，把完整执行轨迹（一棵 Span 树，LLM …"
+        },
+        {
+          "url": "https://www.zhihu.com/question/2057613603713324288/answer/2099506337906418087",
+          "token": "2099506337906418087",
+          "author": "",
+          "votes": null,
+          "snippet": "先别急着修失败题。0 分不等于「不会」。 Agent 评测最容易混在一起的，是三件事：没时间、环境坏了、真的能力不够。混在一起看，你不知道该加预算、修验证器，还是改产品。分数看起来很准，决策却会歪。 我跑过一轮公开基准，88 道题里 16 道 0 分。按老习惯该挑失败题去修。这次先没修，只把预算加大重跑，别的都不动。 2 倍预算：9 道直接转正。 4 倍预算：又多 1 道。 还有 1 道，验证器自己装依赖拿到一串 404，测试根本没…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/2057613603713324288/answer/2078173076127216752",
+          "token": "2078173076127216752",
+          "author": "",
+          "votes": null,
+          "snippet": "同一套 Agent Runtime，为什么 Web、Headless 和 Python SDK 仍然不是同一个产品 [图片] 同一个 Agent Runtime，只要换个 UI、包一层 HTTP 或 SDK，是不是就能变成多个产品？ 这句话只对了一半。共享 Agent Loop、Session、Tool Registry 与模型适配器，确实可以避免为每个入口复制一套核心；但产品差异并不会因此消失。它们会转移到组合配置、宿主生命周期、输入输出协议、凭据、工作区、持久化和版本冻结上。 DeepSeek Harness 的固定…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/2057613603713324288/answer/2077377125733098616",
+          "token": "2077377125733098616",
+          "author": "",
+          "votes": null,
+          "snippet": "Agent 会自己调工具、会改数据库、会一步错之后步步错。给它做评估，不只是准备一批题跑一遍打个分，而是搭一套从衡量标准、测试环境、判分、定位错误到失败回流的完整系统。这篇把这套系统的每一块拆开讲清楚。 同一个 Agent 的成功率可以是 99% 也可以是 7.8%搭评估的第一件事不是写用例，是先想清楚 用什么方式衡量成功。Agent 有个函数没有的特性。同样的输入跑两次，结果可能不一样，模型采样有随机性。所以一条用例的成功…"
+        }
+      ],
+      "viewAngleCards": [],
+      "benchmark": "",
+      "pitfalls": [],
+      "createdAt": "2026-11-18T08:54:33.865Z"
+    },
+    {
+      "id": "q_67",
+      "title": "llm的本质是知识压缩和检索吗？和外挂知识库的检索比到底强在了什么地方？",
+      "questionUrl": "https://www.zhihu.com/question/15764658704",
+      "track": "interview",
+      "topic": "向量检索 召回 切分",
+      "domain": "rag",
+      "kind": "tech",
+      "heat": 5,
+      "sources": [
+        {
+          "url": "https://www.zhihu.com/question/15764658704/answer/1971887715575379866",
+          "token": "1971887715575379866",
+          "author": "",
+          "votes": null,
+          "snippet": "不是压缩也不是检索。 大型语言模型的预训练，用“压缩”这个词容易引起误解，它不是像zip那样无损或有损地把文件变小。虽然大家讲LLM的时候，经常说“压缩即智能”，但“压缩即智能”的压缩和zip那样的压缩有很大区别。“压缩即智能”的“压缩”是在学习数据背后的“规律”和“结构”。 这个过程就产生了“模型”（一个巨复杂的函数）。这个模型的核心能力也不是“查找”，而是“生成”。 检索，是在一个已有的信息集合里“寻找…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/15764658704/answer/1973317780431470703",
+          "token": "1973317780431470703",
+          "author": "",
+          "votes": null,
+          "snippet": "llm和知识库没法放在一起比，前者是隐式的后者是显式的，完全就是两个东西。 灌输给llm的语料知识不是为了让它从压缩的语料里找到对应的条目背诵给你，而是为了让它学会语料中的概率分布特征，所以即使是不存在于语料中的query被输入，llm也能在少样本甚至零样本的情况下，根据已经有的概率分布输出一个最有可能的回复——有的时候这个东西是幻觉，也有的时候它就能答对。 至于知识库检索（假设用的是语义相似度），如果没有一个…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/15764658704/answer/2024079885115688735",
+          "token": "2024079885115688735",
+          "author": "",
+          "votes": null,
+          "snippet": "llm的本质是知识压缩吗？LLM是对知识的压缩没有问题，或者有科学家称为“表征”，我们训练大语言模型、多模态模型、图像模型的过程就是“表征学习”的过程，而表征就是压缩： 原始数据（图像、文字、声音）是高维的、冗余的，比如数据中有无数猫，表征学习能够找到猫的本质表征神经网络逐层提取结构，丢弃噪声，比如站着的猫和卧着的猫不影响他们都是猫，就是说坐姿对于判断是否为猫是一个噪音最终得到一个低维的内部表示——表…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/15764658704/answer/2022946595046442529",
+          "token": "2022946595046442529",
+          "author": "",
+          "votes": null,
+          "snippet": "llm在大规模语料上学习而来，它有知识记忆和压缩的能力，向它输入一个query，返回你想要的答案，这个过程也可以视为检索。 此外，llm不是完全死记硬背，它具体一定的融会贯通的能力，有一定的问题分析，逻辑推理的能力，这不单单是知识的记忆与压缩，而是对知识加工与利用的能力，这个特质才是它的魅力所在。 再回到检索问题，llm不能保证每次都能回答令用户满意，像人一样，虽然知识渊博，但肯定不是每本书他都看过并记住，会存…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/15764658704/answer/1973438252787704678",
+          "token": "1973438252787704678",
+          "author": "",
+          "votes": null,
+          "snippet": "llm 的两个训练阶段确实像知识压缩和检索。但这两个阶段并不是专门为了压缩和检索而设计的。只能说是在处理原任务 predict next token 时，两个训练阶段正好和人类认知里的知识压缩和检索对应上了。 看起来，预训练以及指令微调可以用外挂知识库的方式来做。但其实二者还是有很大差别的。 首先外挂知识库检索的是文档 或段落级别的 top k。而 llm 是在连续向量空间里对上下文和内部记忆做 token 级检索，颗粒度更细。 另外，外挂…"
+        }
+      ],
+      "viewAngleCards": [],
+      "benchmark": "",
+      "pitfalls": [],
+      "createdAt": "2026-11-18T08:54:54.235Z"
+    },
+    {
+      "id": "q_68",
+      "title": "如何快速检索所需文献?",
+      "questionUrl": "https://www.zhihu.com/question/1968759948235240813",
+      "track": "interview",
+      "topic": "向量检索 召回 切分",
+      "domain": "rag",
+      "kind": "tech",
+      "heat": 5,
+      "sources": [
+        {
+          "url": "https://www.zhihu.com/question/1968759948235240813/answer/1969798172218991974",
+          "token": "1969798172218991974",
+          "author": "",
+          "votes": null,
+          "snippet": "搜索文献资料是 论文写作的准备阶段，也是必不可少的基础工作。没有文献资料，研究将无从着手，观点无法成立，论文也不可能形成。 写好论文必须以大量的文献资料为基础，才能保证选题的质量及论文写作的质量。 所以，论文不只是需要会写，还需要会搜。 [图片] 这里给大家分享一个很好用的文献查找工具，可以帮你把有所有关联和引用的文献直接搜索出来，真的很方便，再也不用 大海捞针式的查文献了！Connected Papers检索文献的科研利器…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/1968759948235240813/answer/2030740315611604368",
+          "token": "2030740315611604368",
+          "author": "",
+          "votes": null,
+          "snippet": "推荐一个国产工具： AIspire 。 [图片] 如果你需要的不只是一个能存文献的地方，而是能帮你留痕、做笔记、归档、快速召回观点的工具， AIspire 值得一试。 传统文献管理软件（EndNote、Zotero 等）强在引用格式管理和与 Word 联动，但在知识沉淀和观点召回上比较弱。AIspire 的定位更像是「文献管理 + 知识管理」的结合体。 1. 文献入库与分类 支持批量导入 PDF，自动识别元数据（标题、作者、期刊等）。可以按项目/主题创建文件夹，也能…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/1968759948235240813/answer/2057836247796683348",
+          "token": "2057836247796683348",
+          "author": "",
+          "votes": null,
+          "snippet": "如何快速检索所需文献？ 你小汁算问对咯，我虽不能算高手，但怎么样也在文献海洋里遨游了三四年。 首先分析你的需要，第一你要快，那怎么样算快咯，不就是我打开一个网页嘎嘎一顿输入，不管是我输入关键词也好，句子也好，网页都可以get我的意思，平铺生成一堆高质量的文献，我就好像老鼠进米缸一下，开心坏了，虽然这个比喻有点不恰当哈，但能快速找到文献还都能下载那可真是开心，至少知道我现在这个动作不是在做无用功，说明…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/1968759948235240813/answer/2059998676873896526",
+          "token": "2059998676873896526",
+          "author": "",
+          "votes": null,
+          "snippet": "1. 先确定你要什么类型的文献。 打开数据库前先想清楚：你是要一篇最新的研究？还是要一篇综述快速了解全貌？还是要一篇经典论文找方法学？ 对应不同的检索目标，策略完全不同： 要了解全局 → 搜 “review” 或 “systematic review”要找最新进展 → 按发表时间倒序排列，只看最近 2 年的要找方法学 → 搜 “method” 或 “protocol”要找临床数据 → 搜 “clinical trial” 或”临床试验” PubMed 左侧的过滤器把这些都列好了…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/1968759948235240813/answer/2076594161705283704",
+          "token": "2076594161705283704",
+          "author": "",
+          "votes": null,
+          "snippet": "“快速检索”的核心，不是搜得快，而是筛得快。 让你在几秒钟内判断一篇文献值不值得看，而不是花半小时读完才发现不相关。 第一步：先明确你要找什么——别带着模糊的需求去搜打开数据库之前，先问自己三个问题：我需要的是综述还是原始研究？我需要的是经典文献还是最新进展？我需要的是方法参考、数据对比，还是背景了解？ 明确目的再搜，比漫无目的地翻找，节省至少一半时间。 第二步：用对工具——不同场景用不同数据库 Goo…"
+        }
+      ],
+      "viewAngleCards": [],
+      "benchmark": "",
+      "pitfalls": [],
+      "createdAt": "2026-11-18T08:54:58.779Z"
+    },
+    {
+      "id": "q_69",
+      "title": "NAS 的 SSD 缓存到底有没有必要？什么场景下缓存完全是智商税？",
+      "questionUrl": "https://www.zhihu.com/question/2073529288519840817",
+      "track": "interview",
+      "topic": "缓存 一致性 击穿",
+      "domain": "backend",
+      "kind": "tech",
+      "heat": 4,
+      "sources": [
+        {
+          "url": "https://www.zhihu.com/question/2073529288519840817/answer/2075585091359749595",
+          "token": "2075585091359749595",
+          "author": "",
+          "votes": null,
+          "snippet": "NAS 里的 M.2 SSD 盘位，本质上就是一个独立的 SSD 硬盘。至于这块 SSD 怎么用，主要取决于 NAS 系统怎么设置。 比较常见的用法就是把它设置成缓存盘。 比如做读取缓存：当你第一次从 HDD 读取一个文件时，NAS 可以把这个文件或相关数据缓存到 SSD 里。下一次再次读取相同数据时，就可以直接从 SSD 读取，速度会更快。 也可以做写入缓存。机械硬盘实际连续写入速度通常也就是 100～200MB/s 左右，而现在 5GbE、10GbE 网络已经越…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/2073529288519840817/answer/2075570019019265313",
+          "token": "2075570019019265313",
+          "author": "",
+          "votes": null,
+          "snippet": "没必要，特别是写缓存要绝对警惕，绝对远离，写缓存SSD 缓存的可靠性和寿命都非常有限，会炸阵列，SSD写缓存一炸，整个阵列的数据全丢失。 RAID 阵列和 SSD 缓存可笑的地方就在于，它支持带数据升级，不支持带数据降级，你发现效果不好不想用了，不能无损数据退回上一个配置状态。 想要阵列降级，拆除 SSD 缓存，就必须要全部备份数据，然后重新建立阵列。绝大部分新手是万万没想想到手欠点一下开启一个 RAID 阵列提供的新功能，…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/2073529288519840817/answer/2081044409286661290",
+          "token": "2081044409286661290",
+          "author": "",
+          "votes": null,
+          "snippet": "看情况吧。 在大多数家庭用户的使用场景下，不需要考虑 NAS 的 SSD 缓存，也就说不用在购买 NAS 时特意考虑 NAS 要不要带 M.2 SSD 硬盘位的问题，那不是需求关键。 [图片] 要知道，NAS 的 SSD 缓存主要作用是为了 “热数据”的随机读写得到提升，弥补机械硬盘物理寻道上的天生短板。因此，在用得着的时候，NAS 的 SSD 缓存很有必要；在用不着的时候，它基本上就是智商税，或者大概率是智商税。 那么—— 在什么场景下 SSD 缓存用得着呢…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/2073529288519840817/answer/2074079723844650711",
+          "token": "2074079723844650711",
+          "author": "",
+          "votes": null,
+          "snippet": "如果你不知道有没有必要的话，那大概没有必要。 要针对实际硬件配置、实际业务负载运行性能测试、系统测试，才能验证 SSD 缓存改善了多少性能。然后才可以讨论有没有必要。 在这里空泛的讨论有没有必要，完全没有任何意义。"
+        }
+      ],
+      "viewAngleCards": [],
+      "benchmark": "",
+      "pitfalls": [],
+      "createdAt": "2026-11-18T08:55:31.021Z"
+    },
+    {
+      "id": "q_70",
+      "title": "为什么CPU设计了三级缓存，GPU只设计两级缓存？",
+      "questionUrl": "https://www.zhihu.com/question/1901008279548727378",
+      "track": "interview",
+      "topic": "缓存 一致性 击穿",
+      "domain": "backend",
+      "kind": "tech",
+      "heat": 4,
+      "sources": [
+        {
+          "url": "https://www.zhihu.com/question/1901008279548727378/answer/1904810297551754669",
+          "token": "1904810297551754669",
+          "author": "",
+          "votes": null,
+          "snippet": "而缓存级数这种东西吧，CPU也是从一级慢慢加上来的。 往前数20年也基本上见不到L3（奔4末期/肥龙才加进来），而LionCove已经有4级了（虽然本质上是L2为了省电省布线的改变导致额外加了一级来填差异）。 因为容量大了延迟会高，追求延迟的话抽点容量做一级小的，虽然最终访存延迟是高的，但反而能降低延迟的期望（访存局部性）。 GPU现在常用2级不代表以后不会加到3级。 当然啦CPU现在小半个核心都是缓存，为的就是降低延迟。 但…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/1901008279548727378/answer/1901629643292902614",
+          "token": "1901629643292902614",
+          "author": "",
+          "votes": null,
+          "snippet": "CPU和GPU的核心任务不同，CPU处理的任务更多样化更注重低延迟和复杂的逻辑处理，而GPU处理的是高度并行的数据，专注于高吞吐量和并行计算，对单个线程的延迟不敏感。 从应用场景上来看，CPU在处理复杂任务时需要快速访问不同级别的数据，而GPU在处理图形渲染或并行计算时，数据重用率低，更依赖高带宽内存而非多级缓存。 CPU的三级缓存（L1、L2、L3）可能分别用于不同级别的数据访问，L1和L2是核心私有的，而L3是共享的，这样可…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/1901008279548727378/answer/1962091346107016590",
+          "token": "1962091346107016590",
+          "author": "",
+          "votes": null,
+          "snippet": "1. 为什么 CPU 需要三级缓存？ [图片] CPU采用三级缓存架构，每一级缓存针对不同的设计目标进行优化，形成了速度、容量和功耗之间的权衡。 L1缓存：速度优先设计设计目标：最小化访问延迟，目标访问时间为1-2个时钟周期。 采用激进的SRAM设计，使用更大的晶体管尺寸和更强的驱动电流相同的6T SRAM单元，L1缓存的晶体管尺寸更大、布局更分散，以减少寄生电容和信号传播延迟受限于设计约束，容量限制在32-64KB技术权衡：为了追求极短的访问…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/1901008279548727378/answer/1925889154694254866",
+          "token": "1925889154694254866",
+          "author": "",
+          "votes": null,
+          "snippet": "现代化gpu里不都有l0么？甚至还有operand cache这种低于l0的，再往上还有infinity cache/slc这类。有些l1看着是l1，其实它已经是千年老二了，笑死 。"
+        }
+      ],
+      "viewAngleCards": [],
+      "benchmark": "",
+      "pitfalls": [],
+      "createdAt": "2026-11-18T08:55:32.610Z"
+    },
+    {
+      "id": "q_71",
+      "title": "大模型缓存本就是降低成本的技术问题，凭什么让用户买单？2027年5月31日前会有厂商取消缓存计费吗？",
+      "questionUrl": "https://www.zhihu.com/question/2043447252761499435",
+      "track": "interview",
+      "topic": "产品 商业化 变现 面试",
+      "domain": "product",
+      "kind": "tech",
+      "heat": 3,
+      "sources": [
+        {
+          "url": "https://www.zhihu.com/question/2043447252761499435/answer/2043622068059640778",
+          "token": "2043622068059640778",
+          "author": "",
+          "votes": null,
+          "snippet": "其实无需管它合不合理。。这就不是定价方式的问题。。 不管什么计价方式，最终是什么价格都看供应方定的利润率目标。 是否命中缓存的价格如果做成统一那单价肯定也跟着改啊。。他又不是做慈善。。 就算改成套餐形式收费那也是为了吃“办了卡不来健身的人”的利润。 能以比较透明的方式收费对普通消费者不好吗？你还能根据自己的情况选。。要不然你想以后只能大中小套餐里面选然后超量了加油包？"
+        },
+        {
+          "url": "https://www.zhihu.com/question/2043447252761499435/answer/2044168840829989090",
+          "token": "2044168840829989090",
+          "author": "",
+          "votes": null,
+          "snippet": "上个月我 Claude Code 月账单 187 美元，cache read 这一栏 token 数占输入总量 65%，收费只占 7%。所谓缓存让用户买单，跟我账单上的数字对不上。 Anthropic 的实际定价是这样：标准输入 3 美元每百万 token，cache read 0.3 美元，差不多打一折。真正贵的是 cache write，比标准输入还贵 25%。如果你用 Cursor 那种短交互、上下文反复改写的场景，账单会爆——但坑你的是 cache write 的反复触发，不是 cache 本身。 我那个月 …"
+        },
+        {
+          "url": "https://www.zhihu.com/question/2043447252761499435/answer/2049417960603772753",
+          "token": "2049417960603772753",
+          "author": "",
+          "votes": null,
+          "snippet": "一、前言 在 AI 智能体落地生产的过程中，多轮对话交互、高频用户咨询、批量业务请求并发涌入已是常态。原生大模型智能体依赖LLM实时完成语义理解、意图识别、上下文推理生成回复，单实例推理速度慢、算力消耗高、队列积压严重。一旦线上访问量突增，极易出现接口响应超时、服务阻塞崩溃、用户体验断崖式下跌等问题。 单纯优化模型推理参数难以根治瓶颈，行业成熟落地方案普遍采用双层架构兜底：依托 Redis 内存缓存拦截高频标准…"
+        }
+      ],
+      "viewAngleCards": [],
+      "benchmark": "",
+      "pitfalls": [],
+      "createdAt": "2026-11-18T08:55:34.048Z"
+    },
+    {
+      "id": "q_72",
+      "title": "分布式事务中的最终一致具体应该如何实现？",
+      "questionUrl": "https://www.zhihu.com/question/363054486",
+      "track": "interview",
+      "topic": "分布式 事务 一致性",
+      "domain": "backend",
+      "kind": "tech",
+      "heat": 5,
+      "sources": [
+        {
+          "url": "https://www.zhihu.com/question/363054486/answer/951634231",
+          "token": "951634231",
+          "author": "",
+          "votes": null,
+          "snippet": "我帮这个问题梳理一下逻辑。 分布式系统复杂业务的确需要“分布式事务”。2PC（XA），3PC是一路，因为它们实现了“Atomic Commit”。这里“Atomic”的意思是就是这个事情要不就都做了，要不就都没做，不存在做了一半的情况。生产中主要使用2PC（XA）。但这个方案有个严重的问题，只要事务管理器或者实际执行者有任何一方不工作，都可能会造成整体不工作，甚至是直接hang住了。此外这套需要XA协议的支持，并不是所有资源都支持XA…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/363054486/answer/951268656",
+          "token": "951268656",
+          "author": "",
+          "votes": null,
+          "snippet": "一般用最终一致就不叫分布式事务了。 如果是关键路径，比如付款成功才能更新订单状态。付款的rpc超时了就去查支付状态，成功更新，失败让用户重试。另外付款请求本身也会做成幂等的，防止重复。 如果不是关键路径，比如发货了给用户推个通知。做法可以有很多，比如直接更新状态字段，用cdc触发推送逻辑。"
+        },
+        {
+          "url": "https://www.zhihu.com/question/363054486/answer/58837020798",
+          "token": "58837020798",
+          "author": "",
+          "votes": null,
+          "snippet": "这个问题不从数据库角度上说，是说不清楚的。 最终一致性源自2PC延迟过高。数据库这种软件得以问世，主要得益于商业应用逐渐电子化、数字化。 直到20世纪未，一九九几年时，商业应用的规模都还好，单台主机、单体数据库足以应对最高并发、最大数据量的商业应用。 不过，偶而还是会有些商业需求，需要跨数据库的操作数据，这就需要分布式事务了。但这种分布式事务量少，慢点也没关系。各种数据库也都提供基于2PC的分布式事务，日…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/363054486/answer/952242094",
+          "token": "952242094",
+          "author": "",
+          "votes": null,
+          "snippet": "分布式系统中的数据一致性和性能怎么权衡？ - kimmking的回答 - 知乎 分布式系统中的数据一致性和性能怎么权衡？ [文章: M01.分布式事务及其中间件介绍]"
+        },
+        {
+          "url": "https://www.zhihu.com/question/363054486/answer/3161067513",
+          "token": "3161067513",
+          "author": "",
+          "votes": null,
+          "snippet": "0 前言近期在工作当中和导师中哥一起参与了一个道具服务的设计与开发，由于这个服务的主链路涉及到与分布式事务有关的交互流程，由此引发我对这个话题产生了一些思考. 接下来两周，我会和大家一起分享探讨有关于分布式事务的话题，本系列分为上下两篇： 上篇：万字长文漫谈分布式事务实现原理下篇：从零到一搭建 TCC 分布式事务框架今天分享的是其中的上篇，下面正式开始. 1 分布式事务场景1.1 事务核心特性在聊分布式事务之前，…"
+        }
+      ],
+      "viewAngleCards": [],
+      "benchmark": "",
+      "pitfalls": [],
+      "createdAt": "2026-11-18T08:55:37.101Z"
+    },
+    {
+      "id": "q_73",
+      "title": "javaer总是说有分布式了，单体性能就不重要了，这种说法对吗？",
+      "questionUrl": "https://www.zhihu.com/question/1907621770904707692",
+      "track": "interview",
+      "topic": "分布式 事务 一致性",
+      "domain": "backend",
+      "kind": "tech",
+      "heat": 5,
+      "sources": [
+        {
+          "url": "https://www.zhihu.com/question/1907621770904707692/answer/1908690891687855203",
+          "token": "1908690891687855203",
+          "author": "",
+          "votes": null,
+          "snippet": "做了几个项目架构，从头搭建并了好几个微服务项目，最后完成了全链路的的链路追踪，监控，日志收集，最后才发现网上全是一派胡言，可靠的微服务绝不是拆分那么简单，也是吃了当年欠缺计算机，网络等基础知识的亏了，做起来与意淫的完全相反。 1性能异常炸裂 当做了全链路压测后才发现，性能基本如下 两台机器的单体集群 >>> 一台单体 > 三台机器的微服务 意味着五台机器以上才能在微服务器下有收益，我认为各个微服务颗粒度已经…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/1907621770904707692/answer/2008942219453820931",
+          "token": "2008942219453820931",
+          "author": "",
+          "votes": null,
+          "snippet": "错得离谱，一把刀不快，拿十把刀绑一起就快了？ 首先得明白一件事，分布式是用来突破物理极限的，不能解决代码烂的问题 说“单体性能不重要，大不了加机器”的人，对分布式系统理解绝对有偏差。 就想象一下，假如单节点代码写得很烂：一个接口里面包含3次循环查库、两次外部RPC调用，中间还夹杂着几十兆的大对象频繁创建导致GC疯狂停顿。这台机器稍微来点并发，CPU就打满，内存就爆掉。 这时候加机器有用吗？ 没用的。 横向扩展…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/1907621770904707692/answer/1910707907156247915",
+          "token": "1910707907156247915",
+          "author": "",
+          "votes": null,
+          "snippet": "你听说过程序员的“ 阿Q精神胜利法”么？单体性能跑不过别人，开口就说“咱走分布式，单体无所谓”。是啊，架构一分布，好像啥性能瓶颈都给规避了，系统横向扩展能撬地球。但真就这么回事儿么？一、分布式是解药？还是止疼药？☠ 先讲个真实的线上的事故某大厂（名字就不说了，HR还欠我面试反馈）搞活动搞得飞起，一套微服务架构，用Java + Spring Cloud全家桶，部署了一堆服务，Redis缓存、MQ中间件、Nginx网关、K8S弹性扩展…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/1907621770904707692/answer/2034049820608951166",
+          "token": "2034049820608951166",
+          "author": "",
+          "votes": null,
+          "snippet": "这是纯外行说的，我们老Javaer都是拿单体性能欺负那些Python项目的。JVM作为商业投资积累最多的虚拟机项目，单体性能比它强的业务开发环境几乎不存在了，能超过Java的基本都是些直出native的生态，基本都不是写CURD的那群人能驾驭的。 实际上就算是go，也只能说跟java各有千秋，两别的粉丝各自吹自己的一些优势场景，也没办法稳赢java。"
+        },
+        {
+          "url": "https://www.zhihu.com/question/1907621770904707692/answer/1911937134685848893",
+          "token": "1911937134685848893",
+          "author": "",
+          "votes": null,
+          "snippet": "对优化没概念，才会人云亦云，什么人比机器贵，语言不重要，编译器比你更聪明等等。 只说视频转码业务，堆机器一个手段是远远不够的。可用的加速手段包括： 多机并行处理多线程并行处理SIMD汇编加速异构计算相互之间没关系的视频文件，分发到不同机器上处理容易。但如果是大分辨率视频转AV1或者266，一个视频压一天，不着急可以慢慢等，着急怎么办？ 可以把视频切成片段，比如一分钟一段，分发到不同机器上，多机并行压完再合并…"
+        }
+      ],
+      "viewAngleCards": [],
+      "benchmark": "",
+      "pitfalls": [],
+      "createdAt": "2026-11-18T08:55:40.184Z"
+    },
+    {
+      "id": "q_74",
+      "title": "内容想要在AI里收录，选择哪家AI搜索优化（GEO）平台做优化好？",
+      "questionUrl": "https://www.zhihu.com/question/2045560621433885493",
+      "track": "interview",
+      "topic": "产品 商业化 变现 面试",
+      "domain": "product",
+      "kind": "tech",
+      "heat": 5,
+      "sources": [
+        {
+          "url": "https://www.zhihu.com/question/2045560621433885493/answer/2094080032515925715",
+          "token": "2094080032515925715",
+          "author": "",
+          "votes": null,
+          "snippet": "选哪家，我会先看它愿不愿意把演示过程完整打开。只看几张品牌出现在 AI 回答里的截图，我还没法替你判断谁更合适。 演示时，我会请对方把当时输入的问题原样展示。假设一家工厂做定制钣金机箱，“某某公司的机箱怎么样”和“食品设备要配不锈钢机箱，找供应商时该看什么”，测试的事情就不同。前一个问题已经告诉了系统公司名字；后一个问题才开始接近采购者还不认识这家工厂时的需求。 如果对方把两类结果一起算进“品牌曝光”…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/2045560621433885493/answer/2045561362240238895",
+          "token": "2045561362240238895",
+          "author": "",
+          "votes": null,
+          "snippet": "AI搜索的浪潮已至。IDC《全球人工智能IT支出指南》显示，截至2025年底，中国生成式AI用户突破5.8亿，68%的B2B采购决策者会在调研阶段直接使用DeepSeek、豆包等平台获取供应商名单。Gartner则预测，2026年传统搜索引擎的自然流量将断崖式下跌25%。 流量迁徙的拐点上，一场多数企业尚未察觉的危机正在逼近——“AI隐形失声”。当潜在客户向AI提问“业内最好的XX解决方案提供商是谁”，给出的推荐列表里没有你的名字，甚至出现竞品…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/2045560621433885493/answer/2078842562652139570",
+          "token": "2078842562652139570",
+          "author": "",
+          "votes": null,
+          "snippet": "先说一个反常识的现象：很多品牌在百度、谷歌上排名做得很漂亮,但你直接问ChatGPT、文心一言、豆包“有没有听说过XX品牌”,AI要么答不上来,要么说错、说过时的信息。传统SEO那套关键词、外链的经验,在AI搜索这里基本失效,这也是GEO(生成式引擎优化)突然被重视起来的根本原因—— 你不是要排在第一页,你是要出现在AI的答案里。如果你是来找服务商的,我的答案很直接:推荐我们AiLense(我自己就在这家做AI搜索营销这条业务)。但嘴上…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/2045560621433885493/answer/2080605974105276659",
+          "token": "2080605974105276659",
+          "author": "",
+          "votes": null,
+          "snippet": "一、豆包也有广告了，但很多人搞混了3种模式前几天有个老板问：\"豆包是不是也有竞价广告了？\"确实，现在豆包也有广告了，但有3种模式，你千万别搞混了。 第一种是豆包搜索推荐广告。就是让AI在回答里面植入商家付费广告，类似于百度竞价，但是发生在AI对话场景里。目前这种模式还处于灰度测试、小范围邀约阶段，没有全量对外开放开户。 第二种是GEO优化，目前工业品做宁波AI搜索获客，基本上都是采用这种模式。不用花钱买位置，…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/2045560621433885493/answer/2085399809796600211",
+          "token": "2085399809796600211",
+          "author": "",
+          "votes": null,
+          "snippet": "我没有同一口径的服务商对比实测，不能负责任地给你排“哪家最好”。只凭宣传页上的收录率，也很难判断值不值得买。建议让候选方拿你的一篇真实内容，做一次可以保存记录的演示。 演示前，先问清楚“收录”指什么：文章已经发布、搜索能找到、某次AI回答提到品牌，还是回答引用了具体页面？请对方在报告里把这些结果分开。一个词包住四种结果，后面很容易各说各话。 接下来，我会这样看演示。 请对方打开内容的正式页面，核对发…"
+        }
+      ],
+      "viewAngleCards": [],
+      "benchmark": "",
+      "pitfalls": [],
+      "createdAt": "2026-11-18T08:55:58.885Z"
+    },
+    {
+      "id": "q_75",
+      "title": "特征工程到底是什么？",
+      "questionUrl": "https://www.zhihu.com/question/29316149",
+      "track": "interview",
+      "topic": "特征工程 实践",
+      "domain": "algo-data",
+      "kind": "tech",
+      "heat": 5,
+      "sources": [
+        {
+          "url": "https://www.zhihu.com/question/29316149/answer/607394337",
+          "token": "607394337",
+          "author": "",
+          "votes": null,
+          "snippet": "2020-03-20 更新， 很多资料下载需要翻墙，整理好在下面公众号 包包算法笔记 里面，回复“特征工程”即可获取： [图片] 特征工程是机器学习，甚至是深度学习中最为重要的一部分， 也是课本上最不愿意讲的一部分，特征工程往往是打开数据密码的钥匙，是数据科学中最有创造力的一部分。因为往往和具体的数据相结合，很难优雅地系统地讲好。所以课本上会讲一下理论知识比较扎实的归一化，降维等部分，而忽略一些很dirty hand的特征工程技巧…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/29316149/answer/2346832545",
+          "token": "2346832545",
+          "author": "",
+          "votes": null,
+          "snippet": "目前网上能搜到的讲特征工程方法基本都是教材里的那一套：缺失值填充，归一化，category特征one-hot，降维等等。但是指望靠这些提升模型性能是远远不够的，特别是对强大的xgb/lgb上述方法几乎是毫无意义。也有一些文章总结了特定业务的特征工程，但是对其他任务也没有泛化能力。 本文探讨和介绍一下我的特征工程方法论：1.类automl的暴力特征字典思路 2.基于业务理解的特征工程思路 3.基于特征重要性的特征工程思路；然后是上述…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/29316149/answer/110159647",
+          "token": "110159647",
+          "author": "",
+          "votes": null,
+          "snippet": "转自我的博文： 使用sklearn做单机特征工程 目录1 特征工程是什么？ 2 数据预处理 2.1 无量纲化 2.1.1 标准化 2.1.2 区间缩放法 2.1.3 标准化与归一化的区别 2.2 对定量特征二值化 2.3 对定性特征哑编码 2.4 缺失值计算 2.5 数据变换 3 特征选择 3.1 Filter 3.1.1 方差选择法 3.1.2 相关系数法 3.1.3 卡方检验 3.1.4 互信息法 3.2 Wrapper 3.2.1 递归特征消除法 3.3 Embedded 3.3.1 基于惩罚项的特征选择法 3.3.2 基于树模型的特…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/29316149/answer/2359520069",
+          "token": "2359520069",
+          "author": "",
+          "votes": null,
+          "snippet": "前言记得我入算法这一行的第一份工作面试的时候，最终的boss面的面试官是前微软工程院的副院长。面试进行得很顺利，不免向前院长卖弄一番，谈了谈我对算法的理解。我说算法工程师就好比厨师，模型是灶上功夫，而数据预处理+特征工程就好比刀工。再好的食材，不切不洗，一古脑地扔下锅，熟不熟都会成问题，更甭提味道了。 好的刀工能够将食材加工成合适的形状，无需烈火烹油，也能做出好味道。同理，特征工程做得好，简单模型也能…"
+        },
+        {
+          "url": "https://www.zhihu.com/question/29316149/answer/82949813",
+          "token": "82949813",
+          "author": "",
+          "votes": null,
+          "snippet": "特征工程是一个非常重要的课题，是机器学习中不可缺少的一部分，但是它几乎很少出现于机器学习书本里面的某一章。在机器学习方面的成功很大程度上在于如果使用特征工程。 （I）特征工程可以解决什么样的问题？ 在机器学习中，经常是用一个预测模型（线性回归，逻辑回归，SVD等）和一堆原始数据来得到一些预测的结果，人们需要做的是从这堆原始数据中去提炼较优的结果，然后做到最优的预测。这个就包括两个方面，第一就是如何选择…"
+        }
+      ],
+      "viewAngleCards": [],
+      "benchmark": "",
+      "pitfalls": [],
+      "createdAt": "2026-11-18T08:56:10.800Z"
     }
   ]
 }

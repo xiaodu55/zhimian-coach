@@ -20,7 +20,7 @@ export function renderCitationChip(citation) {
 }
 
 /**
- * 证据抽屉：左边你的口述/论点，右边知乎高赞答主的原话要点 —— 直观看到"高手怎么讲同一个概念"。
+ * 证据抽屉：左边你的口述/论点，右边知乎答主的原话要点 —— 直观看到"高手怎么讲同一个概念"。
  * 传入 myText 时展示对照；没有就退化成原来的纯引用片段视图。
  */
 export function openCitationModal(citation) {
@@ -57,7 +57,7 @@ export function openCitationModal(citation) {
         </div>
       </div>
       <div>
-        <div style="font-size:12px;font-weight:700;color:var(--primary);margin-bottom:6px;">知乎高赞原话要点</div>
+        <div style="font-size:12px;font-weight:700;color:var(--primary);margin-bottom:6px;">知乎原话要点</div>
         <div style="border:1px solid var(--primary);border-radius:8px;padding:10px;background:var(--primary-soft);">
           ${theirs.map((s) => `<p style="margin:0 0 6px;font-size:13px;line-height:1.7;">${escapeHtml(s)}</p>`).join('')}
         </div>

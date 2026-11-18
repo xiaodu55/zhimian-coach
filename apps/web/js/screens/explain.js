@@ -172,7 +172,7 @@ export function renderExplainScreen(root) {
     // 这道题的评分基准来自知乎原答：给出可直接点开的链接
     const sources = (q.viewpointCards || []).filter((c) => c.sourceUrl).slice(0, 3);
     wrapper.querySelector('#framework-sources').innerHTML = sources.length
-      ? '<span style="color:var(--text-muted);">知乎高赞原答：</span>' +
+      ? '<span style="color:var(--text-muted);">知乎原答：</span>' +
         sources
           .map(
             (c, i) =>

@@ -11,6 +11,8 @@ export const state = {
   degradedReason: null,
   bank: [],
   demoSample: null,
+  /** 离线演示保底包：预跑的真实复盘报告，断网/模型不可用时也能演完闭环 */
+  demoReports: [],
   activeQuestion: null,
   /** 用户是否"自己挑过"一道题：题库加载会预填 activeQuestion，但那不算用户的选择。
       跨路由直达下游页面时，用它判断要不要给上下文守卫。 */
@@ -251,11 +253,53 @@ export async function loadQuestionBank() {
   notify();
 }
 
+/** 公网分享口令：URL 里的 ?k= 存进 sessionStorage，所有 /api 请求自动带上 */
+const SHARE_TOKEN_KEY = 'zhimian.share.token';
+
+export function getShareToken() {
+  try {
+    const fromUrl = new URLSearchParams(location.search).get('k');
+    if (fromUrl) {
+      sessionStorage.setItem(SHARE_TOKEN_KEY, fromUrl);
+      return fromUrl;
+    }
+    return sessionStorage.getItem(SHARE_TOKEN_KEY) || '';
+  } catch {
+    return '';
+  }
+}
+
+/** 给 fetch 补上分享口令 */
+export function withShareToken(init = {}) {
+  const token = getShareToken();
+  if (!token) return init;
+  const headers = new Headers(init.headers || {});
+  headers.set('x-share-token', token);
+  return { ...init, headers };
+}
+
+/**
+ * 加载离线演示保底包（静态 JSON，不依赖后端）。
+ * 拿不到就安静降级，不影响主流程。
+ */
+export async function loadDemoReports() {
+  try {
+    const res = await fetch('/data/demo-reports.json', { cache: 'no-cache' });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const data = await res.json();
+    state.demoReports = Array.isArray(data?.reports) ? data.reports : [];
+  } catch {
+    state.demoReports = [];
+  }
+  return state.demoReports;
+}
+
 /**
  * 检查 BFF 健康状态（显式提示降级，不静默）
  */
 export async function checkBackendHealth() {
   const pill = document.getElementById('system-status-pill');
+  getShareToken();
   try {
     const ctrl = new AbortController();
     const timer = setTimeout(() => ctrl.abort(), 3500);

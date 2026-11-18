@@ -20,6 +20,7 @@ import { renderViewpointCard } from '../ui/components.js';
 // 规则编号只留在代码与日志里，界面一律翻译成人话（「⚠️ 缺少量化结果」）
 import { humanizeRule, summarizeFindings } from '../rules/labels.js';
 import { getMatchedSampleAnswer, countEffectiveChars } from '../lib/optimizer.js';
+import { kindOf } from '../lib/domains.js';
 import { createModal, modalButton } from '../ui/modal.js';
 import { LocalAudioRecorder } from '../capture/recorder.js';
 import { LiveCaptionEngine, captionsToTranscript } from '../capture/caption.js';
@@ -277,7 +278,7 @@ export function renderCoachScreen(root) {
 
           <details>
             <summary style="cursor:pointer;font-size:13px;font-weight:600;color:var(--primary);">
-              查看参考答题骨架（提示）<span class="tag tag-green" style="margin-left:6px;">知乎高赞溯源</span>
+              查看参考答题骨架（提示）<span class="tag tag-green" style="margin-left:6px;">知乎原文溯源</span>
             </summary>
             <ul style="margin:8px 0 0;padding-left:18px;font-size:13px;color:var(--text-secondary);" id="coach-skeleton-list">
               ${(question.skeleton || []).map((s, i) => `<li data-skeleton-idx="${i}">${escapeHtml(s)}</li>`).join('')}
@@ -287,7 +288,7 @@ export function renderCoachScreen(root) {
 
         <section>
           <h3 style="margin:0 0 8px;font-size:14px;color:var(--text-secondary);display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
-            评分基准 · 知乎高赞观点
+            评分基准 · 知乎观点原文
             <span style="font-size:11.5px;color:var(--text-muted);font-weight:400;">先自己答，卡壳了再偷看</span>
           </h3>
           <div id="coach-vp-list" style="display:flex;flex-direction:column;gap:10px;"></div>
@@ -1905,7 +1906,8 @@ export function renderCoachScreen(root) {
     return Number.isFinite(v) && v >= 1 && v <= 3 ? v : d;
   };
   let followupDepth = readNum(DEPTH_KEY, 2);
-  let interviewerStyle = localStorage.getItem(STYLE_KEY) === 'gentle' ? 'gentle' : 'tough';
+  // 默认「温和引导型」：新手第一次被怼容易劝退，冲刺期再手动切到压力挑战
+  let interviewerStyle = localStorage.getItem(STYLE_KEY) === 'tough' ? 'tough' : 'gentle';
   depthSelect.value = String(followupDepth);
   styleSelect.value = interviewerStyle;
   depthSelect.addEventListener('change', () => {
@@ -1932,8 +1934,8 @@ export function renderCoachScreen(root) {
         renderCitationChip({
           id: `S${i + 1}`,
           type: 'zhihu',
-          label: `知乎高赞溯源 ${i + 1}`,
-          sourceTitle: vc.author || '知乎高赞回答',
+          label: `知乎原文溯源 ${i + 1}`,
+          sourceTitle: vc.author || '知乎答主',
           locator: vc.stance || '',
           quote: vc.evidenceQuote || '',
           url: vc.sourceUrl || '',
@@ -1955,8 +1957,8 @@ export function renderCoachScreen(root) {
       renderCitationChip({
         id: 'S-F',
         type: 'zhihu',
-        label: '知乎高赞溯源',
-        sourceTitle: vc.author || '知乎高赞回答',
+        label: '知乎原文溯源',
+        sourceTitle: vc.author || '知乎答主',
         locator: vc.stance || '',
         quote: vc.evidenceQuote || '',
         url: vc.sourceUrl || '',
@@ -2058,7 +2060,7 @@ export function renderCoachScreen(root) {
     submitBtn.textContent = '模型生成中（最多 25 秒）…';
 
     // 阶段性微文案：长耗时的模型调用期间必须告诉用户"现在在做什么"
-    const progress = createProgress('正在检索知乎高赞回答结构…');
+    const progress = createProgress('正在检索知乎真实回答结构…');
 
     const transcript = buildTranscript(raw);
     let review;
@@ -2069,6 +2071,10 @@ export function renderCoachScreen(root) {
         followupFocus: activeFollowupFocus,
         interviewerStyle,
         followupDepth,
+        questionKind: kindOf(question),
+        onStage: (text) => {
+          if (text) progress.step(text);
+        },
       });
     } catch (err) {
       // 模型层异常时也要收尾：微文案必须消失、按钮必须可点，否则页面会卡在"生成中"
@@ -2083,13 +2089,10 @@ export function renderCoachScreen(root) {
     setFollowupModeBadge(degraded);
     roundAnswers.push(raw);
 
-    progress.step('正在提炼 3 个核心考察点…');
-    // 让 live region 把上一句播报出去再切下一句（否则三句话会挤在同一帧里看不到过程）
+    // 让 live region 把上一句播报出去再切下一句（否则阶段文案会挤在同一帧里看不到过程）
     await nextPaint();
     // 核心考察点：优先用题库给的骨架，题库没给就用追问焦点兜底
     const corePoints = (question.skeleton || []).slice(0, 3);
-    progress.step('正在对照你的原话逐句诊断…');
-    await nextPaint();
     const speechMetrics = computeSpeechMetrics({
       durationSec: lastAnswerDurationSec,
       text: roundAnswers.join('\n'),
@@ -2159,7 +2162,7 @@ export function renderCoachScreen(root) {
     text: hasQuestion
       ? '下一步：先写下你的回答，再结束并生成复盘诊断'
       : '下一步：先载入一道题，开始这一轮练习',
-    hint: '复盘会逐条回指你的原话，并对照知乎高赞原话给出可核对的改进话术（只存在本机浏览器）。',
+    hint: '复盘会逐条回指你的原话，并对照知乎原话给出可核对的改进话术（只存在本机浏览器）。',
     actions: [
       hasQuestion
         ? {
