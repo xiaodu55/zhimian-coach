@@ -300,3 +300,23 @@ pnpm tunnel          # 申请 Cloudflare 快速隧道，打印 https://xxx.trycl
 - **本地数据有版本**：备份带 `SCHEMA_VERSION`，导入时校验并迁移旧结构；录音默认只导出文字稿，不让备份变成几百 MB。
 - **公网可鉴权**：配 `PUBLIC_SHARE_TOKEN` 后所有 `/api` 都要带 `x-share-token`（前端从 `?k=` 自动带），
   防止演示链接被陌生人刷额度。
+
+---
+
+## 部署（提交「可运行体验链接」）
+
+官方口径：黑客松 FAQ 明确 **需要自己部署服务**，并给了三条路径 ——
+架构复杂的走**云主机**；常规项目走 **CloudBase** 一站式平台；
+**前端 + Node 后端、不含数据库写入的全栈项目 → 用知乎 [AiWorks](https://www.zhihu.com/project-square) 提供的部署能力**（本项目正是这一类）。
+
+完整步骤、环境变量清单、HTTPS 要求、自检清单与常见坑：**[`docs/部署指南.md`](docs/部署指南.md)**。
+
+三条铁律：
+1. **必须 HTTPS**（录音 `getUserMedia` 只在安全上下文可用）；
+2. **密钥只放服务端环境变量**；
+3. **公网必须设 `PUBLIC_SHARE_TOKEN`**，评委用 `https://域名/?k=口令` 打开（前端自动带上），否则任何人拿到链接都能白烧额度。
+
+临时保命（本机方案，电脑不能关机）：`node scripts/dev/keepalive.mjs` 自拉起 BFF + 隧道；
+`powershell -ExecutionPolicy Bypass -File scripts/dev/install-autostart.ps1` 开机自启并禁止睡眠。
+
+> 本项目的用户数据**全部在浏览器 IndexedDB**，服务端零落盘 → 部署到任何机器都不用迁数据，重启不丢。
