@@ -321,7 +321,15 @@ export async function checkBackendHealth() {
       if (data.ok && data.llmConfigured) {
         pill.className = 'status-pill status-online';
         pill.textContent = '● 知乎语料已连接';
-        pill.title = '知乎语料与模型服务均在线';
+        // 把成本看板塞进 hover：今天用了多少次模型/知乎额度，演示前自己心里有数
+        const u = data.usage || {};
+        const llmCalls = u.llm?.calls ?? 0;
+        const zhCalls = u.zhihu?.calls ?? 0;
+        pill.title =
+          '知乎语料与模型服务均在线' +
+          (llmCalls || zhCalls
+            ? `｜本次启动以来：模型调用 ${llmCalls} 次、知乎检索 ${zhCalls} 次`
+            : '');
       } else if (data.ok && data.zhihuConfigured) {
         pill.className = 'status-pill status-degraded';
         pill.textContent = '◐ 本地离线模式（练习记录正常保存）';

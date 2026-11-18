@@ -1,10 +1,31 @@
+/**
+ * 评分维度按题目类型分流：
+ *  - tech：技术/工程题 → 技术深度 / 工程权衡 / 边界意识
+ *  - soft：通用软素质题（自我介绍、离职原因、offer 比较…）→ 结构清晰 / 证据充分 / 表达分寸
+ * 之前所有题都按技术口径打分，给"考公怕面试"这种题打"技术深度 38 分"，
+ * 用户一眼就知道评分口径不对。
+ */
+export const COACH_DIMENSIONS = {
+  tech: '技术深度 / 工程权衡 / 边界意识',
+  soft: '结构清晰 / 证据充分 / 表达分寸',
+} as const;
+
+/** 从题目文本判断题型（调用方没传时的兜底） */
+export function inferQuestionKind(question = ''): 'tech' | 'soft' {
+  const t = String(question);
+  if (/自我介绍|离职|offer|跳槽|转行|职业规划|抗压|心态|沟通|协作|冲突|考公|为什么想|个人优势|缺点/.test(t)) {
+    return 'soft';
+  }
+  return 'tech';
+}
+
 export const COACH_PARSE_SYSTEM_PROMPT = `你是「知面陪练」的结构化面试诊断引擎。
 你必须严格基于提供的知乎观点卡来源集合（S1, S2...）评估候选人回答。
 输出必须是合法 JSON 对象，格式如下：
 {
   "llmScores": [
     {
-      "dimension": "技术深度 / 工程权衡 / 边界意识",
+      "dimension": "__DIMENSIONS__",
       "score": 80,
       "claim": "具体评估结论",
       "basis": "外部佐证",
