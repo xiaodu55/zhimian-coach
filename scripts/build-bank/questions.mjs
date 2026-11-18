@@ -1,16 +1,23 @@
 /**
  * 真题构建（自包含脚本，不依赖 BFF 源码，避免后端重构把跑批带崩）
  * 用法：
- *   node scripts/build-bank/questions.mjs [--limit 15] [--domain ai-agent] [--reset] [--dry] [--require '正则']
+ *   node scripts/build-bank/questions.mjs [--limit 15] [--domain ai-agent] [--count 10] [--reset] [--dry] [--require '正则']
+ *   node scripts/build-bank/questions.mjs --urls .cache/urls.json --limit 30   # 外部检索到的候选
  *
- * 配额现实（实测）：question_discovery 共享 100/天，推荐与回答摘要都从这里扣。
- * 一个题 = 1 次推荐 + 1 次回答 → 每天最多约 30–50 题，用完就停（429 直接退出）。
+ * 配额现实（实测）：
+ *   - question_discovery 共享 100/天；推荐接口与回答摘要是**两个独立桶**。
+ *   - 推荐桶（/api/v1/user/question_recommendations）：用完之后接口仍然返回 200，但 Items 为空，
+ *     所以「返回 0 条」= 配额用完，不是「这个主题没有题」。
+ *   - 回答桶（/api/v1/content/question_answers）：按题扣，一次约 1 个。
+ *   - 两条路都能拿题：推荐桶用完时，用 --urls 传入外部检索到的知乎问题（{title,url} 数组或 TSV），
+ *     脚本会照样走「主题匹配 → 抓回答 → 落库」这条流水线。
  *
  * 白名单为什么要按主题拆：
  *   以前是全局白名单（面试/答辩/简历/offer…），它只对软素质题有效。
  *   技术主题一旦走同一个白名单，「RAG 有什么好的优化方案？」这类题会被全部过滤掉，
  *   所以技术主题必须命中**自己主题的**关键词才算命中。
  *   每个 topic 自带 groups（该主题白名单，两组都要命中）与 domain/kind（题库契约字段）。
+ *   匹配是跨主题择优：一次推荐拿回的候选，逐个比对所有主题，命中哪个算哪个。
  */
 import fs from 'node:fs';
 import path from 'node:path';

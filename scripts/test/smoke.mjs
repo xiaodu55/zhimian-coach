@@ -60,6 +60,14 @@ async function step(name, fn) {
     failed += 1;
     results.push({ name, ok: false, ms: Date.now() - t0, error: err.message });
     console.error(`  ✗ ${name}: ${err.message}`);
+  } finally {
+    // 清理可能残留的弹窗：否则一处失败会连锁挡住后面的步骤
+    await page
+      .evaluate(() => {
+        document.querySelectorAll('.modal-backdrop:not(#citation-modal)').forEach((m) => m.remove());
+        document.getElementById('citation-modal')?.setAttribute('hidden', '');
+      })
+      .catch(() => {});
   }
 }
 
@@ -113,12 +121,19 @@ await step('筛选与分页：选方向后仍有结果，分页器可见', async
 await step('拆逻辑卡片：能打开且有得分点', async () => {
   await page.goto(`${BASE}/#/bank`, { waitUntil: 'domcontentloaded' });
   await page.waitForSelector('#bank-list .btn-start-coach', { timeout: 15000 });
-  await page.locator('#bank-list .btn-start-coach').first().click();
-  await page.waitForSelector('.modal-backdrop', { timeout: 5000 });
-  const text = await page.locator('.modal-backdrop .modal-body').innerText();
+  // 挑一张**带知乎原文链接**的题（没有观点卡的题本来就没有链接，不该算失败）
+  const idx = await page.evaluate(() => {
+    const cards = Array.from(document.querySelectorAll('#bank-list .card'));
+    const i = cards.findIndex((c) => c.querySelector('a[href*="zhihu.com"]'));
+    return i >= 0 ? i : 0;
+  });
+  await page.locator('#bank-list .btn-start-coach').nth(idx).click();
+  await page.waitForSelector('.modal-backdrop:not([hidden])', { timeout: 8000 });
+  const text = await page.locator('.modal-backdrop:not([hidden]) .modal-body').innerText();
   if (!text.includes('核心得分点')) throw new Error('拆逻辑卡片缺少得分点');
-  const hasLink = await page.locator('.modal-backdrop a[href*="zhihu.com"]').count();
-  if (hasLink === 0) throw new Error('拆逻辑卡片没有知乎原文链接');
+  const hasLink = await page.locator('.modal-backdrop:not([hidden]) a[href*="zhihu.com"]').count();
+  const hasCards = text.includes('张知乎观点卡');
+  if (hasLink === 0 && hasCards) throw new Error('这道题有观点卡，但拆逻辑卡片里没有知乎原文链接');
   await page.keyboard.press('Escape');
 });
 
@@ -133,9 +148,34 @@ await step('陪练室：门禁生效（空框主按钮禁用）', async () => {
 });
 
 await step('陪练室：填入示例后按钮解锁且字数正确', async () => {
+  // 页面是异步渲染的（题库加载 → 渲染陪练室），等它彻底稳定
+  await page.waitForSelector('#answer-textarea', { timeout: 15000 });
+  await page.waitForTimeout(1500);
   const fill = page.locator('#btn-fill-sample');
-  if (!(await fill.isVisible())) throw new Error('示例填充按钮不可见');
-  await fill.click();
+  await fill.waitFor({ state: 'visible', timeout: 8000 });
+  try {
+    await fill.click({ timeout: 15000 });
+  } catch (err) {
+    // 诊断：元素是否稳定、是否被别的元素盖住
+    const box1 = await fill.boundingBox();
+    await page.waitForTimeout(300);
+    const box2 = await fill.boundingBox();
+    const hit = await page.evaluate(() => {
+      const el = document.querySelector('#btn-fill-sample');
+      if (!el) return '元素不存在';
+      const r = el.getBoundingClientRect();
+      const top = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
+      if (!top) return '无命中元素';
+      const modal = top.closest('.modal-backdrop');
+      const info = `${top.tagName}#${top.id || ''}`;
+      if (modal) {
+        const title = modal.querySelector('h3');
+        return `${info} | 弹窗标题="${(title?.innerText || '').slice(0, 20)}" hidden=${modal.hasAttribute('hidden')} 弹窗数=${document.querySelectorAll('.modal-backdrop').length}`;
+      }
+      return info;
+    });
+    throw new Error(`${err.message.split('\n')[0]}｜稳定=${JSON.stringify(box1) === JSON.stringify(box2)}｜命中=${hit}`);
+  }
   await page.waitForTimeout(300);
   const counter = await page.locator('#answer-char-count').innerText();
   const m = counter.match(/(\d+)/);
@@ -147,13 +187,15 @@ await step('复盘台：有报告时展示维度分与改进话术', async () =>
   await page.goto(`${BASE}/#/review`, { waitUntil: 'domcontentloaded' });
   await page.waitForTimeout(2500);
   const text = await page.locator('#screen-root').innerText();
-  if (text.includes('暂无待复盘')) {
+  if (text.includes('暂无待复盘') || text.includes('还没有可复盘的作答记录')) {
     // 没有报告是允许的状态（守卫兜底），但守卫必须给出可点入口
     const guard = await page.locator('.empty-guard').count();
     if (guard === 0) throw new Error('既没有报告也没有空状态守卫');
     return;
   }
-  if (!text.includes('/ 100 分')) throw new Error('维度分没有刻度（如 "38 / 100 分"）');
+  if (!text.includes('/ 100 分') && !text.includes('未取得模型评分')) {
+    throw new Error('维度分既没有刻度（"38 / 100 分"），也没有明确说明为什么没有');
+  }
 });
 
 await step('弹药库：数据工具条在，闪卡区存在', async () => {

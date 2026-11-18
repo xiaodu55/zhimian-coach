@@ -1,6 +1,6 @@
 {
   "version": 3,
-  "updatedAt": "2026-11-18T09:18:50.873Z",
+  "updatedAt": "2026-11-18T09:27:37.586Z",
   "items": [
     {
       "id": "q_1",
@@ -4513,10 +4513,65 @@
           "snippet": "作为过来人，我面试过很多应届生，我们团队也来过不少刚出校门的新人。 所以每年秋招这段时间，总会遇到一些问题，要么是「我学校一般，是不是没戏了」，要么是「面试官到底在面我的什么能力？」 我来把我自己面试中的真实经历摊开分析一下，尽量说得具体、可执行，供秋招的同学们参考。 面试官心里会给每个候选人一个「基础分」 对于每个面试官来说，当他面试之前拿到你的简历的时候，基本上看完了简历，了解完你的基本信息，他…"
         }
       ],
-      "viewAngleCards": [],
-      "benchmark": "",
-      "pitfalls": [],
-      "createdAt": "2026-11-16T14:34:56.978Z"
+      "viewAngleCards": [
+        {
+          "stance": "潜力可展示",
+          "summary": "面试时间有限，应届生应主动抓住时机，详细讲述为岗位所做的课程、证书、工具等努力，以展示深度研究和发展技术的潜力。",
+          "evidence": "比如，你应聘的是技术岗，就可以将你为了这个技术岗而做的其他努力（如所学的课程、考的证书、学习使用的新工具等）都尽量详细地讲出来。",
+          "sourceIndex": 2,
+          "sourceUrl": "https://www.zhihu.com/question/2098176450230854584/answer/2101918526386726634",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "坦诚失败见潜力",
+          "summary": "潜力是在沟通中观察出来的，应届生敢于坦诚自己曾经的失败，能暴露项目真实性和团队参与度。",
+          "evidence": "✅️首先，应届生要敢于坦诚自己曾经的失败。",
+          "sourceIndex": 3,
+          "sourceUrl": "https://www.zhihu.com/question/2098176450230854584/answer/2099157790157698934",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "特质测不出",
+          "summary": "企业招聘应届生是提前计划好的，不存在赌一把；特质通过面试测不出来，更不可能表演出来。",
+          "evidence": "“特质”通过面试是测不出来的，更不可能“表演”出来。",
+          "sourceIndex": 1,
+          "sourceUrl": "https://www.zhihu.com/question/2098176450230854584/answer/2100827364594927089",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "minority",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "面试官能力有限",
+          "summary": "很多面试官其实没有能力识别一个人是不是有潜力，识别潜力与感知能力、经验积累、认知深度和观察力紧密相关。",
+          "evidence": "很多面试官其实是没有能力识别一个人是不是有潜力的。",
+          "sourceIndex": 4,
+          "sourceUrl": "https://www.zhihu.com/question/2098176450230854584/answer/2099116744119948462",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "minority",
+          "evidenceVerified": true
+        }
+      ],
+      "benchmark": "这题真正在考的是：面试官如何从有限信息中判断应届生的发展潜力，以及普通学历者如何靠可验证的经历与表达实现翻盘",
+      "pitfalls": [
+        "把潜力当表演",
+        "简历美化过度",
+        "答不上失败经历",
+        "忽视岗位相关努力"
+      ],
+      "createdAt": "2026-11-16T14:34:56.978Z",
+      "cardsMeta": {
+        "attempts": 2,
+        "verified": 4,
+        "total": 4
+      }
     },
     {
       "id": "q_49",
@@ -5425,10 +5480,53 @@
           "snippet": "2024年7月26日更新： 最近有个比较火的项目，叫gptpdf，直接通过GPT-4o或者Qwen-VL这种多模态大模型进行文档层面的解析。 GitHub - CosmosShadow/gptpdf: Using GPT to parse PDF 在这个方案的基础上，我也开源了一个对应的方案，使用版面分析，结合多模态大模型的能力，对文档进行切片Chunking操作，实现较好的语义切分效果。 https://github.com/lazyFrogLOL/llmdocparser ---…"
         }
       ],
-      "viewAngleCards": [],
-      "benchmark": "",
-      "pitfalls": [],
-      "createdAt": "2026-11-18T08:53:03.943Z"
+      "viewAngleCards": [
+        {
+          "stance": "全链路排障",
+          "summary": "RAG 链路长，切分、向量化、检索、拼接各环节都可能出错并连锁影响最终可信度。",
+          "evidence": "这几个步骤都有可能出现问题，导致带来连锁反应，使得最后结果的可信度满足不了客户效果。",
+          "sourceIndex": 2,
+          "sourceUrl": "https://www.zhihu.com/question/625481187/answer/3246962359",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "上下文优化",
+          "summary": "从上下文优化与 LLM 优化两个方向入手提升模型效果，需明确模型缺什么信息。",
+          "evidence": "上下文优化： 模型需要知道什么信息才能解决问题。",
+          "sourceIndex": 3,
+          "sourceUrl": "https://www.zhihu.com/question/625481187/answer/3292724588",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "多模态切分",
+          "summary": "用多模态大模型解析文档，结合版面分析做语义切分，改善 Chunking 效果。",
+          "evidence": "使用版面分析，结合多模态大模型的能力，对文档进行切片Chunking操作，实现较好的语义切分效果。",
+          "sourceIndex": 5,
+          "sourceUrl": "https://www.zhihu.com/question/625481187/answer/3313715960",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "minority",
+          "evidenceVerified": true
+        }
+      ],
+      "benchmark": "考察对 RAG 全链路各环节优化技巧的体系化认知与落地判断。",
+      "pitfalls": [
+        "切分策略不按数据集适配",
+        "长文本召回相关性差",
+        "各环节问题连锁放大"
+      ],
+      "createdAt": "2026-11-18T08:53:03.943Z",
+      "cardsMeta": {
+        "attempts": 1,
+        "verified": 3,
+        "total": 3
+      }
     },
     {
       "id": "q_59",
@@ -6013,10 +6111,54 @@
           "snippet": "作者：Chris 来源：通明湖研究院 基于大模型的系统具有明显的非确定性：同一输入在不同运行中可能产生不同输出，因此不能只依赖单元测试或人工主观体验来判断系统是否“可用”。OpenAI 在 Evaluation best practices 中将评估定义为一类结构化测试，其作用是在真实生产环境约束下衡量模型或 agent 的准确性、可靠性和稳定性，并强调评估应围绕具体业务目标而设计，而不是仅依赖通用 benchmark 或单一总分。 对于 agent 系统，Ope…"
         }
       ],
-      "viewAngleCards": [],
-      "benchmark": "",
-      "pitfalls": [],
-      "createdAt": "2026-11-18T08:54:32.421Z"
+      "viewAngleCards": [
+        {
+          "stance": "业务任务先行",
+          "summary": "不要先挑框架或列指标，先用团队反复遇到且可验收的真实任务跑通闭环。",
+          "evidence": "先拿一个团队真的会反复遇到、并且能验收的任务跑通。",
+          "sourceIndex": 3,
+          "sourceUrl": "https://www.zhihu.com/question/1985714937893512991/answer/2069076294504130507",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "参考成熟路线",
+          "summary": "可借鉴 Anthropic 工程实践中从零搭建评测体系的路线图与评测架构经验。",
+          "evidence": "里面对于从0搭建评测系统 的 road map有了很详细的讲述",
+          "sourceIndex": 4,
+          "sourceUrl": "https://www.zhihu.com/question/1985714937893512991/answer/2013755720626107054",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "安全设否决门槛",
+          "summary": "安全应作为独立否决门槛，不能被平均分掩盖，避免总分掩盖风险。",
+          "evidence": "安全要作为单独的否决门槛，不能被平均分掩盖",
+          "sourceIndex": 1,
+          "sourceUrl": "https://www.zhihu.com/question/1985714937893512991/answer/2003207686611805732",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "minority",
+          "evidenceVerified": true
+        }
+      ],
+      "benchmark": "考察能否从零启动 Agent 评测系统并说清落地路径，而不是比拼指标数量。",
+      "pitfalls": [
+        "先堆指标框架",
+        "总分掩盖风险",
+        "忽视Trace",
+        "环境差异失配"
+      ],
+      "createdAt": "2026-11-18T08:54:32.421Z",
+      "cardsMeta": {
+        "attempts": 1,
+        "verified": 3,
+        "total": 3
+      }
     },
     {
       "id": "q_66",
@@ -6275,10 +6417,53 @@
           "snippet": "“快速检索”的核心，不是搜得快，而是筛得快。 让你在几秒钟内判断一篇文献值不值得看，而不是花半小时读完才发现不相关。 第一步：先明确你要找什么——别带着模糊的需求去搜打开数据库之前，先问自己三个问题：我需要的是综述还是原始研究？我需要的是经典文献还是最新进展？我需要的是方法参考、数据对比，还是背景了解？ 明确目的再搜，比漫无目的地翻找，节省至少一半时间。 第二步：用对工具——不同场景用不同数据库 Goo…"
         }
       ],
-      "viewAngleCards": [],
-      "benchmark": "",
-      "pitfalls": [],
-      "createdAt": "2026-11-18T08:54:58.779Z"
+      "viewAngleCards": [
+        {
+          "stance": "先定目标再检索",
+          "summary": "检索前先明确文献类型与用途：综述、最新进展、方法学或临床数据，策略完全不同。",
+          "evidence": "打开数据库前先想清楚：你是要一篇最新的研究？还是要一篇综述快速了解全貌？还是要一篇经典论文找方法学？",
+          "sourceIndex": 4,
+          "sourceUrl": "https://www.zhihu.com/question/1968759948235240813/answer/2059998676873896526",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "筛得快才是核心",
+          "summary": "快速检索的关键在筛选效率，几秒内判断文献值不值得读，先明确需求再用对数据库。",
+          "evidence": "“快速检索”的核心，不是搜得快，而是筛得快。",
+          "sourceIndex": 5,
+          "sourceUrl": "https://www.zhihu.com/question/1968759948235240813/answer/2076594161705283704",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "工具辅助提效",
+          "summary": "借助 Connected Papers 等可视化文献工具，可顺着关联与引用快速定位相关文献。",
+          "evidence": "这里给大家分享一个很好用的文献查找工具，可以帮你把有所有关联和引用的文献直接搜索出来",
+          "sourceIndex": 1,
+          "sourceUrl": "https://www.zhihu.com/question/1968759948235240813/answer/1969798172218991974",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "minority",
+          "evidenceVerified": true
+        }
+      ],
+      "benchmark": "考查能否说清快速检索文献的核心方法路径与工具选择逻辑",
+      "pitfalls": [
+        "漫无目的直接开搜",
+        "只求搜得快不求筛得准",
+        "分不清综述与原始研究"
+      ],
+      "createdAt": "2026-11-18T08:54:58.779Z",
+      "cardsMeta": {
+        "attempts": 2,
+        "verified": 3,
+        "total": 3
+      }
     },
     {
       "id": "q_69",
@@ -6451,10 +6636,53 @@
           "snippet": "0 前言近期在工作当中和导师中哥一起参与了一个道具服务的设计与开发，由于这个服务的主链路涉及到与分布式事务有关的交互流程，由此引发我对这个话题产生了一些思考. 接下来两周，我会和大家一起分享探讨有关于分布式事务的话题，本系列分为上下两篇： 上篇：万字长文漫谈分布式事务实现原理下篇：从零到一搭建 TCC 分布式事务框架今天分享的是其中的上篇，下面正式开始. 1 分布式事务场景1.1 事务核心特性在聊分布式事务之前，…"
         }
       ],
-      "viewAngleCards": [],
-      "benchmark": "",
-      "pitfalls": [],
-      "createdAt": "2026-11-18T08:55:37.101Z"
+      "viewAngleCards": [
+        {
+          "stance": "按路径分流",
+          "summary": "关键路径靠查询补偿与幂等保证一致，非关键路径用CDC等异步触发",
+          "evidence": "付款的rpc超时了就去查支付状态，成功更新，失败让用户重试。",
+          "sourceIndex": 2,
+          "sourceUrl": "https://www.zhihu.com/question/363054486/answer/951268656",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "2PC不适合生产",
+          "summary": "2PC依赖XA且易阻塞，参与者或协调者故障可致整体不可用",
+          "evidence": "只要事务管理器或者实际执行者有任何一方不工作，都可能会造成整体不工作",
+          "sourceIndex": 1,
+          "sourceUrl": "https://www.zhihu.com/question/363054486/answer/951634231",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "最终一致非事务",
+          "summary": "采用最终一致后通常不再称分布式事务，强一致方案有性能代价",
+          "evidence": "一般用最终一致就不叫分布式事务了。",
+          "sourceIndex": 2,
+          "sourceUrl": "https://www.zhihu.com/question/363054486/answer/951268656",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "minority",
+          "evidenceVerified": true
+        }
+      ],
+      "benchmark": "考察对最终一致性落地手段与适用边界的理解",
+      "pitfalls": [
+        "混淆2PC与最终一致",
+        "漏掉幂等设计",
+        "关键路径盲目异步"
+      ],
+      "createdAt": "2026-11-18T08:55:37.101Z",
+      "cardsMeta": {
+        "attempts": 2,
+        "verified": 3,
+        "total": 3
+      }
     },
     {
       "id": "q_73",
@@ -6502,10 +6730,65 @@
           "snippet": "对优化没概念，才会人云亦云，什么人比机器贵，语言不重要，编译器比你更聪明等等。 只说视频转码业务，堆机器一个手段是远远不够的。可用的加速手段包括： 多机并行处理多线程并行处理SIMD汇编加速异构计算相互之间没关系的视频文件，分发到不同机器上处理容易。但如果是大分辨率视频转AV1或者266，一个视频压一天，不着急可以慢慢等，着急怎么办？ 可以把视频切成片段，比如一分钟一段，分发到不同机器上，多机并行压完再合并…"
         }
       ],
-      "viewAngleCards": [],
-      "benchmark": "",
-      "pitfalls": [],
-      "createdAt": "2026-11-18T08:55:40.184Z"
+      "viewAngleCards": [
+        {
+          "stance": "分布式非万能",
+          "summary": "分布式用于突破物理极限，无法解决单体代码质量与性能问题，加机器救不了烂代码。",
+          "evidence": "分布式是用来突破物理极限的，不能解决代码烂的问题",
+          "sourceIndex": 2,
+          "sourceUrl": "https://www.zhihu.com/question/1907621770904707692/answer/2008942219453820931",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "微服务反噬",
+          "summary": "微服务拆分后性能反而下降，需五台以上机器才可能有收益，可靠微服务远非拆分那么简单。",
+          "evidence": "两台机器的单体集群 >>> 一台单体 > 三台机器的微服务",
+          "sourceIndex": 1,
+          "sourceUrl": "https://www.zhihu.com/question/1907621770904707692/answer/1908690891687855203",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "单体性能被低估",
+          "summary": "Java单体性能极强，多数业务开发环境难有对手，分布式不能当作单体性能差的借口。",
+          "evidence": "单体性能比它强的业务开发环境几乎不存在了",
+          "sourceIndex": 4,
+          "sourceUrl": "https://www.zhihu.com/question/1907621770904707692/answer/2034049820608951166",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "minority",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "架构不是止疼药",
+          "summary": "把分布式当性能瓶颈的挡箭牌是阿Q精神，架构分布并不能真正规避单点性能问题。",
+          "evidence": "架构一分布，好像啥性能瓶颈都给规避了",
+          "sourceIndex": 3,
+          "sourceUrl": "https://www.zhihu.com/question/1907621770904707692/answer/1910707907156247915",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        }
+      ],
+      "benchmark": "考察能否辨明分布式与单体性能的关系、识别架构滥用而非跟风站队。",
+      "pitfalls": [
+        "把分布式当性能万能药",
+        "忽视单体代码质量",
+        "盲目拆分微服务",
+        "跟风站队而非量化压测"
+      ],
+      "createdAt": "2026-11-18T08:55:40.184Z",
+      "cardsMeta": {
+        "attempts": 1,
+        "verified": 4,
+        "total": 4
+      }
     },
     {
       "id": "q_74",
@@ -6553,10 +6836,53 @@
           "snippet": "我没有同一口径的服务商对比实测，不能负责任地给你排“哪家最好”。只凭宣传页上的收录率，也很难判断值不值得买。建议让候选方拿你的一篇真实内容，做一次可以保存记录的演示。 演示前，先问清楚“收录”指什么：文章已经发布、搜索能找到、某次AI回答提到品牌，还是回答引用了具体页面？请对方在报告里把这些结果分开。一个词包住四种结果，后面很容易各说各话。 接下来，我会这样看演示。 请对方打开内容的正式页面，核对发…"
         }
       ],
-      "viewAngleCards": [],
-      "benchmark": "",
-      "pitfalls": [],
-      "createdAt": "2026-11-18T08:55:58.885Z"
+      "viewAngleCards": [
+        {
+          "stance": "无法直接排名",
+          "summary": "没有同口径实测数据，不能负责任地排哪家最好，应让候选方用真实内容做可保存记录的演示",
+          "evidence": "我没有同一口径的服务商对比实测，不能负责任地给你排“哪家最好”。",
+          "sourceIndex": 5,
+          "sourceUrl": "https://www.zhihu.com/question/2045560621433885493/answer/2085399809796600211",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "先验演示过程",
+          "summary": "选平台先看对方是否愿意完整打开演示过程，并原样展示输入问题，区分不同测试意图",
+          "evidence": "选哪家，我会先看它愿不愿意把演示过程完整打开。",
+          "sourceIndex": 1,
+          "sourceUrl": "https://www.zhihu.com/question/2045560621433885493/answer/2094080032515925715",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "推荐自家平台",
+          "summary": "认为传统SEO在AI搜索失效，GEO关键是出现在AI答案里，并直接推荐自家AiLense",
+          "evidence": "推荐我们AiLense(我自己就在这家做AI搜索营销这条业务)。",
+          "sourceIndex": 3,
+          "sourceUrl": "https://www.zhihu.com/question/2045560621433885493/answer/2078842562652139570",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "minority",
+          "evidenceVerified": true
+        }
+      ],
+      "benchmark": "考察能否识别GEO平台选择缺乏统一实测结论、应以可验证演示和收录口径界定来决策",
+      "pitfalls": [
+        "只看截图就下单",
+        "收录口径不清",
+        "轻信自荐服务商"
+      ],
+      "createdAt": "2026-11-18T08:55:58.885Z",
+      "cardsMeta": {
+        "attempts": 2,
+        "verified": 3,
+        "total": 3
+      }
     },
     {
       "id": "q_75",
@@ -6648,10 +6974,54 @@
           "snippet": "当你的内容从‘匹配关键词’转向‘理解用户任务’时，你构建的将不再是关键词排名，而是一张让AI持续引用的认知网络。传统思维教你怎么「被搜到」，JTBD思维教你怎么「被选中」 一、一个「正确但没用」的困境先讲一个真实的案例。 2026年初，我服务了一家做智能家居硬件的创业公司。团队不大，十几个人，产品确实不错——智能门锁的识别准确率做到了行业前茅。 他们找我说：「我们想做GEO，让我们在AI搜索里被看到。」 我问：「…"
         }
       ],
-      "viewAngleCards": [],
-      "benchmark": "",
-      "pitfalls": [],
-      "createdAt": "2026-11-18T09:02:07.845Z"
+      "viewAngleCards": [
+        {
+          "stance": "链条分段诊断",
+          "summary": "GEO是官网抓取、内容理解与引用的多段链条，问题常出在前端而非最后一步",
+          "evidence": "GEO 处理的是模型怎么理解你、引用你。这事拆开看是一条链，总共三段。",
+          "sourceIndex": 1,
+          "sourceUrl": "https://www.zhihu.com/question/2049900312102810859/answer/2098737549418279223",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "内容弹药结构",
+          "summary": "内容应以真实案例、用户问句和克制行业判断为来源，按比例持续供给",
+          "evidence": "第一，真实案例。每个客户故事都是弹药，比软文值钱十倍。",
+          "sourceIndex": 3,
+          "sourceUrl": "https://www.zhihu.com/question/2049900312102810859/answer/2083868147204077411",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "平台差异边界",
+          "summary": "各AI产品数据来源与更新机制不同，同一批内容不会立刻全平台生效，需基线测试与复测",
+          "evidence": "不同AI产品的数据来源、检索机制和更新时间并不完全相同，所以同一批内容不会立刻在所有平台生效。",
+          "sourceIndex": 4,
+          "sourceUrl": "https://www.zhihu.com/question/2049900312102810859/answer/2069007869480023054",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "minority",
+          "evidenceVerified": true
+        }
+      ],
+      "benchmark": "考察能否诊断GEO失效的真实环节而非只盯发文量",
+      "pitfalls": [
+        "只统计发文数量",
+        "自说自话写内容",
+        "忽视官网抓取结构",
+        "期待全平台同步生效"
+      ],
+      "createdAt": "2026-11-18T09:02:07.845Z",
+      "cardsMeta": {
+        "attempts": 1,
+        "verified": 3,
+        "total": 3
+      }
     },
     {
       "id": "q_77",
@@ -6699,10 +7069,52 @@
           "snippet": "本科化学做实验不是很多，就是偶尔有一些实验课，但是到了大二结束以后，如果想继续搞科研，可以提前联系老师进入实验室，提前接触科研氛围以及做部分实验，发展的好的话说不定本科就能发SCI论文。如果不做科研那就是最后大四毕设会进实验室做实验。其他的没啥"
         }
       ],
-      "viewAngleCards": [],
-      "benchmark": "",
-      "pitfalls": [],
-      "createdAt": "2026-11-18T09:02:10.972Z"
+      "viewAngleCards": [
+        {
+          "stance": "实验很多",
+          "summary": "化学专业基本泡在实验室，实验课频次高、耗时长，后期进组时间更久",
+          "evidence": "选择化学专业，就基本要泡在实验室里。",
+          "sourceIndex": 4,
+          "sourceUrl": "https://www.zhihu.com/question/1917962295495070276/answer/1942260688740410949",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "实验报告负担重",
+          "summary": "每学期约24个实验，每周2~3次实验，需写预习和正式两套报告",
+          "evidence": "平均每学期24个实验，差不多每个周2~3次实验",
+          "sourceIndex": 2,
+          "sourceUrl": "https://www.zhihu.com/question/1917962295495070276/answer/1982971086586024721",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "本科以理论为主",
+          "summary": "本科不经常做实验，以理论课为主，实验约占专业课三分之一",
+          "evidence": "本科不会经常做。还是以理论课为主",
+          "sourceIndex": 3,
+          "sourceUrl": "https://www.zhihu.com/question/1917962295495070276/answer/1919367926424802094",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "minority",
+          "evidenceVerified": true
+        }
+      ],
+      "benchmark": "考察能否基于真实就读体验，区分化学本科实验课的频次、强度与个体差异",
+      "pitfalls": [
+        "把实验多等同于天天做",
+        "忽视个体与院校差异"
+      ],
+      "createdAt": "2026-11-18T09:02:10.972Z",
+      "cardsMeta": {
+        "attempts": 1,
+        "verified": 3,
+        "total": 3
+      }
     },
     {
       "id": "q_78",
@@ -6750,10 +7162,54 @@
           "snippet": "知道原理和方法，自己做就可以。服务商主要就是刷文，另外有的服务商渠道比较好，这个是优势。但是这个行为，估计很快就会被AI搜索给封杀掉了。还是老老实实的做好SEO和GEO吧。主要是做好渠道和内容建设，这个自己就能做。 企业 GEO 实战指南"
         }
       ],
-      "viewAngleCards": [],
-      "benchmark": "",
-      "pitfalls": [],
-      "createdAt": "2026-11-18T09:02:58.600Z"
+      "viewAngleCards": [
+        {
+          "stance": "自主实操为主",
+          "summary": "掌握原理方法后企业可自建渠道与内容，服务商多为刷文且面临平台封杀风险。",
+          "evidence": "知道原理和方法，自己做就可以。服务商主要就是刷文",
+          "sourceIndex": 5,
+          "sourceUrl": "https://www.zhihu.com/question/2013303498356319148/answer/2101059439323304869",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "minority",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "按维度评估服务商",
+          "summary": "不直接推荐服务商，主张从用户意图、技术后台、平台监测等六维度评估筛选。",
+          "evidence": "可以给到挑选评估服务商的思路，昨天刚用这种方式评估，相对靠谱。",
+          "sourceIndex": 1,
+          "sourceUrl": "https://www.zhihu.com/question/2013303498356319148/answer/2082048015460733768",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "警惕选型陷阱",
+          "summary": "GEO市场存在大量换概念炒噱头的服务乱象，需甄别陷阱避免降权与无效投入。",
+          "evidence": "大量传统营销团队、SEO工作室纷纷转型入局，其中不少团队并未掌握GEO核心技术，仅靠换概念、炒噱头吸引客户",
+          "sourceIndex": 2,
+          "sourceUrl": "https://www.zhihu.com/question/2013303498356319148/answer/2102050032048402672",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        }
+      ],
+      "benchmark": "考察能否区分GEO实操方法与服务商筛选逻辑，并识别行业宣传陷阱。",
+      "pitfalls": [
+        "把卖点塞进问题凑数据",
+        "轻信无原始记录的数据",
+        "盲目招人批量发内容",
+        "被换概念服务商忽悠"
+      ],
+      "createdAt": "2026-11-18T09:02:58.600Z",
+      "cardsMeta": {
+        "attempts": 1,
+        "verified": 3,
+        "total": 3
+      }
     },
     {
       "id": "q_79",
@@ -6852,10 +7308,53 @@
           "snippet": "过去一年，我们服务了数十家本地企业，从餐饮、教育到工业制造，发现一个共同点：大家越来越重视在AI里能不能被看到、被推荐。 GEO（生成式引擎优化）的核心，就是让品牌内容成为AI回答的首选信源，而不只是优化搜索引擎排名。 结合实战经验，总结出一套适用于广州企业GEO优化思路，并以本土服务商飞虎商联的“官网+多媒体平台”布局为例，分享如何落地。 首先要明确，GEO并非适用于所有业务，需先明确其价值。 以下三类场景效果…"
         }
       ],
-      "viewAngleCards": [],
-      "benchmark": "",
-      "pitfalls": [],
-      "createdAt": "2026-11-18T09:03:01.377Z"
+      "viewAngleCards": [
+        {
+          "stance": "三条线选型",
+          "summary": "选服务商要卡技术自研、合规落地、效果可追溯，拒绝贴牌外包。",
+          "evidence": "靠谱服务商要卡死 “技术自研、合规落地、效果可追溯” 三条线",
+          "sourceIndex": 4,
+          "sourceUrl": "https://www.zhihu.com/question/1992994229258064882/answer/2033185381852639266",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "硬数据评估",
+          "summary": "效果评估不能看虚的，必须用引用率、回答率、转化三类硬数据。",
+          "evidence": "评估不能看虚的，必须用 引用率、回答率、转化三类硬数据说话",
+          "sourceIndex": 4,
+          "sourceUrl": "https://www.zhihu.com/question/1992994229258064882/answer/2033185381852639266",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "先辨价值场景",
+          "summary": "GEO并非适用于所有业务，需先明确其价值与适用场景再谈选型。",
+          "evidence": "GEO并非适用于所有业务，需先明确其价值。",
+          "sourceIndex": 5,
+          "sourceUrl": "https://www.zhihu.com/question/1992994229258064882/answer/1996991426739851741",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "minority",
+          "evidenceVerified": true
+        }
+      ],
+      "benchmark": "考察对GEO服务商选型标准与效果评估指标的专业判断，而非罗列营销话术。",
+      "pitfalls": [
+        "只看会不会写文章",
+        "贴牌外包冒充自研",
+        "堆低质内容充效果"
+      ],
+      "createdAt": "2026-11-18T09:03:01.377Z",
+      "cardsMeta": {
+        "attempts": 2,
+        "verified": 3,
+        "total": 3
+      }
     },
     {
       "id": "q_81",
@@ -6954,10 +7453,53 @@
           "snippet": "1 写在前面DeepSeek-R1 自从1-20号开源/发布十天以来，鲶鱼效应应接不暇，OpenAI o3-mini 也在几天前向免费用户推送。 [图片] 官方开源的版本除了满血的 671b 外，还有 1.5b，7b，8b，14b，32b，70b 六个蒸馏后的尺寸，笔者使用 Ollama 在电脑本地部署了 7b 的模型，在终端中测试了虽然回答没有满血版的那么惊艳，但凑活能用。 [图片] 作为一款高阶模型开源，确实要 salute 一下。不过进一步的问题是，我们面对这样的强思维链模型，除了在官网…"
         }
       ],
-      "viewAngleCards": [],
-      "benchmark": "",
-      "pitfalls": [],
-      "createdAt": "2026-11-18T09:08:06.741Z"
+      "viewAngleCards": [
+        {
+          "stance": "RAG优先",
+          "summary": "通用模型需注入领域知识，RAG/知识库是比微调更易上手的路径",
+          "evidence": "模型是通用的你得让它有你自己领域的东西要么微调要么加RAG也就是知识库嘛，RAG是最容易上手的一种",
+          "sourceIndex": 1,
+          "sourceUrl": "https://www.zhihu.com/question/650032076/answer/2023757075717660994",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "数据自持",
+          "summary": "核心资料不应托管在云端，主张把知识存到自己可控的本地环境",
+          "evidence": "我平时最核心的工作复盘、深度学习体系和灵感碎片，凭什么要存在别人的服务器上？",
+          "sourceIndex": 3,
+          "sourceUrl": "https://www.zhihu.com/question/650032076/answer/2040581648492778835",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "minority",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "图谱构建",
+          "summary": "对原始资料做知识萃取，抽取摘要主题并建立知识点关联形成知识图谱",
+          "evidence": "最终提取核心的文章摘要和主题信息，然后建立知识点之间的关联构建可视化知识图谱",
+          "sourceIndex": 2,
+          "sourceUrl": "https://www.zhihu.com/question/650032076/answer/2045250987997365169",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "minority",
+          "evidenceVerified": true
+        }
+      ],
+      "benchmark": "考察候选人能否把大模型本地知识库的架构与工程落地讲清楚",
+      "pitfalls": [
+        "只跑通demo不够",
+        "忽略数据归属风险",
+        "部署工具选型盲从"
+      ],
+      "createdAt": "2026-11-18T09:08:06.741Z",
+      "cardsMeta": {
+        "attempts": 1,
+        "verified": 3,
+        "total": 3
+      }
     },
     {
       "id": "q_83",
@@ -7056,10 +7598,64 @@
           "snippet": "说实话，从后端转AI Agent这条路，我踩了半年坑才摸清门道写在前面：别被B站那些速成教程骗了先说我自己的情况吧。6年后端，主要做Java那一套，Spring全家桶玩得还算溜。去年年底开始焦虑，感觉后端这块真的卷不动了，身边比我年轻的人技术栈比我新，比我老的人title比我高。 然后公司内部有个AI Agent的岗位在招人，我动心了。但问题是，我不想背刺现在的老板（他对我确实挺好的），所以就想着自己先学学，等学得差不多了再说。…"
         }
       ],
-      "viewAngleCards": [],
-      "benchmark": "",
-      "pitfalls": [],
-      "createdAt": "2026-11-18T09:08:09.636Z"
+      "viewAngleCards": [
+        {
+          "stance": "课程入门派",
+          "summary": "先刷官方免费教程打基础，如微软、Hugging Face、Anthropic 课程，不必买课",
+          "evidence": "如果没基础的话可以先看微软的《AI Agents for Beginners》",
+          "sourceIndex": 1,
+          "sourceUrl": "https://www.zhihu.com/question/1936375725931361485/answer/2011230268539805801",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "官方教程优先",
+          "summary": "一天一小时刷完 Claude 官方教程即可入门，之后再有针对性深入学习",
+          "evidence": "刷完 https://anthropic.skilljar.com/claude-with-the-anthropic-api 这个 Claude 的官方教程，你就算是入门了",
+          "sourceIndex": 2,
+          "sourceUrl": "https://www.zhihu.com/question/1936375725931361485/answer/1958927612178048839",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "作品导向派",
+          "summary": "社招核心要求是完成过类似作品并上线达到指定服务水准，强调 agentic system",
+          "evidence": "AI Agent 工程师岗位的基本要求是：你完成过一个类似的作品，并且上线达到了指定的服务水准。",
+          "sourceIndex": 3,
+          "sourceUrl": "https://www.zhihu.com/question/1936375725931361485/answer/1951235004484030764",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "minority",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "转行踩坑派",
+          "summary": "后端转 AI Agent 需警惕速成教程，实际摸索耗时不短，应理性规划",
+          "evidence": "从后端转AI Agent这条路，我踩了半年坑才摸清门道写在前面：别被B站那些速成教程骗了",
+          "sourceIndex": 5,
+          "sourceUrl": "https://www.zhihu.com/question/1936375725931361485/answer/1982833664812413939",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "minority",
+          "evidenceVerified": true
+        }
+      ],
+      "benchmark": "考察能否给出从入门到具备社招竞争力的 AI Agent 工程师成长路径",
+      "pitfalls": [
+        "迷信速成教程",
+        "只学不做出作品",
+        "买付费课走弯路"
+      ],
+      "createdAt": "2026-11-18T09:08:09.636Z",
+      "cardsMeta": {
+        "attempts": 1,
+        "verified": 4,
+        "total": 4
+      }
     },
     {
       "id": "q_85",
@@ -7137,10 +7733,52 @@
           "snippet": "agent不是prompt也不是算法，而是更复杂的存在。 来一个Agent项目就知道了，从原理到项目完成。 本文是记录，所以比较长。 早两年跟一个团队大佬做了个多智能体交易系统，我第一反应就是那种。 一个听起来很牛逼，实际做起来想砸电脑的项目。 是个私募（切记人称投资中的战斗机）的项目，要求做一套\"AI驱动的量化交易系统\"。 说好两个月！ 结果整整搞了半年，期间踩的坑能写一本《量化交易灾难大全》。 不过话说回来，最终系统跑…"
         }
       ],
-      "viewAngleCards": [],
-      "benchmark": "",
-      "pitfalls": [],
-      "createdAt": "2026-11-18T09:08:12.484Z"
+      "viewAngleCards": [
+        {
+          "stance": "部分成立但不足",
+          "summary": "现有 Agent 多以 LLM 加 Prompt 等外层封装实现，但未来未必如此，不能简单等同",
+          "evidence": "现在常见的Agent，包括Manus、Deep Research大部分都是LLM+Wrapper(Prompt、Function Call，MCP etc)，不过未来未必。",
+          "sourceIndex": 1,
+          "sourceUrl": "https://www.zhihu.com/question/1894891236617332066/answer/1897665876154622135",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "远不止Prompt",
+          "summary": "仅靠 System Prompt 不够，还需工具构造设计、流程编排、产品交互和 Badcase 修复",
+          "evidence": "光有System Prompt 可不够，还需要对Tools的构造以及设计非常的有想法才行，以及完善的Agent流程编排、非常细节的产品交互、及时的Badcase修复等等。",
+          "sourceIndex": 2,
+          "sourceUrl": "https://www.zhihu.com/question/1894891236617332066/answer/1898148855989642581",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "核心是编排器",
+          "summary": "Agent 核心应是多智能体编排器，而非单纯依赖工具调用和模型能力",
+          "evidence": "agent的核心应该是multi agent orchestrator 而不是单纯的依靠tool call和model能力",
+          "sourceIndex": 3,
+          "sourceUrl": "https://www.zhihu.com/question/1894891236617332066/answer/1914813693750903525",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "minority",
+          "evidenceVerified": true
+        }
+      ],
+      "benchmark": "考察能否区分 Agent 的 Prompt 层与流程编排、工具设计等工程层，避免把复杂系统简单归因于 Prompt 堆叠",
+      "pitfalls": [
+        "把Agent等同于Prompt堆叠",
+        "忽视工程与编排层"
+      ],
+      "createdAt": "2026-11-18T09:08:12.484Z",
+      "cardsMeta": {
+        "attempts": 1,
+        "verified": 3,
+        "total": 3
+      }
     },
     {
       "id": "q_87",
@@ -7239,10 +7877,64 @@
           "snippet": "Kevin 学习笔记 摘要大语言模型（LLMs）的性能从根本上由推理过程中提供的上下文信息决定。本综述提出 “上下文工程” 这一正式学科，它超越简单的提示设计，涵盖对大语言模型信息负载的系统化优化。我们构建了一个全面的分类体系，将上下文工程拆解为两大核心部分：基础组件与复杂的系统实现 —— 前者是构成该学科的核心技术模块，后者是将这些模块整合为智能系统的具体架构。 首先，我们详细分析基础组件：（1）上下文检索与…"
         }
       ],
-      "viewAngleCards": [],
-      "benchmark": "",
-      "pitfalls": [],
-      "createdAt": "2026-11-18T09:08:15.305Z"
+      "viewAngleCards": [
+        {
+          "stance": "研究变机密壁垒",
+          "summary": "不是研究少，而是真正的研究已成大厂闭门造车的核心机密与工程壁垒",
+          "evidence": "真正的研究都已经变成了大厂闭门造车的核心机密",
+          "sourceIndex": 1,
+          "sourceUrl": "https://www.zhihu.com/question/1975867034127599388/answer/1977380893665539779",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "minority",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "论文标准不兼容",
+          "summary": "学术界少研究是因该领域太工程化、缺形式化美感，不符合论文标准",
+          "evidence": "这套东西在计算机科学的论文标准里太脏、太工程化、太缺乏形式化的数学美感",
+          "sourceIndex": 3,
+          "sourceUrl": "https://www.zhihu.com/question/1975867034127599388/answer/2079752484533319083",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "落地决定成败",
+          "summary": "Agent能否从Demo走向商业化交付，取决于枯燥繁琐的上下文工程",
+          "evidence": "决定一个Agent能不能从实验室Demo走向商业化交付的，根本不是模型参数量",
+          "sourceIndex": 4,
+          "sourceUrl": "https://www.zhihu.com/question/1975867034127599388/answer/2081484838763246433",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "转向系统化优化",
+          "summary": "上下文工程超越提示设计，是对模型信息负载的系统化优化学科",
+          "evidence": "它超越简单的提示设计，涵盖对大语言模型信息负载的系统化优化",
+          "sourceIndex": 5,
+          "sourceUrl": "https://www.zhihu.com/question/1975867034127599388/answer/1985253624671122157",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        }
+      ],
+      "benchmark": "考察能否识破「研究少是假象」并厘清上下文工程对Agent落地的决定性作用",
+      "pitfalls": [
+        "把上下文工程等同Prompt",
+        "迷信大窗口无需管理",
+        "只看论文判断研究热度"
+      ],
+      "createdAt": "2026-11-18T09:08:15.305Z",
+      "cardsMeta": {
+        "attempts": 1,
+        "verified": 4,
+        "total": 4
+      }
     },
     {
       "id": "q_89",
@@ -7290,10 +7982,65 @@
           "snippet": "一、RAG（检索增强生成）学习路径 1. 核心学习目标掌握RAG技术原理、组件实现及优化策略，能够独立构建企业级知识检索与生成系统。 2. 推荐书籍《大模型应用开发：RAG实战课》 [图片] 内容亮点：从零搭建RAG系统，解析十大核心组件，基于DeepSeek、LangChain等框架实现知识库构建。 适用人群：程序员及RAG实战开发者。 在大模型逐渐成为智能系统核心引擎的今天，检索增强生成（RAG）技术为解决模型的知识盲区以及提升响应准确性提供了关…"
         }
       ],
-      "viewAngleCards": [],
-      "benchmark": "",
-      "pitfalls": [],
-      "createdAt": "2026-11-18T09:08:16.776Z"
+      "viewAngleCards": [
+        {
+          "stance": "实践驱动",
+          "summary": "系统性学习低效，应以有难度的真实问题切入，在解决难点中掌握三项技术。",
+          "evidence": "以前也很喜欢思考怎么系统性学习，后来发现这是一种比较低效的学习方式。",
+          "sourceIndex": 4,
+          "sourceUrl": "https://www.zhihu.com/question/1892824874994623025/answer/1980976732786931310",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "minority",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "综述先行",
+          "summary": "按个人习惯先读领域较新的综述文章，再逐步展开系统学习。",
+          "evidence": "一般我会找这个领域比较新的「综述」文章去看",
+          "sourceIndex": 3,
+          "sourceUrl": "https://www.zhihu.com/question/1892824874994623025/answer/1893064474421876015",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "minority",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "路径化学习",
+          "summary": "按技术分别给出学习路径与目标，如RAG掌握原理组件与优化策略并落地企业级系统。",
+          "evidence": "掌握RAG技术原理、组件实现及优化策略，能够独立构建企业级知识检索与生成系统。",
+          "sourceIndex": 5,
+          "sourceUrl": "https://www.zhihu.com/question/1892824874994623025/answer/1953907086892184584",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "避坑理解",
+          "summary": "教程多为文档翻译或入门demo，应补足为何这样做的原理与常见问题。",
+          "evidence": "技术文档告诉你\"怎么做\"，但从来不告诉你\"为什么这样做\"和\"哪里会出问题\"",
+          "sourceIndex": 2,
+          "sourceUrl": "https://www.zhihu.com/question/1892824874994623025/answer/1978139300622271150",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        }
+      ],
+      "benchmark": "考察对RAG、Agent、MCP三者关系及系统学习路径的认知，能否辨析不同学习主张并避免概念混淆。",
+      "pitfalls": [
+        "混淆RAG与MCP层次",
+        "只看Hello World demo",
+        "忽视原理与边界",
+        "缺少真实问题驱动"
+      ],
+      "createdAt": "2026-11-18T09:08:16.776Z",
+      "cardsMeta": {
+        "attempts": 1,
+        "verified": 4,
+        "total": 4
+      }
     },
     {
       "id": "q_90",
@@ -7341,10 +8088,53 @@
           "snippet": "面试被问到如何处理突发成倍数增长的流量？答案是进行优雅且有效的服务扩展(Service Scaling)！ 太长不看：在美国不同公司、不同岗位、不同级别的的招聘中，如何处理突发流量并高效且准确地进行服务扩展是及其容易遇到的问题！悄悄告诉你。。这个问题也是我经常用来评估 微软面试者的系统设计经验和解决实际问题能力的有效指标！我目前在微软担任主力面试官，也是目前我们部门的算法面试出题人，同时也向技术社区输出了不少改编…"
         }
       ],
-      "viewAngleCards": [],
-      "benchmark": "",
-      "pitfalls": [],
-      "createdAt": "2026-11-18T09:08:18.212Z"
+      "viewAngleCards": [
+        {
+          "stance": "案例切入派",
+          "summary": "以秒杀系统为典型载体，梳理高并发场景需掌握的关键技术点。",
+          "evidence": "最典型的高并发系统是秒杀系统，如果能掌握秒杀系统中相关技术，应对一般的高并发业务场景是绰绰有余的。",
+          "sourceIndex": 1,
+          "sourceUrl": "https://www.zhihu.com/question/593921820/answer/3475827666",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "无状态扩展派",
+          "summary": "核心是保证整体可用并抗住流量，通过无状态和横向扩展分而治之。",
+          "evidence": "如果设计的应用是无状态的，那么应用比较容易进行水平扩展。",
+          "sourceIndex": 2,
+          "sourceUrl": "https://www.zhihu.com/question/593921820/answer/2980314808",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "服务扩展派",
+          "summary": "面对突发成倍增长的流量，答案是进行优雅且有效的服务扩展。",
+          "evidence": "答案是进行优雅且有效的服务扩展(Service Scaling)！",
+          "sourceIndex": 5,
+          "sourceUrl": "https://www.zhihu.com/question/593921820/answer/3138499093",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "minority",
+          "evidenceVerified": true
+        }
+      ],
+      "benchmark": "考查从单机到分布式、从前端到后端的整体高并发架构设计能力。",
+      "pitfalls": [
+        "只谈单机优化",
+        "忽视无状态扩展",
+        "脱离业务空谈技术"
+      ],
+      "createdAt": "2026-11-18T09:08:18.212Z",
+      "cardsMeta": {
+        "attempts": 2,
+        "verified": 3,
+        "total": 3
+      }
     },
     {
       "id": "q_91",
@@ -7392,10 +8182,53 @@
           "snippet": "这又是一个高频的场景面试题，同时，它也是一个没有标准答案的、可以跟面试官讨论很久的面试题。 对于这个面试题，我的观点是：” 没有完美的方案，只有最适合某场景的方案。“这个问题表面上看是数据一致性的问题，其实根本上，又是数据一致性、系统性能和系统复杂度的选择与取舍。 下面我们先历数一下各种技术方案，环肥燕瘦两相宜，总有一款适合你。 1、先更新MySQL，再更新Redis [图片] 这个方案存在如下问题： （1）如果先更新MySQL…"
         }
       ],
-      "viewAngleCards": [],
-      "benchmark": "",
-      "pitfalls": [],
-      "createdAt": "2026-11-18T09:08:19.833Z"
+      "viewAngleCards": [
+        {
+          "stance": "无完美方案",
+          "summary": "没有标准答案，本质是数据一致性、性能与复杂度的场景化取舍",
+          "evidence": "没有完美的方案，只有最适合某场景的方案",
+          "sourceIndex": 5,
+          "sourceUrl": "https://www.zhihu.com/question/475100954/answer/3234645165",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "方案枚举对比",
+          "summary": "先穷举更新数据库与缓存的各种先后策略，再逐一讨论优劣",
+          "evidence": "那么我们这里列出来所有策略，并且讨论他们优劣性",
+          "sourceIndex": 2,
+          "sourceUrl": "https://www.zhihu.com/question/475100954/answer/2948099867",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "binlog异步同步",
+          "summary": "借binlog经消息队列异步更新Redis，靠至少一次加幂等实现最终一致",
+          "evidence": "消费语义一般会实现至少一次+幂等的方式",
+          "sourceIndex": 1,
+          "sourceUrl": "https://www.zhihu.com/question/475100954/answer/2100417148",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "minority",
+          "evidenceVerified": true
+        }
+      ],
+      "benchmark": "考查对缓存与数据库双写一致性方案及其取舍的权衡能力",
+      "pitfalls": [
+        "只背方案不谈取舍",
+        "忽视并发时序问题",
+        "混淆强一致与最终一致"
+      ],
+      "createdAt": "2026-11-18T09:08:19.833Z",
+      "cardsMeta": {
+        "attempts": 2,
+        "verified": 3,
+        "total": 3
+      }
     },
     {
       "id": "q_92",
@@ -7443,10 +8276,54 @@
           "snippet": "索引是必须掌握的数据库知识，下面我们一起来研究下数据库索引吧。 [图片] 一、索引的几个概念 单列索引：索引节点中的关键字是一个列的内容，也叫普通索引，比如：用身份证号做索引，用手机号做索引。 联合索引：索引节点中的关键字是多个列的内容，经常在需要用多个字段查询的时候用到。比如：用手机号+时间做索引，或者手机号+时间+状态做索引；也就是说单列索引是特殊的联合索引。 唯一索引：索引列的值必须唯一，但允许有空值；如…"
         }
       ],
-      "viewAngleCards": [],
-      "benchmark": "",
-      "pitfalls": [],
-      "createdAt": "2026-11-18T09:08:22.737Z"
+      "viewAngleCards": [
+        {
+          "stance": "索引未生效",
+          "summary": "查询慢首先应查执行计划，确认索引是否因函数、类型转换等原因根本没走上",
+          "evidence": "加了索引不代表查询就会用这个索引。跑一下 EXPLAIN 看 key 列，如果显示 NULL 说明索引根本没走上。",
+          "sourceIndex": 2,
+          "sourceUrl": "https://www.zhihu.com/question/536974445/answer/2070936612393980958",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "优化器选错",
+          "summary": "优化器基于统计信息估算成本，可能主动放弃索引而选全表扫描，导致加了索引反而更慢",
+          "evidence": "一个查询跑了 8 秒，加了索引之后变成了 12 秒。 这不是数据库 bug，是优化器做了一个看起来合理但实际上错误的选择。",
+          "sourceIndex": 1,
+          "sourceUrl": "https://www.zhihu.com/question/536974445/answer/2035646098493192131",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "minority",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "分场景归因",
+          "summary": "先区分偶发变慢与持续变慢，再分别排查，避免把索引当作唯一原因",
+          "evidence": "一条 SQL 语句执行的很慢，那是每次执行都很慢呢？还是大多数情况下是正常的，偶尔出现很慢呢？",
+          "sourceIndex": 4,
+          "sourceUrl": "https://www.zhihu.com/question/536974445/answer/3230951561",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        }
+      ],
+      "benchmark": "考察是否理解索引存在不等于索引生效、以及优化器与统计信息等非索引因素同样导致查询慢",
+      "pitfalls": [
+        "以为加索引必走索引",
+        "在索引列上套函数",
+        "忽略隐式类型转换",
+        "不先看EXPLAIN"
+      ],
+      "createdAt": "2026-11-18T09:08:22.737Z",
+      "cardsMeta": {
+        "attempts": 1,
+        "verified": 3,
+        "total": 3
+      }
     },
     {
       "id": "q_93",
