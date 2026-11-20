@@ -15,8 +15,8 @@
 | 项 | 值 |
 |---|---|
 | 交付包 | `.tunnel/zhimian-delivery.zip`（11MB / 127 文件） |
-| 分享口令 | `zhimian-i4kZIwDMDBOPIja0` |
-| 访问方式 | `https://<平台域名>/?k=zhimian-i4kZIwDMDBOPIja0` |
+| 分享口令 | `zhimian-UV4dTK_qWE5LrjQz` |
+| 访问方式 | `https://<平台域名>/?k=zhimian-UV4dTK_qWE5LrjQz` |
 | 重新生成 | `node scripts/deploy/build-delivery.mjs`（密钥轮换后重跑即可） |
 
 **你要做的只有两步**：
