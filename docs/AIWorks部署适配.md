@@ -140,3 +140,13 @@ node scripts/test/smoke.mjs --base https://<你的域名>
 > 教训：**平台模拟必须用 Linux 语义**。本机 Windows 上 `npm ci` 永远成功、模型延迟永远比云端低，
 > 这两个坑本地一个都测不出来。
 
+### 第三个坑：首屏模块图被网关掐断（SPA 起不来）
+
+| 现象 | 根因 | 修法 |
+|---|---|---|
+| 公网打开白屏，`ERR_ABORTED` / `Failed to fetch dynamically imported module: /js/app.js`，远程冒烟只有 1/9 | `app.js` 静态 import 了 6 个界面模块 + 5 个基础模块，首屏一次性并发 11+ 个模块请求；云函数冷启动实例并发不够，网关掐断其中几个，**整张模块图失败**（浏览器把失败归到根 import 上）。逐个单独 import / 单独 fetch / 并发 fetch 全部正常，只有"首屏模块图"会炸 | ① `index.html` 启动脚本改成带重试的动态 import（最多 5 次、退避 350ms×n；失败的模块重新请求，第二次落在已预热实例上）② BFF 静态资源加 `Cache-Control: public, max-age=600, must-revalidate`（原来每个静态请求都要打一次云函数实例） |
+
+实测：公网远程冒烟 **9/9 全过**（首页 3.9s）；不带口令访问也能靠随站静态题库渲染 12 张卡片（`/api/bank` 401 → 前端自动回退 `./data/question-bank.json`）。
+
+> 这一类问题**只有真部署 + 真浏览器访问才能发现**：本地 Windows、localhost、热实例全部复现不了。
+> 结论：交付前必须跑一次「公网域名 + 无登录态 + 真实浏览器」的远程冒烟。

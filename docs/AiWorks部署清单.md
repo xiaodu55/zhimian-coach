@@ -15,13 +15,22 @@
 | 项 | 值 |
 |---|---|
 | 交付包 | `.tunnel/zhimian-delivery.zip`（11MB / 127 文件） |
-| 分享口令 | `zhimian--BqObUY_K7QAxrMB` |
+| 分享口令 | `zhimian--BqObUY_K7QAxrMB`（已固定进 `.env` 的 `PUBLIC_SHARE_TOKEN`，重建交付包不再变） |
+| 域名来源 | **平台自动分配，不需要买域名**（自购域名只用于方案 C 自建云主机） |
 | 访问方式 | `https://b3z5z9ztm5qo.aiworks.site/?k=zhimian--BqObUY_K7QAxrMB`（**已部署，审核已通过**） |
 | 重新生成 | `node scripts/deploy/build-delivery.mjs`（密钥轮换后重跑即可） |
 
-**你要做的只有两步**：
-1. 在 AI Works / CloudBase 上传 `zhimian-delivery.zip`（控制台里选"上传项目包"或"源码包"）；
-2. 部署完成后把域名发我，我立刻跑远程自检 `node scripts/test/smoke.mjs --base https://你的域名`。
+**部署已经完成了**（2026-11-21）：
+- 平台：AI Works 项目广场 → 创建项目 → 发布方式选「上传源码」→ 上传 `zhimian-delivery.zip` → 平台云端构建部署 → 分配域名 → 发布 → 审核通过。
+- 项目页：`https://www.zhihu.com/project/detail/240916`（V0.2.2，状态"可运行"）。
+- 公网域名：`https://b3z5z9ztm5qo.aiworks.site`。
+- 远程自检：`node scripts/test/smoke.mjs --base "https://b3z5z9ztm5qo.aiworks.site/?k=zhimian--BqObUY_K7QAxrMB"` → **9/9 通过**。
+
+**剩下要做的（轮换密钥后）**：
+1. 轮换 `LLM_API_KEY` 与 `ZHIHU_ACCESS_SECRET`；
+2. 重跑 `node scripts/deploy/build-delivery.mjs` 重新生成交付包；
+3. 回到 AI Works 编辑项目 → 上传新版本 → 发布新版本 → 等审核通过；
+4. 复跑远程冒烟确认 9/9。
 
 > 交付包里密钥是**明文固化**的（你已授权）。**部署完成后请轮换 `LLM_API_KEY` 与 `ZHIHU_ACCESS_SECRET`，
 > 然后重跑生成脚本并重新上传一次** —— 旧包里的密钥就彻底失效了。
