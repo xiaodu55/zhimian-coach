@@ -20,6 +20,17 @@ const argOf = (n, d) => {
   return i >= 0 && ARGS[i + 1] ? ARGS[i + 1] : d;
 };
 const BASE = argOf('base', 'http://127.0.0.1:8787');
+
+/**
+ * 拼 hash 路由 URL。
+ * 注意：base 里带 query（如 ?k=分享口令）时，不能再拼 "/"，
+ * 否则斜杠会被算进 query 值里 → location.search 变成 "?k=口令/" →
+ * 服务端收到错口令 → 401 → 前端静默降级（没有追问、没有维度分）。
+ */
+function routeUrl(hash) {
+  return `${BASE}${BASE.includes('?') ? '' : '/'}${hash}`;
+}
+
 const HEADED = ARGS.includes('--headed');
 
 /** 找本机已安装的 chromium（playwright 缓存目录） */
@@ -90,7 +101,7 @@ page.on('pageerror', (e) => consoleErrors.push('pageerror: ' + e.message));
 console.log(`[smoke] 目标 ${BASE}｜浏览器 ${execPath}\n`);
 
 await step('首页加载：hero + 题库列表有卡', async () => {
-  await page.goto(`${BASE}/#/bank`, { waitUntil: 'domcontentloaded' });
+  await page.goto(`${routeUrl('#/bank')}`, { waitUntil: 'domcontentloaded' });
   await page.waitForSelector('.hero-title', { timeout: 15000 });
   await page.waitForSelector('#bank-list .card', { timeout: 15000 });
   const n = await page.locator('#bank-list .card').count();
@@ -119,7 +130,7 @@ await step('筛选与分页：选方向后仍有结果，分页器可见', async
 });
 
 await step('拆逻辑卡片：能打开且有得分点', async () => {
-  await page.goto(`${BASE}/#/bank`, { waitUntil: 'domcontentloaded' });
+  await page.goto(`${routeUrl('#/bank')}`, { waitUntil: 'domcontentloaded' });
   await page.waitForSelector('#bank-list .btn-start-coach', { timeout: 15000 });
   // 挑一张**带知乎原文链接**的题（没有观点卡的题本来就没有链接，不该算失败）
   const idx = await page.evaluate(() => {
@@ -138,7 +149,7 @@ await step('拆逻辑卡片：能打开且有得分点', async () => {
 });
 
 await step('陪练室：门禁生效（空框主按钮禁用）', async () => {
-  await page.goto(`${BASE}/#/coach`, { waitUntil: 'domcontentloaded' });
+  await page.goto(`${routeUrl('#/coach')}`, { waitUntil: 'domcontentloaded' });
   await page.waitForSelector('#answer-textarea', { timeout: 15000 });
   await page.waitForTimeout(600);
   const btn = page.locator('#btn-submit-parse');
@@ -184,7 +195,7 @@ await step('陪练室：填入示例后按钮解锁且字数正确', async () =>
 });
 
 await step('复盘台：有报告时展示维度分与改进话术', async () => {
-  await page.goto(`${BASE}/#/review`, { waitUntil: 'domcontentloaded' });
+  await page.goto(`${routeUrl('#/review')}`, { waitUntil: 'domcontentloaded' });
   await page.waitForTimeout(2500);
   const text = await page.locator('#screen-root').innerText();
   if (text.includes('暂无待复盘') || text.includes('还没有可复盘的作答记录')) {
@@ -199,7 +210,7 @@ await step('复盘台：有报告时展示维度分与改进话术', async () =>
 });
 
 await step('弹药库：数据工具条在，闪卡区存在', async () => {
-  await page.goto(`${BASE}/#/ledger`, { waitUntil: 'domcontentloaded' });
+  await page.goto(`${routeUrl('#/ledger')}`, { waitUntil: 'domcontentloaded' });
   await page.waitForSelector('#storage-usage', { timeout: 15000 });
   await page.waitForTimeout(1200);
   for (const id of ['btn-export-bundle', 'btn-export-manual', 'btn-import-restore', 'btn-clean-audio']) {
@@ -208,7 +219,7 @@ await step('弹药库：数据工具条在，闪卡区存在', async () => {
 });
 
 await step('答辩预测：空材料时有守卫与示例入口', async () => {
-  await page.goto(`${BASE}/#/defense`, { waitUntil: 'domcontentloaded' });
+  await page.goto(`${routeUrl('#/defense')}`, { waitUntil: 'domcontentloaded' });
   await page.waitForTimeout(1500);
   const guard = await page.locator('.empty-guard').count();
   if (guard === 0) throw new Error('没有材料时缺少上下文守卫');

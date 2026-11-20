@@ -29,6 +29,17 @@ const argOf = (n, d) => {
   return i >= 0 && ARGS[i + 1] && !ARGS[i + 1].startsWith('--') ? ARGS[i + 1] : d;
 };
 const BASE = argOf('base', 'http://127.0.0.1:8787').replace(/\/+$/, '');
+
+/**
+ * 拼 hash 路由 URL。
+ * 注意：base 里带 query（如 ?k=分享口令）时，不能再拼 "/"，
+ * 否则斜杠会被算进 query 值里 → location.search 变成 "?k=口令/" →
+ * 服务端收到错口令 → 401 → 前端静默降级（没有追问、没有维度分）。
+ */
+function routeUrl(hash) {
+  return `${BASE}${BASE.includes('?') ? '' : '/'}${hash}`;
+}
+
 const DRY = ARGS.includes('--dry');
 const HEADED = ARGS.includes('--headed');
 
@@ -184,7 +195,7 @@ const STEPS = [
     wait: '等 .hero-title 出现后停留 3 秒',
     detail: '让评委看清标题「别让“看懂了”变成面试时的“说不清”」与信任标签',
     async run(page) {
-      await page.goto(`${BASE}/#/bank`, { waitUntil: 'domcontentloaded' });
+      await page.goto(`${routeUrl('#/bank')}`, { waitUntil: 'domcontentloaded' });
       await waitFor(page, '.hero-title', 15000);
       await sleep(PACE.dwell);
     },
@@ -539,7 +550,7 @@ page.on('pageerror', (e) => consoleErrors.push(e.message));
 // 录制前先「种」一张闪卡：弹药库那格要展示真实卡片，而不是空状态
 async function seedFlashcard() {
   try {
-    await page.goto(`${BASE}/#/ledger`, { waitUntil: 'domcontentloaded' });
+    await page.goto(`${routeUrl('#/ledger')}`, { waitUntil: 'domcontentloaded' });
     // 注意：不能用固定 waitForTimeout —— 公网链路上首屏要 10s+（模块图还会重试），
     // 固定等待会在页面还没渲染出来时就判定「按钮不存在」，导致种子闪卡丢失（弹药库那格空着）。
     // 再加一层保险：按钮没出现就整页重载一次（第二次通常落在已预热实例上）。
