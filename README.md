@@ -325,7 +325,10 @@ pnpm tunnel          # 申请 Cloudflare 快速隧道，打印 https://xxx.trycl
 选路线 A（知乎 AiWorks）的照点清单：**[`docs/AiWorks部署清单.md`](docs/AiWorks部署清单.md)**。
 
 ```bash
-# 打印要粘到平台「环境变量」框里的内容（必填/建议/可选分三段）
+# 生成官方交付包（已包含密钥固化与官方校验，一条命令可重复执行）
+node scripts/deploy/build-delivery.mjs
+
+# 打印要粘到平台「环境变量」框里的内容（本地自建部署时用）
 node scripts/dev/print-env-for-deploy.mjs
 # 部署完，一条命令跑完 9 条主链路自检（把 --base 换成你的域名）
 node scripts/test/smoke.mjs --base https://你的域名

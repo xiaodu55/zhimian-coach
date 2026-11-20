@@ -7,6 +7,27 @@
 
 ---
 
+## 〇、最快路径：交付包已经生成好了 ✅
+
+我已经用**官方部署助手**（AI Works Skill，官网给的 `zhihu-ai-works-deploy-helper`）走完了全部准备流程，
+交付包已通过官方校验（`deployment input validation passed`）：
+
+| 项 | 值 |
+|---|---|
+| 交付包 | `.tunnel/zhimian-delivery.zip`（11MB / 127 文件） |
+| 分享口令 | `zhimian-i4kZIwDMDBOPIja0` |
+| 访问方式 | `https://<平台域名>/?k=zhimian-i4kZIwDMDBOPIja0` |
+| 重新生成 | `node scripts/deploy/build-delivery.mjs`（密钥轮换后重跑即可） |
+
+**你要做的只有两步**：
+1. 在 AI Works / CloudBase 上传 `zhimian-delivery.zip`（控制台里选"上传项目包"或"源码包"）；
+2. 部署完成后把域名发我，我立刻跑远程自检 `node scripts/test/smoke.mjs --base https://你的域名`。
+
+> 交付包里密钥是**明文固化**的（你已授权）。**部署完成后请轮换 `LLM_API_KEY` 与 `ZHIHU_ACCESS_SECRET`，
+> 然后重跑生成脚本并重新上传一次** —— 旧包里的密钥就彻底失效了。
+
+---
+
 ## 一、动手前 3 分钟检查
 
 | # | 检查 | 怎么查 | 不通过怎么办 |
