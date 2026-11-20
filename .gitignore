@@ -37,3 +37,6 @@ zhihu-cli-skill.zip
 
 # 公网隧道本地目录
 .tunnel/
+
+# 录屏产物：webm 太大不入库，mp4 保留
+out/*.webm

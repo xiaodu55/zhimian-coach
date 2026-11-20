@@ -29,12 +29,13 @@ const argOf = (n, d) => {
   return i >= 0 && ARGS[i + 1] && !ARGS[i + 1].startsWith('--') ? ARGS[i + 1] : d;
 };
 const BASE = argOf('base', 'http://127.0.0.1:8787').replace(/\/+$/, '');
-const OUT_DIR = path.resolve(argOf('out', 'out'));
 const DRY = ARGS.includes('--dry');
 const HEADED = ARGS.includes('--headed');
 
 const SCRIPT_DIR = path.dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = path.resolve(SCRIPT_DIR, '..', '..');
+// 默认产物目录挂在仓库根的 out/ 下：不管从哪个目录调用脚本，落点都一样
+const OUT_DIR = path.resolve(REPO_ROOT, argOf('out', 'out'));
 
 /** 找本机已安装的 chromium（playwright 缓存目录），与 scripts/test/smoke.mjs 保持同一套找法 */
 function findChromium() {
@@ -59,13 +60,12 @@ function findChromium() {
 /* ------------------------------------------------------------------ *
  * 录制节奏：每个动作之间的停顿就是观众的阅读时间，太短看不清、太长像卡住
  * ------------------------------------------------------------------ */
-const PACE = { tiny: 350, short: 700, mid: 1200, long: 2000, dwell: 3000 };
+const PACE = { short: 700, mid: 1200, long: 2000, dwell: 3000 };
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 /* ------------------------------------------------------------------ *
  * 容错封装：任何一步失败只警告不中断，保证后半段（复盘/弹药库/答辩）也能录到
  * ------------------------------------------------------------------ */
-let stepIndex = 0;
 let warnCount = 0;
 
 function warn(msg) {
@@ -523,7 +523,6 @@ page.on('pageerror', (e) => consoleErrors.push(e.message));
 
 const t0 = Date.now();
 for (const s of STEPS) {
-  stepIndex += 1;
   console.log(`\n—— ${s.id}/${STEPS.length} ${s.title} ————————————————`);
   const st = Date.now();
   try {
@@ -539,9 +538,10 @@ await sleep(1500);
 
 const video = page.video();
 await ctx.close(); // 关闭 context 后视频文件才会落盘写完
+// 必须在 browser.close() 之前取路径：连接断掉后就拿不到了
+const rawPath = video ? await video.path().catch(() => undefined) : undefined;
 await browser.close();
 
-const rawPath = video ? await video.path() : undefined;
 let webmPath = rawPath;
 if (rawPath) {
   const target = path.join(OUT_DIR, `${rawName}.webm`);
@@ -576,7 +576,11 @@ if (webmPath) {
     console.log(`  ffmpeg -i "${webmPath}" -c:v libx264 -pix_fmt yuv420p -preset medium -crf 23 -movflags +faststart "${mp4Path}"`);
   } else {
     const args = ['-y', '-i', webmPath, '-c:v', 'libx264', '-pix_fmt', 'yuv420p', '-preset', 'medium', '-crf', '23', '-movflags', '+faststart', mp4Path];
-    const r = spawnSync('ffmpeg', args, { encoding: 'utf8' });
+    let r = spawnSync('ffmpeg', args, { encoding: 'utf8' });
+    if (r.status !== 0 || !fs.existsSync(mp4Path)) {
+      // 有些 ffmpeg 构建没编 libx264，退回 mpeg4：体积大一点但一样能上传
+      r = spawnSync('ffmpeg', ['-y', '-i', webmPath, '-c:v', 'mpeg4', '-q:v', '4', mp4Path], { encoding: 'utf8' });
+    }
     if (r.status === 0 && fs.existsSync(mp4Path)) {
       console.log(`mp4 ：${mp4Path}`);
     } else {
