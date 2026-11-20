@@ -88,6 +88,24 @@ async function tryClick(page, selector, label, { timeout = 4000, optional = true
   }
 }
 
+/** 等按钮从 disabled 变为可点（材料未就绪的按钮要点会一直等到超时） */
+async function waitEnabled(page, selector, timeout = 12000) {
+  try {
+    await page.waitForFunction(
+      (sel) => {
+        const el = document.querySelector(sel);
+        return Boolean(el && !el.disabled);
+      },
+      selector,
+      { timeout, polling: 300 }
+    );
+    return true;
+  } catch {
+    warn(`${selector} 一直处于禁用状态`);
+    return false;
+  }
+}
+
 /** 等待某个选择器出现（不存在就返回 false，不抛） */
 async function waitFor(page, selector, timeout = 8000) {
   try {
@@ -113,11 +131,17 @@ async function focusOn(page, selector, label, hold = PACE.mid) {
   }
 }
 
-/** 关掉当前可能存在的弹窗（脚本跑久了页面里可能残留遮罩） */
+/**
+ * 关掉当前可能存在的弹窗（脚本跑久了页面里可能残留遮罩）。
+ * 注意：index.html 里那个 #citation-modal 是全局复用的引用弹窗，
+ * 删掉它后面所有「点 chip 看原文」都会失效 —— 所以只隐藏，不移除。
+ */
 async function clearModals(page) {
   await page
     .evaluate(() => {
-      document.querySelectorAll('.modal-backdrop').forEach((m) => m.remove());
+      document.querySelectorAll('.modal-backdrop:not(#citation-modal)').forEach((m) => m.remove());
+      const cm = document.getElementById('citation-modal');
+      if (cm) cm.setAttribute('hidden', '');
     })
     .catch(() => {});
 }
@@ -236,30 +260,45 @@ const STEPS = [
           reached = true;
           break;
         }
-        // 提交按钮此刻可能被门禁置灰：先确认有内容再点
-        const ready = await page
+        // 按钮三种状态：忙碌（模型生成中）/ 可提交 / 门禁置灰（作答框空了）
+        const state = await page
           .evaluate(() => {
             const b = document.querySelector('#btn-submit-parse');
             const t = document.querySelector('#answer-textarea');
-            return Boolean(b && !b.disabled && t && t.value.trim());
+            if (!b) return 'missing';
+            // 先看忙碌标记：模型生成期间按钮是禁用的，但作答框里还留着上一轮文字，
+            // 若按文字在不在判断，会被误当成可以提交，从而在生成中途又点一次提交。
+            if (b.dataset.busy === '1') return 'busy';
+            if (b.disabled) return t && t.value.trim() ? 'busy' : 'empty';
+            return 'ready';
           })
-          .catch(() => false);
-        if (!ready) {
-          await tryClick(page, '#btn-fill-sample', '补填示例回答（上一轮已清空）');
-          await sleep(PACE.short);
-          const ok = await page.evaluate(() => {
-            const b = document.querySelector('#btn-submit-parse');
-            return Boolean(b && !b.disabled);
-          });
-          if (!ok) {
-            warn('提交按钮不可用：作答框是空的或仍在生成中');
-            await sleep(2000);
-            continue;
-          }
+          .catch(() => 'missing');
+        if (state === 'busy') {
+          await sleep(2000);
+          continue;
         }
-        await page.locator('#btn-submit-parse').first().click({ timeout: 8000 }).catch((e) => warn(`点提交失败：${e.message.split('\n')[0]}`));
+        if (state === 'empty') {
+          // 上一轮被追问清空了作答框：补一段示例回答再提交
+          await tryClick(page, '#btn-fill-sample', '补填示例回答（上一轮已被追问清空）');
+          await sleep(PACE.short);
+        } else if (state === 'missing') {
+          warn('页面上找不到提交按钮（可能已经跳走了）');
+          await sleep(1500);
+          continue;
+        }
+        const clicked = await page
+          .locator('#btn-submit-parse')
+          .first()
+          .click({ timeout: 8000 })
+          .then(() => true)
+          .catch((e) => {
+            warn(`点提交失败：${e.message.split('\n')[0]}`);
+            return false;
+          });
+        if (!clicked) continue;
         console.log(`  · 已提交（第 ${round + 1} 轮），等待模型…`);
         // 等「跳到复盘」或「评委又追问」二者之一，谁先来算谁
+        const remain = Math.max(5000, deadline - Date.now());
         const outcome = await page
           .waitForFunction(
             () => {
@@ -269,7 +308,7 @@ const STEPS = [
               return false;
             },
             null,
-            { timeout: 90000, polling: 500 }
+            { timeout: Math.min(90000, remain), polling: 500 }
           )
           .then((h) => h.jsonValue())
           .catch(() => null);
@@ -284,7 +323,7 @@ const STEPS = [
           await sleep(PACE.long);
           continue;
         }
-        warn('等待复盘超时（90 秒），继续再等一轮');
+        warn('等待复盘超时，继续再等一轮');
       }
       if (reached) console.log('  · 已到达 #/review');
       else warn('180 秒内没有到达 #/review（模型可能不可用），后续复盘画面可能是空状态');
@@ -315,7 +354,13 @@ const STEPS = [
       await waitFor(page, '#storage-usage', 15000);
       await sleep(PACE.long);
       await focusOn(page, '#storage-usage', '数据安全工具条：本机占用统计', PACE.long);
-      await tryClick(page, '#btn-recite-toggle', '开「🎴 抽背模式」');
+      // 抽背模式是开关：已经开着就不要再点一次（否则等于把它关掉）
+      const reciteLabel = await page.locator('#btn-recite-toggle').innerText().catch(() => '');
+      if (!reciteLabel.includes('已开启')) {
+        await tryClick(page, '#btn-recite-toggle', '开「🎴 抽背模式」');
+      } else {
+        console.log('  · 抽背模式已开启，跳过切换');
+      }
       await sleep(PACE.long);
       const card = page.locator('#flashcard-grid .card').first();
       if (await card.count()) {
@@ -329,9 +374,9 @@ const STEPS = [
         warn('弹药库里还没有闪卡（需要先完成一次复盘并入库）');
       }
       await tryClick(page, '#btn-quick-quiz', '点「🎯 快问快答」');
-      await waitFor(page, '.modal-backdrop:not([hidden]) #quiz-answer', 6000);
       await sleep(PACE.short);
       await tryClick(page, '.modal-backdrop:not([hidden]) .modal-footer button:has-text("我讲完了")', '翻面对照：展开标准答案');
+      await waitFor(page, '.modal-backdrop:not([hidden]) #quiz-answer', 6000);
       await sleep(PACE.long);
       await page.keyboard.press('Escape').catch(() => {});
       await clearModals(page);
@@ -354,6 +399,7 @@ const STEPS = [
       } else {
         warn('没有找到示例材料入口');
       }
+      await waitEnabled(page, '#btn-gen-defense', 15000);
       await tryClick(page, '#btn-gen-defense', '点「🎓 开始预演（生成评委追问）」', { timeout: 6000 });
       const hasQuestions = await page
         .waitForFunction(

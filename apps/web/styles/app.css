@@ -821,6 +821,27 @@ a:hover {
 
 /* ---------- 移动端专项 ---------- */
 @media (max-width: 720px) {
+  /* 顶栏压到一行：品牌只留徽标，状态灯只留圆点，步骤指示器只留编号 */
+  .topbar-inner { flex-wrap: nowrap; gap: 8px; padding: 6px 10px; }
+  .brand-title { display: none; }
+  .topbar-actions { gap: 6px; }
+  #system-status-pill { font-size: 0; padding: 4px 7px; }
+  #system-status-pill::first-letter { font-size: 12px; }
+  .nav-stepper { flex: 1; justify-content: center; }
+  .nav-step { padding: 4px 5px; }
+  .step-line { width: 6px; }
+
+  /* 方向筛选改成横向可滚动一行，别把首屏撑满 */
+  #track-filters {
+    flex-wrap: nowrap !important;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding-bottom: 2px;
+  }
+  #track-filters::-webkit-scrollbar { display: none; }
+  #track-filters .btn { flex: none; }
+
   .main-container {
     padding: 12px 10px 120px;
   }
