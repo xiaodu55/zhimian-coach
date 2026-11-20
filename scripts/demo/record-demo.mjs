@@ -540,14 +540,17 @@ page.on('pageerror', (e) => consoleErrors.push(e.message));
 async function seedFlashcard() {
   try {
     await page.goto(`${BASE}/#/ledger`, { waitUntil: 'domcontentloaded' });
-    await page.waitForTimeout(1200);
-    const addBtn = await page.$('#btn-add-flashcard');
+    // 注意：不能用固定 waitForTimeout —— 公网链路上首屏要 10s+，固定等待会
+    // 在页面还没渲染出来时就判定「按钮不存在」，导致种子闪卡丢失（弹药库那格空着）。
+    const addBtn = await waitFor(page, '#btn-add-flashcard', 20000)
+      ? await page.$('#btn-add-flashcard')
+      : null;
     if (!addBtn) {
       warn('没有「手动新增闪卡」按钮，跳过种子数据');
       return;
     }
     await addBtn.click();
-    await page.waitForTimeout(600);
+    await waitFor(page, '.modal-backdrop input, .modal-backdrop textarea', 10000);
     const filled = await page.evaluate(() => {
       const fields = Array.from(document.querySelectorAll('.modal-backdrop input, .modal-backdrop textarea'));
       if (!fields.length) return false;
