@@ -6,6 +6,7 @@ import { dbPut, dbGetAll } from '../db.js';
 import { chunkDocumentText } from '../retrieval/chunk.js';
 import { createModal, modalButton } from '../ui/modal.js';
 import { runReview } from '../lib/review.js';
+import { fetchWithRetry } from '../lib/http.js';
 import { mountEmptyContextGuard } from '../lib/empty-guard.js';
 import { mountNextStepBar, createProgress } from '../lib/nextstep.js';
 import { humanizeRule } from '../rules/labels.js';
@@ -316,7 +317,7 @@ export function renderDefenseScreen(root) {
         try {
           const ctrl = new AbortController();
           const timer = setTimeout(() => ctrl.abort(), 45000);
-          const res = await fetch('/api/defense/followup', {
+          const res = await fetchWithRetry('/api/defense/followup', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -446,7 +447,7 @@ export function renderDefenseScreen(root) {
 
     let data = null;
     try {
-      const res = await fetch('/api/defense/analyze', {
+      const res = await fetchWithRetry('/api/defense/analyze', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ title: doc.title, segments: doc.segments }),
@@ -520,7 +521,7 @@ export function renderDefenseScreen(root) {
     if (!doc?.segments?.length) return;
     refreshRefsBtn.disabled = true;
     try {
-      const res = await fetch('/api/defense/references', {
+      const res = await fetchWithRetry('/api/defense/references', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ title: doc.title, segments: doc.segments }),

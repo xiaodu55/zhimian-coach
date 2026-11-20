@@ -1,6 +1,7 @@
 import { parseTranscriptToQA } from '../capture/transcript.js';
 import { runDeterministicRules } from '../rules/diagnose.js';
 import { postSSE } from './sse.js';
+import { fetchWithRetry } from './http.js';
 
 /**
  * 跑一次复盘：规则层（原话级诊断）+ 模型层（观点/知识契合度评分）。
@@ -88,37 +89,32 @@ export async function runReview({
       // 实例预热后第二次通常几秒就成功，所以这里重试几次，
       // 否则评委第一次点"结束作答"就会看到降级成规则模式（没有追问、没有维度分）。
       const maxAttempts = err?.name === 'AbortError' ? 2 : 3;
-      let lastErr = null;
-      for (let attempt = 1; attempt <= maxAttempts; attempt++) {
-        try {
-          const ctrl = new AbortController();
-          const timer = setTimeout(() => ctrl.abort(), 25000);
-          const res = await fetch('/api/coach/parse', {
+      try {
+        const ctrl = new AbortController();
+        const timer = setTimeout(() => ctrl.abort(), 25000);
+        const res = await fetchWithRetry(
+          '/api/coach/parse',
+          {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload),
             signal: ctrl.signal,
-          });
-          clearTimeout(timer);
-          if (res.ok) {
-            const j = await res.json();
-            degraded = !!j.degraded;
-            llmScores = j.llmScores || null;
-            improvements = j.improvements || null;
-            followups = j.followups || null;
-            lastErr = null;
-            break;
+          },
+          {
+            attempts: maxAttempts,
+            onRetry: (attempt) =>
+              onStage?.('retrying', attempt === 1 ? '网络不太顺，正在重试…' : '仍在重试，请稍候…'),
           }
-          lastErr = new Error('HTTP ' + res.status);
-        } catch (e) {
-          lastErr = e;
-        }
-        if (attempt < maxAttempts) {
-          onStage?.('retrying', attempt === 1 ? '网络不太顺，正在重试…' : '仍在重试，请稍候…');
-          await new Promise((r) => setTimeout(r, 800 * attempt));
-        }
+        );
+        clearTimeout(timer);
+        const j = await res.json();
+        degraded = !!j.degraded;
+        llmScores = j.llmScores || null;
+        improvements = j.improvements || null;
+        followups = j.followups || null;
+      } catch (_) {
+        degraded = true;
       }
-      if (lastErr) degraded = true;
     }
   }
 
