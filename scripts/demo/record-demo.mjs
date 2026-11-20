@@ -21,6 +21,7 @@ import path from 'node:path';
 import fs from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { spawnSync } from 'node:child_process';
+import os from 'node:os';
 
 const ARGS = process.argv.slice(2);
 const argOf = (n, d) => {
@@ -39,7 +40,7 @@ const REPO_ROOT = path.resolve(SCRIPT_DIR, '..', '..');
 function findChromium() {
   const explicit = argOf('browser-path', '');
   if (explicit && fs.existsSync(explicit)) return explicit;
-  const base = path.join(process.env.LOCALAPPDATA || path.join(process.env.HOME || '', '.cache'), 'ms-playwright');
+  const base = path.join(process.env.LOCALAPPDATA || path.join(os.homedir(), 'AppData', 'Local'), 'ms-playwright');
   if (!fs.existsSync(base)) return undefined;
   const dirs = fs
     .readdirSync(base)
@@ -86,6 +87,32 @@ async function tryClick(page, selector, label, { timeout = 4000, optional = true
     warn(`${label}：${err.message.split('\n')[0]}`);
     return false;
   }
+}
+
+/**
+ * 切到某个 hash 路由并等它渲染出来。
+ * 为什么不用 page.goto：同文档的 fragment 跳转不会重新加载页面，
+ * 既保住了 IndexedDB 里的本机数据（闪卡、复盘记录），也不会白屏一下。
+ */
+async function gotoRoute(page, hash, expectSelector, timeout = 15000) {
+  await page.evaluate((h) => {
+    location.hash = h;
+  }, hash);
+  if (expectSelector) {
+    const ok = await waitFor(page, expectSelector, timeout);
+    if (!ok) warn(`切到 ${hash} 后没有等到 ${expectSelector}`);
+  }
+  return true;
+}
+
+/** 等 hash 路由切换完成（轮询 location.hash） */
+async function waitForHash(page, hash, timeout = 20000) {
+  const ok = await page
+    .waitForFunction((h) => location.hash.includes(h), hash, { timeout, polling: 400 })
+    .then(() => true)
+    .catch(() => false);
+  if (!ok) warn(`等不到路由 ${hash}`);
+  return ok;
 }
 
 /** 等按钮从 disabled 变为可点（材料未就绪的按钮要点会一直等到超时） */
@@ -214,7 +241,7 @@ const STEPS = [
       } else {
         warn('弹窗里没有「我准备好了，开始作答」按钮');
       }
-      await page.waitForURL(/#\/coach/, { timeout: 15000 }).catch(() => warn('没有跳到 #/coach'));
+      await waitForHash(page, '/coach', 15000);
       await sleep(PACE.long);
     },
   },
@@ -224,7 +251,7 @@ const STEPS = [
     wait: '等 #answer-textarea，等 #answer-char-count 出现数字',
     detail: '展示门禁（先答题才解锁）与追问深度/人设可调',
     async run(page) {
-      await page.waitForURL(/#\/coach/, { timeout: 15000 }).catch(() => {});
+      await waitForHash(page, '/coach', 15000);
       await waitFor(page, '#answer-textarea', 20000);
       await sleep(PACE.short);
       await tryClick(page, '#btn-fill-sample', '点「试一试：填入一段示例回答」');
@@ -336,7 +363,7 @@ const STEPS = [
     wait: '等 #findings-list / .dimension-score-wrap 出现',
     detail: '每条诊断都回指你的原话与字符区间，不是空泛评价',
     async run(page) {
-      await page.waitForURL(/#\/review/, { timeout: 20000 }).catch(() => warn('当前不在 #/review'));
+      await waitForHash(page, '/review', 20000);
       await sleep(PACE.long);
       await focusOn(page, '#user-answer-highlighted', '三方对照：你的回答原话 ⇄ 主流观点 ⇄ 少数派观点', PACE.long);
       await focusOn(page, '.dimension-score-wrap', '维度分（四维观点评分）', PACE.long);
@@ -350,8 +377,7 @@ const STEPS = [
     wait: '等 #storage-usage；闪卡区可能为空（没做过复盘就没有卡）',
     detail: '数据全在本机 IndexedDB，一键导出/清空可自证',
     async run(page) {
-      await page.goto(`${BASE}/#/ledger`, { waitUntil: 'domcontentloaded' });
-      await waitFor(page, '#storage-usage', 15000);
+      await gotoRoute(page, '#/ledger', '#storage-usage', 15000);
       await sleep(PACE.long);
       await focusOn(page, '#storage-usage', '数据安全工具条：本机占用统计', PACE.long);
       // 抽背模式是开关：已经开着就不要再点一次（否则等于把它关掉）
@@ -362,9 +388,23 @@ const STEPS = [
         console.log('  · 抽背模式已开启，跳过切换');
       }
       await sleep(PACE.long);
+      // 闪卡是从 IndexedDB 异步读的：先给它一点时间渲染，再判断有没有卡
+      await page
+        .waitForFunction(
+          () => {
+            const grid = document.querySelector('#flashcard-grid');
+            if (!grid) return false;
+            return grid.querySelector('.card') || grid.textContent.includes('还没有话术闪卡');
+          },
+          null,
+          { timeout: 12000, polling: 400 }
+        )
+        .catch(() => warn('闪卡区一直没有加载出来'));
       const card = page.locator('#flashcard-grid .card').first();
       if (await card.count()) {
-        const hint = card.locator('text=答案已遮住').first();
+        // 用 last()：文本匹配会同时命中祖先元素，取最深的那个才是提示条本身，
+        // 点祖先会点到卡片中间的掌握度控件，触发不了翻面
+        const hint = card.getByText('答案已遮住').last();
         if (await hint.count()) {
           await hint.click({ timeout: 4000 }).catch(() => {});
           console.log('  · 点卡片翻面看标准答案');
@@ -389,7 +429,7 @@ const STEPS = [
     wait: '等 #defense-context-guard 的示例材料入口，等追问列表出现',
     detail: '论文/讲稿切片段，追问必须落在片段上，不许编',
     async run(page) {
-      await page.goto(`${BASE}/#/defense`, { waitUntil: 'domcontentloaded' });
+      await gotoRoute(page, '#/defense', '#defense-context-guard', 15000);
       await sleep(2000);
       const demo = page.locator('button:has-text("示例材料")').first();
       if (await demo.count()) {
