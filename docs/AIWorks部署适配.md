@@ -104,3 +104,39 @@ node scripts/test/smoke.mjs --base https://<你的域名>
    修法：固化成 `FROZEN_ENV` 常量表（`Record<string, string>`），类型仍是 `string`，所有比较合法，探测器也看不到 `process.env` 读取。
 
 > 结论：**上传前一定要在本机复刻平台 5 步**。这两类问题在本地开发环境完全看不出来。
+
+---
+
+## 附二：真实部署实测（2026-11-20 23:30 起，已跑通）
+
+平台：**AI Works 项目广场**（`https://www.zhihu.com/project-square` → 创建项目 → 发布方式选「上传源码」→ 上传交付 ZIP）。
+平台自己会**云端构建 + 部署**，并分配一个**免费公网域名**，不需要买域名（方案 C 的自购域名是给自建云主机用的，官方路径不需要）。
+
+| 项 | 值 |
+|---|---|
+| 项目 ID | 240916 |
+| 项目地址 | `https://www.zhihu.com/project/detail/240916` |
+| **公网域名** | **`https://b3z5z9ztm5qo.aiworks.site`**（审核通过后生效） |
+| 预览域名 | `https://b3z5z9ztm5qo.preview.aiworks.site`（需知乎 SSO 登录态） |
+| 分享口令 | `zhimian--BqObUY_K7QAxrMB`（已固定进 `.env` 的 `PUBLIC_SHARE_TOKEN`，重建不再变） |
+| 体验链接 | `https://b3z5z9ztm5qo.aiworks.site/?k=zhimian--BqObUY_K7QAxrMB` |
+
+实测（全部不带知乎登录态）：
+```
+/api/health  → 200 {"ok":true,"zhihuConfigured":true,"llmConfigured":true,"bankSize":92,"requiresToken":true}
+/             → 200（0.27s）    /js/app.js → 200
+/api/bank 无口令 → 401
+/api/coach/parse 带口令 → 200，7.0s，degraded:false，4 个维度分带 refIds
+```
+
+### 这一轮抓到的三个坑（本地全都测不出来）
+
+| 坑 | 现象 | 根因 | 修法 |
+|---|---|---|---|
+| 1 `npm ci` 失败 | `EBADPLATFORM ... @botharness/cloudflared-win32-x64 ... current: {"os":"linux"}` | 交付包带了**本机隧道用的 Windows 专用依赖**；平台在 Linux 上构建 | `build-delivery.mjs` 新增 `stripHostOnlyDeps()`：交付副本里同步剔除 package.json 与 package-lock.json 中的平台限定包（仓库源码不动） |
+| 2 函数 3 秒超时 | `Environment task timed out after 3 seconds`（ret_code 200401） | CloudBase HTTP 云函数**默认超时 3 秒**，LLM 调用必挂 | 官方 helper 没有超时开关，按 CloudBase 标准做法在交付副本 `cloudbaserc.json` 里显式设 `timeout: 60` + `memorySize: 512`；本地官方校验只对这一处有意偏离放行 |
+| 3 网关约 15 秒上限 | 修完 2 仍返回 **554 空响应**（~16s 处被砍） | 模型**思考模式**把一次调用拖到 16–19s | 请求体加 `thinking: {type:'disabled'}`：同一 `deepseek-v4-flash`，completion 2657→571 token（reasoning 1750→0），延迟 16~19s→**3.9s**，诊断质量实测未下降。本地 LLM 从 5.5–13s 降到 3.3–3.5s |
+
+> 教训：**平台模拟必须用 Linux 语义**。本机 Windows 上 `npm ci` 永远成功、模型延迟永远比云端低，
+> 这两个坑本地一个都测不出来。
+

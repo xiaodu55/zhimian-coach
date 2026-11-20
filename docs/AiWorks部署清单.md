@@ -15,8 +15,8 @@
 | 项 | 值 |
 |---|---|
 | 交付包 | `.tunnel/zhimian-delivery.zip`（11MB / 127 文件） |
-| 分享口令 | `zhimian-UV4dTK_qWE5LrjQz` |
-| 访问方式 | `https://<平台域名>/?k=zhimian-UV4dTK_qWE5LrjQz` |
+| 分享口令 | `zhimian--BqObUY_K7QAxrMB` |
+| 访问方式 | `https://b3z5z9ztm5qo.aiworks.site/?k=zhimian--BqObUY_K7QAxrMB`（**已部署，审核已通过**） |
 | 重新生成 | `node scripts/deploy/build-delivery.mjs`（密钥轮换后重跑即可） |
 
 **你要做的只有两步**：

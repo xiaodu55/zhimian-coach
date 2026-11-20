@@ -100,6 +100,33 @@
   <!-- Toast 容器 -->
   <div id="toast-container" class="toast-container" aria-live="polite"></div>
 
-  <script type="module" src="./js/app.js"></script>
+  <!--
+    启动脚本带重试：app.js 会静态 import 6 个界面模块，首屏会一次性并发 7 个模块请求。
+    云函数冷启动时实例并发不够，网关会掐断其中几个（浏览器报 ERR_ABORTED / "Failed to
+    fetch dynamically imported module"），整个 SPA 就起不来 —— 本地/热实例完全复现不了。
+    失败重试第二次就落在已预热的实例上，能稳定起来。
+  -->
+  <script type="module">
+    (async () => {
+      for (let attempt = 1; attempt <= 5; attempt++) {
+        try {
+          await import('./js/app.js');
+          return;
+        } catch (err) {
+          if (attempt === 5) {
+            console.error('[知面陪练] 前端模块加载失败：', err);
+            document.body.insertAdjacentHTML(
+              'beforeend',
+              '<div style="padding:16px;color:#b91c1c;font-size:14px">' +
+                '页面加载失败，请刷新重试。若持续失败，请用提交表单里的完整链接（含 ?k= 口令）打开。' +
+              '</div>'
+            );
+            return;
+          }
+          await new Promise((r) => setTimeout(r, 350 * attempt));
+        }
+      }
+    })();
+  </script>
 </body>
 </html>

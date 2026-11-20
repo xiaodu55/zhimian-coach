@@ -87,6 +87,15 @@ app.route('/api', resumeBulletRoutes);
 
 // 同域托管 apps/web 静态站点（彻底规避 CORS）
 const relativeWebRoot = path.relative(process.cwd(), config.webRoot);
+// 静态资源加缓存头：云函数上每个请求都要起一次函数实例，
+// 不缓存的话评委每次打开都要重新拉 7 个模块请求，容易撞上网关并发限制。
+app.use('/*', async (c, next) => {
+  await next();
+  const p = c.req.path;
+  if (p.endsWith('.js') || p.endsWith('.css') || p.endsWith('.json') || p.endsWith('.png') || p.endsWith('.svg') || p.endsWith('.webp')) {
+    c.header('Cache-Control', 'public, max-age=600, must-revalidate');
+  }
+});
 app.use('/*', serveStatic({ root: relativeWebRoot }));
 
 console.log(`[知面陪练 BFF] 启动中 -> http://localhost:${config.port}`);
