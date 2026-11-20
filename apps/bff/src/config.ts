@@ -25,7 +25,11 @@ export const config = {
   publicShareToken: (process.env.PUBLIC_SHARE_TOKEN || '').trim(),
   oauthAppId: (process.env.OAUTH_APP_ID || '').trim(),
   oauthAppKey: (process.env.OAUTH_APP_KEY || '').trim(),
+  oauthAppSecret: (process.env.OAUTH_APP_SECRET || '').trim(),
   oauthRedirectUri: (process.env.OAUTH_REDIRECT_URI || '').trim(),
+  // 端点做成可配置：知乎若调整地址，改环境变量即可，不必动代码
+  oauthTokenUrl: (process.env.OAUTH_TOKEN_URL || 'https://www.zhihu.com/api/v4/oauth/token').trim(),
+  oauthMeUrl: (process.env.OAUTH_ME_URL || 'https://api.zhihu.com/v4/me').trim(),
   // ASR（可选）：未配置时 /api/asr 返回 501 + 本地转写/导入的替代路径
   asrProvider: (process.env.ASR_PROVIDER || 'none').trim(),
   asrBaseUrl: (process.env.ASR_BASE_URL || '').trim(),

@@ -13,6 +13,9 @@ export const state = {
   demoSample: null,
   /** 离线演示保底包：预跑的真实复盘报告，断网/模型不可用时也能演完闭环 */
   demoReports: [],
+  /** 知乎登录态（未配置 OAuth 时为 null，前端自动隐藏入口） */
+  user: null,
+  oauthAvailable: false,
   activeQuestion: null,
   /** 用户是否"自己挑过"一道题：题库加载会预填 activeQuestion，但那不算用户的选择。
       跨路由直达下游页面时，用它判断要不要给上下文守卫。 */
@@ -292,6 +295,35 @@ export async function loadDemoReports() {
     state.demoReports = [];
   }
   return state.demoReports;
+}
+
+/**
+ * 读取知乎登录态。
+ * 401 = 未登录（正常）；501 = 服务端没配 OAuth 凭据 → 前端把登录入口整个隐藏。
+ */
+export async function loadAuthUser() {
+  try {
+    const res = await fetch('/api/auth/me', { credentials: 'same-origin' });
+    if (res.status === 501) {
+      state.oauthAvailable = false;
+      state.user = null;
+      notify();
+      return null;
+    }
+    state.oauthAvailable = true;
+    if (!res.ok) {
+      state.user = null;
+      notify();
+      return null;
+    }
+    const data = await res.json();
+    state.user = data?.user || null;
+  } catch {
+    state.user = null;
+    state.oauthAvailable = false;
+  }
+  notify();
+  return state.user;
 }
 
 /**

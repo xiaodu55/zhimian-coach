@@ -1,5 +1,14 @@
 import { registerRoute, initRouter } from './router.js';
-import { loadQuestionBank, checkBackendHealth, refreshLocalCollections, setDegraded, loadDemoReports } from './state.js';
+import {
+  loadQuestionBank,
+  checkBackendHealth,
+  refreshLocalCollections,
+  setDegraded,
+  loadDemoReports,
+  loadAuthUser,
+  state,
+  subscribe,
+} from './state.js';
 import { exportAllData, importAllData, resetLocalData } from './db.js';
 import { initCitationModal } from './ui/citation.js';
 import { showToast } from './ui/toast.js';
@@ -34,9 +43,34 @@ function installShareTokenInterceptor() {
   };
 }
 
+/** 顶栏登录区：没配 OAuth 就不显示；有登录就显示昵称与退出 */
+function renderAuthArea() {
+  const host = document.getElementById('auth-area');
+  if (!host) return;
+  host.innerHTML = '';
+  if (!state.oauthAvailable) return; // 服务端没配凭据 → 入口整个隐藏，不给评委一个点不动的按钮
+  if (state.user) {
+    const tag = document.createElement('span');
+    tag.className = 'tag tag-green';
+    tag.textContent = `知乎 · ${state.user.name}`;
+    const out = document.createElement('a');
+    out.className = 'btn btn-ghost btn-sm';
+    out.href = '/api/auth/logout';
+    out.textContent = '退出';
+    host.append(tag, out);
+    return;
+  }
+  const login = document.createElement('a');
+  login.className = 'btn btn-sm';
+  login.href = '/api/auth/zhihu/start';
+  login.textContent = '用知乎账号登录';
+  host.appendChild(login);
+}
+
 async function bootstrap() {
   installShareTokenInterceptor();
   initCitationModal();
+  subscribe(renderAuthArea);
 
   // 关闭降级横幅按钮
   document.getElementById('btn-dismiss-banner')?.addEventListener('click', () => {
@@ -90,6 +124,8 @@ async function bootstrap() {
   await loadQuestionBank();
   await loadDemoReports();
   await refreshLocalCollections();
+  await loadAuthUser();
+  renderAuthArea();
   initRouter();
 
   // 异步探测 BFF 健康状态（显式降级提示）
