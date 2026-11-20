@@ -207,6 +207,7 @@ const STEPS = [
     detail: '证明题库是真语料驱动：每张卡都挂着知乎原答摘要',
     async run(page) {
       await waitFor(page, '#bank-list .card', 15000);
+      await seedFlashcard(page);
       const chips = page.locator('#track-filters button');
       const n = await chips.count();
       for (let i = 0; i < n; i++) {
@@ -548,63 +549,67 @@ const consoleErrors = [];
 page.on('pageerror', (e) => consoleErrors.push(e.message));
 
 // 录制前先「种」一张闪卡：弹药库那格要展示真实卡片，而不是空状态
-async function seedFlashcard() {
+/**
+ * 准备一张演示闪卡。
+ *
+ * 为什么直接写 IndexedDB 而不是走「手动新增闪卡」按钮：
+ * 走按钮要先跳到 /#/ledger，这段会被录进片头，成片就从"弹药库"起手，主线断了。
+ * 这里在题库页（已经在应用 origin 上）直接调应用自己的模块写一条记录，
+ * 录屏画面完全不受影响，弹药库那格却有真实卡片可拍。
+ */
+async function seedFlashcard(page) {
   try {
-    await page.goto(`${routeUrl('#/ledger')}`, { waitUntil: 'domcontentloaded' });
-    // 注意：不能用固定 waitForTimeout —— 公网链路上首屏要 10s+（模块图还会重试），
-    // 固定等待会在页面还没渲染出来时就判定「按钮不存在」，导致种子闪卡丢失（弹药库那格空着）。
-    // 再加一层保险：按钮没出现就整页重载一次（第二次通常落在已预热实例上）。
-    let addBtn = null;
-    for (let attempt = 1; attempt <= 2; attempt++) {
-      if (await waitFor(page, '#btn-add-flashcard', 45000)) {
-        addBtn = await page.$('#btn-add-flashcard');
-        break;
-      }
-      console.log(`  · 弹药库按钮还没出现，重载一次（第 ${attempt} 次）`);
-      await page.reload({ waitUntil: 'domcontentloaded' });
-      await waitFor(page, '.topbar, #screen-root', 30000);
-    }
-    if (!addBtn) {
-      warn('没有「手动新增闪卡」按钮，跳过种子数据');
+    const has = await page.evaluate(
+      () =>
+        new Promise((resolve) => {
+          try {
+            const req = indexedDB.open('zhimian_coach_db');
+            req.onsuccess = () => {
+              const db = req.result;
+              if (!db.objectStoreNames.contains('flashcards')) { resolve(0); return; }
+              const count = db.transaction('flashcards', 'readonly').objectStore('flashcards').count();
+              count.onsuccess = () => resolve(count.result || 0);
+              count.onerror = () => resolve(0);
+            };
+            req.onerror = () => resolve(0);
+          } catch {
+            resolve(0);
+          }
+        })
+    );
+    if (has > 0) {
+      console.log(`  · 已有 ${has} 张闪卡，跳过种子`);
       return;
     }
-    await addBtn.click();
-    await waitFor(page, '.modal-backdrop input, .modal-backdrop textarea', 10000);
-    const filled = await page.evaluate(() => {
-      const fields = Array.from(document.querySelectorAll('.modal-backdrop input, .modal-backdrop textarea'));
-      if (!fields.length) return false;
-      // 表单字段顺序：题干(input) / 核心结论(textarea) / 支撑论据(textarea) / 防杠兜底(textarea)
-      const values = [
-        '讲清楚 Agent 工具调用的权限治理（三级权限）',
-        '结论：只读放行、写入询问、高危转人工；误拦截率 3% → 1.2%，P99 判定 8ms。',
-        '判定输入分三层：工具名、参数、Bash 子命令与工作区\n冲突时以更严格的一方为准\n高危动作绑定单次消费的执行凭证',
-        '这组数据来自当前业务规模与限定前提；并发翻倍或分布漂移时我会先灰度降级并盯住监控告警。',
-      ];
-      fields.forEach((el, i) => {
-        if (values[i] === undefined) return;
-        el.value = values[i];
-        el.dispatchEvent(new Event('input', { bubbles: true }));
+    const ok = await page.evaluate(async () => {
+      const load = async (path) => {
+        for (let i = 0; i < 5; i++) {
+          try { return await import(path); } catch { await new Promise((r) => setTimeout(r, 1200 * (i + 1))); }
+        }
+        throw new Error('模块加载失败：' + path);
+      };
+      const [{ buildManualFlashcard }, db] = await Promise.all([load('/js/lib/flashcards.js'), load('/js/db.js')]);
+      const card = buildManualFlashcard({
+        questionTitle: '讲清楚 Agent 工具调用的权限治理（三级权限）',
+        track: 'AI Agent / 工具调用',
+        coreConclusion: '结论：只读放行、写入询问、高危转人工；误拦截率 3% → 1.2%，P99 判定 8ms。',
+        supports: [
+          '判定输入分三层：工具名、参数、Bash 子命令与工作区',
+          '冲突时以更严格的一方为准',
+          '高危动作绑定单次消费的执行凭证',
+        ],
+        fallback: '这组数据来自当前业务规模与限定前提；并发翻倍或分布漂移时我会先灰度降级并盯住监控告警。',
       });
+      await db.dbPut('flashcards', card);
       return true;
     });
-    if (!filled) {
-      warn('闪卡表单没找到输入框，跳过种子数据');
-      return;
-    }
-    await page.evaluate(() => {
-      const btns = Array.from(document.querySelectorAll('.modal-backdrop button'));
-      const ok = btns.find((b) => /存入弹药库|保存|确定/.test(b.innerText));
-      if (ok) ok.click();
-    });
-    await page.waitForTimeout(1200);
-    console.log('[演示录屏] 已准备一张演示闪卡（弹药库那格不再空）');
+    console.log(ok ? '  · 已准备一张演示闪卡（弹药库那格不再空）' : '  · 闪卡种子未写入');
   } catch (err) {
-    warn(`种子闪卡失败：${err.message.split('\n')[0]}`);
+    warn('种子闪卡失败：' + (err?.message || String(err)).split('\n')[0]);
   }
 }
 
 const t0 = Date.now();
-await seedFlashcard();
 for (const s of STEPS) {
   console.log(`\n—— ${s.id}/${STEPS.length} ${s.title} ————————————————`);
   const st = Date.now();
