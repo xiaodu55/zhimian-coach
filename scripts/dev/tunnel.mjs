@@ -54,7 +54,9 @@ const child = spawn(bin, ['tunnel', '--url', LOCAL, '--no-autoupdate', '--loglev
   stdio: ['ignore', 'pipe', 'pipe'],
 });
 
-const URL_RE = /https:\/\/[a-z0-9-]+\.trycloudflare\.com/;
+// 真实分配到的是三段随机主机名（如 a-b-c.trycloudflare.com）；
+// 单段的是 cloudflared 自己在日志里提到的 api.trycloudflare.com，别认错
+const URL_RE = /https:\/\/[a-z0-9]+(?:-[a-z0-9]+){2,}\.trycloudflare\.com/;
 let printed = false;
 
 const onLine = (buf) => {
