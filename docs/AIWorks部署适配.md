@@ -72,3 +72,35 @@ python <helper>/scripts/validate_deploy_output.py ...
 # 3) 部署后跑我们自己的远程自检（要 9/9）
 node scripts/test/smoke.mjs --base https://<你的域名>
 ```
+
+
+---
+
+## 附：交付包"平台模拟"自检（上传前必做，已跑通）
+
+平台会按 `backend.deploy.json` 的 CustomSteps 依次执行：
+
+| 步 | 命令 |
+|---|---|
+| 1 安装构建依赖 | `npm ci` |
+| 2 构建 | `node _tmp/materialize-event-tracking-ticket.cjs && npm run build --workspace @zhimian/bff && test -e apps/bff/dist` |
+| 3 切换运行时依赖清单 | `node _tmp/prepare-backend-package.js`（**平台自己做，打包时不能提前跑**） |
+| 4 安装生产依赖 | `npm install --omit=dev --ignore-scripts` |
+| 5 验证 | `npm ls --omit=dev && test -f apps/bff/dist/index.js && test -x scf_bootstrap && test -f cloudbaserc.json` |
+| 启动 | `scf_bootstrap` → `exec npm run start`（根 manifest 的 start） |
+
+**本地完整复刻这 5 步 + 真启动一次**，本轮实测全部通过：
+```
+/api/health → ok:true, zhihuConfigured:true, llmConfigured:true（冻结密钥生效）, bankSize:92, requiresToken:true
+首页 200 ｜ /js/app.js 200
+无口令 → 401 ｜ 带口令 → 真实模型调用成功（技术深度 38 分，6.2s）
+/api/usage → llm.calls:1, avgLatencyMs:6171
+```
+
+### 这一步抓到两个会让部署直接失败的坑
+
+1. **打包时多跑了一步 `prepare-backend-package.js`** → 它把根 `package.json` 换成运行时清单（没有 workspaces）→ 平台第 2 步 `npm run build --workspace @zhimian/bff` 必然 `No workspaces found`。修法：打包不跑这步，交给平台。
+2. **密钥固化写成内联字面量** → `(process.env.PDF_OCR || '1') === '1'` 变成 `("0" || '1') === '1'`，TypeScript 报 TS2367/TS2872（类型恒真/恒假）→ **构建失败**。
+   修法：固化成 `FROZEN_ENV` 常量表（`Record<string, string>`），类型仍是 `string`，所有比较合法，探测器也看不到 `process.env` 读取。
+
+> 结论：**上传前一定要在本机复刻平台 5 步**。这两类问题在本地开发环境完全看不出来。

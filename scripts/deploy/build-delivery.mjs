@@ -105,21 +105,47 @@ const FALLBACKS = {
   PDF_OCR: '0',
 };
 
+// 固化成"常量表"而不是内联字面量：
+// 内联会把 (process.env.PDF_OCR || '1') === '1' 变成 ("0" || '1') === '1'，
+// TypeScript 会报 TS2367/TS2872（类型恒真/恒假）→ 平台构建直接失败。
+// 用 Record<string, string> 的常量表，类型仍是 string，所有比较都合法。
 const bffSrc = path.join(WORK, 'apps', 'bff', 'src');
+const frozenValues = {};
 let frozen = 0;
+const touched = new Map();
+
 for (const file of walk(bffSrc)) {
   if (!/\.(ts|js)$/.test(file)) continue;
   const original = fs.readFileSync(file, 'utf8');
   let text = original;
   for (const key of new Set([...text.matchAll(/process\.env\.([A-Z_]+)/g)].map((m) => m[1]))) {
     if (ALLOWED_ENV.has(key)) continue;
-    const value = env[key] ?? FALLBACKS[key] ?? '';
-    text = text.replaceAll(`process.env.${key}`, JSON.stringify(value));
+    frozenValues[key] = env[key] ?? FALLBACKS[key] ?? '';
+    text = text.replaceAll(`process.env.${key}`, `FROZEN_ENV.${key}`);
     frozen += 1;
   }
-  if (text !== original) fs.writeFileSync(file, text, 'utf-8');
+  if (text === original) continue;
+  // 补 import（相对本文件的路径）
+  const depth = path.relative(path.dirname(file), path.join(bffSrc, 'lib', 'frozen-env.js')).split(path.sep).join('/');
+  const importPath = depth.startsWith('.') ? depth : './' + depth;
+  text = `import { FROZEN_ENV } from '${importPath.endsWith('.js') ? importPath : importPath + '.js'}';\n` + text;
+  fs.writeFileSync(file, text, 'utf-8');
+  touched.set(file, true);
 }
-log(`② 密钥固化完成（替换 ${frozen} 处读取）`);
+
+// 常量表本身
+fs.writeFileSync(
+  path.join(bffSrc, 'lib', 'frozen-env.ts'),
+  `/**
+ * 交付副本专用：运行时变量已固化为常量。
+ * 云函数运行时只注入 PORT/HOST 等变量，密钥必须随源码走（明文），这是官方部署契约的要求。
+ * 不要把本文件里的值提交回主仓库。
+ */
+export const FROZEN_ENV: Record<string, string> = ${JSON.stringify(frozenValues, null, 2)};
+`,
+  'utf-8'
+);
+log(`② 密钥固化完成（${frozen} 处读取 → ${Object.keys(frozenValues).length} 个常量，${touched.size} 个文件）`);
 
 // 交付包不含 .env / .env.example（官方要求排除）
 for (const f of ['.env', '.env.example']) {
@@ -189,6 +215,9 @@ echo "--- 生成运行时与描述符 ---"
 python3 write_backend_runtime.py --project-root "$WORKDIR" --plan "$WORKDIR/_tmp/deploy-plan.json"
 python3 write_deploy_descriptors.py --output-root "$WORKDIR" --plan "$WORKDIR/_tmp/deploy-plan.json" --frontend-install-cmd "npm ci"
 python3 settle_agent.py --project-root "$WORKDIR" --product-code zhimian-coach --product-name "知面陪练" --product-version 0.2.0
+# 注意：不要在这里跑 prepare-backend-package.js —— 那一步由平台在构建完成后执行。
+# 提前跑会把根 package.json 换成运行时清单（没有 workspaces），
+# 平台第 2 步的 npm run build --workspace @zhimian/bff 就会失败。
 
 echo "--- 打包与校验 ---"
 chmod +x "$WORKDIR/scf_bootstrap"
