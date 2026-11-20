@@ -16,7 +16,8 @@ bundle/
 Thumbs.db
 .tmp/
 tmp/
-out/
+out/*
+!out/*.mp4
 data/local-*
 
 # ---- 编辑器 ----
