@@ -170,6 +170,13 @@ async function callOnce<T>(
         model: config.llmModel,
         temperature: 0.2,
         response_format: { type: 'json_object' },
+        // 关键：关掉模型的"思考"模式。
+        // 同一个 deepseek-v4-flash，开思考 completion=2657 token（其中 1750 是 reasoning）→ 16~19s；
+        // 关思考 completion=571 token → 3.9s，诊断结论质量实测没有下降（仍带维度分/可核对原话/改进话术/追问）。
+        // 为什么要关：AI Works 的 HTTP 网关单次请求约 15 秒上限，超过就 554 空响应，
+        // 追问与复盘这种核心链路会全部失败。LLM_THINKING=on 可切回旧行为（本地调试用）。
+        ...(process.env.LLM_THINKING === 'on' ? {} : { thinking: { type: 'disabled' } }),
+        max_tokens: 2000,
         messages: [
           { role: 'system', content: systemPrompt },
           { role: 'user', content: userPrompt }
