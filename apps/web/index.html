@@ -108,12 +108,12 @@
   -->
   <script type="module">
     (async () => {
-      for (let attempt = 1; attempt <= 5; attempt++) {
+      for (let attempt = 1; attempt <= 6; attempt++) {
         try {
           await import('./js/app.js');
           return;
         } catch (err) {
-          if (attempt === 5) {
+          if (attempt === 6) {
             console.error('[知面陪练] 前端模块加载失败：', err);
             document.body.insertAdjacentHTML(
               'beforeend',
@@ -123,7 +123,7 @@
             );
             return;
           }
-          await new Promise((r) => setTimeout(r, 350 * attempt));
+          await new Promise((r) => setTimeout(r, 1500 * attempt));
         }
       }
     })();
