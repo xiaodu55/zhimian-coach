@@ -45,6 +45,18 @@ function startBff() {
   return child;
 }
 
+function startCpolar() {
+  const bin = process.env.CPOLAR_BIN || 'D:/college/cpolar/cpolar.exe';
+  if (!fs.existsSync(bin)) return null;
+  const log = fs.openSync(path.join(LOG_DIR, 'cpolar.log'), 'a');
+  const child = spawn(bin, ['start', 'zhimian', '--log=stdout'], {
+    cwd: ROOT,
+    stdio: ['ignore', log, log],
+  });
+  child.on('exit', (code) => console.log(`[keepalive] cpolar 退出（code=${code}），5 秒后重启`));
+  return child;
+}
+
 function startTunnel() {
   const log = fs.openSync(path.join(LOG_DIR, 'tunnel.log'), 'a');
   const child = spawn(process.execPath, [path.join(ROOT, 'scripts', 'dev', 'tunnel.mjs')], {
@@ -61,6 +73,8 @@ let bff = startBff();
 // 等 BFF 起来再拉隧道
 for (let i = 0; i < 20 && !(await alive()); i++) await sleep(500);
 let tunnel = startTunnel();
+// cpolar 命名隧道：域名固定（重启不变），比 trycloudflare 适合当提交链接
+let cpolar = startCpolar();
 
 let lastUrl = '';
 setInterval(async () => {
@@ -78,9 +92,23 @@ setInterval(async () => {
     console.log('[keepalive] 隧道不在 → 重启');
     tunnel = startTunnel();
   }
+  if (cpolar && cpolar.exitCode !== null) {
+    console.log('[keepalive] cpolar 不在 → 重启');
+    cpolar = startCpolar();
+  }
   // 把当前公网地址打印出来，方便复制（每次隧道重启地址都会变）
   try {
     const log = fs.readFileSync(path.join(LOG_DIR, 'tunnel.log'), 'utf8');
+    try {
+      const cp = fs.readFileSync(path.join(LOG_DIR, 'cpolar.log'), 'utf8');
+      const cpUrl = [...cp.matchAll(/https:\/\/[a-z0-9.-]+\.cpolar\.[a-z]+/g)].map((m) => m[0]).pop();
+      if (cpUrl && cpUrl !== lastUrl) {
+        lastUrl = cpUrl;
+        console.log(`[keepalive] 固定域名（cpolar，重启不变）：${cpUrl}`);
+      }
+    } catch {
+      /* ignore */
+    }
     const urls = [...log.matchAll(/https:\/\/[a-z0-9-]+\.trycloudflare\.com/g)].map((m) => m[0]);
     const latest = urls[urls.length - 1];
     if (latest && latest !== lastUrl) {
@@ -96,6 +124,7 @@ for (const sig of ['SIGINT', 'SIGTERM']) {
   process.on(sig, () => {
     bff.kill();
     tunnel.kill();
+    cpolar?.kill();
     process.exit(0);
   });
 }
