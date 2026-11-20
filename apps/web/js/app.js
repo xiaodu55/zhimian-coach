@@ -12,12 +12,16 @@ import {
 import { exportAllData, importAllData, resetLocalData } from './db.js';
 import { initCitationModal } from './ui/citation.js';
 import { showToast } from './ui/toast.js';
-import { renderBankScreen } from './screens/bank.js';
-import { renderCoachScreen } from './screens/coach.js';
-import { renderReviewScreen } from './screens/review.js';
-import { renderExplainScreen } from './screens/explain.js';
-import { renderDefenseScreen } from './screens/defense.js';
-import { renderLedgerScreen } from './screens/ledger.js';
+/**
+ * 屏幕模块按需加载。
+ * 为什么不用静态 import：静态 import 会让首屏一次性并发 11+ 个模块请求，
+ * 云端网关会限流（429 Too Many Requests），表现为首屏骨架屏卡 4~6 秒，
+ * 甚至模块图加载失败。改成按需加载后，首屏只请求 app.js + 当前屏两个模块。
+ */
+const lazyScreen = (file, exportName) => async (root) => {
+  const mod = await import(`./screens/${file}`);
+  return mod[exportName](root);
+};
 
 /**
  * 公网分享口令：后台配置了 PUBLIC_SHARE_TOKEN 时，所有 /api 请求都要带 x-share-token。
@@ -113,12 +117,12 @@ async function bootstrap() {
   });
 
   // 注册 6 个核心页面路由
-  registerRoute('bank', renderBankScreen);
-  registerRoute('coach', renderCoachScreen);
-  registerRoute('review', renderReviewScreen);
-  registerRoute('explain', renderExplainScreen);
-  registerRoute('defense', renderDefenseScreen);
-  registerRoute('ledger', renderLedgerScreen);
+  registerRoute('bank', lazyScreen('bank.js', 'renderBankScreen'));
+  registerRoute('coach', lazyScreen('coach.js', 'renderCoachScreen'));
+  registerRoute('review', lazyScreen('review.js', 'renderReviewScreen'));
+  registerRoute('explain', lazyScreen('explain.js', 'renderExplainScreen'));
+  registerRoute('defense', lazyScreen('defense.js', 'renderDefenseScreen'));
+  registerRoute('ledger', lazyScreen('ledger.js', 'renderLedgerScreen'));
 
   // 先加载本地种子题库并立即渲染首屏（保证 <= 1.5s 可交互）
   await loadQuestionBank();
