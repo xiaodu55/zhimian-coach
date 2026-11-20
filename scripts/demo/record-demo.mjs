@@ -540,11 +540,19 @@ page.on('pageerror', (e) => consoleErrors.push(e.message));
 async function seedFlashcard() {
   try {
     await page.goto(`${BASE}/#/ledger`, { waitUntil: 'domcontentloaded' });
-    // 注意：不能用固定 waitForTimeout —— 公网链路上首屏要 10s+，固定等待会
-    // 在页面还没渲染出来时就判定「按钮不存在」，导致种子闪卡丢失（弹药库那格空着）。
-    const addBtn = await waitFor(page, '#btn-add-flashcard', 20000)
-      ? await page.$('#btn-add-flashcard')
-      : null;
+    // 注意：不能用固定 waitForTimeout —— 公网链路上首屏要 10s+（模块图还会重试），
+    // 固定等待会在页面还没渲染出来时就判定「按钮不存在」，导致种子闪卡丢失（弹药库那格空着）。
+    // 再加一层保险：按钮没出现就整页重载一次（第二次通常落在已预热实例上）。
+    let addBtn = null;
+    for (let attempt = 1; attempt <= 2; attempt++) {
+      if (await waitFor(page, '#btn-add-flashcard', 45000)) {
+        addBtn = await page.$('#btn-add-flashcard');
+        break;
+      }
+      console.log(`  · 弹药库按钮还没出现，重载一次（第 ${attempt} 次）`);
+      await page.reload({ waitUntil: 'domcontentloaded' });
+      await waitFor(page, '.topbar, #screen-root', 30000);
+    }
     if (!addBtn) {
       warn('没有「手动新增闪卡」按钮，跳过种子数据');
       return;

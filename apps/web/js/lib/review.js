@@ -83,10 +83,13 @@ export async function runReview({
       improvements = j.improvements || null;
       followups = j.followups || null;
     } catch (err) {
-      // 流式不可用（老服务端 / 网络）→ 回落非流式接口
-      if (err?.name === 'AbortError') {
-        degraded = true;
-      } else {
+      // 流式不可用（老服务端 / 网络 / 网关掐断）→ 回落非流式接口，并带退避重试。
+      // 云函数冷启动 + 网关约 15 秒上限：第一次请求可能整条失败（554/网络中断）。
+      // 实例预热后第二次通常几秒就成功，所以这里重试几次，
+      // 否则评委第一次点"结束作答"就会看到降级成规则模式（没有追问、没有维度分）。
+      const maxAttempts = err?.name === 'AbortError' ? 2 : 3;
+      let lastErr = null;
+      for (let attempt = 1; attempt <= maxAttempts; attempt++) {
         try {
           const ctrl = new AbortController();
           const timer = setTimeout(() => ctrl.abort(), 25000);
@@ -103,13 +106,19 @@ export async function runReview({
             llmScores = j.llmScores || null;
             improvements = j.improvements || null;
             followups = j.followups || null;
-          } else {
-            degraded = true;
+            lastErr = null;
+            break;
           }
-        } catch (_) {
-          degraded = true;
+          lastErr = new Error('HTTP ' + res.status);
+        } catch (e) {
+          lastErr = e;
+        }
+        if (attempt < maxAttempts) {
+          onStage?.('retrying', attempt === 1 ? '网络不太顺，正在重试…' : '仍在重试，请稍候…');
+          await new Promise((r) => setTimeout(r, 800 * attempt));
         }
       }
+      if (lastErr) degraded = true;
     }
   }
 
