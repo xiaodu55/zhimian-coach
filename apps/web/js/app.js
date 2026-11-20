@@ -12,6 +12,7 @@ import {
 import { exportAllData, importAllData, resetLocalData } from './db.js';
 import { initCitationModal } from './ui/citation.js';
 import { showToast } from './ui/toast.js';
+import { importWithRetry } from './lib/http.js';
 /**
  * 屏幕模块按需加载。
  * 为什么不用静态 import：静态 import 会让首屏一次性并发 11+ 个模块请求，
@@ -19,7 +20,12 @@ import { showToast } from './ui/toast.js';
  * 甚至模块图加载失败。改成按需加载后，首屏只请求 app.js + 当前屏两个模块。
  */
 const lazyScreen = (file, exportName) => async (root) => {
-  const mod = await import(`./screens/${file}`);
+  // 用带重试的动态 import：网关会限流（429），单个模块偶发被掐掉时重试即可。
+  // 必须用 import.meta.url 解析成绝对 URL：
+  // 动态 import 的相对路径基准是「发起 import 的那个模块所在目录」，
+  // 而 importWithRetry 定义在 js/lib/http.js 里，直接传 './screens/x.js' 会变成 /js/lib/screens/x.js。
+  const url = new URL(`./screens/${file}`, import.meta.url).href;
+  const mod = await importWithRetry(url, { attempts: 4, backoffMs: 700 });
   return mod[exportName](root);
 };
 
