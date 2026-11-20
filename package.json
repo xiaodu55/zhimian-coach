@@ -3,19 +3,19 @@
   "private": true,
   "version": "0.2.0",
   "scripts": {
-    "dev": "pnpm --filter @zhimian/bff dev",
-    "build:bank": "pnpm --filter @zhimian/build-bank start",
+    "dev": "npm run dev --workspace @zhimian/bff",
+    "build:bank": "npm run start --workspace @zhimian/build-bank",
     "check:secrets": "node scripts/check-secrets.mjs",
-    "dev:port": "pnpm --filter @zhimian/bff exec tsx src/index.ts --port",
-    "build:bff": "pnpm --filter @zhimian/bff build",
+    "dev:port": "npm run dev:port --workspace @zhimian/bff",
+    "build:bff": "npm run build --workspace @zhimian/bff",
     "start": "node scripts/dev/start-prod.mjs",
     "bank:questions": "node scripts/build-bank/questions.mjs",
     "bank:cards": "node scripts/build-bank/cards.mjs",
     "bank:to-v02": "node scripts/build-bank/to-v02.mjs",
     "bank:full": "node scripts/build-bank/questions.mjs && node scripts/build-bank/cards.mjs && node scripts/build-bank/to-v02.mjs",
-    "test": "pnpm --filter @zhimian/bff test",
+    "test": "npm run test --workspace @zhimian/bff",
     "dev:restart": "node scripts/dev/restart.mjs",
-    "build:all": "pnpm --filter @zhimian/bff build",
+    "build:all": "npm run build --workspace @zhimian/bff",
     "tunnel": "node scripts/dev/tunnel.mjs",
     "verify:deploy": "node scripts/test/smoke.mjs"
   },
@@ -27,5 +27,8 @@
   "workspaces": [
     "apps/*",
     "scripts/*"
-  ]
+  ],
+  "engines": {
+    "node": "20"
+  }
 }

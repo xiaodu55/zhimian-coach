@@ -2,10 +2,7 @@
  * PDF 解析编排：先 pdf-parse，质量不达标再按可用性依次尝试 OCR / Tika / MinerU。
  * 原则：**先测质量再决定升级**，并把"用了哪个引擎、哪里有问题"如实回给前端。
  */
-import fs from 'node:fs';
-import os from 'node:os';
 import path from 'node:path';
-import { spawnSync } from 'node:child_process';
 // @ts-expect-error 无类型声明
 import pdfParse from 'pdf-parse/lib/pdf-parse.js';
 import { config } from '../../config.js';
@@ -67,23 +64,6 @@ async function withPdfParse(buffer: Buffer): Promise<PageText[]> {
     },
   });
   return pages.length ? pages : [{ page: 1, text: data.text || '' }];
-}
-
-/** 本地 OCR：PyMuPDF 渲染 + RapidOCR（容器里通常不可用 → 会明确失败，不假装） */
-function withLocalOcr(buffer: Buffer, filename: string): PageText[] {
-  const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'zm-pdf-'));
-  const pdfPath = path.join(tmpDir, 'input.pdf');
-  const outPath = path.join(tmpDir, 'ocr.json');
-  fs.writeFileSync(pdfPath, buffer);
-  const script = path.join(config.repoRoot, 'scripts/pdf/ocr_fallback.py');
-  const py = process.platform === 'win32' ? 'python' : 'python3';
-  const res = spawnSync(py, [script, pdfPath, '--out', outPath], { encoding: 'utf8', timeout: 180_000 });
-  if (res.status !== 0 || !fs.existsSync(outPath)) {
-    throw new Error(String(res.stderr || '').split('\n').slice(-2).join(' ').slice(0, 200) || '本地 OCR 失败');
-  }
-  const parsed = JSON.parse(fs.readFileSync(outPath, 'utf8')) as { pages: PageText[] };
-  fs.rmSync(tmpDir, { recursive: true, force: true });
-  return parsed.pages || [];
 }
 
 /** Apache Tika：自建 tika-server（docker run -p 9998:9998 apache/tika），走 /tika 纯文本输出 */
@@ -160,7 +140,6 @@ export async function parsePdfSmart(filename: string, buffer: Buffer): Promise<P
   if (await tryEngine('pdf-parse', () => withPdfParse(buffer))) {
     // 质量已达标：不再花时间做 OCR
   } else {
-    if (config.pdfOcrEnabled) await tryEngine('local-ocr', async () => withLocalOcr(buffer, filename));
     if (config.tikaUrl) await tryEngine('tika', () => withTika(buffer, filename));
     if (config.mineruUrl) await tryEngine('mineru', () => withMineru(buffer, filename));
   }
