@@ -309,7 +309,7 @@ pnpm tunnel          # 申请 Cloudflare 快速隧道，打印 https://xxx.trycl
 逐日计划、当前状态盘点与"不要做什么"：**[`docs/提交倒计时.md`](docs/提交倒计时.md)**。
 
 提交材料：**产品说明计划书** [`docs/产品说明计划书.md`](docs/产品说明计划书.md) ｜
-**演示视频** 分镜 [`docs/演示视频脚本.md`](docs/演示视频脚本.md) + 自动录屏 `node scripts/demo/record-demo.mjs` ｜
+**演示视频** 逐字配音稿 [`docs/演示视频配音稿.md`](docs/演示视频配音稿.md)（时间轴按成片逐帧核对）+ 旧版分镜 [`docs/演示视频脚本.md`](docs/演示视频脚本.md) + 自动录屏 `node scripts/demo/record-demo.mjs` ｜
 **OAuth 接入** [`docs/OAuth接入.md`](docs/OAuth接入.md) ｜
 **部署** [`docs/AiWorks部署清单.md`](docs/AiWorks部署清单.md) / [`docs/部署指南.md`](docs/部署指南.md)
 
