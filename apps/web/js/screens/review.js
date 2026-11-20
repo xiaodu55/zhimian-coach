@@ -6,6 +6,7 @@ import { dbPut, dbGetAll } from '../db.js';
 import { showToast } from '../ui/toast.js';
 import { mountEmptyContextGuard, recentQuestionOptions, recommendWarmupQuestion } from '../lib/empty-guard.js';
 import { mountNextStepBar, createProgress } from '../lib/nextstep.js';
+import { importWithRetry } from '../lib/http.js';
 import { humanizeRule } from '../rules/labels.js';
 import { countChars } from '../capture/speechmetrics.js';
 import { countEffectiveChars, formatDimensionScore, sanitizeFlashcardData } from '../lib/optimizer.js';
@@ -370,7 +371,7 @@ export async function renderReviewScreen(root) {
     // 顺手把这次作答提炼成结构化闪卡（30 秒结论 + 支撑论据 + 防杠话术），存到弹药库
     let flashcardMsg = '';
     try {
-      const mod = await import('../lib/flashcards.js');
+      const mod = await importWithRetry('../lib/flashcards.js');
       const built = mod.buildFlashcard({ report, question, answer: report.answer });
       // 清洗：诊断标签不能当论据、模板拼接话术要读得通
       const card = sanitizeFlashcardData(built, question, report.answer);

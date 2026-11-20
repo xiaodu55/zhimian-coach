@@ -28,3 +28,21 @@ export async function fetchWithRetry(
   }
   throw lastErr ?? new Error('请求失败');
 }
+
+/**
+ * 带退避重试的动态 import。
+ * 网关会限流并发请求（429），运行时按需加载的模块偶尔会被掐掉，
+ * 重试一次即可（模块本身不大，几 KB）。
+ */
+export async function importWithRetry(path, { attempts = 3, backoffMs = 600 } = {}) {
+  let lastErr = null;
+  for (let attempt = 1; attempt <= attempts; attempt++) {
+    try {
+      return await import(/* @vite-ignore */ path);
+    } catch (err) {
+      lastErr = err;
+      if (attempt < attempts) await new Promise((r) => setTimeout(r, backoffMs * attempt));
+    }
+  }
+  throw lastErr ?? new Error('模块加载失败：' + path);
+}
