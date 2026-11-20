@@ -34,8 +34,9 @@ const HEADED = ARGS.includes('--headed');
 
 const SCRIPT_DIR = path.dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = path.resolve(SCRIPT_DIR, '..', '..');
-// 默认产物目录挂在仓库根的 out/ 下：不管从哪个目录调用脚本，落点都一样
-const OUT_DIR = path.resolve(REPO_ROOT, argOf('out', 'out'));
+const outArg = argOf('out', 'out');
+// 绝对路径原样使用；相对路径挂到仓库根的 out/ 下，保证从任何目录调用落点一致
+const OUT_DIR = path.isAbsolute(outArg) ? outArg : path.resolve(REPO_ROOT, outArg);
 
 /** 找本机已安装的 chromium（playwright 缓存目录），与 scripts/test/smoke.mjs 保持同一套找法 */
 function findChromium() {
@@ -275,12 +276,13 @@ const STEPS = [
   {
     id: '05',
     title: '提交复盘 → 连环追问 → #\/review',
-    wait: '轮询 URL 等待 #/review，最长 180 秒；中途出现追问框就再答一轮',
+    wait: '轮询 URL 等待 #/review，最长 180 秒；中途出现追问框就补一次示例回答再答一轮',
     detail: '这是与普通题库网站最大的区别：不是出题，是**连环追问**',
     async run(page) {
       const deadline = Date.now() + 180000;
       let round = 0;
       let reached = false;
+      let miss = 0;
       while (Date.now() < deadline) {
         const onReview = await page.evaluate(() => location.hash.includes('/review'));
         if (onReview) {
@@ -291,12 +293,11 @@ const STEPS = [
         const state = await page
           .evaluate(() => {
             const b = document.querySelector('#btn-submit-parse');
-            const t = document.querySelector('#answer-textarea');
             if (!b) return 'missing';
             // 先看忙碌标记：模型生成期间按钮是禁用的，但作答框里还留着上一轮文字，
             // 若按文字在不在判断，会被误当成可以提交，从而在生成中途又点一次提交。
             if (b.dataset.busy === '1') return 'busy';
-            if (b.disabled) return t && t.value.trim() ? 'busy' : 'empty';
+            if (b.disabled) return 'gated';
             return 'ready';
           })
           .catch(() => 'missing');
@@ -304,12 +305,18 @@ const STEPS = [
           await sleep(2000);
           continue;
         }
-        if (state === 'empty') {
-          // 上一轮被追问清空了作答框：补一段示例回答再提交
-          await tryClick(page, '#btn-fill-sample', '补填示例回答（上一轮已被追问清空）');
+        if (state === 'gated') {
+          // 门禁置灰：作答框是空的（上一轮被追问清空了），补一段示例回答再提交
+          const filled = await tryClick(page, '#btn-fill-sample', '补填示例回答（上一轮已被追问清空）');
           await sleep(PACE.short);
+          if (!filled) {
+            // 补不上就放弃这一轮：否则会在死循环里白等 180 秒
+            warn('补填示例回答失败，放弃本次复盘等待');
+            break;
+          }
         } else if (state === 'missing') {
           warn('页面上找不到提交按钮（可能已经跳走了）');
+          if (++miss >= 6) break; // 连续找不到就放弃这一轮，别空转到 180 秒
           await sleep(1500);
           continue;
         }
@@ -322,7 +329,10 @@ const STEPS = [
             warn(`点提交失败：${e.message.split('\n')[0]}`);
             return false;
           });
-        if (!clicked) continue;
+        if (!clicked) {
+          if (++miss >= 6) break; // 连续点不动就放弃，别把 180 秒耗在死循环上
+          continue;
+        }
         console.log(`  · 已提交（第 ${round + 1} 轮），等待模型…`);
         // 等「跳到复盘」或「评委又追问」二者之一，谁先来算谁
         const remain = Math.max(5000, deadline - Date.now());
@@ -510,18 +520,69 @@ console.log(`\n[演示录屏] 目标 ${BASE}`);
 console.log(`[演示录屏] 浏览器 ${execPath}`);
 console.log(`[演示录屏] 产物目录 ${OUT_DIR}\n`);
 
-const browser = await chromium.launch({ headless: !HEADED, executablePath: execPath });
-// 录像分辨率与视口一致：浏览器缩放视频时画面不会被拉伸变形
-const ctx = await browser.newContext({
+// 持久化 profile：录屏会清掉/重建本地数据（IndexedDB），用固定 profile 才能在第二次录制时
+// 保留上次的闪卡与复盘记录 —— 否则「弹药库」那格永远是空的
+const PROFILE_DIR = path.join(REPO_ROOT, '.tunnel', 'demo-profile');
+fs.mkdirSync(PROFILE_DIR, { recursive: true });
+const ctx = await chromium.launchPersistentContext(PROFILE_DIR, {
+  headless: !HEADED,
+  executablePath: execPath,
   viewport: { width: 1440, height: 900 },
   recordVideo: { dir: OUT_DIR, size: { width: 1440, height: 900 } },
 });
+const browser = ctx.browser();
 const page = await ctx.newPage();
 
 const consoleErrors = [];
 page.on('pageerror', (e) => consoleErrors.push(e.message));
 
+// 录制前先「种」一张闪卡：弹药库那格要展示真实卡片，而不是空状态
+async function seedFlashcard() {
+  try {
+    await page.goto(`${BASE}/#/ledger`, { waitUntil: 'domcontentloaded' });
+    await page.waitForTimeout(1200);
+    const addBtn = await page.$('#btn-add-flashcard');
+    if (!addBtn) {
+      warn('没有「手动新增闪卡」按钮，跳过种子数据');
+      return;
+    }
+    await addBtn.click();
+    await page.waitForTimeout(600);
+    const filled = await page.evaluate(() => {
+      const fields = Array.from(document.querySelectorAll('.modal-backdrop input, .modal-backdrop textarea'));
+      if (!fields.length) return false;
+      // 表单字段顺序：题干(input) / 核心结论(textarea) / 支撑论据(textarea) / 防杠兜底(textarea)
+      const values = [
+        '讲清楚 Agent 工具调用的权限治理（三级权限）',
+        '结论：只读放行、写入询问、高危转人工；误拦截率 3% → 1.2%，P99 判定 8ms。',
+        '判定输入分三层：工具名、参数、Bash 子命令与工作区\n冲突时以更严格的一方为准\n高危动作绑定单次消费的执行凭证',
+        '这组数据来自当前业务规模与限定前提；并发翻倍或分布漂移时我会先灰度降级并盯住监控告警。',
+      ];
+      fields.forEach((el, i) => {
+        if (values[i] === undefined) return;
+        el.value = values[i];
+        el.dispatchEvent(new Event('input', { bubbles: true }));
+      });
+      return true;
+    });
+    if (!filled) {
+      warn('闪卡表单没找到输入框，跳过种子数据');
+      return;
+    }
+    await page.evaluate(() => {
+      const btns = Array.from(document.querySelectorAll('.modal-backdrop button'));
+      const ok = btns.find((b) => /存入弹药库|保存|确定/.test(b.innerText));
+      if (ok) ok.click();
+    });
+    await page.waitForTimeout(1200);
+    console.log('[演示录屏] 已准备一张演示闪卡（弹药库那格不再空）');
+  } catch (err) {
+    warn(`种子闪卡失败：${err.message.split('\n')[0]}`);
+  }
+}
+
 const t0 = Date.now();
+await seedFlashcard();
 for (const s of STEPS) {
   console.log(`\n—— ${s.id}/${STEPS.length} ${s.title} ————————————————`);
   const st = Date.now();
