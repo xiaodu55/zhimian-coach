@@ -357,6 +357,17 @@ export function renderCoachScreen(root) {
             录音文件仅保存在本机浏览器 IndexedDB，绝不上传服务器。
           </div>
 
+          <!-- 转写能力常驻说明：
+               云端转写默认没开通（云函数里没有 ASR 模型），而提示原本只在点「转写这两轨」后
+               才出现 —— 评委录完音看到一片空白，容易以为系统卡住直接走人。
+               所以这里先给静态说明，点「转写这两轨」时会被实时检测结果覆盖。 -->
+          <div style="font-size:12.5px;color:var(--text-secondary);line-height:1.7;background:var(--surface,#f6f7f9);border-radius:8px;padding:9px 11px;">
+            <strong>关于自动转写：</strong>部署版默认未开通云端转写（点「转写这两轨」会实时检测）。
+            录音后有两条路都能继续复盘：① 点「导出两条音轨」，用你自己电脑上的转写工具生成文字稿，
+            再粘到下面的作答框；② 直接导入飞书妙记 / 腾讯会议 AI 笔记导出的转写稿（最省事）。
+            <strong>不想转写也行</strong>：切到「真题陪练」直接打字作答，效果完全一样。
+          </div>
+
           <!-- 设备、双轨与说话人控制 -->
           <div id="capture-config" style="display:grid;gap:8px;margin-bottom:10px;font-size:12.5px;">
             <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
