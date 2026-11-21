@@ -150,3 +150,34 @@ node scripts/test/smoke.mjs --base https://<你的域名>
 
 > 这一类问题**只有真部署 + 真浏览器访问才能发现**：本地 Windows、localhost、热实例全部复现不了。
 > 结论：交付前必须跑一次「公网域名 + 无登录态 + 真实浏览器」的远程冒烟。
+
+### 第四个坑：密钥轮换后线上会"静默降级"
+
+密钥过期时，接口**不报错**，而是返回 `degraded:true` 的规则模式结果（无维度分、无追问）——
+评委看到的是一个"能跑但很平庸"的作品，**从页面上完全看不出是密钥挂了**。
+
+实测：DeepSeek 旧 key 重置后，线上 `/api/coach/parse` 返回
+`{"degraded":true,"degradedReason":"模型上游响应异常 (401)","llmScores":[],...}`。
+
+轮换流程（已跑通一次，2026-11-21）：
+
+```bash
+# 1. 换 .env 里的 LLM_API_KEY 与 ZHIHU_ACCESS_SECRET
+#    知乎 Access Secret：https://developer.zhihu.com/profile → Access Secret 管理 → 申请新 Access Secret
+#      （最多可申请 20 个，全部共享同一额度池；旧的不必删，确认新 secret 可用后再删）
+# 2. 先直连验证两个 key 都活着，再打包
+#    知乎验证：GET https://developer.zhihu.com/api/v1/content/hot_list?Limit=3
+#      headers: Authorization: Bearer <secret> + X-Request-Timestamp: <秒级时间戳>
+# 3. node scripts/deploy/build-delivery.mjs → AI Works 上传 → 发布新版本 → 等审核通过
+# 4. node scripts/test/smoke.mjs --base "https://<域名>/?k=<口令>" → 9/9
+# 5. 再手打一次真实模型调用，确认 degraded=false（smoke 只查界面，查不出降级）
+```
+
+> 第 5 步不能省：冒烟测试只验证界面交互，**降级状态下界面一切正常**。
+
+### 关于交付包里的明文密钥（安全边界）
+
+官方部署契约要求云函数运行时只注入 `PORT/HOST`，密钥必须随源码走 →
+**交付 ZIP 里必然是明文**。任何人下载 ZIP 就能拿到。
+可接受的做法：① 比赛结束后（12.19 之后）到知乎后台**删除该 Access Secret**；
+② 期间不要把 ZIP 链接发到公开渠道；③ 仓库里的 `.env` 始终被 `.gitignore` 忽略（已验证）。
