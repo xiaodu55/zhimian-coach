@@ -343,3 +343,22 @@ node scripts/test/smoke.mjs --base https://你的域名
 `powershell -ExecutionPolicy Bypass -File scripts/dev/install-autostart.ps1` 开机自启并禁止睡眠。
 
 > 本项目的用户数据**全部在浏览器 IndexedDB**，服务端零落盘 → 部署到任何机器都不用迁数据，重启不丢。
+
+## 演示素材（可直接交）
+
+| 素材 | 位置 | 说明 |
+|---|---|---|
+| 演示视频 | `out/demo-2026-11-20T17-07-52.mp4` | 78.6s，8 分镜，实拍公网部署版 |
+| 逐字配音稿 | `docs/演示视频配音稿.md` | 时间轴按成片逐帧核对，照着念 |
+| 产品截图（7 张） | `docs/screenshots/` | **从线上部署域名截取**，非本机截图 |
+| 产品说明计划书 | `docs/产品说明计划书.md` | 已填最终链接与线上实测数据 |
+| 提报表单模板 | `docs/提报表单填写模板.md` | 已填最终链接，12.05 直接复制粘贴 |
+
+重录/重截（部署域名变了就重跑）：
+
+```bash
+node scripts/demo/record-demo.mjs --base "https://b3z5z9ztm5qo.aiworks.site/?k=zhimian--BqObUY_K7QAxrMB"
+node scripts/demo/capture-screenshots.mjs --base "https://b3z5z9ztm5qo.aiworks.site/?k=zhimian--BqObUY_K7QAxrMB"
+node scripts/test/smoke.mjs --base "https://b3z5z9ztm5qo.aiworks.site/?k=zhimian--BqObUY_K7QAxrMB"   # 远程 9/9
+node scripts/test/probe-first-call.mjs --base "https://b3z5z9ztm5qo.aiworks.site/?k=zhimian--BqObUY_K7QAxrMB"  # 复现评委首次提交
+```
