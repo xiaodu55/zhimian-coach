@@ -39,5 +39,7 @@
       "start": 68.4,
       "text": "答辩也一样：讲稿切成片段，评委可能问什么、知乎上别人怎么质疑，当场就能看。"
     }
-  ]
+  ],
+  "edgeVoice": "zh-CN-YunxiNeural",
+  "edgeRate": "+6%"
 }

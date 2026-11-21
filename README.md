@@ -348,8 +348,9 @@ node scripts/test/smoke.mjs --base https://你的域名
 
 | 素材 | 位置 | 说明 |
 |---|---|---|
-| 演示视频 | `out/demo-2026-11-20T17-07-52.mp4` | 78.6s，8 分镜，实拍公网部署版 |
-| 逐字配音稿 | `docs/演示视频配音稿.md` | 时间轴按成片逐帧核对，照着念 |
+| 演示视频（**带 AI 旁白，交这个**） | `out/demo-2026-11-20T17-07-52-voiced.mp4` | 78.6s，微软 Yunxi 男声旁白，实拍公网部署版 |
+| 逐字配音稿 | `docs/演示视频配音稿.md` | 时间轴按成片逐帧核对；含 AI 配音说明 |
+| 无旁白原版 | `out/demo-2026-11-20T17-07-52.mp4` | 想自己配音时用这个 |
 | 产品截图（7 张） | `docs/screenshots/` | **从线上部署域名截取**，非本机截图 |
 | 产品说明计划书 | `docs/产品说明计划书.md` | 已填最终链接与线上实测数据 |
 | 提报表单模板 | `docs/提报表单填写模板.md` | 已填最终链接，12.05 直接复制粘贴 |
@@ -357,6 +358,7 @@ node scripts/test/smoke.mjs --base https://你的域名
 重录/重截（部署域名变了就重跑）：
 
 ```bash
+python scripts/demo/make-voiceover.py --engine edge   # 配 AI 旁白（edge-tts 走系统代理）
 node scripts/demo/record-demo.mjs --base "https://b3z5z9ztm5qo.aiworks.site/?k=zhimian--BqObUY_K7QAxrMB"
 node scripts/demo/capture-screenshots.mjs --base "https://b3z5z9ztm5qo.aiworks.site/?k=zhimian--BqObUY_K7QAxrMB"
 node scripts/test/smoke.mjs --base "https://b3z5z9ztm5qo.aiworks.site/?k=zhimian--BqObUY_K7QAxrMB"   # 远程 9/9
