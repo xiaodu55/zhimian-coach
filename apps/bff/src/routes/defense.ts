@@ -17,19 +17,16 @@ function topicOf(title: string, segments: Array<{ heading?: string }>): string {
  */
 async function searchReferences(topic: string): Promise<Array<{ title: string; url: string; snippet: string }>> {
   const queries = [`${topic} 质疑 局限`, `${topic} 优缺点 对比`, `${topic} 踩坑 经验`];
+  const settled = await Promise.allSettled(queries.map((q) => zhihuSearch(q, 'zhihu', 4)));
   const seen = new Set<string>();
   const out: Array<{ title: string; url: string; snippet: string }> = [];
-  for (const q of queries) {
-    try {
-      const { results } = await zhihuSearch(q, 'zhihu', 5);
-      for (const r of results) {
-        if (!r?.url || seen.has(r.url)) continue;
-        seen.add(r.url);
-        out.push({ title: r.title || '', url: r.url, snippet: r.snippet || '' });
-        if (out.length >= 8) return out;
-      }
-    } catch {
-      // 单条查询失败不阻塞：继续试下一条
+  for (const item of settled) {
+    if (item.status !== 'fulfilled') continue;
+    for (const r of item.value.results || []) {
+      if (!r?.url || seen.has(r.url)) continue;
+      seen.add(r.url);
+      out.push({ title: r.title || '', url: r.url, snippet: r.snippet || '' });
+      if (out.length >= 8) return out;
     }
   }
   return out;
@@ -70,8 +67,7 @@ defenseRoutes.post('/defense/analyze', async (c) => {
   }
 
   const topic = topicOf(title, segments);
-  const references = await searchReferences(topic);
-
+  const referencesPromise = searchReferences(topic).catch(() => [] as Array<{ title: string; url: string; snippet: string }>);
   // 材料薄弱点（纯结构化推断，不编造内容）
   const segs = segments as Array<{ locator?: string; heading?: string; title?: string; text?: string }>;
   const locatorOf = (s: { locator?: string }, i: number) => String(s.locator || `§${i + 1}`).trim();
@@ -122,7 +118,7 @@ defenseRoutes.post('/defense/analyze', async (c) => {
       zhihuRef: null,
     }));
   }
-
+  const references = await referencesPromise;
   // 每条追问挂一条真实知乎讨论（用户可点进去看）
   const predictedQuestions = questions.map((q, i) => ({
     ...q,

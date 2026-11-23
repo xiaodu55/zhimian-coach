@@ -87,18 +87,38 @@ resumeRoutes.post('/resume/analyze', async (c) => {
    * 上下文格式为 `[1] (第1段) ...`，关掉 thinking 后模型常把 locator 写成 `[1]`、`1`、`S1` 或 `[1] (第1段)`。
    * 先查精确命中 → 再按 `[i]` 序号反查 → 再按子串包含 → 单段简历兜底为首段，仅在完全无法对应任何段落时才丢弃。
    */
-  function resolveLocator(rawLoc: string): string | null {
+  function resolveLocator(rawLoc: string, qText = ''): string | null {
     const loc = String(rawLoc || '').trim();
-    if (!loc) return segments.length === 1 ? segments[0].locator : null;
-    if (validLocators.has(loc)) return loc;
-    const idxMatch = /^\[?[Ss#第]?(\d+)[\]段节]?/.exec(loc);
-    if (idxMatch) {
-      const idx = Number(idxMatch[1]) - 1;
-      if (idx >= 0 && idx < segments.length) return segments[idx].locator;
+    if (loc && validLocators.has(loc)) return loc;
+    if (loc) {
+      const found = segments.find((s) => s.locator && (loc.includes(s.locator) || s.locator.includes(loc)));
+      if (found) return found.locator;
+      const paraMatch = /¶(\d+)/.exec(loc) || /^\[?[Ss#§第pP]?(\d+)[\]段节]?$/.exec(loc) || /\[(\d+)\]/.exec(loc) || /(\d+)/.exec(loc);
+      if (paraMatch) {
+        const idx = Number(paraMatch[1]) - 1;
+        if (idx >= 0 && idx < segments.length) return segments[idx].locator;
+      }
     }
-    const found = segments.find((s) => s.locator && (loc.includes(s.locator) || s.locator.includes(loc)));
-    if (found) return found.locator;
     if (segments.length === 1) return segments[0].locator;
+    // 按题目文本与各分段文本的 2-gram 重合度吸附到最相关的简历段落
+    const cleanQ = String(qText || '').replace(/\s+/g, '');
+    if (cleanQ.length >= 4) {
+      let bestLoc: string | null = null;
+      let bestScore = 0;
+      for (const s of segments) {
+        const hay = String(s.text || '');
+        let score = 0;
+        for (let i = 0; i < cleanQ.length - 1; i++) {
+          const bi = cleanQ.slice(i, i + 2);
+          if (hay.includes(bi)) score++;
+        }
+        if (score > bestScore) {
+          bestScore = score;
+          bestLoc = s.locator;
+        }
+      }
+      if (bestLoc && bestScore >= 2) return bestLoc;
+    }
     return null;
   }
   // 控制上下文体积：实测 3.8k 字符约 22s，超过默认 25s 超时会误降级
@@ -110,13 +130,18 @@ resumeRoutes.post('/resume/analyze', async (c) => {
   let degraded = false;
   let degradedReason = '';
   let droppedByGrounding = 0;
+  // 知乎面经检索与 LLM 出题并行发起，避免串行叠加撞上云端网关 15s 上限
+  const seedQuery = `${segments[0]?.heading || filename} ${segments[0]?.text?.slice(0, 28) || ''} 面试 追问`.trim();
+  const refsPromise: Promise<ZhihuRef[]> = zhihuSearch(seedQuery, 'zhihu', 4)
+    .then(({ results }) => results.map((r) => ({ title: r.title, url: r.url, snippet: r.snippet })))
+    .catch(() => []);
 
   try {
-    // 简历出题属于长结构化输出：给足 90s，避免 25s 默认超时把成功请求打断
+    // 简历出题：给 45s 上限
     const raw = await callStructuredLlm<{ profile?: ResumeProfile; questions?: RawQuestion[] }>(
       RESUME_ANALYZE_SYSTEM_PROMPT,
       `简历文件：${filename}\n\n分段：\n${context}`,
-      90_000
+      45_000
     );
     profile = {
       headline: String(raw.profile?.headline || '').slice(0, 120),
@@ -137,7 +162,7 @@ resumeRoutes.post('/resume/analyze', async (c) => {
     // 接地校验：locator 必须真实存在于简历分段，否则丢弃（防止模型凭空编经历）
     questions = (raw.questions || [])
       .map((q, i) => {
-        const resolvedLoc = resolveLocator(String(q?.locator || ''));
+        const resolvedLoc = resolveLocator(String(q?.locator || ''), String(q?.q || ''));
         return {
           id: `resume-${i + 1}`,
           q: String(q?.q || '').trim().slice(0, 160),
@@ -196,18 +221,7 @@ resumeRoutes.post('/resume/analyze', async (c) => {
 
   // 真实知乎面经/质疑：最多 2 次搜索，挂到题目上（失败不影响出题）
   if (questions.length) {
-    const topics = [profile.headline || filename, profile.projects[0]?.tech?.[0] || profile.skills?.[0] || '项目 追问']
-      .filter(Boolean)
-      .slice(0, 2);
-    const refs: ZhihuRef[] = [];
-    for (const topic of topics) {
-      try {
-        const { results } = await zhihuSearch(`${topic} 面试 追问 面经`, 'zhihu', 3);
-        refs.push(...results.map((r) => ({ title: r.title, url: r.url, snippet: r.snippet })));
-      } catch {
-        /* 配额/网络问题不影响出题 */
-      }
-    }
+    const refs = await refsPromise;
     const unique = refs.filter((r, i) => refs.findIndex((x) => x.url === r.url) === i);
     questions = questions.map((q, i) => {
       const picked = unique.length
