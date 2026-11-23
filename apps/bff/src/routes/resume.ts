@@ -82,11 +82,29 @@ resumeRoutes.post('/resume/analyze', async (c) => {
   }
 
   const validLocators = new Set(segments.map((s) => s.locator));
+  /**
+   * 宽容解析模型输出的 locator：
+   * 上下文格式为 `[1] (第1段) ...`，关掉 thinking 后模型常把 locator 写成 `[1]`、`1`、`S1` 或 `[1] (第1段)`。
+   * 先查精确命中 → 再按 `[i]` 序号反查 → 再按子串包含 → 单段简历兜底为首段，仅在完全无法对应任何段落时才丢弃。
+   */
+  function resolveLocator(rawLoc: string): string | null {
+    const loc = String(rawLoc || '').trim();
+    if (!loc) return segments.length === 1 ? segments[0].locator : null;
+    if (validLocators.has(loc)) return loc;
+    const idxMatch = /^\[?[Ss#第]?(\d+)[\]段节]?/.exec(loc);
+    if (idxMatch) {
+      const idx = Number(idxMatch[1]) - 1;
+      if (idx >= 0 && idx < segments.length) return segments[idx].locator;
+    }
+    const found = segments.find((s) => s.locator && (loc.includes(s.locator) || s.locator.includes(loc)));
+    if (found) return found.locator;
+    if (segments.length === 1) return segments[0].locator;
+    return null;
+  }
   // 控制上下文体积：实测 3.8k 字符约 22s，超过默认 25s 超时会误降级
   const context = segments
     .map((s, i) => `[${i + 1}] (${s.locator}) ${s.text.slice(0, 400)}`)
     .join('\n');
-
   let profile: ResumeProfile = { headline: '', skills: [], projects: [], gaps: [] };
   let questions: Array<{ id: string; q: string; why: string; focus: string; locator: string; difficulty: string; zhihuRef: ZhihuRef | null }> = [];
   let degraded = false;
@@ -118,22 +136,25 @@ resumeRoutes.post('/resume/analyze', async (c) => {
 
     // 接地校验：locator 必须真实存在于简历分段，否则丢弃（防止模型凭空编经历）
     questions = (raw.questions || [])
-      .map((q, i) => ({
-        id: `resume-${i + 1}`,
-        q: String(q?.q || '').trim().slice(0, 160),
-        why: String(q?.why || '').slice(0, 120),
-        focus: String(q?.focus || '项目深挖').slice(0, 12),
-        locator: String(q?.locator || '').trim(),
-        difficulty: ['基础', '进阶', '难'].includes(String(q?.difficulty)) ? String(q.difficulty) : '进阶',
-        bullets: (Array.isArray(q?.bullets) ? q.bullets : [])
-          .map((b: unknown) => String(b).trim().slice(0, 60))
-          .filter((b: string) => b.length >= 4)
-          .slice(0, 4),
-        zhihuRef: null as ZhihuRef | null,
-      }))
+      .map((q, i) => {
+        const resolvedLoc = resolveLocator(String(q?.locator || ''));
+        return {
+          id: `resume-${i + 1}`,
+          q: String(q?.q || '').trim().slice(0, 160),
+          why: String(q?.why || '').slice(0, 120),
+          focus: String(q?.focus || '项目深挖').slice(0, 12),
+          locator: resolvedLoc || '',
+          difficulty: ['基础', '进阶', '难'].includes(String(q?.difficulty)) ? String(q.difficulty) : '进阶',
+          bullets: (Array.isArray(q?.bullets) ? q.bullets : [])
+            .map((b: unknown) => String(b).trim().slice(0, 60))
+            .filter((b: string) => b.length >= 4)
+            .slice(0, 4),
+          zhihuRef: null as ZhihuRef | null,
+        };
+      })
       .filter((q) => {
         if (!q.q) return false;
-        if (!validLocators.has(q.locator)) {
+        if (!q.locator) {
           droppedByGrounding += 1;
           return false;
         }
@@ -144,6 +165,10 @@ resumeRoutes.post('/resume/analyze', async (c) => {
         bullets: q.bullets.length ? q.bullets : fallbackBullets(q.why),
       }))
       .slice(0, 10);
+    if (!questions.length) {
+      degraded = true;
+      degradedReason = '模型输出的定位符未命中简历分段，已回退为分段通用追问';
+    }
   } catch (err) {
     degraded = true;
     degradedReason =

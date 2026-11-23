@@ -2114,7 +2114,7 @@ export function renderCoachScreen(root) {
     const nextFollowups = followups || [];
     if (!skipFollowup && nextFollowups.length && deepRound < followupDepth) {
       deepRound++;
-      const fq = nextFollowups[0];
+      const fq = nextFollowups.find((q) => !askedFollowups.includes(q)) || nextFollowups[0];
       askedFollowups.push(fq);
       showFollowupBox(fq, deepRound);
       textarea.value = '';

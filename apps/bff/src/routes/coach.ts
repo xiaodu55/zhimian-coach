@@ -115,6 +115,12 @@ async function runParse(
     const kind = body?.questionKind === 'soft' ? 'soft' : body?.questionKind === 'tech' ? 'tech' : inferQuestionKind(title);
     const dimensions = COACH_DIMENSIONS[kind];
 
+    const transcript = String(body?.transcript || '').trim();
+    const hasHistory = transcript.includes('面试官：');
+    const historyBlock = hasHistory
+      ? `\n\n【已进行的对话上下文（本轮 followups 严禁与上面「面试官：」已问过的问题重复或雷同，必须顺着候选人最新一轮回答切换到新的薄弱点或边界条件继续深挖）】\n${transcript.slice(0, 2000)}`
+      : '';
+
     onStage?.('treating', '正在提炼 3 个核心考察点…');
     const rawLlm = await callStructuredLlm<{
       llmScores?: ClaimItem[];
@@ -122,7 +128,7 @@ async function runParse(
       followups?: string[];
     }>(
       COACH_PARSE_SYSTEM_PROMPT.replace('__DIMENSIONS__', dimensions),
-      `题目：${title}\n\n可用知乎来源集合：\n${sourceContext || '无外部来源'}\n\n候选人回答：\n${answer}\n\n【本轮追问要求】\n${style.rule}\n${followupRule}`
+      `题目：${title}\n\n可用知乎来源集合：\n${sourceContext || '无外部来源'}\n\n候选人回答：\n${answer}${historyBlock}\n\n【本轮追问要求】\n${style.rule}\n${followupRule}`
     );
 
     onStage?.('diagnosing', '正在对照你的原话逐句诊断…');

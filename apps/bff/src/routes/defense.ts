@@ -73,16 +73,18 @@ defenseRoutes.post('/defense/analyze', async (c) => {
   const references = await searchReferences(topic);
 
   // 材料薄弱点（纯结构化推断，不编造内容）
-  const segs = segments as Array<{ locator?: string; heading?: string; text?: string }>;
+  const segs = segments as Array<{ locator?: string; heading?: string; title?: string; text?: string }>;
+  const locatorOf = (s: { locator?: string }, i: number) => String(s.locator || `§${i + 1}`).trim();
+  const headingOf = (s: { locator?: string; heading?: string; title?: string; text?: string }, i: number) =>
+    String(s.heading || s.title || s.text?.slice(0, 18) || s.locator || `片段 #${i + 1}`).trim();
   const topRisks = segs.slice(0, 3).map((seg, i) => ({
     riskId: `risk-${i + 1}`,
-    locator: seg.locator,
-    title: `薄弱点 #${i + 1}：${seg.heading}`,
-    reason: `材料在 ${seg.locator} 提出了关键论断，但缺少对照基线、消融实验或极端边界数据。`,
+    locator: locatorOf(seg, i),
+    title: `薄弱点 #${i + 1}：${headingOf(seg, i)}`,
+    reason: `材料在 ${locatorOf(seg, i)} 提出了关键论断，但缺少对照基线、消融实验或极端边界数据。`,
   }));
 
-  const contextText = segs.map((s, i) => `[S${i + 1}] (${s.locator}) ${s.heading}：${s.text}`).join('\n');
-
+  const contextText = segs.map((s, i) => `[S${i + 1}] (${locatorOf(s, i)}) ${headingOf(s, i)}：${s.text || ''}`).join('\n');
   let questions: DefenseQuestion[] = [];
   let degraded = false;
   try {
@@ -113,9 +115,9 @@ defenseRoutes.post('/defense/analyze', async (c) => {
   if (!questions.length) {
     degraded = true;
     questions = segs.slice(0, 8).map((seg, idx) => ({
-      q: `针对 ${seg.locator}「${seg.heading}」，如果去掉这个机制、或遇到长尾异常输入，你的指标会掉多少？依据是什么？`,
+      q: `针对 ${locatorOf(seg, idx)}「${headingOf(seg, idx)}」，如果去掉这个机制、或遇到长尾异常输入，你的指标会掉多少？依据是什么？`,
       why: '该段是核心技术主张，评委通常用"消融实验 + 边界压力"验证它是不是真的必要。',
-      locator: String(seg.locator || ''),
+      locator: locatorOf(seg, idx),
       severity: idx < 3 ? '高' : '中',
       zhihuRef: null,
     }));
@@ -144,10 +146,14 @@ defenseRoutes.post('/defense/followup', async (c) => {
     return c.json({ error: { code: 'VALIDATION_ERROR', message: '缺少 question 或 answer' } }, 400);
   }
 
-  const segs = segments as Array<{ locator?: string; heading?: string; text?: string }>;
+  const segs = segments as Array<{ locator?: string; heading?: string; title?: string; text?: string }>;
   const contextText = segs
     .slice(0, 12)
-    .map((s, i) => `[S${i + 1}] (${s.locator}) ${s.heading}：${s.text}`)
+    .map((s, i) => {
+      const loc = String(s.locator || `§${i + 1}`).trim();
+      const head = String(s.heading || s.title || s.text?.slice(0, 18) || loc).trim();
+      return `[S${i + 1}] (${loc}) ${head}：${s.text || ''}`;
+    })
     .join('\n');
 
   try {
