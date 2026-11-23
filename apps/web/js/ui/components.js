@@ -8,7 +8,7 @@ export function renderViewpointCard(card, index = 0) {
   el.innerHTML = `
     <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:6px;">
       <span class="tag ${isMajority ? 'tag-blue' : 'tag-amber'}">${escapeHtml(card.stance || '观点')}</span>
-      <span style="font-size:12px;color:var(--text-muted);">👍 ${card.upvotes ?? 0} · ${escapeHtml(card.author || '知乎答主')}</span>
+      <span style="font-size:12px;color:var(--text-muted);">${card.upvotes > 0 ? `👍 ${card.upvotes} · ` : '知乎原答 · '}${escapeHtml(card.author || '知乎答主')}</span>
     </div>
     <p style="margin:0 0 8px;font-weight:600;font-size:14px;">${escapeHtml(card.summary)}</p>
     <div style="font-size:13px;color:var(--text-secondary);background:var(--surface-alt);padding:8px 10px;border-radius:6px;margin-bottom:8px;">

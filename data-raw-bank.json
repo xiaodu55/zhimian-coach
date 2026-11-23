@@ -5445,7 +5445,7 @@
         {
           "stance": "配置救场论",
           "summary": "换模型无效往往源于缺少项目背景与工具边界，补齐配置即可显著提升效果",
-          "evidence": "后来我们只改了一点，加了个 AGENTS.md 文件，再给Agent配了三个工具：读文件、跑测试、看 git diff。效果立刻提升，漏报率降了一半以上",
+          "evidence": "后来我们只改了一点，加了个AGENTS.md文件，再给Agent配了三个工具：读文件、跑测试、看git diff。效果立刻提升，漏报率降了一半以上",
           "sourceIndex": 3,
           "sourceUrl": "https://www.zhihu.com/question/2021371233627845218/answer/2073807225534137763",
           "sourceAuthor": "",
@@ -11050,9 +11050,54 @@
           "snippet": "非双一流院校硕论就不要纠结什么创新点了，你唯一能创新不翻车的就是参考点新文献。分给你们导师的课题都是挑剩下的。稳抓稳打格式规范和工作量足这两点足以让你顺利毕业，不要主动挑战难度。 毕业论文最大的阻碍是拖延症！导师放养，没东西写，不会写这些都不是问题。只要开始，就不难！ 首先论文选题务必参考导师意见，多看几篇同类以便借鉴成熟框架。一定要格式规范条理清晰，工作量一定要多多益善。薅羊毛不要逮着一只羊薅，…"
         }
       ],
-      "viewAngleCards": [],
-      "benchmark": "",
-      "pitfalls": [],
+      "viewAngleCards": [
+        {
+          "stance": "文献缺陷提炼派",
+          "summary": "系统回顾文献归纳前人研究的缺陷与不足，用细化、分化、质疑、深化提炼论点",
+          "evidence": "通过系统回顾文献，我们可以了解到先前的研究中存在的缺陷和不足，从而提出自己的观点和思路。",
+          "sourceUrl": "https://www.zhihu.com/question/355733089/answer/2963321562",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "对象与视角交叉派",
+          "summary": "将两个课题结合或提取研究较少的具体切入点，跟进顶尖实验室延续性成果做拓展",
+          "evidence": "我们可以将两个课题结合起来进行分析，或者从某课题中提取突出的点作为对象进行分析。",
+          "sourceUrl": "https://www.zhihu.com/question/355733089/answer/3271317358",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "论点四步演化派",
+          "summary": "论点创新有章可循，通过细化、分化、质疑、深化四步并明确论点成立边界条件",
+          "evidence": "论点创新的方法包括细化、分化、质疑、深化。",
+          "sourceUrl": "https://www.zhihu.com/question/355733089/answer/3291004159",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "工作量与规范优先派",
+          "summary": "普通硕论不必死磕颠覆式创新，借鉴成熟框架、参考新文献并把格式规范与工作量做扎实更能稳妥毕业",
+          "evidence": "稳抓稳打格式规范和工作量足这两点足以让你顺利毕业，不要主动挑战难度。",
+          "sourceUrl": "https://www.zhihu.com/question/355733089/answer/3372208525",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "minority",
+          "evidenceVerified": true
+        }
+      ],
+      "benchmark": "考察能否用系统化文献梳理、视角/对象交叉或跟进前沿实验室来提炼可落地的论文创新点，并区分不同学位阶段的创新与工作量要求",
+      "pitfalls": [
+        "把空泛概念包装成创新点",
+        "脱离文献盲目自创方法",
+        "忽视学位论文的格式规范与工作量底线"
+      ],
       "createdAt": "2026-11-18T09:08:59.184Z"
     },
     {
@@ -11981,9 +12026,54 @@
           "snippet": "我不是AI从业者，出于兴趣试了下基于 DeepSeek-R1和演义群内部资料库开发《三国演义》答题机器人“罗灌水”，效果还可以，算有点经验，也不知道通不通用，记录和分享一下。 [图片] 之前孟老师 @青蝇吊客 指点过我，罗灌水的机制属于RAG。根据我今天接触到的概念，罗灌水的机制也算是DeepResearch，因为包含了多轮思考-查询。罗灌水似乎也能被称为Agent，因为它是在每一轮中自主决定调用哪些函数的，当然它更可能不配称为Agent，这不重要…"
         }
       ],
-      "viewAngleCards": [],
-      "benchmark": "",
-      "pitfalls": [],
+      "viewAngleCards": [
+        {
+          "stance": "数据预处理决胜派",
+          "summary": "不微调就能把准确率从 50% 提到 88%，最有效的是深耕 PDF/扫描件等原始文档的数据清洗与预处理",
+          "evidence": "做了一年多RAG落地，准确率从最初的50%提到了88%。整个过程中我们没做过任何模型微调。",
+          "sourceUrl": "https://www.zhihu.com/question/638730143/answer/2041228453932963535",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "Agentic 多轮检索派",
+          "summary": "简单单次 RAG 线上效果必垮，需引入 Agentic 知识系统与多轮思考-查询机制实现先准后快",
+          "evidence": "使用简单的RAG流程必然不可能有很好的检索效果，大模型的回答也一定是一塌糊涂。",
+          "sourceUrl": "https://www.zhihu.com/question/638730143/answer/35565847625",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "自主工具编排派",
+          "summary": "将 RAG 升级为包含多轮思考与自主函数调用的 DeepResearch 式检索流程",
+          "evidence": "罗灌水的机制也算是DeepResearch，因为包含了多轮思考-查询。",
+          "sourceUrl": "https://www.zhihu.com/question/638730143/answer/119244769698",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "mainstream",
+          "evidenceVerified": true
+        },
+        {
+          "stance": "向量维度与长窗口决定论",
+          "summary": "分块奇技淫巧无法根本解决精确性，本质受限于 Embedding 区分度与长上下文推理成本",
+          "evidence": "本质上，这是context长度不足的问题，再追溯 就是成本问题，只能等待 上下文推理成本 的降低。",
+          "sourceUrl": "https://www.zhihu.com/question/638730143/answer/106469413623",
+          "sourceAuthor": "",
+          "sourceVotes": null,
+          "popularity": "minority",
+          "evidenceVerified": true
+        }
+      ],
+      "benchmark": "考察在无 GPU 微调条件下，能否通过数据清洗预处理、Agentic 多轮检索提升 RAG 准确率，并认清检索分块与长上下文成本的理论边界",
+      "pitfalls": [
+        "跳过脏数据清洗直接调检索算法",
+        "把简单单次 Top-K 检索当成生产级方案",
+        "忽视扫描件与排版解析对召回的毁灭性影响"
+      ],
       "createdAt": "2026-11-18T09:53:30.384Z"
     }
   ]

@@ -258,6 +258,7 @@ export async function loadQuestionBank() {
 
 /** 公网分享口令：URL 里的 ?k= 存进 sessionStorage，所有 /api 请求自动带上 */
 const SHARE_TOKEN_KEY = 'zhimian.share.token';
+const DEFAULT_PUBLIC_TOKEN = 'zhimian--BqObUY_K7QAxrMB';
 
 export function getShareToken() {
   try {
@@ -266,9 +267,9 @@ export function getShareToken() {
       sessionStorage.setItem(SHARE_TOKEN_KEY, fromUrl);
       return fromUrl;
     }
-    return sessionStorage.getItem(SHARE_TOKEN_KEY) || '';
+    return sessionStorage.getItem(SHARE_TOKEN_KEY) || DEFAULT_PUBLIC_TOKEN;
   } catch {
-    return '';
+    return DEFAULT_PUBLIC_TOKEN;
   }
 }
 

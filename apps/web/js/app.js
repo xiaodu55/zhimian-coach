@@ -35,16 +35,21 @@ const lazyScreen = (file, exportName) => async (root) => {
  */
 function installShareTokenInterceptor() {
   const KEY = 'zhimian.share.token';
+  // 知乎 AI Works 项目广场内嵌 iframe 固定访问裸域名（不带 ?k=），
+  // 若不回退默认体验口令，广场内所有 /api/* 都会 401 退化为离线规则模式。
+  // 裸扫接口的爬虫不走前端，没有 x-share-token 头，服务端照样 401 拦截。
+  const DEFAULT_PUBLIC_TOKEN = 'zhimian--BqObUY_K7QAxrMB';
   const nativeFetch = window.fetch.bind(window);
   window.fetch = (input, init = {}) => {
     const url = typeof input === 'string' ? input : input?.url || '';
     if (!url.includes('/api/')) return nativeFetch(input, init);
     let token = '';
     try {
-      token = sessionStorage.getItem(KEY) || new URLSearchParams(location.search).get('k') || '';
-      if (token) sessionStorage.setItem(KEY, token);
+      const fromUrl = new URLSearchParams(location.search).get('k') || '';
+      if (fromUrl) sessionStorage.setItem(KEY, fromUrl);
+      token = fromUrl || sessionStorage.getItem(KEY) || DEFAULT_PUBLIC_TOKEN;
     } catch {
-      /* 隐私模式忽略 */
+      token = DEFAULT_PUBLIC_TOKEN;
     }
     if (!token) return nativeFetch(input, init);
     const headers = new Headers(init.headers || (typeof input === 'string' ? undefined : input.headers));
