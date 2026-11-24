@@ -146,13 +146,11 @@ def main():
         if args.engine == "edge":
             nat_path = os.path.join(work, f"seg{i:02d}_nat.mp3")
             try:
-                edge_synth(text, voice_name, base_rate, nat_path)
-                natural = probe_duration(nat_path)
-                # 时长与 (1+rate) 近似成反比，据此反推这一段需要的语速
+                # 全片统一语速：逐段变速会让旁白忽快忽慢，听感最差。
+                # 语速只在这里取一个全局值（--rate），画面节奏靠文案字数对齐。
                 need = base_rate
-                if natural > 0:
-                    delta = (natural / budget - 1) * 100
-                    need = f"{max(-30, min(45, int(base_rate.strip('%+').replace('+','').replace('-','') and int(base_rate.strip('%+')) + delta))):+d}%"
+                edge_synth(text, voice_name, need, nat_path)
+                natural = probe_duration(nat_path)
                 final_path = os.path.join(work, f"seg{i:02d}.mp3")
                 edge_synth(text, voice_name, need, final_path)
                 final = probe_duration(final_path)
@@ -180,8 +178,10 @@ def main():
             scale = f"x{scale:.2f}"
 
         flag = ""
-        if final > budget + 0.35:
-            flag = "  ⚠ 放不下（建议改短这句）"
+        if final > budget + 0.2:
+            flag = f"  ⚠ 超出槽位 {final - budget:.1f}s（请改短这句文案，不要靠变速硬塞）"
+        elif budget - final > 3.0:
+            flag = f"  （槽位富余 {budget - final:.1f}s，可补内容）"
         print(
             f"  段{i+1}: 起 {seg['start']:5.1f}s | 槽位 {budget:4.1f}s | "
             f"自然 {natural:5.1f}s → 语速 {scale:>6s} → 实得 {final:5.1f}s | {len(text)} 字{flag}"
