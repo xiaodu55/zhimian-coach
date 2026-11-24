@@ -31,31 +31,52 @@ const lazyScreen = (file, exportName) => async (root) => {
 };
 
 /**
- * 公网分享口令：后台配置了 PUBLIC_SHARE_TOKEN 时，所有 /api 请求都要带 x-share-token。
- * 这里统一在 fetch 层注入，避免每个调用点都改一遍；没配置口令时完全无感。
+ * 公网分享口令 + 429 退避重试。
+ *
+ * 两件事都在 fetch 层统一做，避免每个调用点改一遍：
+ * 1) 口令注入：后台配置了 PUBLIC_SHARE_TOKEN 时，所有 /api 请求都带 x-share-token。
+ *    AI Works 项目广场内嵌 iframe 固定访问裸域名（不带 ?k=），不回退默认口令的话
+ *    广场内所有 /api/* 都会 401 退化为离线规则模式；裸扫接口的爬虫不走前端，
+ *    没有 x-share-token 头，服务端照样 401 拦截。
+ * 2) 429 退避重试：云函数网关对并发请求有速率上限，**冷启动首屏**并发十几个
+ *    （模块 + 题库 + 题单 + 离线包 + 健康检查）会被限流打回 429，
+ *    表现是首屏空白（实测：/api/bank、/data/*.json 全部 429）。
+ *    这里对 429/5xx 自动退避重试，让"被限流"退化成"慢一点"，而不是"打不开"。
  */
 function installShareTokenInterceptor() {
   const KEY = 'zhimian.share.token';
-  // 知乎 AI Works 项目广场内嵌 iframe 固定访问裸域名（不带 ?k=），
-  // 若不回退默认体验口令，广场内所有 /api/* 都会 401 退化为离线规则模式。
-  // 裸扫接口的爬虫不走前端，没有 x-share-token 头，服务端照样 401 拦截。
   const DEFAULT_PUBLIC_TOKEN = 'zhimian--BqObUY_K7QAxrMB';
   const nativeFetch = window.fetch.bind(window);
-  window.fetch = (input, init = {}) => {
+  const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
+  window.fetch = async (input, init = {}) => {
     const url = typeof input === 'string' ? input : input?.url || '';
-    if (!url.includes('/api/')) return nativeFetch(input, init);
-    let token = '';
-    try {
-      const fromUrl = new URLSearchParams(location.search).get('k') || '';
-      if (fromUrl) sessionStorage.setItem(KEY, fromUrl);
-      token = fromUrl || sessionStorage.getItem(KEY) || DEFAULT_PUBLIC_TOKEN;
-    } catch {
-      token = DEFAULT_PUBLIC_TOKEN;
+    const isApi = url.includes('/api/');
+    let headers;
+    if (isApi) {
+      let token = '';
+      try {
+        const fromUrl = new URLSearchParams(location.search).get('k') || '';
+        if (fromUrl) sessionStorage.setItem(KEY, fromUrl);
+        token = fromUrl || sessionStorage.getItem(KEY) || DEFAULT_PUBLIC_TOKEN;
+      } catch {
+        token = DEFAULT_PUBLIC_TOKEN;
+      }
+      headers = new Headers(init.headers || (typeof input === 'string' ? undefined : input.headers));
+      if (token) headers.set('x-share-token', token);
     }
-    if (!token) return nativeFetch(input, init);
-    const headers = new Headers(init.headers || (typeof input === 'string' ? undefined : input.headers));
-    headers.set('x-share-token', token);
-    return nativeFetch(input, { ...init, headers });
+
+    const doFetch = () => nativeFetch(input, headers ? { ...init, headers } : init);
+
+    let res;
+    for (let attempt = 0; attempt <= 3; attempt++) {
+      res = await doFetch();
+      // 429 = 网关限流，5xx = 实例刚起还没热；两种都值得等一下再试
+      if (res.status !== 429 && res.status < 500) break;
+      if (attempt === 3) break;
+      await sleep(600 * (attempt + 1));
+    }
+    return res;
   };
 }
 
@@ -136,17 +157,21 @@ async function bootstrap() {
   registerRoute('defense', lazyScreen('defense.js', 'renderDefenseScreen'));
   registerRoute('ledger', lazyScreen('ledger.js', 'renderLedgerScreen'));
 
-  // 先加载本地种子题库并立即渲染首屏（保证 <= 1.5s 可交互）
+  // 先加载题库并立即渲染首屏（保证 <= 1.5s 可交互）
   await loadQuestionBank();
-  await loadBundles();
-  await loadDemoReports();
   await refreshLocalCollections();
-  await loadAuthUser();
-  renderAuthArea();
   initRouter();
 
-  // 异步探测 BFF 健康状态（显式降级提示）
-  checkBackendHealth();
+  // 首屏之外的请求延后发起：冷启动时网关对并发请求有速率上限，
+  // 把这些"锦上添花"的请求（题单 / 离线兜底包 / 登录态 / 健康探测）挪到首屏之后，
+  // 避免它们和题库请求一起被 429 打回。
+  setTimeout(() => { loadBundles(); }, 120);
+  setTimeout(() => { loadDemoReports(); }, 260);
+  setTimeout(() => {
+    loadAuthUser().then(() => renderAuthArea());
+    checkBackendHealth();
+  }, 400);
+
 }
 
 bootstrap();

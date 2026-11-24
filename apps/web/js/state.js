@@ -285,6 +285,9 @@ export async function loadBundles() {
   } catch (err) {
     console.error('题单加载失败:', err);
   }
+  // 题单是延后加载的（冷启动时和题库请求一起发会被网关限流），
+  // 屏幕可能已经渲染完了 —— 广播一个事件让题库页补渲染题单区。
+  window.dispatchEvent(new CustomEvent('zhimian:bundles-ready'));
   notify();
 }
 

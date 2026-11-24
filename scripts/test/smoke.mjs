@@ -131,10 +131,13 @@ await step('筛选与分页：选方向后仍有结果，分页器可见', async
 
 await step('题单：可选中场景题单并过滤题库，可一键回到全部', async () => {
   await page.goto(`${routeUrl('#/bank')}`, { waitUntil: 'domcontentloaded' });
-  await page.waitForSelector('#bundle-chips', { timeout: 15000 });
+  // 题单是延后加载的（避免冷启动被网关限流），这里等它渲染出来
+  const ready = await page
+    .waitForFunction(() => document.querySelectorAll('#bundle-chips button').length >= 3, null, { timeout: 20000, polling: 300 })
+    .then(() => true)
+    .catch(() => false);
+  if (!ready) throw new Error('题单 chips 没有渲染出来（少于 3 个）');
   const chips = page.locator('#bundle-chips button');
-  const n = await chips.count();
-  if (n < 3) throw new Error(`题单数量不足（${n}）`);
   const label = (await chips.first().innerText()).trim();
   await chips.first().click();
   await page.waitForTimeout(500);

@@ -902,6 +902,12 @@ export function renderBankScreen(root) {
   renderCustomQuestions();
   showOnboarding();
 
+  // 题单是延后加载的：加载完补渲染一次题单区（否则首屏看不到题单入口）
+  window.addEventListener('zhimian:bundles-ready', () => {
+    renderBundleChips();
+    if (selectedBundle) renderList();
+  });
+
   // 底部"下一步"主行动条：选中题 → 去拆逻辑
   // 吸底条会盖住最后一行，补一块等高留白，避免分页器被压在条下面点不到
   const barSpacer = document.createElement('div');

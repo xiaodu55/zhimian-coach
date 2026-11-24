@@ -364,3 +364,12 @@ node scripts/demo/capture-screenshots.mjs --base "https://b3z5z9ztm5qo.aiworks.s
 node scripts/test/smoke.mjs --base "https://b3z5z9ztm5qo.aiworks.site/?k=zhimian--BqObUY_K7QAxrMB"   # 远程 9/9
 node scripts/test/probe-first-call.mjs --base "https://b3z5z9ztm5qo.aiworks.site/?k=zhimian--BqObUY_K7QAxrMB"  # 复现评委首次提交
 ```
+
+### 题单（场景化学习路径）
+
+题库 92 道真题不是平铺的，而是按岗位场景组织成 7 个精选题单，每单都是「基础 → 进阶 → 难」的梯度：
+AI Agent / RAG / 后端系统设计 / 算法与数据 / 产品与业务 / 论文答辩 / 通用软素质专项。
+首页破冰卡可直接选单，选中后题库只剩这一单；「通用软素质专项」复用了库里已被逐字校验过、
+但因软素质题限量未进主库的 12 道题（**零知乎 API 消耗**）。
+
+生成：`node scripts/build-bank/bundles.mjs` → `apps/web/data/bundles.json`
