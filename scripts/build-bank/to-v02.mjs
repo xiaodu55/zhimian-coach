@@ -22,7 +22,7 @@ const argOf = (n, d) => {
 const IN = path.resolve(ROOT, argOf('in', 'data-raw-bank.json'));
 const OUT = path.resolve(ROOT, argOf('out', 'apps/web/data/question-bank.json'));
 
-const TRACK_LABEL = { interview: '面试通用', defense: '论文/答辩' };
+export const TRACK_LABEL = { interview: '面试通用', defense: '论文/答辩' };
 
 /**
  * 老题（跑批之前抓的 53 道）没有 domain 字段，按标题定点归类：
@@ -51,7 +51,7 @@ const BASE_TECH = /是什么|什么是|有哪些|定义|含义|区别|为什么�
 /** 「为什么这么设计」型原理题也属于基础（概念理解，不是架构取舍） */
 const BASE_TECH_WHY = /为什么.*(设计|原理|区别|机制)/;
 
-const DOMAIN_LABEL = {
+export const DOMAIN_LABEL = {
   'ai-agent': 'AI Agent / 工具调用',
   rag: 'RAG / 检索增强',
   backend: '后端与系统设计',
@@ -81,7 +81,7 @@ const SOFT_KEEP = [
 ];
 
 /** 从标题里抽二元组关键词（无分词器的稳妥做法），并补上观点立场词 */
-function keywordsOf(item) {
+export function keywordsOf(item) {
   const out = new Set();
   for (const w of item.tags || []) if (w && w.length >= 2) out.add(w);
   for (const v of item.viewAngleCards || []) if (v.stance) out.add(v.stance);
@@ -93,7 +93,7 @@ function keywordsOf(item) {
   return [...out].slice(0, 10);
 }
 
-function skeletonOf(item) {
+export function skeletonOf(item) {
   const base = [
     '开口先复述问题，确认你听到的是同一件事',
     '给一个可核对数字（影响面 / 耗时 / 覆盖率）并说明口径与基线',
@@ -104,14 +104,14 @@ function skeletonOf(item) {
   return base;
 }
 
-function contextOf(item) {
+export function contextOf(item) {
   if (item.benchmark) return item.benchmark;
   const pits = (item.pitfalls || []).slice(0, 3).join(' / ');
   if (pits) return `这道题真正在考：${pits}`;
   return '考察能否在有分歧的问题上给出有依据、经得起追问的判断。';
 }
 
-function toCard(v, i, item) {
+export function toCard(v, i, item) {
   return {
     id: `${item.id}-vp-${i + 1}`,
     stance: v.stance || '观点',
@@ -127,7 +127,7 @@ function toCard(v, i, item) {
 }
 
 /** 题目方向：raw 里有 domain 就用；老题按定点表 + track 兜底 */
-function domainOf(item) {
+export function domainOf(item) {
   if (item.domain && DOMAIN_LABEL[item.domain]) return item.domain;
   for (const [frag, dom] of LEGACY_DOMAIN) if (item.title.includes(frag)) return dom;
   if (item.track === 'defense') return 'defense';
@@ -135,7 +135,7 @@ function domainOf(item) {
 }
 
 /** 题型：raw 里有 kind 就用；否则 general=soft，其余=tech */
-function kindOf(item, domain) {
+export function kindOf(item, domain) {
   if (item.kind === 'tech' || item.kind === 'soft') return item.kind;
   return domain === 'general' ? 'soft' : 'tech';
 }
@@ -147,7 +147,7 @@ function kindOf(item, domain) {
  *   进阶 = 其余
  * 实现：先按 domain/kind 给默认档，再用标题关键词微调。
  */
-function difficultyOf(item, domain, kind) {
+export function difficultyOf(item, domain, kind) {
   // 只看题目本身（标题）：benchmark/context 是给前端展示的考点说明，
   // 里面常出现「评估/评测/指标」等词，topic 是粗分类，用它们判难度会让难度跟着文案漂移。
   const hay = String(item.title || '');
@@ -167,7 +167,7 @@ function difficultyOf(item, domain, kind) {
  * 来源快照：保留一段摘要原文，好让「观点卡 evidence 逐字来自来源」在成品文件里可核对。
  * 摘要会裁剪到 260 字，但裁剪后仍要盖住所有引用该来源的 evidence。
  */
-function sourcesOf(item) {
+export function sourcesOf(item) {
   const cards = item.viewAngleCards || [];
   return (item.sources || []).map((s) => {
     const full = String(s.snippet || '');
@@ -278,4 +278,8 @@ function main() {
   console.log(`[to-v02] 一键体验题目：${demoQuestion?.id} ${String(demoQuestion?.title || '').slice(0, 40)}`);
 }
 
-main();
+// 被别的脚本 import 时不自动执行（只有直接运行本文件才构建）
+const invokedDirectly = process.argv[1] && path.basename(process.argv[1]).startsWith('to-v02');
+if (invokedDirectly) {
+  main();
+}

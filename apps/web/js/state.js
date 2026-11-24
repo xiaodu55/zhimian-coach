@@ -10,6 +10,9 @@ export const state = {
   },
   degradedReason: null,
   bank: [],
+  /** 题单：把主库真题按方向与难度梯度组织成场景化精选（bundles.json） */
+  bundles: [],
+  bundleById: new Map(),
   demoSample: null,
   /** 离线演示保底包：预跑的真实复盘报告，断网/模型不可用时也能演完闭环 */
   demoReports: [],
@@ -252,6 +255,35 @@ export async function loadQuestionBank() {
     state.demoSample = localJson.demoSampleTranscript || null;
   } catch (err) {
     console.error('本地种子题库加载失败:', err);
+  }
+  notify();
+}
+
+/**
+ * 加载题单（bundles）。
+ * 题单把 92 道主库真题按方向与难度梯度组织成场景化精选；
+ * 「通用软素质专项」额外带 12 道已有逐字校验观点卡的软素质题（extra:true），
+ * 它们只在题单里出现，不进主库列表（避免主库被通用软题稀释）。
+ */
+export async function loadBundles() {
+  try {
+    const res = await fetch('./data/bundles.json');
+    if (!res.ok) return;
+    const json = await res.json();
+    const bundles = Array.isArray(json.bundles) ? json.bundles : [];
+    const extras = Array.isArray(json.extraQuestions) ? json.extraQuestions : [];
+    state.bundles = bundles;
+    state.bundleById = new Map(bundles.map((b) => [b.id, b]));
+    // 专项题并入题库索引（标记 extra），这样它们也能走完整拆逻辑 → 追问 → 复盘链路
+    const known = new Set(state.bank.map((q) => q.id));
+    for (const q of extras) {
+      if (!known.has(q.id)) {
+        state.bank.push({ ...q, extra: true });
+        known.add(q.id);
+      }
+    }
+  } catch (err) {
+    console.error('题单加载失败:', err);
   }
   notify();
 }

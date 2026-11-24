@@ -129,6 +129,27 @@ await step('筛选与分页：选方向后仍有结果，分页器可见', async
   }
 });
 
+await step('题单：可选中场景题单并过滤题库，可一键回到全部', async () => {
+  await page.goto(`${routeUrl('#/bank')}`, { waitUntil: 'domcontentloaded' });
+  await page.waitForSelector('#bundle-chips', { timeout: 15000 });
+  const chips = page.locator('#bundle-chips button');
+  const n = await chips.count();
+  if (n < 3) throw new Error(`题单数量不足（${n}）`);
+  const label = (await chips.first().innerText()).trim();
+  await chips.first().click();
+  await page.waitForTimeout(500);
+  const bar = page.locator('#bundle-filter-bar');
+  if (!(await bar.isVisible())) throw new Error('选中题单后没有出现当前题单提示条');
+  const barText = await bar.innerText();
+  if (!barText.includes('当前题单')) throw new Error('题单提示条没有说明当前题单');
+  const cards = await page.locator('#bank-list .card').count();
+  if (cards === 0) throw new Error(`题单「${label}」过滤后一道题都没有`);
+  // 回到全部
+  await bar.locator('button').click();
+  await page.waitForTimeout(400);
+  if (await bar.isVisible()) throw new Error('点击「看全部」后题单提示条没有消失');
+});
+
 await step('拆逻辑卡片：能打开且有得分点', async () => {
   await page.goto(`${routeUrl('#/bank')}`, { waitUntil: 'domcontentloaded' });
   await page.waitForSelector('#bank-list .btn-start-coach', { timeout: 15000 });

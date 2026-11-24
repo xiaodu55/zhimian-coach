@@ -79,6 +79,15 @@ export function renderBankScreen(root) {
         </div>
         <div id="onboard-jd-questions" style="display:flex;flex-direction:column;gap:8px;margin-top:10px;"></div>
       </div>
+
+      <!-- 题单：把 92 道真题按方向与难度梯度组织成场景化精选，30 秒定位对口题 -->
+      <div style="margin-top:14px;border-top:1px dashed var(--border);padding-top:12px;">
+        <div style="font-size:12.5px;color:var(--text-secondary);margin-bottom:8px;">
+          <strong>③ 按场景挑题单</strong> · 每单都是「基础 → 进阶 → 难」的梯度，答完一单就能看出自己卡在哪
+        </div>
+        <div id="bundle-chips" style="display:flex;gap:6px;flex-wrap:wrap;"></div>
+        <div id="bundle-desc" style="font-size:12px;color:var(--text-muted);margin-top:8px;line-height:1.6;"></div>
+      </div>
     </section>
 
     <!-- 双入口：按方向刷真题 / 定制我的项目答辩 -->
@@ -112,6 +121,7 @@ export function renderBankScreen(root) {
           </div>
         </div>
         <div id="bank-domain-note" style="font-size:11.5px;color:var(--text-muted);margin-top:8px;"></div>
+        <div id="bundle-filter-bar" hidden style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:8px;padding:8px 10px;border:1px solid var(--primary);border-radius:8px;background:var(--primary-soft);font-size:12.5px;"></div>
         <div style="font-size:11.5px;color:var(--text-muted);margin-top:4px;">
           每个方向 chip 后面的数字是这个方向现有的题量；点不开的方向说明还没收录，不用试。
         </div>
@@ -609,11 +619,48 @@ export function renderBankScreen(root) {
   });
 
   let selectedDomain = '';
+  /** 当前题单（空 = 看全部主库题） */
+  let selectedBundle = '';
+
+  /** 题单 chips：破冰卡里一组，点击即把题库过滤到该题单 */
+  const renderBundleChips = () => {
+    const box = wrapper.querySelector('#bundle-chips');
+    const desc = wrapper.querySelector('#bundle-desc');
+    if (!box) return;
+    box.innerHTML = '';
+    for (const b of state.bundles || []) {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = `btn btn-sm bundle-chip${selectedBundle === b.id ? ' btn-primary' : ''}`;
+      btn.textContent = `${b.title}（${b.questionIds.length}）`;
+      btn.title = b.desc || '';
+      btn.addEventListener('click', () => {
+        selectedBundle = selectedBundle === b.id ? '' : b.id;
+        selectedDomain = '';
+        keyword = '';
+        if (searchInput) searchInput.value = '';
+        resetPage();
+        renderBundleChips();
+        renderList();
+        listBox.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        if (desc) {
+          const cur = selectedBundle ? state.bundleById.get(selectedBundle) : null;
+          desc.textContent = cur ? `${cur.desc} · ${cur.difficultyMix}` : '点任一题单，下面只显示这一单；再点一次取消。';
+        }
+      });
+      box.appendChild(btn);
+    }
+    if (desc && !desc.textContent) {
+      desc.textContent = '点任一题单，下面只显示这一单；再点一次取消。';
+    }
+  };
 
   const renderTracks = () => {
     trackBox.innerHTML = '';
-    const counts = domainCounts(state.bank);
-    const all = [{ key: '', label: '全部方向', count: state.bank.length }, ...DOMAIN_ITEMS.map((d) => ({ ...d, count: counts[d.key] || 0 }))];
+    // 方向 chip 的题量只算主库题：专项题默认不在列表里，混进数字会让评委以为多了 12 道
+    const mainBank = state.bank.filter((q) => !q.extra);
+    const counts = domainCounts(mainBank);
+    const all = [{ key: '', label: '全部方向', count: mainBank.length }, ...DOMAIN_ITEMS.map((d) => ({ ...d, count: counts[d.key] || 0 }))];
     all.forEach((d) => {
       const btn = document.createElement('button');
       btn.type = 'button';
@@ -687,22 +734,50 @@ export function renderBankScreen(root) {
   const renderList = () => {
     const diff = difficultySelect?.value || '';
     const category = categorySelect?.value || '';
+    const bundle = selectedBundle ? state.bundleById.get(selectedBundle) : null;
+    const bundleIds = bundle ? new Set(bundle.questionIds) : null;
     const filtered = state.bank.filter((q) => {
       const kw = keyword.trim().toLowerCase();
       const matchKw = !kw || q.title.toLowerCase().includes(kw) || q.context.toLowerCase().includes(kw);
       const matchDomain = !selectedDomain || domainOf(q) === selectedDomain;
       const matchDiff = !diff || q.difficulty === diff;
       const matchCategory = !category || q.track === category;
-      return matchKw && matchDomain && matchDiff && matchCategory;
+      // 题单生效时只显示该题单的题；否则只显示主库题（extra 的专项题只在题单里出现）
+      const matchBundle = bundleIds ? bundleIds.has(q.id) : !q.extra;
+      return matchKw && matchDomain && matchDiff && matchCategory && matchBundle;
     });
+
+    // 当前题单提示条
+    const bar = wrapper.querySelector('#bundle-filter-bar');
+    if (bar) {
+      if (bundle) {
+        bar.hidden = false;
+        bar.innerHTML = `<strong>当前题单：${escapeHtml(bundle.title)}</strong>
+          <span style="color:var(--text-secondary);">${bundle.questionIds.length} 道 · ${escapeHtml(bundle.difficultyMix || '')}</span>
+          <button type="button" class="btn btn-sm" id="btn-clear-bundle">看全部 92 道</button>`;
+        bar.querySelector('#btn-clear-bundle').addEventListener('click', () => {
+          selectedBundle = '';
+          resetPage();
+          renderBundleChips();
+          renderList();
+        });
+      } else {
+        bar.hidden = true;
+        bar.innerHTML = '';
+      }
+    }
 
     const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
     if (page > totalPages) page = totalPages;
 
     if (domainNote) {
-      const total = state.bank.length;
+      // 主库与专项题分开报数：专项题只在题单里出现，默认列表不含它们
+      const mainTotal = state.bank.filter((q) => !q.extra).length;
+      const extraTotal = state.bank.length - mainTotal;
       domainNote.textContent =
-        `共 ${total} 道知乎高频真题 · 当前筛出 ${filtered.length} 道` +
+        `主库 ${mainTotal} 道知乎高频真题` +
+        (extraTotal ? ` + 专项 ${extraTotal} 道` : '') +
+        ` · 当前筛出 ${filtered.length} 道` +
         (filtered.length > pageSize ? `（第 ${page}/${totalPages} 页）` : '') +
         ' · 每题都带知乎观点卡对照（来源可点开核对）';
     }
@@ -822,6 +897,7 @@ export function renderBankScreen(root) {
   });
 
   renderTracks();
+  renderBundleChips();
   renderList();
   renderCustomQuestions();
   showOnboarding();

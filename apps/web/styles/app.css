@@ -867,6 +867,17 @@ a:hover {
   .hero-actions .btn { width: 100%; }
 }
 
+/* ---------- 题单 chips（场景化精选题单） ---------- */
+#bundle-filter-bar[hidden] { display: none !important; }
+.bundle-chip {
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-secondary);
+  transition: border-color .15s ease, background .15s ease, color .15s ease;
+}
+.bundle-chip:hover { border-color: var(--primary); color: var(--primary); background: var(--primary-soft); }
+.bundle-chip.btn-primary { border-color: var(--primary); background: var(--primary); color: #fff; }
+
 /* ---------- 视觉层级：主行动、卡片与复盘总览 ---------- */
 .hero-banner {
   position: relative;

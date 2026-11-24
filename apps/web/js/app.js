@@ -1,6 +1,7 @@
 import { registerRoute, initRouter } from './router.js';
 import {
   loadQuestionBank,
+  loadBundles,
   checkBackendHealth,
   refreshLocalCollections,
   setDegraded,
@@ -137,6 +138,7 @@ async function bootstrap() {
 
   // 先加载本地种子题库并立即渲染首屏（保证 <= 1.5s 可交互）
   await loadQuestionBank();
+  await loadBundles();
   await loadDemoReports();
   await refreshLocalCollections();
   await loadAuthUser();
