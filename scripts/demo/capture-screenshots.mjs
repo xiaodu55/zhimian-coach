@@ -119,8 +119,12 @@ for (let i = 0; i < 4 && !atReview; i++) {
 if (!atReview) console.log('  ! 没到复盘页');
 await sleep(3500);
 await shot('04-复盘台', '逐句回指原话 + 维度分带刻度 + 知乎原话对照');
-// 往下滚一点，把"AI 观点层"四维分也拍进去
-await page.evaluate(() => window.scrollBy(0, 620));
+// 往下滚一点，把"AI 观点层"四维分也拍进去（改成定位元素，避免固定偏移随版式变化而失效）
+await page.evaluate(() => {
+  const el = document.querySelector('#llm-layer');
+  if (el) el.scrollIntoView({ block: 'start' });
+  else window.scrollBy(0, 620);
+});
 await sleep(1200);
 await shot('04b-复盘台-维度分', 'AI 观点层：四维评分，每条结论挂知乎原文角标');
 await page.evaluate(() => window.scrollTo(0, 0));

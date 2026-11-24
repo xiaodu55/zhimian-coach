@@ -70,7 +70,7 @@ def probe_duration(path):
 
 
 # ---------------------------------------------------------------- edge 引擎
-async def edge_synth_async(text, voice, rate, out_path, tries=6):
+async def edge_synth_async(text, voice, rate, out_path, tries=12):
     import edge_tts
 
     last = None
@@ -79,14 +79,14 @@ async def edge_synth_async(text, voice, rate, out_path, tries=6):
             comm = edge_tts.Communicate(text, voice, rate=rate)
             await comm.save(out_path)
             return True
-        except Exception as e:  # 代理链路不稳，重试
+        except Exception as e:  # 代理链路不稳，重试（退避最长 8s）
             last = e
-            await asyncio.sleep(1.2 * (i + 1))
+            await asyncio.sleep(min(1.2 * (i + 1), 8))
     print(f"    edge-tts 失败（已试 {tries} 次）：{type(last).__name__} {str(last)[:120]}")
     return False
 
 
-def edge_synth(text, voice, rate, out_path, tries=6):
+def edge_synth(text, voice, rate, out_path, tries=12):
     ok = asyncio.run(edge_synth_async(text, voice, rate, out_path, tries))
     if not ok:
         raise RuntimeError("edge-tts 合成失败")
@@ -135,10 +135,7 @@ def main():
             os.environ["HTTP_PROXY"] = proxy
             print(f"走系统代理：{proxy}\n")
     else:
-        from piper import PiperVoice
-        piper_voice = PiperVoice.load(
-            os.path.join(ROOT, cfg["voice"]), config_path=os.path.join(ROOT, cfg["voiceConfig"])
-        )
+        piper_voice = None
 
     prepared = []
     for i, seg in enumerate(segs):
@@ -148,17 +145,32 @@ def main():
 
         if args.engine == "edge":
             nat_path = os.path.join(work, f"seg{i:02d}_nat.mp3")
-            edge_synth(text, voice_name, base_rate, nat_path)
-            natural = probe_duration(nat_path)
-            # 时长与 (1+rate) 近似成反比，据此反推这一段需要的语速
-            need = base_rate
-            if natural > 0:
-                delta = (natural / budget - 1) * 100
-                need = f"{max(-30, min(45, int(base_rate.strip('%+').replace('+','').replace('-','') and int(base_rate.strip('%+')) + delta))):+d}%"
-            final_path = os.path.join(work, f"seg{i:02d}.mp3")
-            edge_synth(text, voice_name, need, final_path)
-            final = probe_duration(final_path)
-            scale = need
+            try:
+                edge_synth(text, voice_name, base_rate, nat_path)
+                natural = probe_duration(nat_path)
+                # 时长与 (1+rate) 近似成反比，据此反推这一段需要的语速
+                need = base_rate
+                if natural > 0:
+                    delta = (natural / budget - 1) * 100
+                    need = f"{max(-30, min(45, int(base_rate.strip('%+').replace('+','').replace('-','') and int(base_rate.strip('%+')) + delta))):+d}%"
+                final_path = os.path.join(work, f"seg{i:02d}.mp3")
+                edge_synth(text, voice_name, need, final_path)
+                final = probe_duration(final_path)
+                scale = need
+            except RuntimeError:
+                # 代理链路彻底断了也别让整条配音作废：这一段退回本地 Piper
+                print("    ↳ 本段改用本地 Piper 兜底")
+                if piper_voice is None:
+                    from piper import PiperVoice
+                    piper_voice = PiperVoice.load(
+                        os.path.join(ROOT, cfg["voice"]), config_path=os.path.join(ROOT, cfg["voiceConfig"])
+                    )
+                nat_wav = os.path.join(work, f"seg{i:02d}_nat.wav")
+                natural = piper_synth(piper_voice, text, nat_wav)
+                scale = max(0.82, min(1.15, natural / budget if budget > 0 else 1.0))
+                final_path = os.path.join(work, f"seg{i:02d}.wav")
+                final = piper_synth(piper_voice, text, final_path, length_scale=scale)
+                scale = f"x{scale:.2f}(piper)"
         else:
             nat_path = os.path.join(work, f"seg{i:02d}_nat.wav")
             natural = piper_synth(piper_voice, text, nat_path)
