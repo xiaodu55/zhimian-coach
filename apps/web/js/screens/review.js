@@ -93,6 +93,9 @@ export async function renderReviewScreen(root) {
       </div>
     </div>
 
+    <!-- 先看结果：把最重要的三个结论放在所有长文诊断之前 -->
+    <section id="review-summary" class="review-summary" aria-label="复盘结果总览"></section>
+
     <!-- 答题时长与语速雷达：面试里"讲 45 秒"和"讲 5 分钟"完全不同 -->
     <div id="speech-metrics-box" style="margin-bottom:16px;" hidden></div>
 
@@ -196,6 +199,36 @@ export async function renderReviewScreen(root) {
     </section>
   `;
   root.appendChild(wrapper);
+
+  // 结果总览：先给评委一个可一眼读懂的结果，再展开三方对照和逐条诊断。
+  (() => {
+    const host = wrapper.querySelector('#review-summary');
+    if (!host) return;
+    const scores = (report.llmScores || []).map((s) => Number(s.score)).filter(Number.isFinite);
+    const avg = scores.length ? Math.round(scores.reduce((sum, score) => sum + score, 0) / scores.length) : null;
+    const focus = ruleFindings[0] || null;
+    const tone = avg === null ? 'var(--primary)' : avg >= 75 ? 'var(--green)' : avg >= 55 ? 'var(--amber)' : 'var(--red)';
+    const scoreLabel = avg === null ? '规则诊断' : avg >= 75 ? '表现扎实' : avg >= 55 ? '基本达标' : '需重点强化';
+    const cards = question.viewpointCards || [];
+    const linked = cards.filter((c) => c.sourceUrl).length;
+    host.innerHTML = `
+      <div class="review-score-block">
+        <div class="review-score-label">${avg === null ? '确定性规则诊断' : 'AI 观点层综合得分'}</div>
+        <div class="review-score-value" style="color:${tone}">${avg === null ? `${ruleFindings.length} 条` : `${avg}<span>/100</span>`}</div>
+        <span class="review-score-badge">${scoreLabel}</span>
+      </div>
+      <div class="review-focus-block">
+        <div class="review-summary-kicker">优先改进</div>
+        <div class="review-focus-title">${escapeHtml(focus ? `${humanizeRule(focus).icon} ${humanizeRule(focus).label}` : '基础规则全部通过')}</div>
+        <p>${escapeHtml(focus?.suggestion || '结构清晰、指标有基线；可继续用分歧观点做抗压训练。')}</p>
+      </div>
+      <div class="review-source-block">
+        <div class="review-summary-kicker">依据覆盖</div>
+        <strong>${linked}/${cards.length}</strong>
+        <span>张知乎观点卡可打开原答</span>
+        <small>${(report.llmScores || []).length} 条模型结论 · ${ruleFindings.length} 条原话诊断</small>
+      </div>`;
+  })();
 
   // 渲染三方对照中的知乎观点卡
   const slotMaj = wrapper.querySelector('#slot-majority');

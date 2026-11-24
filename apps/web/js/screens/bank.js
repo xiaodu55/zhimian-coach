@@ -32,10 +32,12 @@ export function renderBankScreen(root) {
           <span>⚡ 无需注册，打开即练</span>
         </div>
         <div class="hero-actions">
-          <button id="btn-quick-demo" class="btn btn-primary" type="button">免费开始 3 分钟实战演练</button>
-          <button id="btn-go-explain" class="btn" type="button">浏览题库 / 导入我的项目文档</button>
-          <button id="btn-go-defense" class="btn btn-ghost" type="button">🎓 论文答辩预测</button>
-          <button id="btn-offline-demo" class="btn btn-ghost" type="button">🧯 离线演示（预置复盘）</button>
+          <button id="btn-quick-demo" class="btn btn-primary hero-main-cta" type="button">免费开始 3 分钟实战演练 →</button>
+          <div class="hero-secondary-links" aria-label="其他入口">
+            <button id="btn-go-explain" class="hero-text-link" type="button">浏览题库 / 导入项目文档</button>
+            <button id="btn-go-defense" class="hero-text-link" type="button">🎓 论文答辩预测</button>
+            <button id="btn-offline-demo" class="hero-text-link hero-text-link-muted" type="button">离线演示</button>
+          </div>
         </div>
       </div>
     </section>
@@ -44,7 +46,7 @@ export function renderBankScreen(root) {
     <button id="btn-quick-demo-legacy" type="button" hidden>30 秒免麦一键体验完整闭环</button>
 
     <!-- 新用户破冰卡：只第一次显示，可关闭 -->
-    <section id="onboarding-card" class="card" style="margin-bottom:18px;border-color:var(--primary);display:none;">
+    <section id="onboarding-card" class="card onboarding-card" style="margin-bottom:18px;display:none;">
       <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex-wrap:wrap;">
         <div>
           <strong style="font-size:15px;">开启你的第一场陪练</strong>

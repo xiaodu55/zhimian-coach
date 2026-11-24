@@ -866,3 +866,107 @@ a:hover {
   .topbar-inner { padding: 8px 10px; }
   .hero-actions .btn { width: 100%; }
 }
+
+/* ---------- 视觉层级：主行动、卡片与复盘总览 ---------- */
+.hero-banner {
+  position: relative;
+  overflow: hidden;
+  padding: 34px 36px 30px;
+  background: linear-gradient(125deg, #f8fbff 0%, #ffffff 58%, #f2f7ff 100%);
+  border: 1px solid #d9e6fb;
+  border-radius: 16px;
+  box-shadow: 0 12px 34px rgba(23, 68, 140, .06);
+}
+.hero-banner::after {
+  content: '';
+  position: absolute;
+  width: 280px;
+  height: 280px;
+  right: -110px;
+  top: -145px;
+  border-radius: 50%;
+  background: #e8f1ff;
+  opacity: .8;
+  pointer-events: none;
+}
+.hero-banner > div { position: relative; z-index: 1; }
+.hero-title { letter-spacing: -.035em; line-height: 1.25; }
+.hero-desc { max-width: 790px; color: var(--text-secondary); }
+.hero-badges { gap: 18px !important; }
+.hero-main-cta { padding: 12px 22px; font-size: 15px; font-weight: 650; box-shadow: 0 6px 16px rgba(0, 102, 255, .2); }
+.hero-secondary-links { display: flex; align-items: center; flex-wrap: wrap; gap: 6px 22px; margin-top: 14px; }
+.hero-text-link {
+  padding: 2px 0;
+  border: 0;
+  background: transparent;
+  color: var(--primary);
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+.hero-text-link:hover { text-decoration: underline; }
+.hero-text-link-muted { color: var(--text-muted); }
+.onboarding-card { padding: 18px 22px; background: #f5f9ff; border: 1px solid #d8e6fb; box-shadow: none; }
+.card {
+  border-radius: 12px;
+  border-color: #e0e5ee;
+  box-shadow: 0 2px 7px rgba(16, 24, 40, .035);
+}
+.question-card h3 { letter-spacing: -.012em; }
+.question-card .card-quote {
+  padding: 9px 10px 9px 12px;
+  background: #f7f9fc;
+  border: 1px solid #e8edf4 !important;
+  border-left: 3px solid #a5c8ff !important;
+  border-radius: 7px;
+}
+.question-card:hover { transform: translateY(-2px); }
+.question-card .card-cta-btn { border-color: #c6d9f7; }
+.question-card:hover .card-cta-btn { box-shadow: 0 3px 10px rgba(0, 102, 255, .12); }
+.review-summary {
+  display: grid;
+  grid-template-columns: 180px minmax(0, 1fr) 220px;
+  gap: 0;
+  margin-bottom: 20px;
+  overflow: hidden;
+  background: linear-gradient(110deg, #f7faff, #ffffff);
+  border: 1px solid #d8e4f5;
+  border-radius: 14px;
+  box-shadow: 0 8px 24px rgba(23, 68, 140, .055);
+}
+.review-summary > div { padding: 20px 22px; }
+.review-summary > div + div { border-left: 1px solid #e0e8f3; }
+.review-score-label, .review-summary-kicker { font-size: 11.5px; color: var(--text-muted); font-weight: 600; }
+.review-score-value { margin: 4px 0 2px; font-size: 38px; font-weight: 800; line-height: 1.15; letter-spacing: -.04em; }
+.review-score-value span { margin-left: 3px; font-size: 14px; font-weight: 500; color: var(--text-muted); }
+.review-score-badge { display: inline-flex; padding: 3px 8px; border-radius: 5px; background: var(--primary-soft); color: var(--primary); font-size: 12px; font-weight: 600; }
+.review-focus-title { margin: 4px 0 5px; font-size: 17px; font-weight: 700; }
+.review-focus-block p { margin: 0; color: var(--text-secondary); font-size: 13px; line-height: 1.65; }
+.review-source-block { display: flex; flex-direction: column; align-items: flex-start; justify-content: center; }
+.review-source-block strong { margin: 3px 0 1px; font-size: 27px; line-height: 1.2; color: var(--primary); }
+.review-source-block span { color: var(--text-secondary); font-size: 12.5px; }
+.review-source-block small { margin-top: 10px; color: var(--text-muted); font-size: 11.5px; }
+#findings-list .finding-item { border-radius: 10px; box-shadow: 0 1px 4px rgba(16, 24, 40, .035); }
+#llm-layer .card { transition: box-shadow .2s ease; }
+#llm-layer .card:hover { box-shadow: 0 5px 16px rgba(16, 24, 40, .07); }
+@media (max-width: 960px) {
+  .review-summary { grid-template-columns: 150px minmax(0, 1fr); }
+  .review-source-block { display: none; }
+}
+@media (max-width: 720px) {
+  .hero-banner { padding: 24px 22px; border-radius: 12px; }
+  .hero-main-cta { padding: 11px 16px; }
+  .hero-secondary-links { gap: 8px 16px; }
+  /* 破冰卡的关闭按钮固定在右上角：窄屏 flex 换行会让它掉到标题下面单独一行 */
+  .onboarding-card { position: relative; padding: 16px 44px 16px 18px; }
+  .onboarding-card #btn-onboarding-close { position: absolute; top: 12px; right: 12px; }
+  /* 底部"下一步"条：窄屏两个按钮并排会互相压字，改成纵向各占一行 */
+  .next-step-bar > div:last-child { flex-direction: column; align-items: stretch; }
+  .next-step-bar > div:last-child .btn { width: 100%; white-space: normal; line-height: 1.45; }
+  .review-summary { grid-template-columns: 1fr; }
+  .review-summary > div { padding: 16px 18px; }
+  .review-summary > div + div { border-left: 0; border-top: 1px solid #e0e8f3; }
+  .review-score-block { display: flex; align-items: center; flex-wrap: wrap; gap: 6px 12px; }
+  .review-score-label { flex-basis: 100%; }
+  .review-score-value { margin: 0; font-size: 32px; }
+}
