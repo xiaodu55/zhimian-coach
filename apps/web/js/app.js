@@ -69,11 +69,13 @@ function installShareTokenInterceptor() {
     const doFetch = () => nativeFetch(input, headers ? { ...init, headers } : init);
 
     let res;
-    for (let attempt = 0; attempt <= 3; attempt++) {
+    // 最多试 6 次：冷启动时限流窗口可能横跨好几秒，
+    // 累计退避约 9s，足够穿过网关的突发限流（实测首屏 3s 内就能拿到题库）
+    for (let attempt = 0; attempt <= 5; attempt++) {
       res = await doFetch();
       // 429 = 网关限流，5xx = 实例刚起还没热；两种都值得等一下再试
       if (res.status !== 429 && res.status < 500) break;
-      if (attempt === 3) break;
+      if (attempt === 5) break;
       await sleep(600 * (attempt + 1));
     }
     return res;
@@ -167,10 +169,12 @@ async function bootstrap() {
   // 避免它们和题库请求一起被 429 打回。
   setTimeout(() => { loadBundles(); }, 120);
   setTimeout(() => { loadDemoReports(); }, 260);
+  // 登录态与健康探测再往后挪：它们只影响状态灯/登录入口，
+  // 冷启动时先让题库与题单把配额用上（实测这两个接口更容易撞限流）
   setTimeout(() => {
     loadAuthUser().then(() => renderAuthArea());
     checkBackendHealth();
-  }, 400);
+  }, 1200);
 
 }
 
